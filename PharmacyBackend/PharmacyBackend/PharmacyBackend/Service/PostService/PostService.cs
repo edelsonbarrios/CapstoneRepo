@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.AccountDTOs;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -14,7 +15,17 @@ namespace PharmacyBackend.Service.PostService
             _postRepo = postRepo;
         }
 
+        public Task<bool> AuthenticationAsync(LogInRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string TokenGeneration(Account request)
         {
             throw new NotImplementedException();
         }
