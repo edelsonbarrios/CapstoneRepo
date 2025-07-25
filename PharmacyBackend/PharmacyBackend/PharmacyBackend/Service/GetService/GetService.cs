@@ -14,7 +14,7 @@ namespace PharmacyBackend.Service.GetService
             _getRepo = getRepo;
         }
 
-        public async Task<IEnumerable<EmployeeDTO>> GetAllEmployeesAsync()
+        public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()
         {
             var employees = await _getRepo.GetAllEmployeesAsync();
             if (!employees.Any() || employees.Count() == 0)
@@ -30,7 +30,7 @@ namespace PharmacyBackend.Service.GetService
                 Gender = e.Gender,
                 Email = e.Email,
                 Address = e.Address
-            });
+            }).ToList();
             return modifEmployees;
         }
 

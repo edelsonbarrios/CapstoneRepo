@@ -1,9 +1,12 @@
-﻿using PharmacyBackend.Models;
+﻿using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.Models;
 
 namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 {
     public interface IPostRepositoryContracts
     {
         public Task<bool> CreateEmployeeAsync(Employee request);
+        public Task<bool> AuthenticationAsync(LogInRequest request);
+        public string TokenGeneration(Account request);
     }
 }

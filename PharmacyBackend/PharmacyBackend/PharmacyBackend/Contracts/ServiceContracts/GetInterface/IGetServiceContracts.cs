@@ -4,7 +4,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
     {
-        public Task<IEnumerable<EmployeeDTO>> GetAllEmployeesAsync();
+        public Task<List<EmployeeDTO>> GetAllEmployeesAsync();
         public Task<EmployeeDTO> GetEmployeeByIdAsync(int id);
     }
 }
