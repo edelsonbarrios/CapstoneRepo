@@ -13,6 +13,16 @@ namespace PharmacyBackend.Repository.GET
             _context = context;
         }
 
+        public async Task<Account> GetAccountByIdAsync(int id)
+        {
+            return await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<List<Account>> GetAllAccountsAsync()
+        {
+            return await _context.Accounts.ToListAsync();
+        }
+
         public async Task<List<Employee>> GetAllEmployeesAsync()
         {
             return await _context.Employees.ToListAsync();
@@ -20,7 +30,9 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
-            return await _context.Employees.FindAsync(id);
+            return await _context.Employees
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
     }
 }

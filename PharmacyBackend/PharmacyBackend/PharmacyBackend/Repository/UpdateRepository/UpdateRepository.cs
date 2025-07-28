@@ -12,6 +12,13 @@ namespace PharmacyBackend.Repository.UpdateRepository
             _context = context;
         }
 
+        public async Task<bool> UpdateAccountAsync(Account request)
+        {
+            _context.Update(request);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> UpdateEmployeeAsync(Employee request)
         {
             _context.Update(request);

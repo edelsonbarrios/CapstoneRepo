@@ -68,5 +68,12 @@ namespace PharmacyBackend.Repository.POST
                 return false;
             return true;
         }
+
+        public async Task<bool> CreateAccountAsync(Account request)
+        {
+            await _context.Accounts.AddAsync(request);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.AccountDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -12,6 +13,36 @@ namespace PharmacyBackend.Service.GetService
         public GetService(IGetRepositoryContracts getRepo)
         {
             _getRepo = getRepo;
+        }
+
+        public async Task<AccountDTO> GetAccountByIdAsync(int id)
+        {
+            var account = await _getRepo.GetAccountByIdAsync(id);
+            if (account is null)
+                return null;
+            var modifAccount = new AccountDTO
+            {
+                Id = account.Id,
+                AccountCode = account.AccountCode,
+                Username = account.Username,
+                DecryptedPassword = account.EncryptedPassword,
+            };
+            return modifAccount;
+        }
+
+        public async Task<List<AccountDTO>> GetAllAccountsAsync()
+        {
+            var accounts = await _getRepo.GetAllAccountsAsync();
+            if (!accounts.Any() && accounts.Count() == 0)
+                return new List<AccountDTO>();
+            var modifAccounts = accounts.Select(a => new AccountDTO
+            {
+                Id = a.Id,
+                AccountCode = a.AccountCode,
+                Username = a.Username,
+                DecryptedPassword = a.EncryptedPassword,
+            }).ToList();
+            return modifAccounts;
         }
 
         public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()

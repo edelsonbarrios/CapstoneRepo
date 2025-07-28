@@ -3,7 +3,9 @@ using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
+using System.Security.Principal;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -17,6 +19,27 @@ namespace PharmacyBackend.Service.UpdateService
         {
             _updateRepo = updateRepo;
             _getRepo = getRepo;
+        }
+
+        public async Task<bool> UpdateAccountAsync(Account request)
+        {
+            if (request is null)
+                return false;
+
+            var account = await _getRepo.GetAccountByIdAsync(request.Id);
+            if (account is null)
+                return false;
+
+            var encryptedPassword = AesHelper.Encrypt(request.EncryptedPassword);
+
+            account.AccountCode = request.AccountCode;
+            account.Username = request.Username;
+            account.EncryptedPassword = encryptedPassword;
+
+            var updateAccount = await _updateRepo.UpdateAccountAsync(account);
+            if (!updateAccount)
+                return false;
+            return true;
         }
 
         public async Task<bool> UpdateEmployeeAsync(UpdateEmployeeRequest request)

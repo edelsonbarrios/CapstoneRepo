@@ -12,6 +12,16 @@ namespace PharmacyBackend.Repository.DELETE
             _context = context;
         }
 
+        public async Task<bool> DeleteAccountByIdAsync(int id)
+        {
+            var account = await _context.Accounts.FindAsync(id);
+            if (account is null)
+                return false;
+            _context.Remove(account);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> DeleteEmployeeByIdAsync(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
