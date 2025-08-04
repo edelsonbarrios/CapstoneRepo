@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using System.Diagnostics.Contracts;
 
 namespace PharmacyBackend.Controllers
@@ -33,5 +34,24 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Employee does not exist.");
             return Ok(employee);
         }
+
+        [HttpGet("SaleAll")]
+        public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesAsync()
+        {
+            var sales = await _getService.GetAllSalesTransactionsAsync();
+            if (!sales.Any())
+                return NotFound("No sales transactions found.");
+            return Ok(sales);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SalesTransactionDto>> GetSaleByIdAsync(int id)
+        {
+            var sale = await _getService.GetSalesTransactionByIdAsync(id);
+            if (sale == null)
+                return NotFound("Sales transaction not found.");
+            return Ok(sale);
+        }
     }
 }
+

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 
 namespace PharmacyBackend.Controllers
 {
@@ -25,6 +26,16 @@ namespace PharmacyBackend.Controllers
             if (!updateEmployee)
                 return BadRequest(new EmployeeRequestResponse { Message = "Failed to updated employee." });
             return Ok(new EmployeeRequestResponse { Message = "Employee updated sucessfully." });
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateSales(int id, [FromBody] UpdateSalesTransactionDto dto)
+        {
+            var success = await _updateService.UpdateSalesTransactionAsync(id, dto);
+            if (!success)
+                return NotFound($"No sales transaction found with ID {id}");
+
+            return Ok("Sales transaction updated successfully.");
         }
     }
 }

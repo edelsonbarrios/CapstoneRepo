@@ -24,5 +24,15 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new EmployeeRequestResponse { Message = "Employee cannot be deleted." });
             return Ok(new EmployeeRequestResponse { Message = "Employee deleted." });
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteSales(int id)
+        {
+            var success = await _deleteService.DeleteSalesTransactionByIdAsync(id);
+            if (!success)
+                return NotFound($"No sales transaction found with ID {id}");
+
+            return Ok("Sales transaction deleted successfully.");
+        }
     }
 }

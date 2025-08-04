@@ -6,7 +6,7 @@ using PharmacyBackend.Models.CashierViewModel;
 
 namespace PharmacyBackend.Repository.GET
 {
-    public class GetRepository : qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqIGetRepositoryContracts
+    public class GetRepository : IGetRepositoryContracts
     {
         private readonly PharmacyContext _context;
         public GetRepository(PharmacyContext context)
@@ -24,12 +24,12 @@ namespace PharmacyBackend.Repository.GET
             return await _context.Employees.FindAsync(id);
         }
         //sales
-        public async Task<List<SalesTransaction>> GetAllSalesAsync()
+        public async Task<List<SalesTransaction>> GetAllSalesTransactionsAsync()
         {
             return await _context.SalesTransaction.ToListAsync();
         }
 
-        public async Task<SalesTransaction?> GetSaleByIdAsync(int id)
+        public async Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id)
         {
             return await _context.SalesTransaction.FindAsync(id);
         }

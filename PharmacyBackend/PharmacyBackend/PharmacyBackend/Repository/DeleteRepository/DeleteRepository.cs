@@ -23,7 +23,7 @@ namespace PharmacyBackend.Repository.DELETE
         }
 
         //sales
-        public async Task<bool> DeleteSaleByIdAsync(int id)
+        public async Task<bool> DeleteSalesTransactionByIdAsync(int id)
         {
             var sale = await _context.SalesTransaction.FindAsync(id);
             if (sale == null)

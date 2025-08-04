@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Npgsql.PostgresTypes;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 
 namespace PharmacyBackend.Controllers
 {
@@ -28,5 +29,11 @@ namespace PharmacyBackend.Controllers
                 new EmployeeRequestResponse { Message = $"Employee successfully created. " });
         }
 
+        [HttpPost("sale")]
+        public async Task<IActionResult> CreateSalesTransaction([FromBody] CreateSalesTransactionDto dto)
+        {
+            var result = await _postService.CreateSalesTransactionAsync(dto);
+            return Ok(result);
+        }
     }
 }
