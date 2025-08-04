@@ -3,6 +3,7 @@ using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 
 namespace PharmacyBackend.Service.UpdateService
@@ -60,6 +61,31 @@ namespace PharmacyBackend.Service.UpdateService
             if (!updateEmployee)
                 return false;
             return true;
+        }
+
+        //sales 
+        public async Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto)
+        {
+            var existing = await _getRepo.GetSalesTransactionByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.DiscountAmount = dto.DiscountAmount;
+
+            foreach (var updatedItem in dto.Items)
+            {
+                var item = existing.Items.FirstOrDefault(i => i.Id == updatedItem.Id);
+                if (item != null)
+                {
+                    item.Quantity = updatedItem.Quantity;
+                    item.UnitPrice = updatedItem.UnitPrice;
+                    item.Subtotal = updatedItem.Quantity * updatedItem.UnitPrice;
+                }
+            }
+
+            existing.TotalAmount = existing.Items.Sum(i => i.Subtotal);
+            existing.NetAmount = existing.TotalAmount - existing.DiscountAmount;
+
+            return await _updateRepo.UpdateSalesTransactionAsync(existing);
         }
     }
 }

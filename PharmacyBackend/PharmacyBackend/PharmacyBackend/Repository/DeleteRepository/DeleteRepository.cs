@@ -21,5 +21,18 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+
+        //sales
+        public async Task<bool> DeleteSaleByIdAsync(int id)
+        {
+            var sale = await _context.SalesTransaction.FindAsync(id);
+            if (sale == null)
+                return false;
+
+            _context.SalesTransaction.Remove(sale);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

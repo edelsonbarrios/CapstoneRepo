@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.Models;
+using PharmacyBackend.Models.CashierViewModel;
 
 namespace PharmacyBackend.DataContext
 {
@@ -10,6 +11,9 @@ namespace PharmacyBackend.DataContext
         public DbSet<Role> Roles { get; set; }
         public DbSet<Account> Accounts { get; set; }
 
+        //CashierviewDb
+        public DbSet<SalesItem> SalesItems { get; set; }
+        public DbSet<SalesTransaction> SalesTransaction { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -6,6 +6,7 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
+using PharmacyBackend.Models.CashierViewModel;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,7 +24,7 @@ namespace PharmacyBackend.Repository.POST
             _context = context;
             _config = config;
         }
-
+        //employee
         public string TokenGeneration(Account request)
         {
             var claims = new List<Claim>
@@ -66,6 +67,13 @@ namespace PharmacyBackend.Repository.POST
                 return false;
             if (!account.EncryptedPassword.Equals(request.Password))
                 return false;
+            return true;
+        }
+        //sale
+        public async Task<bool> CreateSaleAsync(SalesTransaction sale)
+        {
+            await _context.SalesTransaction.AddAsync(sale);
+            await _context.SaveChangesAsync();
             return true;
         }
     }

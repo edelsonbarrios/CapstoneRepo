@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -14,6 +15,7 @@ namespace PharmacyBackend.Service.GetService
             _getRepo = getRepo;
         }
 
+        //employee
         public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()
         {
             var employees = await _getRepo.GetAllEmployeesAsync();
@@ -52,5 +54,56 @@ namespace PharmacyBackend.Service.GetService
             };
             return modifEmployee;
         }
+
+        //sales
+
+        public async Task<List<SalesTransactionDto>> GetAllSalesTransactionsAsync()
+        {
+            var transactions = await _getRepo.GetAllSalesTransactionsAsync();
+            return transactions.Select(t => new SalesTransactionDto
+            {
+                Id = t.Id,
+                TransactionDate = t.TransactionDate,
+                InvoiceNumber = t.InvoiceNumber,
+                TotalAmount = t.TotalAmount,
+                DiscountAmount = t.DiscountAmount,
+                NetAmount = t.NetAmount,
+                Items = t.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<SalesTransactionDto?> GetSalesTransactionByIdAsync(int id)
+        {
+            var transaction = await _getRepo.GetSalesTransactionByIdAsync(id);
+            if (transaction is null) return null;
+
+            return new SalesTransactionDto
+            {
+                Id = transaction.Id,
+                TransactionDate = transaction.TransactionDate,
+                InvoiceNumber = transaction.InvoiceNumber,
+                TotalAmount = transaction.TotalAmount,
+                DiscountAmount = transaction.DiscountAmount,
+                NetAmount = transaction.NetAmount,
+                Items = transaction.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            };
+        }
     }
 }
+

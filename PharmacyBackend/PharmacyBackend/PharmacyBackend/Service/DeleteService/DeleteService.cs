@@ -14,13 +14,19 @@ namespace PharmacyBackend.Service.DeleteService
         {
             _deleteRepo = deleteRepo;
         }
-
+        //employee
         public async Task<bool> DeleteEmployeeByIdAsync(int id)
         {
             var deleteEmployee = await _deleteRepo.DeleteEmployeeByIdAsync(id);
             if (!deleteEmployee)
                 return false;
             return true;
+        }
+        //sales
+        public async Task<bool> DeleteSalesTransactionByIdAsync(int id)
+        {
+            var deleted = await _deleteRepo.DeleteSalesTransactionByIdAsync(id);
+            return deleted;
         }
     }
 }
