@@ -25,7 +25,7 @@ namespace PharmacyBackend.Controllers
             return Ok(new EmployeeRequestResponse { Message = "Employee deleted." });
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete/sale")]
         public async Task<IActionResult> DeleteSales(int id)
         {
             var success = await _deleteService.DeleteSalesTransactionByIdAsync(id);
@@ -33,6 +33,15 @@ namespace PharmacyBackend.Controllers
                 return NotFound($"No sales transaction found with ID {id}");
 
             return Ok("Sales transaction deleted successfully.");
+        }
+
+        [HttpDelete("Delete/Discount")]
+        public async Task<IActionResult> DeleteDiscount(int id)
+        {
+            var success = await _deleteService.DeleteDiscountByIdAsync(id);
+            if (!success)
+                return NotFound();
+            return NoContent();
         }
     }
 }

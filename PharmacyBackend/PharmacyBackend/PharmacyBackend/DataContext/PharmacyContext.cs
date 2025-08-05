@@ -14,6 +14,8 @@ namespace PharmacyBackend.DataContext
         //CashierviewDb
         public DbSet<SalesItem> SalesItems { get; set; }
         public DbSet<SalesTransaction> SalesTransaction { get; set; }
+        // Discount
+        public DbSet<Discount> Discounts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

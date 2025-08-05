@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PharmacyBackend.Models.CashierViewModel
 {
@@ -13,6 +14,8 @@ namespace PharmacyBackend.Models.CashierViewModel
         public decimal NetAmount { get; set; }
 
         public int DiscountId { get; set; } // New
+
+        [ForeignKey("DiscountId")]
         public Discount? Discount { get; set; } // Navigation
 
         public ICollection<SalesItem> Items { get; set; } = new List<SalesItem>();

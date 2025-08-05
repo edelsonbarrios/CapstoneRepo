@@ -25,8 +25,19 @@ namespace PharmacyBackend.Service.DeleteService
         //sales
         public async Task<bool> DeleteSalesTransactionByIdAsync(int id)
         {
-            var deleted = await _deleteRepo.DeleteSalesTransactionByIdAsync(id);
-            return deleted;
+            var deletedSale = await _deleteRepo.DeleteSalesTransactionByIdAsync(id);
+            if (!deletedSale)
+                return false;
+            return true;
+        }
+
+        //Discount
+        public async Task<bool> DeleteDiscountByIdAsync(int id)
+        {
+            var deletedDiscount = await _deleteRepo.DeleteDiscountByIdAsync(id);
+            if (!deletedDiscount)
+                return false;
+            return true;
         }
     }
 }

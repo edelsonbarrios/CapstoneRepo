@@ -7,5 +7,8 @@
 
             //sales
             public Task<bool> DeleteSalesTransactionByIdAsync(int id);
-        }
+                
+            //Discount
+            public Task<bool> DeleteDiscountByIdAsync(int id);
+    }
     }

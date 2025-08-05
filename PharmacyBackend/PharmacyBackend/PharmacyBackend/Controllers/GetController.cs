@@ -35,6 +35,7 @@ namespace PharmacyBackend.Controllers
             return Ok(employee);
         }
 
+        //SALE
         [HttpGet("SaleAll")]
         public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesAsync()
         {
@@ -44,13 +45,31 @@ namespace PharmacyBackend.Controllers
             return Ok(sales);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("SalesId")]
         public async Task<ActionResult<SalesTransactionDto>> GetSaleByIdAsync(int id)
         {
             var sale = await _getService.GetSalesTransactionByIdAsync(id);
             if (sale == null)
                 return NotFound("Sales transaction not found.");
             return Ok(sale);
+        }
+
+        //DISCOUNT
+        [HttpGet("DiscountAll")]
+        public async Task<IActionResult> GetAllDiscountsAsync()
+        {
+            var result = await _getService.GetAllDiscountAsync();
+            return Ok(result);
+        }
+
+        // GET: api/Discount/5
+        [HttpGet("DiscountId")]
+        public async Task<IActionResult> GetDiscountById(int id)
+        {
+            var result = await _getService.GetDiscountByIdAsync(id);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
     }
 }

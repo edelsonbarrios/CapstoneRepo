@@ -70,11 +70,19 @@ namespace PharmacyBackend.Repository.POST
             return true;
         }
         //sale
-        public async Task<bool> CreateSaleAsync(SalesTransaction sale)
+        public async Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction sale)
         {
             await _context.SalesTransaction.AddAsync(sale);
             await _context.SaveChangesAsync();
-            return true;
+            return sale;
+        }
+
+        //Discount
+        public async Task<Discount> CreateDiscountAsync(Discount discount)
+        {
+            await _context.Discounts.AddAsync(discount);
+            await _context.SaveChangesAsync();
+            return discount;
         }
     }
 }

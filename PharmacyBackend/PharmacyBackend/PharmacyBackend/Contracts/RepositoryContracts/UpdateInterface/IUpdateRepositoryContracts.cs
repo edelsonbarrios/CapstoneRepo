@@ -10,5 +10,8 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         //sales
         public Task<bool> UpdateSalesTransactionAsync(SalesTransaction transaction);
+
+        //Discount
+        public Task<bool> UpdateDiscountAsync(Discount discount);
     }
 }

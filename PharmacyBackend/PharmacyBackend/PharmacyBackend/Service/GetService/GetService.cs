@@ -3,6 +3,7 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.DTOs.DiscountDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -102,6 +103,31 @@ namespace PharmacyBackend.Service.GetService
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.Subtotal
                 }).ToList()
+            };
+        }
+
+        //Discount
+        public async Task<IEnumerable<DiscountDto>> GetAllDiscountAsync()
+        {
+            var discounts = await _getRepo.GetAllDiscountAsync();
+            return discounts.Select(d => new DiscountDto
+            {
+                Id = d.Id,
+                DiscountName = d.DiscountName,
+                DiscountRate = d.DiscountRate
+            });
+        }
+
+        public async Task<DiscountDto?> GetDiscountByIdAsync(int id)
+        {
+            var d = await _getRepo.GetDiscountByIdAsync(id);
+            if (d == null) return null;
+
+            return new DiscountDto
+            {
+                Id = d.Id,
+                DiscountName = d.DiscountName,
+                DiscountRate = d.DiscountRate
             };
         }
     }

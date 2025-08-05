@@ -34,5 +34,17 @@ namespace PharmacyBackend.Repository.DELETE
             return true;
         }
 
+        //Discount
+        public async Task<bool> DeleteDiscountByIdAsync(int id)
+        {
+            var discount = await _context.Discounts.FindAsync(id);
+            if (discount == null) 
+                return false;
+
+            _context.Discounts.Remove(discount);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

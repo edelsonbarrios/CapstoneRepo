@@ -13,5 +13,8 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 
         //sales
         public Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction transaction);
+
+        //Discount
+        public Task<Discount> CreateDiscountAsync(Discount discount);
     }
 }

@@ -5,6 +5,7 @@ using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models.CashierViewModel;
+using PharmacyBackend.DTOs.DiscountDTOs;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -65,6 +66,24 @@ namespace PharmacyBackend.Service.PostService
                 TransactionDate = created.TransactionDate,
                 TotalAmount = created.TotalAmount,
                 NetAmount = created.NetAmount
+            };
+        }
+
+        //Discount
+        public async Task<DiscountDto> CreateDiscountAsync(CreateDiscountDto dto)
+        {
+            var discount = new Discount
+            {
+                DiscountName = dto.DiscountName,
+                DiscountRate = dto.DiscountRate
+            };
+
+            var result = await _postRepo.CreateDiscountAsync(discount);
+            return new DiscountDto
+            {
+                Id = result.Id,
+                DiscountName = result.DiscountName,
+                DiscountRate = result.DiscountRate
             };
         }
     }

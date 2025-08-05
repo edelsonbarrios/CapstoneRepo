@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
+using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
@@ -86,6 +87,19 @@ namespace PharmacyBackend.Service.UpdateService
             existing.NetAmount = existing.TotalAmount - existing.DiscountAmount;
 
             return await _updateRepo.UpdateSalesTransactionAsync(existing);
+        }
+
+        //Discount
+        public async Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto)
+        {
+            var existing = await _getRepo.GetDiscountByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.DiscountName = dto.DiscountName;
+            existing.DiscountRate = dto.DiscountRate;
+
+            await _updateRepo.UpdateDiscountAsync(existing);
+            return true;
         }
     }
 }

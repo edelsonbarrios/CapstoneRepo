@@ -23,6 +23,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Employees.FindAsync(id);
         }
+
         //sales
         public async Task<List<SalesTransaction>> GetAllSalesTransactionsAsync()
         {
@@ -32,6 +33,17 @@ namespace PharmacyBackend.Repository.GET
         public async Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id)
         {
             return await _context.SalesTransaction.FindAsync(id);
+        }
+
+        //Discount
+        public async Task<IEnumerable<Discount>> GetAllDiscountAsync()
+        {
+            return await _context.Discounts.ToListAsync();
+        }
+
+        public async Task<Discount?> GetDiscountByIdAsync(int id)
+        {
+            return await _context.Discounts.FindAsync(id);
         }
     }
 }

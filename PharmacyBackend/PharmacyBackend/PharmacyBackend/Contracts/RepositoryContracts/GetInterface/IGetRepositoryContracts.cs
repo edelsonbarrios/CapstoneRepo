@@ -10,7 +10,12 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<Employee> GetEmployeeByIdAsync(int id);
 
         //sales
-        Task<List<SalesTransaction>> GetAllSalesTransactionsAsync();
-        Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id);
+        public Task<List<SalesTransaction>> GetAllSalesTransactionsAsync();
+        public Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id);
+
+        //Discount
+        public Task<IEnumerable<Discount>> GetAllDiscountAsync();
+        public Task<Discount?> GetDiscountByIdAsync(int id);
+        
     }
 }
