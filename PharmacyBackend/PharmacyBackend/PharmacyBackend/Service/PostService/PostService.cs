@@ -25,17 +25,24 @@ namespace PharmacyBackend.Service.PostService
             return true;
         }
 
-        public Task<bool> CreateAccountAsync(AccountDTO request)
+        public async Task<bool> CreateAccountAsync(CreateAccountRequest request)
         {
-            
+            if (request is null)
+                return false;
+            var encryptedPass = AesHelper.Encrypt(request.Password);
+            var newAcc = new Account()
+            {
+                AccountCode = request.AccountCode,
+                Username = request.Username,
+                EncryptedPassword = encryptedPass
+            };
+            var createAccount = await _postRepo.CreateAccountAsync(newAcc);
+            if (!createAccount)
+                return false;
+            return createAccount;
         }
 
         public Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string TokenGeneration(AccountDTO request)
         {
             throw new NotImplementedException();
         }

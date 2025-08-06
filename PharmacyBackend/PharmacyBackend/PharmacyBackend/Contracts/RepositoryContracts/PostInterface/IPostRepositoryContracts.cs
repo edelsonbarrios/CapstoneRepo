@@ -7,7 +7,6 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
     {
         public Task<bool> CreateEmployeeAsync(Employee request);
         public Task<bool> AuthenticationAsync(LogInRequest request);
-        public string TokenGeneration(Account request);
         public Task<bool> CreateAccountAsync(Account request);
     }
 }

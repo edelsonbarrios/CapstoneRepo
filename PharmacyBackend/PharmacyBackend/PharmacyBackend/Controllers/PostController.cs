@@ -37,6 +37,7 @@ namespace PharmacyBackend.Controllers
             var authentication = await _postService.AuthenticationAsync(request);
             if (!authentication)
                 return new LogInResponse { Token = null, Message = "Wrong username or password." };
+            return new LogInResponse { }
         }
     }
 }

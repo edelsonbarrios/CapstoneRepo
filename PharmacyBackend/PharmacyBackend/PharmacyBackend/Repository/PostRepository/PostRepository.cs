@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 
 namespace PharmacyBackend.Repository.POST
 {
@@ -17,38 +18,15 @@ namespace PharmacyBackend.Repository.POST
     {
         private readonly PharmacyContext _context;
         private readonly IConfiguration _config;
+        private readonly JwtHelper _jwtHelper;
         public PostRepository(PharmacyContext context,
-            IConfiguration config)
+            IConfiguration config,
+            JwtHelper jwtHelper)
         {
             _context = context;
+            _jwtHelper = jwtHelper;
             _config = config;
         }
-
-        public string TokenGeneration(Account request)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, request.Id.ToString()),
-                new Claim(ClaimTypes.Name, request.Username),
-                new Claim(ClaimTypes.Role, request.Employee.Role.ToString()),
-                new Claim("EmployeeId", request.Employee.Id.ToString())
-            };
-
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetValue<string>("Jwt:SecretKey")));
-            var signingCreds = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha512);
-
-            var tokenDescription = new JwtSecurityToken(
-                issuer: _config.GetValue<string>("Jwt:Issuer"),
-                audience: _config.GetValue<string>("Jwt:Audience"),
-                expires: DateTime.UtcNow.AddHours(_config.GetValue<int>("Jwt:TokenValidity")),
-                claims: claims,
-                signingCredentials: signingCreds
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(tokenDescription);
-
-        }
-
         public async Task<bool> CreateEmployeeAsync(Employee request)
         {
             await _context.Employees.AddAsync(request);
@@ -66,6 +44,7 @@ namespace PharmacyBackend.Repository.POST
                 return false;
             if (!account.EncryptedPassword.Equals(request.Password))
                 return false;
+            string token = _jwtHelper.TokenGeneration(account);
             return true;
         }
 
