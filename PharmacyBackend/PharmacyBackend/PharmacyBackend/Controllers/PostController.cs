@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Npgsql.PostgresTypes;
@@ -34,10 +35,10 @@ namespace PharmacyBackend.Controllers
         {
             if (request is null)
                 return new LogInResponse { Token = null, Message = "Invalid Username or Password." };
-            var authentication = await _postService.AuthenticationAsync(request);
-            if (!authentication)
+            var token = await _postService.AuthenticationAsync(request);
+            if (token is null)
                 return new LogInResponse { Token = null, Message = "Wrong username or password." };
-            return new LogInResponse { }
+            return Ok(new LogInResponse { Token = token, Message = "Successfully logged in." });
         }
     }
 }

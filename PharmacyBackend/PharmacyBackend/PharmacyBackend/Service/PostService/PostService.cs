@@ -16,13 +16,11 @@ namespace PharmacyBackend.Service.PostService
             _postRepo = postRepo;
         }
 
-        public async Task<bool> AuthenticationAsync(LogInRequest request)
+        public async Task<string> AuthenticationAsync(LogInRequest request)
         {
             var enteredPassword = AesHelper.Encrypt(request.Password);
-            var logIn = await _postRepo.AuthenticationAsync(request);
-            if (!logIn)
-                return false;
-            return true;
+            var token = await _postRepo.AuthenticationAsync(request);
+            return token;
         }
 
         public async Task<bool> CreateAccountAsync(CreateAccountRequest request)
@@ -42,9 +40,44 @@ namespace PharmacyBackend.Service.PostService
             return createAccount;
         }
 
-        public Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request)
+        public async Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
-            throw new NotImplementedException();
+            if (request is null)
+                return false;
+
+            int roleId = 0;
+            switch(request.RolePosition)
+            {
+                case "Administrator":
+                    roleId = 1;
+                    break;
+                case "Cashier":
+                    roleId = 2;
+                    break;
+                case "Inventory Manager":
+                    roleId = 3;
+                    break;
+            }
+
+            var newEmployee = new Employee
+            {
+                EmployeeCode = request.EmployeeCode,
+                LastName = request.LastName,
+                FirstName = request.FirstName,
+                MiddleName = request.MiddleName,
+                Age = request.Age,
+                BirthDate = request.BirthDate,
+                CivilStatus = request.CivilStatus,
+                Gender = request.Gender,
+                Email = request.Email,
+                Address = request.Address,
+                RoleId = roleId
+            };
+
+            var createEmployee = await _postRepo.CreateEmployeeAsync(newEmployee);
+            if (!createEmployee)
+                return false;
+            return createEmployee;
         }
     }
 }

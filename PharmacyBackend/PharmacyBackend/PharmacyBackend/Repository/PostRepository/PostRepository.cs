@@ -34,18 +34,18 @@ namespace PharmacyBackend.Repository.POST
             return true;
         }
 
-        public async Task<bool> AuthenticationAsync(LogInRequest request)
+        public async Task<string> AuthenticationAsync(LogInRequest request)
         {
             var account = await _context.Accounts.Where(a => a.Username.Equals(request.Username))
                 .Include(a => a.Employee)
                 .ThenInclude(e => e.Role)
                 .FirstOrDefaultAsync();
             if (account is null)
-                return false;
+                return null;
             if (!account.EncryptedPassword.Equals(request.Password))
-                return false;
+                return null;
             string token = _jwtHelper.TokenGeneration(account);
-            return true;
+            return token;
         }
 
         public async Task<bool> CreateAccountAsync(Account request)

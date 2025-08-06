@@ -8,6 +8,7 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DataContext;
+using PharmacyBackend.Helper;
 using PharmacyBackend.Repository.DELETE;
 using PharmacyBackend.Repository.GET;
 using PharmacyBackend.Repository.POST;
@@ -30,6 +31,7 @@ builder.Services.AddDbContext<PharmacyContext>(x => x.UseNpgsql(
     builder.Configuration.GetConnectionString("RacquelDB")));
 
 #region AddScopes
+builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<IGetRepositoryContracts, GetRepository>();
 builder.Services.AddScoped<IPostRepositoryContracts, PostRepository>();
 builder.Services.AddScoped<IDeleteRepositoryContracts, DeleteRepository>();

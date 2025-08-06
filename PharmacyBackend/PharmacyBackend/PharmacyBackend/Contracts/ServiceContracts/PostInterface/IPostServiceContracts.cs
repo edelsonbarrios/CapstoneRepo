@@ -7,7 +7,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
     public interface IPostServiceContracts
     {
         public Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request);
-        public Task<bool> AuthenticationAsync(LogInRequest request);
+        public Task<string> AuthenticationAsync(LogInRequest request);
         public Task<bool> CreateAccountAsync(CreateAccountRequest request);
     }
 }
