@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Npgsql.PostgresTypes;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
+using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 
 namespace PharmacyBackend.Controllers
@@ -27,6 +29,14 @@ namespace PharmacyBackend.Controllers
             return Ok(
                 new EmployeeRequestResponse { Message = $"Employee successfully created. " });
         }
-
+        [HttpPost]
+        public async Task<ActionResult<LogInResponse>> AuthenticationAsync(LogInRequest request)
+        {
+            if (request is null)
+                return new LogInResponse { Token = null, Message = "Invalid Username or Password." };
+            var authentication = await _postService.AuthenticationAsync(request);
+            if (!authentication)
+                return new LogInResponse { Token = null, Message = "Wrong username or password." };
+        }
     }
 }

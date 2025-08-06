@@ -3,6 +3,7 @@ using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.Helper;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -15,9 +16,18 @@ namespace PharmacyBackend.Service.PostService
             _postRepo = postRepo;
         }
 
-        public Task<bool> AuthenticationAsync(LogInRequest request)
+        public async Task<bool> AuthenticationAsync(LogInRequest request)
         {
-            throw new NotImplementedException();
+            var enteredPassword = AesHelper.Encrypt(request.Password);
+            var logIn = await _postRepo.AuthenticationAsync(request);
+            if (!logIn)
+                return false;
+            return true;
+        }
+
+        public Task<bool> CreateAccountAsync(AccountDTO request)
+        {
+            
         }
 
         public Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request)
@@ -25,7 +35,7 @@ namespace PharmacyBackend.Service.PostService
             throw new NotImplementedException();
         }
 
-        public string TokenGeneration(Account request)
+        public string TokenGeneration(AccountDTO request)
         {
             throw new NotImplementedException();
         }
