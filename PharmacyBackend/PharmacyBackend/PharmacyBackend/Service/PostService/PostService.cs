@@ -4,6 +4,7 @@ using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.Helper;
+using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -19,6 +20,7 @@ namespace PharmacyBackend.Service.PostService
         public async Task<string> AuthenticationAsync(LogInRequest request)
         {
             var enteredPassword = AesHelper.Encrypt(request.Password);
+            request.Password = enteredPassword;
             var token = await _postRepo.AuthenticationAsync(request);
             return token;
         }
@@ -27,23 +29,26 @@ namespace PharmacyBackend.Service.PostService
         {
             if (request is null)
                 return false;
+
             var encryptedPass = AesHelper.Encrypt(request.Password);
             var newAcc = new Account()
             {
                 AccountCode = request.AccountCode,
                 Username = request.Username,
-                EncryptedPassword = encryptedPass
+                EncryptedPassword = encryptedPass,
+                EmployeeId = request.EmployeeId
             };
+
             var createAccount = await _postRepo.CreateAccountAsync(newAcc);
             if (!createAccount)
                 return false;
             return createAccount;
         }
 
-        public async Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request)
+        public async Task<int> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
             if (request is null)
-                return false;
+                return 0;
 
             int roleId = 0;
             switch(request.RolePosition)
@@ -74,10 +79,10 @@ namespace PharmacyBackend.Service.PostService
                 RoleId = roleId
             };
 
-            var createEmployee = await _postRepo.CreateEmployeeAsync(newEmployee);
-            if (!createEmployee)
-                return false;
-            return createEmployee;
+            var employeeId = await _postRepo.CreateEmployeeAsync(newEmployee);
+            if (employeeId == 0)
+                return 0;
+            return employeeId;
         }
     }
 }

@@ -13,6 +13,11 @@ namespace PharmacyBackend.Repository.GET
             _context = context;
         }
 
+        public async Task<bool> AccountUsernameValidation(string userName)
+        {
+            return await _context.Accounts.AnyAsync(a => a.Username.Equals(userName));
+        }
+
         public async Task<Account> GetAccountByIdAsync(int id)
         {
             return await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);

@@ -15,6 +15,13 @@ namespace PharmacyBackend.Service.GetService
             _getRepo = getRepo;
         }
 
+        public async Task<bool> AccountUsernameValidation(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return false;
+            var validateUsername = await _getRepo.AccountUsernameValidation(userName);
+            return validateUsername;
+        }
         public async Task<AccountDTO> GetAccountByIdAsync(int id)
         {
             var account = await _getRepo.GetAccountByIdAsync(id);
@@ -58,6 +65,8 @@ namespace PharmacyBackend.Service.GetService
                 FirstName = e.FirstName,
                 MiddleName = e.MiddleName,
                 Age = e.Age,
+                BirthDate = e.BirthDate,
+                CivilStatus = e.CivilStatus,
                 Gender = e.Gender,
                 Email = e.Email,
                 Address = e.Address
@@ -77,6 +86,8 @@ namespace PharmacyBackend.Service.GetService
                 FirstName = employee.FirstName,
                 MiddleName = employee.MiddleName,
                 Age = employee.Age,
+                BirthDate = employee.BirthDate,
+                CivilStatus = employee.CivilStatus,
                 Gender = employee.Gender,
                 Email = employee.Email,
                 Address = employee.Address

@@ -27,11 +27,11 @@ namespace PharmacyBackend.Repository.POST
             _jwtHelper = jwtHelper;
             _config = config;
         }
-        public async Task<bool> CreateEmployeeAsync(Employee request)
+        public async Task<int> CreateEmployeeAsync(Employee request)
         {
             await _context.Employees.AddAsync(request);
             await _context.SaveChangesAsync();
-            return true;
+            return request.Id;
         }
 
         public async Task<string> AuthenticationAsync(LogInRequest request)

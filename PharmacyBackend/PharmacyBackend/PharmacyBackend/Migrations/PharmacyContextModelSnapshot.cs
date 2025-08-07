@@ -30,8 +30,8 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountCode")
-                        .HasColumnType("integer");
+                    b.Property<string>("AccountCode")
+                        .HasColumnType("text");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer");

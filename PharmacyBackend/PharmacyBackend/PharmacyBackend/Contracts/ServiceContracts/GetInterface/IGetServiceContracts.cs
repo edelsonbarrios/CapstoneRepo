@@ -9,5 +9,6 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<EmployeeDTO> GetEmployeeByIdAsync(int id);
         public Task<List<AccountDTO>> GetAllAccountsAsync();
         public Task<AccountDTO> GetAccountByIdAsync(int id);
+        public Task<bool> AccountUsernameValidation(string userName);
     }
 }
