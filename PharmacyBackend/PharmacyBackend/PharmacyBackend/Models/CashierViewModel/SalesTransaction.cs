@@ -16,7 +16,42 @@ namespace PharmacyBackend.Models.CashierViewModel
         public int DiscountId { get; set; } // New
 
         [ForeignKey("DiscountId")]
-        public Discount? Discount { get; set; } // Navigation
+        public Discount?
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            Discount { get; set; } // Navigation
 
         public ICollection<SalesItem> Items { get; set; } = new List<SalesItem>();
     }

@@ -45,5 +45,17 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Discounts.FindAsync(id);
         }
+
+        //Product
+        public async Task<IEnumerable<Product>> GetAllProductAsync()
+        {
+            return await _context.Product.ToListAsync();
+        }
+        
+        public async Task<Product?> GetProductByIdAsync(int id)
+        {
+            return await _context.Product.FindAsync(id);
+        }
+            
     }
 }

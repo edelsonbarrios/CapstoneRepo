@@ -4,6 +4,7 @@ using Npgsql.PostgresTypes;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 
 namespace PharmacyBackend.Controllers
@@ -31,7 +32,7 @@ namespace PharmacyBackend.Controllers
         }
         //salesController
         [HttpPost("sale")]
-        public async Task<IActionResult> CreateSalesTransaction([FromBody] CreateSalesTransactionDto dto)
+        public async Task<IActionResult> CreateSalesTransactionAsync([FromBody] CreateSalesTransactionDto dto)
         {
             var result = await _postService.CreateSalesTransactionAsync(dto);
             return Ok(result);
@@ -39,11 +40,18 @@ namespace PharmacyBackend.Controllers
 
         //DiscountController
         [HttpPost("Discount")]
-        public async Task<IActionResult> CreateDiscount([FromBody] CreateDiscountDto dto)
+        public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
         {
             var result = await _postService.CreateDiscountAsync(dto);
             return Ok(result);
         }
 
+        [HttpPost("Product")]
+        public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductDto dto)
+        {
+            var result = await _postService.CreateProductAsync(dto);
+            return Ok(result);
+
+        }
     }
 }

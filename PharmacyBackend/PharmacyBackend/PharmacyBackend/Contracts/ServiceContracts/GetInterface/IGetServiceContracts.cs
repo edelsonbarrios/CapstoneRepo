@@ -2,6 +2,7 @@
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -17,5 +18,9 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         //DISCOUNT
         public Task<IEnumerable<DiscountDto>> GetAllDiscountAsync();
         public Task<DiscountDto> GetDiscountByIdAsync(int id);
+
+        //PRODUCT
+        public Task<IEnumerable<ProductDto>> GetAllProductAsync();
+        public Task<ProductDto> GetProductByIdAsync(int id);
     }
 }

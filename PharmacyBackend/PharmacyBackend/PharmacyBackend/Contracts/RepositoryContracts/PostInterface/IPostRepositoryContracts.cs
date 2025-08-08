@@ -16,5 +16,9 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 
         //Discount
         public Task<Discount> CreateDiscountAsync(Discount discount);
+
+        //Product
+        public Task<Product> CreateProductAsync(Product product);
     }
 }
+

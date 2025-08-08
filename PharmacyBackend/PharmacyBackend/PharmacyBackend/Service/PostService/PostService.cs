@@ -6,6 +6,7 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DiscountDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -86,5 +87,42 @@ namespace PharmacyBackend.Service.PostService
                 DiscountRate = result.DiscountRate
             };
         }
+        //Product
+        public async Task<ProductDto> CreateProductAsync(CreateProductDto dto)
+        {
+            var product = new Product
+            {
+                ProductName = dto.ProductName,
+                CategoryID = dto.CategoryID,
+                BrandID = dto.BrandID,
+                GenericID = dto.GenericID,
+                FormulationID = dto.FormulationID,
+                ClassificationID = dto.ClassificationID,
+                TypeID = dto.TypeID,
+                SupplierID = dto.SupplierID,
+                Price = dto.Price,
+                Stock = dto.Stock,
+                IsActive = true
+            };
+
+            var created = await _postRepo.CreateProductAsync(product);
+
+            return new ProductDto
+            {
+                ProductID = created.ProductID,
+                ProductName = created.ProductName,
+                CategoryID = created.CategoryID,
+                BrandID = created.BrandID,
+                GenericID = created.GenericID,
+                FormulationID = created.FormulationID,
+                ClassificationID = created.ClassificationID,
+                TypeID = created.TypeID,
+                SupplierID = created.SupplierID,
+                Price = created.Price,
+                Stock = created.Stock,
+                IsActive = created.IsActive
+            };
+        }
+
     }
 }

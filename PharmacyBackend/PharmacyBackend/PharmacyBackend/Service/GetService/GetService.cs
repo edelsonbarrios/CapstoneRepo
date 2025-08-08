@@ -4,6 +4,7 @@ using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -81,7 +82,7 @@ namespace PharmacyBackend.Service.GetService
             }).ToList();
         }
 
-        public async Task<SalesTransactionDto?> GetSalesTransactionByIdAsync(int id)
+        public async Task<SalesTransactionDto> GetSalesTransactionByIdAsync(int id)
         {
             var transaction = await _getRepo.GetSalesTransactionByIdAsync(id);
             if (transaction is null) return null;
@@ -130,6 +131,50 @@ namespace PharmacyBackend.Service.GetService
                 DiscountRate = d.DiscountRate
             };
         }
+
+        //Product
+        public async Task<IEnumerable<ProductDto>> GetAllProductAsync()
+        {
+            var products = await _getRepo.GetAllProductAsync();
+            return products.Select(p => new ProductDto
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                CategoryID = p.CategoryID,
+                BrandID = p.BrandID,
+                GenericID = p.GenericID,
+                FormulationID = p.FormulationID,
+                ClassificationID = p.ClassificationID,
+                TypeID = p.TypeID,
+                SupplierID = p.SupplierID,
+                Price = p.Price,
+                Stock = p.Stock,
+                IsActive = p.IsActive
+            });
+        }
+
+        public async Task<ProductDto> GetProductByIdAsync(int id)
+        {
+            var p = await _getRepo.GetProductByIdAsync(id);
+            if (p == null) return null;
+
+            return new ProductDto
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                CategoryID = p.CategoryID,
+                BrandID = p.BrandID,
+                GenericID = p.GenericID,
+                FormulationID = p.FormulationID,
+                ClassificationID = p.ClassificationID,
+                TypeID = p.TypeID,
+                SupplierID = p.SupplierID,
+                Price = p.Price,
+                Stock = p.Stock,
+                IsActive = p.IsActive
+            };
+        }
+
     }
 }
 

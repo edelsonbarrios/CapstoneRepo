@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 
 namespace PharmacyBackend.Controllers
@@ -30,7 +32,7 @@ namespace PharmacyBackend.Controllers
         }
 
         [HttpPut("update/sale")]
-        public async Task<IActionResult> UpdateSales(int id, [FromBody] UpdateSalesTransactionDto dto)
+        public async Task<IActionResult> UpdateSalesTransactionAsync(int id, [FromBody] UpdateSalesTransactionDto dto)
         {
             var success = await _updateService.UpdateSalesTransactionAsync(id, dto);
             if (!success)
@@ -40,10 +42,19 @@ namespace PharmacyBackend.Controllers
         }
 
         [HttpPut("Update/Discount")]
-        public async Task<IActionResult> UpdateDiscount(int id, [FromBody] UpdateDiscountDto dto)
+        public async Task<IActionResult> UpdateDiscountAsync(int id, [FromBody] UpdateDiscountDto dto)
         {
             var success = await _updateService.UpdateDiscountAsync(id, dto);
             if (!success)
+                return NotFound();
+            return NoContent();
+        }
+
+        [HttpPut("Update/Product")]   
+        public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] UpdateProductDto dto)
+        {
+            var success = await _updateService.UpdateProductAsync(id, dto);
+            if (!success) 
                 return NotFound();
             return NoContent();
         }

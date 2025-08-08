@@ -16,6 +16,9 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         //Discount
         public Task<IEnumerable<Discount>> GetAllDiscountAsync();
         public Task<Discount?> GetDiscountByIdAsync(int id);
-        
+
+        //Product
+        public Task<IEnumerable<Product>> GetAllProductAsync();
+        public Task<Product> GetProductByIdAsync(int id);
     }
 }

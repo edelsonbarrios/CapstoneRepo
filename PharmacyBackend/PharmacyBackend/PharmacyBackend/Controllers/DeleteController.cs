@@ -26,7 +26,7 @@ namespace PharmacyBackend.Controllers
         }
 
         [HttpDelete("delete/sale")]
-        public async Task<IActionResult> DeleteSales(int id)
+        public async Task<IActionResult> DeleteSalesTransactionByIdAsync(int id)
         {
             var success = await _deleteService.DeleteSalesTransactionByIdAsync(id);
             if (!success)
@@ -36,9 +36,18 @@ namespace PharmacyBackend.Controllers
         }
 
         [HttpDelete("Delete/Discount")]
-        public async Task<IActionResult> DeleteDiscount(int id)
+        public async Task<IActionResult> DeleteDiscountByIdAsync(int id)
         {
             var success = await _deleteService.DeleteDiscountByIdAsync(id);
+            if (!success)
+                return NotFound();
+            return NoContent();
+        }
+
+        [HttpDelete("Delete/Product")]
+        public async Task<IActionResult> DeleteProductByIdAsync(int id)
+        {
+            var success = await _deleteService.DeleteProductByIdAsync(id);
             if (!success)
                 return NotFound();
             return NoContent();

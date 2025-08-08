@@ -1,5 +1,6 @@
 ﻿using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 
@@ -15,5 +16,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         //Discount
         public Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto);
+
+        //Product
+        public Task<bool> UpdateProductAsync(int id, UpdateProductDto dto);
     }
 }

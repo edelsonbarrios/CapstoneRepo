@@ -39,5 +39,14 @@ namespace PharmacyBackend.Service.DeleteService
                 return false;
             return true;
         }
+
+        //Product
+        public async Task<bool> DeleteProductByIdAsync(int id)
+        {
+            var deleteProduct = await _deleteRepo.DeleteProductByIdAsync(id);
+            if(!deleteProduct)
+                return false;
+            return true;
+        }
     }
 }

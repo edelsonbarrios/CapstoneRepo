@@ -11,5 +11,8 @@
         //DISCOUNT
         public Task<bool> DeleteDiscountByIdAsync(int id);
 
+        //Product
+        public Task<bool> DeleteProductByIdAsync(int id);
+
     }
 }

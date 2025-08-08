@@ -35,5 +35,13 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        //Product
+        public async Task<bool> UpdateProductAsync(Product product)
+        {
+            _context.Product.Update(product);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

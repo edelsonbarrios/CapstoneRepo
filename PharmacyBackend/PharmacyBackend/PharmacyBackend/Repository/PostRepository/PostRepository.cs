@@ -84,5 +84,14 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return discount;
         }
+
+        //Product
+        public async Task<Product> CreateProductAsync(Product product)
+        {
+            await _context.Product.AddAsync(product);
+            await _context.SaveChangesAsync();
+            return product;
+        }
+
     }
 }

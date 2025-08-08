@@ -37,7 +37,7 @@ namespace PharmacyBackend.Controllers
 
         //SALE
         [HttpGet("SaleAll")]
-        public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesAsync()
+        public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesTransactionsAsync()
         {
             var sales = await _getService.GetAllSalesTransactionsAsync();
             if (!sales.Any())
@@ -46,7 +46,7 @@ namespace PharmacyBackend.Controllers
         }
 
         [HttpGet("SalesId")]
-        public async Task<ActionResult<SalesTransactionDto>> GetSaleByIdAsync(int id)
+        public async Task<ActionResult<SalesTransactionDto>> GetSalesTransactionByIdAsync(int id)
         {
             var sale = await _getService.GetSalesTransactionByIdAsync(id);
             if (sale == null)
@@ -64,12 +64,29 @@ namespace PharmacyBackend.Controllers
 
         // GET: api/Discount/5
         [HttpGet("DiscountId")]
-        public async Task<IActionResult> GetDiscountById(int id)
+        public async Task<IActionResult> GetDiscountByIdAsync(int id)
         {
             var result = await _getService.GetDiscountByIdAsync(id);
             if (result == null)
-                return NotFound();
+                return NotFound("Discount not found");
             return Ok(result);
+        }
+
+        //Product
+        [HttpGet("ProductAll")]
+        public async Task<IActionResult> GetAllProductAsync()
+        {
+            var products = await _getService.GetAllProductAsync();
+            return Ok(products);
+        }
+
+        [HttpGet("ProductId")]
+        public async Task<IActionResult> GetProductByIdAsync(int id)
+        {
+            var product = await _getService.GetProductByIdAsync(id);
+            if (product == null)
+                return NotFound();
+            return Ok(product);
         }
     }
 }

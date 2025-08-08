@@ -11,7 +11,7 @@ namespace PharmacyBackend.Models.CashierViewModel
         public SalesTransaction SalesTransaction { get; set; }
 
         public int ProductId { get; set; }
-        //public Product Product { get; set; }
+        public Product Product { get; set; }
 
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }

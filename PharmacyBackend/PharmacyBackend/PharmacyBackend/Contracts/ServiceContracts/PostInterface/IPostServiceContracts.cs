@@ -4,6 +4,7 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using System.Threading.Tasks;
+using PharmacyBackend.DTOs.ProductDTOs;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 {
@@ -19,5 +20,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         //Discount
         public Task<DiscountDto> CreateDiscountAsync(CreateDiscountDto dto);
+
+        //Product
+        public Task<ProductDto> CreateProductAsync(CreateProductDto dto);
     }
 }

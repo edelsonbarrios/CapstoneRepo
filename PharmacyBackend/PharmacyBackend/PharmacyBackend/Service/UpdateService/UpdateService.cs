@@ -4,6 +4,7 @@ using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 
@@ -99,6 +100,28 @@ namespace PharmacyBackend.Service.UpdateService
             existing.DiscountRate = dto.DiscountRate;
 
             await _updateRepo.UpdateDiscountAsync(existing);
+            return true;
+        }
+
+        //Product
+        public async Task<bool> UpdateProductAsync(int id, UpdateProductDto dto)
+        {
+            var existing = await _getRepo.GetProductByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.ProductName = dto.ProductName;
+            existing.CategoryID = dto.CategoryID;
+            existing.BrandID = dto.BrandID;
+            existing.GenericID = dto.GenericID;
+            existing.FormulationID = dto.FormulationID;
+            existing.ClassificationID = dto.ClassificationID;
+            existing.TypeID = dto.TypeID;
+            existing.SupplierID = dto.SupplierID;
+            existing.Price = dto.Price;
+            existing.Stock = dto.Stock;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateProductAsync(existing);
             return true;
         }
     }
