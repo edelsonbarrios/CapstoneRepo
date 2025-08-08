@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
+using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
@@ -21,7 +22,7 @@ namespace PharmacyBackend.Service.UpdateService
             _getRepo = getRepo;
         }
 
-        public async Task<bool> UpdateAccountAsync(Account request)
+        public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
         {
             if (request is null)
                 return false;
