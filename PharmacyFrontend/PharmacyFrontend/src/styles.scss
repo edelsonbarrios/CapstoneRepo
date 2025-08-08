@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --main-bg-color: #7B3F00;
+  --secondary-bg-color: #F5F5DC;
+
+  --ff-trirong: 'Trirong', 'Poppins', sans-serif;
+  --ff-poppins: 'Poppins', 'Tahoma', 'Trirong', sans-serif;
+
+  --fw-heavy: 700;
+  --fw-regular: 400;
+  --fw-light: 300;
+  --fw-super-light: 100;
+
+  --fs-super-large: 3rem;
+  --fs-large: 2rem;
+  --fs-regular: 1rem;
+  --fs-small: 11px;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
