@@ -8,9 +8,8 @@
         public decimal TotalAmount { get; set; }
         public decimal DiscountAmount { get; set; }
         public decimal NetAmount { get; set; }
-
-        public int? DiscountId { get; set; }
-        public string? DiscountDescription { get; set; }
+        public int  DiscountId { get; set; }
+        public string DiscountName { get; set; }
 
         public List<SalesItemDto> Items { get; set; } = new();
     }

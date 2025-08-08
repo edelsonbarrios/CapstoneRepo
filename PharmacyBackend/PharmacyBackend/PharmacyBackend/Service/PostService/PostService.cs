@@ -45,6 +45,7 @@ namespace PharmacyBackend.Service.PostService
             {
                 TransactionDate = DateTime.Now,
                 InvoiceNumber = dto.InvoiceNumber,
+                DiscountId = dto.DiscountId, 
                 DiscountAmount = 0,
                 Items = dto.Items.Select(i => new SalesItem
                 {

@@ -27,12 +27,20 @@ namespace PharmacyBackend.Repository.GET
         //sales
         public async Task<List<SalesTransaction>> GetAllSalesTransactionsAsync()
         {
-            return await _context.SalesTransaction.ToListAsync();
+            return await _context.SalesTransaction
+                .Include(t => t.Discount) 
+                .Include(t => t.Items)   
+                  .ThenInclude(i => i.Product) 
+                .ToListAsync();
         }
 
         public async Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id)
         {
-            return await _context.SalesTransaction.FindAsync(id);
+            return await _context.SalesTransaction
+                .Include(t => t.Discount)
+                .Include(t => t.Items)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         //Discount

@@ -70,6 +70,8 @@ namespace PharmacyBackend.Service.GetService
                 TotalAmount = t.TotalAmount,
                 DiscountAmount = t.DiscountAmount,
                 NetAmount = t.NetAmount,
+                DiscountId = t.DiscountId,
+                DiscountName = t.Discount?.DiscountName ?? string.Empty,
                 Items = t.Items.Select(i => new SalesItemDto
                 {
                     Id = i.Id,
@@ -95,6 +97,8 @@ namespace PharmacyBackend.Service.GetService
                 TotalAmount = transaction.TotalAmount,
                 DiscountAmount = transaction.DiscountAmount,
                 NetAmount = transaction.NetAmount,
+                DiscountId = transaction.DiscountId,
+                DiscountName = transaction.Discount?.DiscountName ?? string.Empty,
                 Items = transaction.Items.Select(i => new SalesItemDto
                 {
                     Id = i.Id,
