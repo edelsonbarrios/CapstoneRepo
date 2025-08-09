@@ -92,6 +92,13 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return product;
         }
+        //Category
+        public async Task<Category> CreateCategoryAsync(Category category)
+        {
+            await _context.Category.AddAsync(category);
+            await _context.SaveChangesAsync();
+            return category;
+        }
 
     }
 }

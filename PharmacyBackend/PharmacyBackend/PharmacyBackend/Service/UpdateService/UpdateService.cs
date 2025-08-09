@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
+using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
@@ -122,6 +123,19 @@ namespace PharmacyBackend.Service.UpdateService
             existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateProductAsync(existing);
+            return true;
+        }
+
+        //Category
+        public async Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto)
+        {
+            var existing = await _getRepo.GetCategoryByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.CategoryName = dto.CategoryName;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateCategoryAsync(existing);
             return true;
         }
     }

@@ -58,18 +58,18 @@ namespace PharmacyBackend.Controllers
         [HttpGet("DiscountAll")]
         public async Task<IActionResult> GetAllDiscountsAsync()
         {
-            var result = await _getService.GetAllDiscountAsync();
-            return Ok(result);
+            var discount = await _getService.GetAllDiscountAsync();
+            return Ok(discount);
         }
 
         // GET: api/Discount/5
         [HttpGet("DiscountId")]
         public async Task<IActionResult> GetDiscountByIdAsync(int id)
         {
-            var result = await _getService.GetDiscountByIdAsync(id);
-            if (result == null)
+            var discount = await _getService.GetDiscountByIdAsync(id);
+            if (discount == null)
                 return NotFound("Discount not found");
-            return Ok(result);
+            return Ok(discount);
         }
 
         //Product
@@ -87,6 +87,25 @@ namespace PharmacyBackend.Controllers
             if (product == null)
                 return NotFound();
             return Ok(product);
+        }
+
+        //Category
+        [HttpGet("CategoryAll")]
+        public async Task<IActionResult> GetAllCategoryAsync()
+        {
+            var Category = await _getService.GetAllCategoryAsync();
+            if (!Category.Any())
+                return NotFound("No categories found.");
+            return Ok(Category);
+        }
+
+        [HttpGet("CategoryId")]
+        public async Task<IActionResult> GetCategoryByIdAsync(int id)
+        {
+            var Category = await _getService.GetCategoryByIdAsync(id);
+            if (Category == null)
+                return NotFound("Category not found.");
+            return Ok(Category);
         }
     }
 }

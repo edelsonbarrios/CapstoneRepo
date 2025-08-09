@@ -52,5 +52,15 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+
+        [HttpDelete("Delete/Category")]
+        public async Task<IActionResult> DeleteCategoryByIdAsync(int id)
+        {
+            var result = await _deleteService.DeleteCategoryByIdAsync(id);
+            if (!result)
+                return NotFound("Category not found or already deleted.");
+            return Ok("Category deleted successfully.");
+        }
+
     }
 }

@@ -58,5 +58,16 @@ namespace PharmacyBackend.Repository.DELETE
             return true;
         }
 
+        //Category
+        public async Task<bool> DeleteCategoryByIdAsync(int id)
+        {
+            var category = await _context.Category.FindAsync(id);
+            if (category == null) 
+                return false;
+
+            _context.Category.Remove(category);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

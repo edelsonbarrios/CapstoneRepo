@@ -16,5 +16,8 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         //Product
         public Task<bool> UpdateProductAsync(Product product);
+
+        //Category
+        public Task<bool> UpdateCategoryAsync(Category category);
     }
 }

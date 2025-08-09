@@ -7,6 +7,7 @@ using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.CategoryDTOs;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -122,6 +123,23 @@ namespace PharmacyBackend.Service.PostService
                 Price = created.Price,
                 Stock = created.Stock,
                 IsActive = created.IsActive
+            };
+        }
+
+        //Category
+        public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto)
+        {
+            var category = new Category
+            {
+                CategoryName = dto.CategoryName
+            };
+
+            var created = await _postRepo.CreateCategoryAsync(category);
+
+            return new CategoryDto
+            {
+                CategoryID = created.CategoryID,
+                CategoryName = created.CategoryName
             };
         }
 

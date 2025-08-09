@@ -5,6 +5,7 @@ using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.CategoryDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -176,6 +177,29 @@ namespace PharmacyBackend.Service.GetService
                 Price = p.Price,
                 Stock = p.Stock,
                 IsActive = p.IsActive
+            };
+        }
+
+        //Category
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoryAsync()
+        {
+            var categories = await _getRepo.GetAllCategoryAsync();
+            return categories.Select(c => new CategoryDto
+            {
+                CategoryID = c.CategoryID,
+                CategoryName = c.CategoryName
+            });
+        }
+
+        public async Task<CategoryDto> GetCategoryByIdAsync(int id)
+        {
+            var c = await _getRepo.GetCategoryByIdAsync(id);
+            if (c == null) return null;
+
+            return new CategoryDto
+            {
+                CategoryID = c.CategoryID,
+                CategoryName = c.CategoryName
             };
         }
 

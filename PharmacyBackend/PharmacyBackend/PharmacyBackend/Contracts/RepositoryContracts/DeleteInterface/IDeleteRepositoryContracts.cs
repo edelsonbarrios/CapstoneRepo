@@ -13,5 +13,8 @@
 
         //Product
         public Task<bool> DeleteProductByIdAsync(int id);
+
+        //Category
+        public Task<bool> DeleteCategoryByIdAsync(int id);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Npgsql.PostgresTypes;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
+using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
@@ -50,8 +51,17 @@ namespace PharmacyBackend.Controllers
         public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductDto dto)
         {
             var result = await _postService.CreateProductAsync(dto);
+
             return Ok(result);
 
         }
+
+        [HttpPost("Category")]
+        public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryDto dto)
+        {
+            var result = await _postService.CreateCategoryAsync(dto);
+            return Ok("Category created successfully.");
+        }
+
     }
 }
