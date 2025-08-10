@@ -30,6 +30,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PharmacyContext>(x => x.UseNpgsql(
     builder.Configuration.GetConnectionString("RacquelDB")));
 
+builder.Services.AddCors(x => x.AddPolicy(name: "RacquelPharmacy", x =>
+{
+    x.AllowAnyOrigin()
+     .AllowAnyHeader()
+     .AllowAnyMethod();
+}));
+
 #region AddScopes
 builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddScoped<IGetRepositoryContracts, GetRepository>();
@@ -52,6 +59,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("RacquelPharmacy");
 
 app.UseAuthorization();
 

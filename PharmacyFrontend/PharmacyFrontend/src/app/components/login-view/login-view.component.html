@@ -1,1 +1,18 @@
-<p>login-view works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Racquel LogIn</title>
+</head>
+<body>
+  <header>
+    <h1>LOG INNN!!!!</h1>
+  </header>
+  <main>
+    <input type="text" [(ngModel)]="userName" placeholder="Username">
+    <input type="text" [(ngModel)]="password" placeholder="Password">
+    <button (click)="Authenticate()">Log In</button>
+  </main>
+</body>
+</html>
