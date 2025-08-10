@@ -3,16 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Racquel LogIn</title>
+  <title>Login</title>
 </head>
 <body>
-  <header>
-    <h1>LOG INNN!!!!</h1>
-  </header>
-  <main>
-    <input type="text" [(ngModel)]="userName" placeholder="Username">
-    <input type="text" [(ngModel)]="password" placeholder="Password">
-    <button (click)="Authenticate()">Log In</button>
-  </main>
+  <div class="login-container">
+    
+    <!-- Left Blue Panel -->
+    <div class="left-panel"></div>
+
+    <!-- Right White Panel -->
+    <div class="main-panel">
+      <h2 class="login-title">Login</h2>
+      <h1 class="welcome-text">Welcome back!</h1>
+      <p class="subtitle">Please login to your account</p>
+
+      <form class="login-form">
+        <label>Username</label>
+        <input type="text" name="email" placeholder="Enter your email" [(ngModel)]="userName">
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" [(ngModel)]="password">
+
+        <button type="submit" class="login-btn" (click)="Authenticate()">Login</button>
+      </form>
+    </div>
+
+  </div>
 </body>
 </html>
