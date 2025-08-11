@@ -100,5 +100,48 @@ namespace PharmacyBackend.Repository.POST
             return category;
         }
 
+        //ItemDataControl
+
+        //Brand
+        public async Task<Brand> CreateBrandAsync(Brand brand)
+        {
+            await _context.Brand.AddAsync(brand);
+            await _context.SaveChangesAsync();
+            return brand;
+        }
+
+        //Generic 
+        public async Task<Generic> CreateGenericAsync(Generic generic)
+        {
+            await _context.Generic.AddAsync(generic);
+            await _context.SaveChangesAsync();
+            return generic;
+        }
+
+        //Formulation
+
+        public async Task<Formulation> CreateFormulationAsync(Formulation formulation)
+        {
+            await _context.Formulation.AddAsync(formulation);
+            await _context.SaveChangesAsync();
+            return formulation;
+        }
+
+        //Classification
+        public async Task<Classification> CreateClassificationAsync(Classification classification)
+        {
+            await _context.Classification.AddAsync(classification);
+            await _context.SaveChangesAsync();
+            return classification;
+        }
+
+        //Type
+        public async Task<TypeModel> CreateTypeModelAsync(TypeModel typeModel)
+        {
+            await _context.TypeModel.AddAsync(typeModel);
+            await _context.SaveChangesAsync();
+            return typeModel;
+        }
+
     }
 }

@@ -57,5 +57,52 @@ namespace PharmacyBackend.Service.DeleteService
                 return false;
             return true;
         }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<bool> DeleteBrandByIdAsync(int id)
+        {
+            var deleteBrand = await _deleteRepo.DeleteBrandByIdAsync(id);
+            if (!deleteBrand)
+                return false;
+            return true;
+        }
+
+        //Generic
+        public async Task<bool> DeleteGenericByIdAsync(int id)
+        {
+            var deleteGeneric = await _deleteRepo.DeleteGenericByIdAsync(id);
+            if (!deleteGeneric)
+                return false;
+            return true;
+        }
+
+        //Formulation
+        public async Task<bool> DeleteFormulationByIdAsync(int id)
+        {
+            var deleteFormulation = await _deleteRepo.DeleteFormulationByIdAsync(id);
+            if (!deleteFormulation)
+                return false;
+            return true;
+        }
+
+        //Classification
+        public async Task<bool> DeleteClassificationByIdAsync(int id)
+        {
+            var deleteClassification = await _deleteRepo.DeleteClassificationByIdAsync(id);
+            if (!deleteClassification)
+                return false;
+            return true;
+        }
+
+        //Type
+        public async Task<bool> DeleteTypeModelByIdAsync(int id)
+        {
+            var deleteType = await _deleteRepo.DeleteTypeModelByIdAsync(id);
+            if (!deleteType)
+                return false;
+            return true;
+        }
     }
 }

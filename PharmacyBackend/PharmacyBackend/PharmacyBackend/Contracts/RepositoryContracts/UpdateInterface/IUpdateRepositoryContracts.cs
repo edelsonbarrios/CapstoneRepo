@@ -19,5 +19,22 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         //Category
         public Task<bool> UpdateCategoryAsync(Category category);
+
+        //ItemDataControl
+
+        //Brand
+        public Task<bool> UpdateBrandAsync(Brand brand);
+
+        //Generic
+        public Task<bool> UpdateGenericAsync(Generic generic);
+
+        //Formulation
+        public Task<bool> UpdateFormulationAsync(Formulation formulation);
+
+        //Classification
+        public Task<bool> UpdateClassificationAsync(Classification classification);
+
+        //TypeModel
+        public Task<bool> UpdateTypeModelAsync(TypeModel typeModel);
     }
 }

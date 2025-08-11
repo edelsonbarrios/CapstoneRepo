@@ -75,5 +75,57 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Category.FindAsync(id);
         }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<IEnumerable<Brand>> GetAllBrandAsync()
+        {
+            return await _context.Brand.ToListAsync();
+        }
+        public async Task<Brand> GetBrandByIdAsync(int id)
+        {
+            return await _context.Brand.FindAsync(id);
+        }
+
+        //Generic
+        public async Task<IEnumerable<Generic>> GetAllGenericAsync()
+        {
+            return await _context.Generic.ToListAsync();
+        }
+        public async Task<Generic> GetGenericByIdAsync(int id)
+        {
+            return await _context.Generic.FindAsync(id);
+        }
+
+        //Formulation
+        public async Task<IEnumerable<Formulation>> GetAllFormulationAsync()
+        {
+            return await _context.Formulation.ToListAsync();
+        }
+        public async Task<Formulation> GetFormulationByIdAsync(int id)
+        {
+            return await _context.Formulation.FindAsync(id);
+        }
+
+        //Classification
+        public async Task<IEnumerable<Classification>> GetAllClassificationAsync()
+        {
+            return await _context.Classification.ToListAsync();
+        }
+        public async Task<Classification> GetClassificationByIdAsync(int id)
+        {
+            return await _context.Classification.FindAsync(id);
+        }
+
+        //Type
+        public async Task<IEnumerable<TypeModel>> GetAllTypeModelAsync()
+        {
+            return await _context.TypeModel.ToListAsync();
+        }
+        public async Task<TypeModel> GetTypeModelByIdAsync(int id)
+        {
+            return await _context.TypeModel.FindAsync(id);
+        }
     }
 }

@@ -24,5 +24,27 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         //Category
         public Task<IEnumerable<Category>> GetAllCategoryAsync();
         public Task<Category> GetCategoryByIdAsync(int id);
+
+        //Item Data Control
+
+        //Brand
+        public Task<IEnumerable<Brand>> GetAllBrandAsync();
+        public Task<Brand> GetBrandByIdAsync(int id);
+
+        //Generic
+        public Task<IEnumerable<Generic>> GetAllGenericAsync();
+        public Task<Generic> GetGenericByIdAsync(int id);
+
+        //Formulation
+        public Task<IEnumerable<Formulation>> GetAllFormulationAsync();
+        public Task<Formulation> GetFormulationByIdAsync(int id);
+
+        //Classification
+        public Task<IEnumerable<Classification>> GetAllClassificationAsync();
+        public Task<Classification> GetClassificationByIdAsync(int id);
+
+        //Types
+        public Task<IEnumerable<TypeModel>> GetAllTypeModelAsync();
+        public Task<TypeModel> GetTypeModelByIdAsync(int id);
     }
 }

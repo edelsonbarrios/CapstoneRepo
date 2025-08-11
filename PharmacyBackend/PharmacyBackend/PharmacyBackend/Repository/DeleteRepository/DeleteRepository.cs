@@ -69,5 +69,67 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<bool> DeleteBrandByIdAsync(int id)
+        {
+            var brand = await _context.Brand.FindAsync(id);
+            if (brand == null)
+                return false;
+
+            _context.Brand.Remove(brand);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //Generic
+        public async Task<bool> DeleteGenericByIdAsync(int id)
+        {
+            var generic = await _context.Generic.FindAsync(id);
+            if (generic == null)
+                return false;
+
+            _context.Generic.Remove(generic);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //Formulation
+        public async Task<bool> DeleteFormulationByIdAsync(int id)
+        {
+            var formulation = await _context.Formulation.FindAsync(id);
+            if (formulation == null)
+                return false;
+
+            _context.Formulation.Remove(formulation);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //Classififcation
+        public async Task<bool> DeleteClassificationByIdAsync(int id)
+        {
+            var classification = await _context.Classification.FindAsync(id);
+            if (classification == null)
+                return false;
+
+            _context.Classification.Remove(classification);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //Type
+        public async Task<bool> DeleteTypeModelByIdAsync(int id)
+        {
+            var typemodel= await _context.TypeModel.FindAsync(id);
+            if (typemodel == null)
+                return false;
+
+            _context.TypeModel.Remove(typemodel);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

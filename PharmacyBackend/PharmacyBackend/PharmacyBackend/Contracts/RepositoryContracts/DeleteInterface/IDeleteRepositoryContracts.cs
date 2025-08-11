@@ -16,5 +16,22 @@
 
         //Category
         public Task<bool> DeleteCategoryByIdAsync(int id);
+
+        //ItemDataControl
+
+        //Brand
+        public Task<bool> DeleteBrandByIdAsync(int id);
+
+        //Generic
+        public Task<bool> DeleteGenericByIdAsync(int id);
+
+        //Formulation
+        public Task<bool> DeleteFormulationByIdAsync(int id);
+
+        //Classification
+        public Task<bool> DeleteClassificationByIdAsync(int id);
+
+        //Types
+        public Task<bool> DeleteTypeModelByIdAsync(int id);
     }
 }

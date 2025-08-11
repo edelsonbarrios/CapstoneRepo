@@ -5,6 +5,7 @@ using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 
@@ -60,8 +61,49 @@ namespace PharmacyBackend.Controllers
         public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryDto dto)
         {
             var result = await _postService.CreateCategoryAsync(dto);
-            return Ok("Category created successfully.");
+            return Ok(result);
         }
 
+        //ItemDataControl
+
+        //Brand
+        [HttpPost("Brand")]
+        public async Task<IActionResult> CreateBrandAsync([FromBody] CreateBrandDto dto)
+        {
+            var result = await _postService.CreateBrandAsync(dto);
+            return Ok(result);
+        }
+
+        //Generic
+        [HttpPost("Generic")]
+        public async Task<IActionResult> CreateGenericAsync([FromBody] CreateGenericDto dto)
+        {
+            var result = await _postService.CreateGenericAsync(dto);
+            return Ok(result);
+        }
+
+        //Formulation
+        [HttpPost("Formulation")]
+        public async Task<IActionResult> CreateFormulationAsync([FromBody] CreateFormulationDto dto)
+        {
+            var result = await _postService.CreateFormulationAsync(dto);
+            return Ok(result);
+        }
+
+        //Classification
+        [HttpPost("Classification")]
+        public async Task<IActionResult> CreateClassificationAsync([FromBody] CreateClassificationDto dto)
+        {
+            var result = await _postService.CreateClassificationAsync(dto);
+            return Ok(result);
+        }
+
+        //Type
+        [HttpPost("Type")]
+        public async Task<IActionResult> CreateTypeModelAsync([FromBody] CreateTypeModelDto dto)
+        {
+            var result = await _postService.CreateTypeModelAsync(dto);
+            return Ok(result);
+        }
     }
 }

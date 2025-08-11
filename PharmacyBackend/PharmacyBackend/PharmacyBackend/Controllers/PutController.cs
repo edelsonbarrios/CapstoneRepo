@@ -5,6 +5,7 @@ using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 
@@ -67,6 +68,58 @@ namespace PharmacyBackend.Controllers
             if (!success)
                 return NotFound("Category not found or update failed.");
             return Ok("Category updated successfully.");
+        }
+
+        //ItemDataControl
+
+        //Brand
+        [HttpPut("Update/Brand")]
+        public async Task<IActionResult> UpdateBrandAsync(int id, [FromBody] UpdateBrandDto dto)
+        {
+            var success = await _updateService.UpdateBrandAsync(id, dto);
+            if (!success) 
+                return NotFound();
+            return NoContent();
+        }
+
+        //Generic
+        [HttpPut("Update/Generic")]
+        public async Task<IActionResult> UpdateGenericAsync(int id, [FromBody] UpdateGenericDto dto)
+        {
+            var success = await _updateService.UpdateGenericAsync(id, dto);
+            if (!success)
+                return NotFound();
+            return NoContent();
+        }
+
+        //Formulation
+        [HttpPut("Update/Formulation")]
+        public async Task<IActionResult> UpdateFormulationAsync(int id, [FromBody] UpdateFormulationDto dto)
+        {
+            var success = await _updateService.UpdateFormulationAsync(id, dto);
+            if (!success)
+                return NotFound();
+            return NoContent();
+        }
+
+        //Classification
+        [HttpPut("Update/Classification")]
+        public async Task<IActionResult> UpdateClassificationAsync(int id, [FromBody] UpdateClassificationDto dto)
+        {
+            var success = await _updateService.UpdateClassificationAsync(id, dto);
+            if (!success)
+                return NotFound();
+            return NoContent();
+        }
+
+        //Type
+        [HttpPut("Update/Type")]
+        public async Task<IActionResult> UpdateTypeModelAsync(int id, [FromBody] UpdateTypeModelDto dto)
+        {
+            var success = await _updateService.UpdateTypeModelAsync(id, dto);
+            if (!success)
+                return NotFound();
+            return NoContent();
         }
     }
 }

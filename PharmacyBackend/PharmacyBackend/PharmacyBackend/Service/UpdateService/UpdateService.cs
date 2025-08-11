@@ -5,6 +5,7 @@ using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
@@ -136,6 +137,68 @@ namespace PharmacyBackend.Service.UpdateService
             existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateCategoryAsync(existing);
+            return true;
+        }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto)
+        {
+            var existing = await _getRepo.GetBrandByIdAsync(id);
+            if (existing == null) return false;
+            
+            existing.BrandName = dto.BrandName;
+
+            await _updateRepo.UpdateBrandAsync(existing);
+            return true;
+        }
+
+        //Generic
+        public async Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto)
+        {
+            var existing = await _getRepo.GetGenericByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.GenericName = dto.GenericName;
+
+            await _updateRepo.UpdateGenericAsync(existing);
+            return true;
+        }
+
+        //Formulation
+        public async Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto)
+        {
+            var existing = await _getRepo.GetFormulationByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.FormulationName = dto.FormulationName;
+
+            await _updateRepo.UpdateFormulationAsync(existing);
+            return true;
+        }
+
+        //Classification
+        public async Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto)
+        {
+            var existing = await _getRepo.GetClassificationByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.ClassificationName = dto.ClassificationName;
+
+            await _updateRepo.UpdateClassificationAsync(existing);
+            return true;
+        }
+
+        //Type
+        public async Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto)
+        {
+            var existing = await _getRepo.GetTypeModelByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.TypeName = dto.TypeName;
+
+            await _updateRepo.UpdateTypeModelAsync(existing);
             return true;
         }
     }

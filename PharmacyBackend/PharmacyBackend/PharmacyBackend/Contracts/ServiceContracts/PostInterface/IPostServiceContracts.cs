@@ -6,6 +6,7 @@ using PharmacyBackend.DTOs.DiscountDTOs;
 using System.Threading.Tasks;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 {
@@ -27,5 +28,21 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         //Category
         public Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto);
+
+        //ItemDataControl
+
+        //Brand
+        public Task<BrandDto> CreateBrandAsync(CreateBrandDto dto);
+
+        //Generic
+        public Task<GenericDto> CreateGenericAsync(CreateGenericDto dto);
+
+        //Formulation
+        public Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto);
+
+        //Classification
+        public Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto);
+        //Type
+        public Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto);
     }
 }

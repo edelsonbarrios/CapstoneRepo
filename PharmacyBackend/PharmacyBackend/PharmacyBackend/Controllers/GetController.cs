@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
 
 namespace PharmacyBackend.Controllers
@@ -106,6 +107,102 @@ namespace PharmacyBackend.Controllers
             if (Category == null)
                 return NotFound("Category not found.");
             return Ok(Category);
+        }
+
+        //ItemDataControl
+        //Brand
+        [HttpGet("BrandAll")]
+        public async Task<IActionResult> GetAllBrandAsync()
+        {
+            var brand = await _getService.GetAllBrandAsync();
+            if (!brand.Any())
+                return NotFound("No Brand found.");
+            return Ok(brand);
+        }
+
+        [HttpGet("BrandId")]
+        public async Task<IActionResult> GetBrandByIdAsync(int id)
+        {
+            var Brand = await _getService.GetBrandByIdAsync(id);
+            if (Brand == null) 
+                return NotFound("Brand Not Found");
+            return Ok(Brand);
+        }
+
+        //Generic
+        [HttpGet("GenericAll")]
+        public async Task<IActionResult> GetAllGenericAsync()
+        {
+            var generic = await _getService.GetAllGenericAsync();
+            if (!generic.Any())
+                return NotFound("No Brand found.");
+            return Ok(generic);
+        }
+
+        [HttpGet("GenericId")]
+        public async Task<IActionResult> GetGenericByIdAsync(int id)
+        {
+            var generic = await _getService.GetBrandByIdAsync(id);
+            if (generic == null)
+                return NotFound("Brand Not Found");
+            return Ok(generic);
+        }
+
+        //Formulation
+        [HttpGet("FormulationAll")]
+        public async Task<IActionResult> GetAllFormulationAsync()
+        {
+            var formulation = await _getService.GetAllFormulationAsync();
+            if (!formulation.Any())
+                return NotFound("No Brand found.");
+            return Ok(formulation);
+        }
+
+        [HttpGet("FormulationId")]
+        public async Task<IActionResult> GetFormulationByIdAsync(int id)
+        {
+            var formulation = await _getService.GetFormulationByIdAsync(id);
+            if (formulation == null)
+                return NotFound("Brand Not Found");
+            return Ok(formulation);
+        }
+
+        //Classification
+        [HttpGet("ClassificationAll")]
+        public async Task<IActionResult> GetAllClassificationAsync()
+        {
+            var classification= await _getService.GetAllClassificationAsync();
+            if (!classification.Any())
+                return NotFound("No Brand found.");
+            return Ok(classification);
+        }
+
+        [HttpGet("ClassificationId")]
+        public async Task<IActionResult> GetClassificationByIdAsync(int id)
+        {
+            var classification = await _getService.GetClassificationByIdAsync(id);
+            if (classification == null)
+                return NotFound("Brand Not Found");
+            return Ok(classification);
+        }
+
+        //Type
+        [HttpGet("TypeAll")]
+        public async Task<IActionResult> GetAllTypeModelAsync()
+        {
+            var type = await _getService.GetAllTypeModelAsync();
+            if (!type.Any())
+                return NotFound("No Brand found.");
+            return Ok(type);
+        }
+
+        [HttpGet("TypeId")]
+        public async Task<IActionResult> GetTypeModelByIdAsync(int id)
+        {
+            var type = await _getService.GetTypeModelByIdAsync(id);
+            if (type == null)
+                return NotFound("Brand Not Found");
+            return Ok(type);
         }
     }
 }

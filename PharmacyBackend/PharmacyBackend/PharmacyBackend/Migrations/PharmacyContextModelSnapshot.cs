@@ -50,6 +50,22 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.Brand", b =>
+                {
+                    b.Property<int>("BrandID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BrandID"));
+
+                    b.Property<string>("BrandName")
+                        .HasColumnType("text");
+
+                    b.HasKey("BrandID");
+
+                    b.ToTable("Brand");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesItem", b =>
                 {
                     b.Property<int>("Id")
@@ -134,6 +150,22 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.Classification", b =>
+                {
+                    b.Property<int>("ClassificationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ClassificationID"));
+
+                    b.Property<string>("ClassificationName")
+                        .HasColumnType("text");
+
+                    b.HasKey("ClassificationID");
+
+                    b.ToTable("Classification");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Discount", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +233,38 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.Formulation", b =>
+                {
+                    b.Property<int>("FormulationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FormulationID"));
+
+                    b.Property<string>("FormulationName")
+                        .HasColumnType("text");
+
+                    b.HasKey("FormulationID");
+
+                    b.ToTable("Formulation");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Generic", b =>
+                {
+                    b.Property<int>("GenericID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GenericID"));
+
+                    b.Property<string>("GenericName")
+                        .HasColumnType("text");
+
+                    b.HasKey("GenericID");
+
+                    b.ToTable("Generic");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
@@ -244,7 +308,17 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("ProductID");
 
+                    b.HasIndex("BrandID");
+
                     b.HasIndex("CategoryID");
+
+                    b.HasIndex("ClassificationID");
+
+                    b.HasIndex("FormulationID");
+
+                    b.HasIndex("GenericID");
+
+                    b.HasIndex("TypeID");
 
                     b.ToTable("Product");
                 });
@@ -263,6 +337,22 @@ namespace PharmacyBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.TypeModel", b =>
+                {
+                    b.Property<int>("TypeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TypeID"));
+
+                    b.Property<string>("TypeName")
+                        .HasColumnType("text");
+
+                    b.HasKey("TypeID");
+
+                    b.ToTable("TypeModel");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Account", b =>
@@ -319,11 +409,53 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
                 {
-                    b.HasOne("PharmacyBackend.Models.Category", null)
-                        .WithMany("Product")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("PharmacyBackend.Models.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Classification", "Classification")
+                        .WithMany()
+                        .HasForeignKey("ClassificationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Formulation", "Formulation")
+                        .WithMany()
+                        .HasForeignKey("FormulationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Generic", "Generic")
+                        .WithMany()
+                        .HasForeignKey("GenericID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.TypeModel", "TypeModel")
+                        .WithMany()
+                        .HasForeignKey("TypeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Classification");
+
+                    b.Navigation("Formulation");
+
+                    b.Navigation("Generic");
+
+                    b.Navigation("TypeModel");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesTransaction", b =>
@@ -333,7 +465,7 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.Category", b =>
                 {
-                    b.Navigation("Product");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>

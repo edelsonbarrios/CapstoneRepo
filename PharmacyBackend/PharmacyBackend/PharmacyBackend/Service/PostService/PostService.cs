@@ -8,6 +8,7 @@ using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -140,6 +141,89 @@ namespace PharmacyBackend.Service.PostService
             {
                 CategoryID = created.CategoryID,
                 CategoryName = created.CategoryName
+            };
+        }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<BrandDto> CreateBrandAsync(CreateBrandDto dto)
+        {
+            var brand = new Brand 
+            { 
+                BrandName = dto.BrandName
+            };
+            var created = await _postRepo.CreateBrandAsync(brand);
+
+            return new BrandDto 
+            { 
+                BrandID = created.BrandID, 
+                BrandName = created.BrandName
+            };
+        }
+
+        //Generic
+
+        public async Task<GenericDto> CreateGenericAsync(CreateGenericDto dto)
+        {
+            var generic = new Generic
+            {
+                GenericName = dto.GenericName
+            };
+            var created = await _postRepo.CreateGenericAsync(generic);
+
+            return new GenericDto
+            {
+                GenericID = created.GenericID,
+                GenericName = created.GenericName
+            };
+        }
+
+        //Formulation
+        public async Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto)
+        {
+            var formulation = new Formulation
+            {
+                FormulationName = dto.FormulationName
+            };
+            var created = await _postRepo.CreateFormulationAsync(formulation);
+
+            return new FormulationDto
+            {
+                FormulationID = created.FormulationID,
+                FormulationName = created.FormulationName
+            };
+        }
+
+        //Classification
+        public async Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto)
+        {
+            var classification = new Classification
+            {
+                ClassificationName = dto.ClassificationName
+            };
+            var created = await _postRepo.CreateClassificationAsync(classification);
+
+            return new ClassificationDto
+            {
+                ClassificationID = created.ClassificationID,
+                ClassificationName = created.ClassificationName
+            };
+        }
+
+        //Type
+        public async Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto)
+        {
+            var type = new TypeModel
+            {
+                TypeName = dto.TypeName
+            };
+            var created = await _postRepo.CreateTypeModelAsync(type);
+
+            return new TypeModelDto
+            {
+                TypeID = created.TypeID,
+                TypeName = created.TypeName
             };
         }
 

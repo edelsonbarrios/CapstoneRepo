@@ -1,4 +1,5 @@
 ﻿using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -22,6 +23,23 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 
         //Category
         public Task<Category> CreateCategoryAsync(Category category);
+
+        //ItemDataControl
+
+        //Brand
+        public Task<Brand> CreateBrandAsync(Brand brand);
+
+        //Generic
+        public Task<Generic> CreateGenericAsync(Generic generic);
+
+        //Formulation
+        public Task<Formulation> CreateFormulationAsync(Formulation formulation);
+
+        //Classification
+        public Task<Classification> CreateClassificationAsync(Classification classification);
+
+        //Types
+        public Task<TypeModel> CreateTypeModelAsync(TypeModel typeModel);
     }
 }
 
