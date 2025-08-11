@@ -1,82 +1,80 @@
-body {
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  background: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+$light-blue-color: #006DBA;
+$grey-color: #615E5E;
+
+html {
   height: 100vh;
+  width: 100%;
+  background-image: url('/background-login.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.login-container {
+body {
+  height: 100%;
+  width: 40%;
   display: flex;
-  width: 1178px;
-  height: 645px;
-  border-radius: 15px;
-  overflow: hidden;
-  background: white;
+  justify-content: center;
 
-  .left-panel {
-    background: #6198FF;
-    flex: 0 0 751px;
-  }
-
-  .main-panel {
-    flex: 1;
-    padding: 40px;
-    position: relative;
-
-    .login-title {
-      font-weight: 600;
-      font-size: 20px;
-      color: #006DBA;
-      margin-bottom: 20px;
+  main {
+    margin-top: 10rem;
+    font-family: var(--ff-inter);
+    h1 {
+      color: $light-blue-color;
     }
 
-    .welcome-text {
-      font-weight: 900;
-      font-size: 40px;
-      color: #006DBA;
-      margin: 20px 0 5px;
+    .header-wrapper {
+      margin-block: 1.25rem;
+      h1 {
+        font-size: var(--fs-super-large);
+        font-weight: var(--fw-super-heavy);
+        color: $light-blue-color;
+      }
+      h2 {
+        color: $grey-color;
+        font-size: var(--fs-regular);
+      }
     }
 
-    .subtitle {
-      font-weight: 400;
-      font-size: 14px;
-      color: #615E5E;
-      margin-bottom: 30px;
-    }
-
-    .login-form {
+    .input-wrapper {
+      margin-bottom: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-
-      label {
-        font-size: 14px;
-        color: #615E5E;
-      }
+      align-items: flex-start;
+      gap: 1rem;
 
       input {
+        padding-block: 1rem;
+        font-size: 1.25rem;
         border: none;
-        border-bottom: 1px solid #000;
-        padding: 8px 4px;
-        font-size: 14px;
+        border-bottom: 2px solid black;
+        background: transparent;
         outline: none;
+        width: 100%;
       }
+    }
 
-      .login-btn {
-        background: #006DBA;
-        color: #fff;
-        font-weight: 800;
-        font-size: 14px;
-        padding: 10px;
+    .button-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+      button {
+        background-color: $light-blue-color;
+        color: white;
         border: none;
+        padding: 8px 4rem;
+        font-size: 1rem;
+        font-weight: var(--fw-super-heavy);
         border-radius: 5px;
+        transition: opacity 0.15s;
         cursor: pointer;
-
         &:hover {
-          background: darken(#006DBA, 10%);
+          opacity: 0.7;
+        }
+        &:active {
+          opacity: 0.5;
         }
       }
     }
