@@ -3,6 +3,11 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Models;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.DTOs.DiscountDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -52,6 +57,7 @@ namespace PharmacyBackend.Service.GetService
             return modifAccounts;
         }
 
+        //employee
         public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()
         {
             var employees = await _getRepo.GetAllEmployeesAsync();
@@ -94,5 +100,270 @@ namespace PharmacyBackend.Service.GetService
             };
             return modifEmployee;
         }
+
+        //sales
+
+        public async Task<List<SalesTransactionDto>> GetAllSalesTransactionsAsync()
+        {
+            var transactions = await _getRepo.GetAllSalesTransactionsAsync();
+            return transactions.Select(t => new SalesTransactionDto
+            {
+                Id = t.Id,
+                TransactionDate = t.TransactionDate,
+                InvoiceNumber = t.InvoiceNumber,
+                TotalAmount = t.TotalAmount,
+                DiscountAmount = t.DiscountAmount,
+                NetAmount = t.NetAmount,
+                DiscountId = t.DiscountId,
+                DiscountName = t.Discount?.DiscountName ?? string.Empty,
+                Items = t.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            }).ToList();
+        }
+
+        public async Task<SalesTransactionDto> GetSalesTransactionByIdAsync(int id)
+        {
+            var transaction = await _getRepo.GetSalesTransactionByIdAsync(id);
+            if (transaction is null) 
+                return null;
+            return new SalesTransactionDto
+            {
+                Id = transaction.Id,
+                TransactionDate = transaction.TransactionDate,
+                InvoiceNumber = transaction.InvoiceNumber,
+                TotalAmount = transaction.TotalAmount,
+                DiscountAmount = transaction.DiscountAmount,
+                NetAmount = transaction.NetAmount,
+                DiscountId = transaction.DiscountId,
+                DiscountName = transaction.Discount?.DiscountName ?? string.Empty,
+                Items = transaction.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            };
+        }
+
+        //Discount
+        public async Task<IEnumerable<DiscountDto>> GetAllDiscountAsync()
+        {
+            var discounts = await _getRepo.GetAllDiscountAsync();
+            return discounts.Select(d => new DiscountDto
+            {
+                Id = d.Id,
+                DiscountName = d.DiscountName,
+                DiscountRate = d.DiscountRate
+            });
+        }
+
+        public async Task<DiscountDto?> GetDiscountByIdAsync(int id)
+        {
+            var d = await _getRepo.GetDiscountByIdAsync(id);
+            if (d == null) 
+               return null;
+            return new DiscountDto
+            {
+                Id = d.Id,
+                DiscountName = d.DiscountName,
+                DiscountRate = d.DiscountRate
+            };
+        }
+
+        //Product
+        public async Task<IEnumerable<ProductDto>> GetAllProductAsync()
+        {
+            var products = await _getRepo.GetAllProductAsync();
+            return products.Select(p => new ProductDto
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                CategoryID = p.CategoryID,
+                BrandID = p.BrandID,
+                GenericID = p.GenericID,
+                FormulationID = p.FormulationID,
+                ClassificationID = p.ClassificationID,
+                TypeID = p.TypeID,
+                SupplierID = p.SupplierID,
+                Price = p.Price,
+                Stock = p.Stock,
+                IsActive = p.IsActive
+            });
+        }
+
+        public async Task<ProductDto> GetProductByIdAsync(int id)
+        {
+            var p = await _getRepo.GetProductByIdAsync(id);
+            if (p == null)
+                return null;
+            return new ProductDto
+            {
+                ProductID = p.ProductID,
+                ProductName = p.ProductName,
+                CategoryID = p.CategoryID,
+                BrandID = p.BrandID,
+                GenericID = p.GenericID,
+                FormulationID = p.FormulationID,
+                ClassificationID = p.ClassificationID,
+                TypeID = p.TypeID,
+                SupplierID = p.SupplierID,
+                Price = p.Price,
+                Stock = p.Stock,
+                IsActive = p.IsActive
+            };
+        }
+
+        //Category
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoryAsync()
+        {
+            var categories = await _getRepo.GetAllCategoryAsync();
+            return categories.Select(c => new CategoryDto
+            {
+                CategoryID = c.CategoryID,
+                CategoryName = c.CategoryName
+            });
+        }
+
+        public async Task<CategoryDto> GetCategoryByIdAsync(int id)
+        {
+            var c = await _getRepo.GetCategoryByIdAsync(id);
+            if (c == null) 
+                return null;
+            return new CategoryDto
+            {
+                CategoryID = c.CategoryID,
+                CategoryName = c.CategoryName
+            };
+        }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<IEnumerable<BrandDto>> GetAllBrandAsync()
+        {
+            var brand = await _getRepo.GetAllBrandAsync();
+            return brand.Select(b => new BrandDto
+            {
+                BrandID = b.BrandID,
+                BrandName = b.BrandName
+            });
+        }
+
+        public async Task<BrandDto?> GetBrandByIdAsync(int id)
+        {
+            var b = await _getRepo.GetBrandByIdAsync(id);
+            if (b == null) 
+                return null;
+            return new BrandDto 
+            { 
+                BrandID = b.BrandID, 
+                BrandName = b.BrandName
+            };
+        }
+
+        //Generic
+
+        public async Task<IEnumerable<GenericDto>> GetAllGenericAsync()
+        {
+            var generic = await _getRepo.GetAllGenericAsync();
+            return generic.Select(g => new GenericDto
+            {
+                GenericID = g.GenericID,
+                GenericName = g.GenericName
+            });
+        }
+
+        public async Task<GenericDto?> GetGenericByIdAsync(int id)
+        {
+            var g = await _getRepo.GetGenericByIdAsync(id);
+            if (g == null) 
+                return null;
+            return new GenericDto
+            {
+                GenericID = g.GenericID,
+                GenericName = g.GenericName
+            };
+        }
+
+        //Formulation
+        public async Task<IEnumerable<FormulationDto>> GetAllFormulationAsync()
+        {
+            var Formulation = await _getRepo.GetAllFormulationAsync();
+            return Formulation.Select(f => new FormulationDto
+            {
+                FormulationID = f.FormulationID,
+                FormulationName = f.FormulationName
+            });
+        }
+
+        public async Task<FormulationDto?> GetFormulationByIdAsync(int id)
+        {
+            var f = await _getRepo.GetFormulationByIdAsync(id);
+            if (f == null)
+                return null;
+            return new FormulationDto
+            {
+                FormulationID = f.FormulationID,
+                FormulationName = f.FormulationName
+            };
+        }
+
+        //Classification
+        public async Task<IEnumerable<ClassificationDto>> GetAllClassificationAsync()
+        {
+            var classification = await _getRepo.GetAllClassificationAsync();
+            return classification.Select(c => new ClassificationDto
+            {
+                ClassificationID = c.ClassificationID,
+                ClassificationName = c.ClassificationName
+            });
+        }
+
+        public async Task<ClassificationDto?> GetClassificationByIdAsync(int id)
+        {
+            var c = await _getRepo.GetClassificationByIdAsync(id);
+            if (c == null)
+                return null;
+            return new ClassificationDto
+            {
+                ClassificationID = c.ClassificationID,
+                ClassificationName = c.ClassificationName
+            };
+        }
+
+        //Type
+        public async Task<IEnumerable<TypeModelDto>> GetAllTypeModelAsync()
+        {
+            var type = await _getRepo.GetAllTypeModelAsync();
+            return type.Select(t => new TypeModelDto
+            {
+                TypeID = t.TypeID,
+                TypeName = t.TypeName
+            });
+        }
+
+        public async Task<TypeModelDto?> GetTypeModelByIdAsync(int id)
+        {
+            var t = await _getRepo.GetTypeModelByIdAsync(id);
+            if (t == null)
+                return null;
+            return new TypeModelDto
+            {
+                TypeID = t.TypeID,
+                TypeName = t.TypeName
+            };
+        }
+
     }
 }
+

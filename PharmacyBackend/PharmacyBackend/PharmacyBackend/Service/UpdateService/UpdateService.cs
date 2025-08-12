@@ -5,6 +5,12 @@ using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.Helper;
+using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.DiscountDTOs;
+using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using System.Security.Principal;
 
@@ -83,6 +89,141 @@ namespace PharmacyBackend.Service.UpdateService
             var updateEmployee = await _updateRepo.UpdateEmployeeAsync(employeeToUpdate);
             if (!updateEmployee)
                 return false;
+            return true;
+        }
+
+        //sales 
+        public async Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto)
+        {
+            var existing = await _getRepo.GetSalesTransactionByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.DiscountAmount = dto.DiscountAmount;
+
+            foreach (var updatedItem in dto.Items)
+            {
+                var item = existing.Items.FirstOrDefault(i => i.Id == updatedItem.Id);
+                if (item != null)
+                {
+                    item.Quantity = updatedItem.Quantity;
+                    item.UnitPrice = updatedItem.UnitPrice;
+                    item.Subtotal = updatedItem.Quantity * updatedItem.UnitPrice;
+                }
+            }
+
+            existing.TotalAmount = existing.Items.Sum(i => i.Subtotal);
+            existing.NetAmount = existing.TotalAmount - existing.DiscountAmount;
+
+            return await _updateRepo.UpdateSalesTransactionAsync(existing);
+        }
+
+        //Discount
+        public async Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto)
+        {
+            var existing = await _getRepo.GetDiscountByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.DiscountName = dto.DiscountName;
+            existing.DiscountRate = dto.DiscountRate;
+
+            await _updateRepo.UpdateDiscountAsync(existing);
+            return true;
+        }
+
+        //Product
+        public async Task<bool> UpdateProductAsync(int id, UpdateProductDto dto)
+        {
+            var existing = await _getRepo.GetProductByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.ProductName = dto.ProductName;
+            existing.CategoryID = dto.CategoryID;
+            existing.BrandID = dto.BrandID;
+            existing.GenericID = dto.GenericID;
+            existing.FormulationID = dto.FormulationID;
+            existing.ClassificationID = dto.ClassificationID;
+            existing.TypeID = dto.TypeID;
+            existing.SupplierID = dto.SupplierID;
+            existing.Price = dto.Price;
+            existing.Stock = dto.Stock;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateProductAsync(existing);
+            return true;
+        }
+
+        //Category
+        public async Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto)
+        {
+            var existing = await _getRepo.GetCategoryByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.CategoryName = dto.CategoryName;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateCategoryAsync(existing);
+            return true;
+        }
+
+        //ItemDataControl
+
+        //Brand
+        public async Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto)
+        {
+            var existing = await _getRepo.GetBrandByIdAsync(id);
+            if (existing == null) return false;
+            
+            existing.BrandName = dto.BrandName;
+
+            await _updateRepo.UpdateBrandAsync(existing);
+            return true;
+        }
+
+        //Generic
+        public async Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto)
+        {
+            var existing = await _getRepo.GetGenericByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.GenericName = dto.GenericName;
+
+            await _updateRepo.UpdateGenericAsync(existing);
+            return true;
+        }
+
+        //Formulation
+        public async Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto)
+        {
+            var existing = await _getRepo.GetFormulationByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.FormulationName = dto.FormulationName;
+
+            await _updateRepo.UpdateFormulationAsync(existing);
+            return true;
+        }
+
+        //Classification
+        public async Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto)
+        {
+            var existing = await _getRepo.GetClassificationByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.ClassificationName = dto.ClassificationName;
+
+            await _updateRepo.UpdateClassificationAsync(existing);
+            return true;
+        }
+
+        //Type
+        public async Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto)
+        {
+            var existing = await _getRepo.GetTypeModelByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.TypeName = dto.TypeName;
+
+            await _updateRepo.UpdateTypeModelAsync(existing);
             return true;
         }
     }
