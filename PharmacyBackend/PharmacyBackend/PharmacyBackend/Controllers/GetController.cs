@@ -54,7 +54,7 @@ namespace PharmacyBackend.Controllers
             if (account is null)
                 return NotFound("Account does not exist.");
             return Ok(account);
-
+        }
         //SALE
         [HttpGet("SaleAll")]
         public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesTransactionsAsync()
@@ -143,7 +143,7 @@ namespace PharmacyBackend.Controllers
         public async Task<IActionResult> GetBrandByIdAsync(int id)
         {
             var Brand = await _getService.GetBrandByIdAsync(id);
-            if (Brand == null) 
+            if (Brand == null)
                 return NotFound("Brand Not Found");
             return Ok(Brand);
         }
@@ -190,7 +190,7 @@ namespace PharmacyBackend.Controllers
         [HttpGet("ClassificationAll")]
         public async Task<IActionResult> GetAllClassificationAsync()
         {
-            var classification= await _getService.GetAllClassificationAsync();
+            var classification = await _getService.GetAllClassificationAsync();
             if (!classification.Any())
                 return NotFound("No Brand found.");
             return Ok(classification);

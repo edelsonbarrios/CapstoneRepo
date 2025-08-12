@@ -28,7 +28,6 @@ namespace PharmacyBackend.Repository.POST
             _jwtHelper = jwtHelper;
             _config = config;
         }
-        public async Task<int> CreateEmployeeAsync(Employee request)
         //employee
         public string TokenGeneration(Account request)
         {
@@ -55,7 +54,7 @@ namespace PharmacyBackend.Repository.POST
 
         }
 
-        public async Task<bool> CreateEmployeeAsync(Employee request)
+        public async Task<int> CreateEmployeeAsync(Employee request)
         {
             await _context.Employees.AddAsync(request);
             await _context.SaveChangesAsync();

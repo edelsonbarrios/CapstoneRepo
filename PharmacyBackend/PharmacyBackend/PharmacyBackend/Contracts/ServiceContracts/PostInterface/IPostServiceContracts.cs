@@ -15,10 +15,6 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         public Task<int> CreateEmployeeAsync(CreateEmployeeRequest request);
         public Task<string> AuthenticationAsync(LogInRequest request);
         public Task<bool> CreateAccountAsync(CreateAccountRequest request);
-        //employee
-        public Task<bool> CreateEmployeeAsync(CreateEmployeeRequest request);
-        public Task<bool> AuthenticationAsync(LogInRequest request);
-        public string TokenGeneration(Account request);
 
         //sales
         public Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto request);

@@ -34,7 +34,7 @@ namespace PharmacyBackend.Controllers
             if (!deleteAccount)
                 return BadRequest(new AccountRequestResponse { Message = "Account cannot be deleted." });
             return Ok(new AccountRequestResponse { Message = "Account successfully deleted." });
-
+        }
         [HttpDelete("delete/sale")]
         public async Task<IActionResult> DeleteSalesTransactionByIdAsync(int id)
         {

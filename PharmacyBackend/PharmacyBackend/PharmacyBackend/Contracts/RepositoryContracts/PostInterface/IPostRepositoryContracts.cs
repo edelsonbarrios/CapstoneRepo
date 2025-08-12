@@ -10,10 +10,6 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         public Task<int> CreateEmployeeAsync(Employee request);
         public Task<string> AuthenticationAsync(LogInRequest request);
         public Task<bool> CreateAccountAsync(Account request);
-        //employee
-        public Task<bool> CreateEmployeeAsync(Employee request);
-        public Task<bool> AuthenticationAsync(LogInRequest request);
-        public string TokenGeneration(Account request);
 
         //sales
         public Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction transaction);

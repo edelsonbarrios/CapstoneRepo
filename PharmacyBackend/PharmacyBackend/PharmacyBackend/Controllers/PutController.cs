@@ -45,7 +45,7 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new UpdateAccountResponse { Message = "Account cannot be updated. Please try again." });
 
             return Ok(new UpdateAccountResponse { Message = "Account successfully updated." });
-
+        }
         [HttpPut("update/sale")]
         public async Task<IActionResult> UpdateSalesTransactionAsync(int id, [FromBody] UpdateSalesTransactionDto dto)
         {
@@ -65,11 +65,11 @@ namespace PharmacyBackend.Controllers
             return NoContent();
         }
 
-        [HttpPut("Update/Product")]   
+        [HttpPut("Update/Product")]
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] UpdateProductDto dto)
         {
             var success = await _updateService.UpdateProductAsync(id, dto);
-            if (!success) 
+            if (!success)
                 return NotFound();
             return NoContent();
         }
@@ -90,7 +90,7 @@ namespace PharmacyBackend.Controllers
         public async Task<IActionResult> UpdateBrandAsync(int id, [FromBody] UpdateBrandDto dto)
         {
             var success = await _updateService.UpdateBrandAsync(id, dto);
-            if (!success) 
+            if (!success)
                 return NotFound();
             return NoContent();
         }

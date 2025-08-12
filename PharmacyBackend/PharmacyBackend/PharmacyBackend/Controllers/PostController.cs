@@ -64,6 +64,7 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new CreateAccountResponse { Message = "Account cannot be created." });
 
             return Ok(new CreateAccountResponse { Message = "Account successfully created." });
+        }
         //salesController
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSalesTransactionAsync([FromBody] CreateSalesTransactionDto dto)
