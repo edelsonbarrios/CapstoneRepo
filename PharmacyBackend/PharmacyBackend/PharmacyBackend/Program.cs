@@ -49,6 +49,8 @@ builder.Services.AddScoped<IDeleteServiceContracts, DeleteService>();
 builder.Services.AddScoped<IUpdateServiceContracts, UpdateService>();
 #endregion
 
+//TINE SUBUKAN MO NGA BRANCH MO
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
