@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'app-admin-header',
   standalone: true,
-  imports: [RouterLinkActive, RouterLink],
+  imports: [RouterLink],
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.scss'
 })
