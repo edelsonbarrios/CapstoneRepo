@@ -30,4 +30,8 @@ export class LoginViewComponent {
       }
     });
   }
+
+  goToAdminMain() {
+    this.router.navigateByUrl('/admin-main');
+  }
 }

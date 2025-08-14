@@ -7,46 +7,8 @@
 </head>
 <body>
   <div class="container">
-  <aside class="sidebar">
-    <div class="profile">
-      <div class="logo">logo</div>
-      <div class="user-info">
-        <div class="avatar"></div>
-        <div>
-          <div class="name">Kristine Malto</div>
-          <div class="email">kristinemalto&#64;gmail.com</div>
-        </div>
-      </div>
-    </div>
-    <nav class="nav">
-      <a>📊 Dashboard</a>
-      <a>📈 Reports</a>
-      <a>🛠️ Maintenance</a>
-      <a>📦 Supplier</a>
-      <a>👤 Employee Accounts</a>
-    </nav>
-    <div class="bottom-nav">
-      <a href="#">⚙️ Settings</a>
-      <a href="#">↩️ Logout</a>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="header">
-      <h1>Dashboard Overview</h1>
-      <div class="notification">🔔<span class="dot"></span></div>
-    </div>
-    <div class="top-cards">
-      <div class="card small"></div>
-      <div class="card small"></div>
-      <div class="card small"></div>
-    </div>
-    <div class="bottom-cards">
-      <div class="card large"></div>
-      <div class="card medium"></div>
-      <div class="card medium"></div>
-    </div>
-  </main>
-</div>
+    <app-admin-header></app-admin-header>
+    <router-outlet></router-outlet>
+   </div>
 </body>
 </html>

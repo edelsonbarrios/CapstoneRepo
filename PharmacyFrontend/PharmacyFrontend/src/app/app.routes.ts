@@ -11,6 +11,14 @@ export const routes: Routes = [
     path: 'admin-main',
     loadComponent: () => {
       return import('./components//admin-view/admin-main/admin-main.component').then(m => m.AdminMainComponent);
-    }
+    },
+    children: [
+      {
+        path: '',
+        loadComponent: () => {
+          return import('./components/admin-view/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent);
+        }
+      }
+    ]
   }
 ];
