@@ -14,10 +14,33 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: '',
+        path: 'admin-dashboard',
         loadComponent: () => {
           return import('./components/admin-view/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent);
-        }
+        },
+      },
+      {
+        path: 'employee-accounts-main',
+        loadComponent: () => {
+          return import('./components/admin-view/employee-accounts/employee-accounts-main/employee-accounts-main.component')
+          .then(m => m.EmployeeAccountsMainComponent);
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import('./components/admin-view/employee-accounts/manage-employees/manage-employees.component')
+              .then(m => m.ManageEmployeesComponent);
+            }
+          },
+          {
+            path: 'manage-accounts',
+            loadComponent: () => {
+              return import('./components/admin-view/employee-accounts/manage-accounts/manage-accounts.component')
+              .then(m => m.ManageAccountsComponent);
+            }
+          }
+        ]
       }
     ]
   }
