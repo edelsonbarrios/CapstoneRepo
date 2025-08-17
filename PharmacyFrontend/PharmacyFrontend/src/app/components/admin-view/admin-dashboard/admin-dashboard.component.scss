@@ -1,59 +1,187 @@
 .wrapper {
-  flex-grow: 1;
+  flex: 1;
   padding: 20px;
+  background: #f2f6fc;
 
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    border-bottom: rgb(0, 0, 0);
 
     h1 {
       color: #3498ff;
-      font-size: 18px;
+      font-size: 24px;
+      margin-right: 1020px;
     }
+
+    .searchbar{
+        padding: 8px 16px;
+        border: 1px solid #e2e8f0;
+        font-size: 14px;
+        border-radius: 20px;
+        background: white;
+        width: 300px;
+      }
 
     .notification {
       position: relative;
       font-size: 20px;
+      cursor: pointer;
+      transition: margin-bottom 0.15s;
 
-      .dot {
-        width: 8px;
-        height: 8px;
-        background: red;
-        border-radius: 50%;
-        position: absolute;
-        top: 0;
-        right: -5px;
+      &:hover{
+        margin-bottom: 10px;
+      }
+
+      &:active{
+        opacity: 0.8;
       }
     }
   }
 
-  .top-cards,
-  .bottom-cards {
-    display: flex;
+  .top-containers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.2fr;
     gap: 20px;
     margin-bottom: 20px;
   }
 
-  .card {
-    background: #f2f6fc;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  .sales-status {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #f1f5f9;
+  }
 
-    &.small {
-      flex: 1;
-      height: 100px;
+  .sales {
+    height: 200px;
+    width: 350px;
+    padding: 0px;
+    margin: 0px;
+  }
+  
+  .text-sales{
+    font-size: large;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 140px;
+  }
+
+  .view-report{
+    color: #3498ff;
+    font-size: large;
+    margin-top: 10px;
+    margin-left: 15px;
+    transition: margin-left 0.15s;
+
+    &:hover {
+      color: #1669bb;
+      cursor: pointer;
+      margin-left: 20px;
     }
 
-    &.large {
-      flex: 2;
-      height: 300px;
+    &:active {
+      opacity: 0.8;
+    }
+  }
+  
+  .inventory {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #f1f5f9;
+  }
+
+  .inv-status{
+    height: 200px;
+    width: 350px;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .status-inventory{
+    font-size: large;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 140px;
+  }
+
+  .reorder{
+    color: #3498ff;
+    font-size: large;
+    margin-top: 10px;
+    margin-left: 15px;
+    transition: margin-left 0.15s;
+
+    &:hover {
+      color: #1669bb;
+      cursor: pointer;
+      margin-left: 20px;
     }
 
-    &.medium {
-      flex: 1;
-      height: 140px;
+    &:active {
+      opacity: 0.8;
     }
+  }
+
+  .top-selling-meds {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #f1f5f9;
+  }
+
+  .top-meds {
+    height: 200px;
+    width: 350px;
+    padding: 0px;
+    margin: 0px;
+  }
+  
+  .meds-calendar{
+    font-size: large;
+    margin-top: 20px;
+    margin-left: 20px;
+    display: inline-block;
+  }
+
+  .bottom-containers {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 20px;
+  }
+  
+  .sales-trends{
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #f1f5f9;
+  }
+
+  .text-trend{
+    font-size: large;
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+
+  .expiry {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #f1f5f9;
+  }
+
+  .expiring-soon {
+    height: 200px;
+    width: 350px;
+    padding: 0px;
+    margin: 0px;
   }
 }
