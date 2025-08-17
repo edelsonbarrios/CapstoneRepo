@@ -1,1 +1,24 @@
-<p>manage-accounts works!</p>
+<div class="wrapper">
+  <table class="employee-table">
+    <thead>
+      <tr>
+        <th>Account Code</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of accounts">
+        <td>{{a.accountCode}}</td>
+        <td>{{a.username}}</td>
+        <td>{{a.decryptedPassword}}</td>
+        <td>
+          <button class="btn view">View</button>
+          <button class="btn edit">Edit</button>
+          <button class="btn archive">Archive</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

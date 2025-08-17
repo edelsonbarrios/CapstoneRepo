@@ -1,9 +1,26 @@
 import { Injectable } from '@angular/core';
-
+import { BaseApiUrl } from '../../shared/apiUrl';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Employee } from '../../models/employee';
+import { Account } from '../../models/account';
 @Injectable({
   providedIn: 'root'
 })
 export class GetService {
+  apiUrl = `${BaseApiUrl}`;
+  constructor(
+    private httpClient : HttpClient
+  ) { } 
 
-  constructor() { }
+  //Employees Service
+  GetAllEmployees() : Observable<Employee[]> {
+    return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeAll`);
+  }
+
+
+  //Accounts Service
+  GetAllAccounts() : Observable<Account[]> {
+    return this.httpClient.get<Account[]>(`${this.apiUrl}/Get/AccountAll`);
+  }
 }

@@ -8,6 +8,7 @@ using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -63,6 +64,7 @@ namespace PharmacyBackend.Service.GetService
             var employees = await _getRepo.GetAllEmployeesAsync();
             if (!employees.Any() || employees.Count() == 0)
                 return new List<EmployeeDTO>();
+
             var modifEmployees = employees.Select(e => new EmployeeDTO
             {
                 Id = e.Id,
@@ -75,7 +77,9 @@ namespace PharmacyBackend.Service.GetService
                 CivilStatus = e.CivilStatus,
                 Gender = e.Gender,
                 Email = e.Email,
-                Address = e.Address
+                Address = e.Address,
+                FullName = e.FullName,
+                RolePosition = e.Role.RolePosition
             }).ToList();
             return modifEmployees;
         }

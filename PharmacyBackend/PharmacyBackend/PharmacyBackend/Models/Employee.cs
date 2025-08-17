@@ -19,6 +19,11 @@ namespace PharmacyBackend.Models
         public string Address { get; set; }
         public int RoleId { get; set; }
 
+        public string FullName
+        {
+            get { return $"{LastName}, {FirstName}"; }
+        }
+
         [JsonIgnore]
         public Role Role { get; set; } 
         [JsonIgnore]

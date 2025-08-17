@@ -1,0 +1,61 @@
+.wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  font-family: var(--ff-poppins);
+
+  .table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.employee-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid black;
+}
+
+.employee-table td {
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.status.active {
+  color: green;
+  font-weight: bold;
+}
+
+.btn {
+  padding: 4px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn.view {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn.edit {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn.archive {
+  background-color: #dc3545;
+  color: white;
+}
+
+}

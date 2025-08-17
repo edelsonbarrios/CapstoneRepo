@@ -49,5 +49,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         //Types
         public Task<IEnumerable<TypeModel>> GetAllTypeModelAsync();
         public Task<TypeModel> GetTypeModelByIdAsync(int id);
+
+        public Task<IEnumerable<Role>> GetAllRolesAsync();
     }
 }

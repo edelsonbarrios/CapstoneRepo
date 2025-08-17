@@ -1,11 +1,11 @@
 .wrapper {
-  width: 250px;
   background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid #eee;
   padding: 20px 0;
+  height: 100%;
 
   .profile {
     text-align: center;

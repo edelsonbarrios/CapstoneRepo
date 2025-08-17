@@ -14,10 +14,16 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: 'admin-dashboard',
+        path: '',
         loadComponent: () => {
           return import('./components/admin-view/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent);
         },
+      },
+      {
+        path: 'admin-dashboard',
+        loadComponent: () => {
+          return import('./components/admin-view/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent);
+        }
       },
       {
         path: 'employee-accounts-main',
@@ -28,6 +34,13 @@ export const routes: Routes = [
         children: [
           {
             path: '',
+            loadComponent: () => {
+              return import('./components/admin-view/employee-accounts/manage-employees/manage-employees.component')
+              .then(m => m.ManageEmployeesComponent);
+            }
+          },
+          {
+            path: 'manage-employees',
             loadComponent: () => {
               return import('./components/admin-view/employee-accounts/manage-employees/manage-employees.component')
               .then(m => m.ManageEmployeesComponent);
