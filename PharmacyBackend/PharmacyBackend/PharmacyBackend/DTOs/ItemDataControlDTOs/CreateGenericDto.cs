@@ -1,4 +1,5 @@
-﻿namespace PharmacyBackend.DTOs.ItemDataControlDTOs
+﻿//DTOs/ItemDataControlDtos/CreateGenericDto.cs
+namespace PharmacyBackend.DTOs.ItemDataControlDTOs
 {
     public class CreateGenericDto
     {

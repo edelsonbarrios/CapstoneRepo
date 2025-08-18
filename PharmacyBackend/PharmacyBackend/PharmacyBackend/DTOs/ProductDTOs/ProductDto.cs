@@ -1,7 +1,25 @@
-﻿namespace PharmacyBackend.DTOs.ProductDTOs
+﻿//DTOs/Product.cs
+namespace PharmacyBackend.DTOs.ProductDTOs
 {
     public class ProductDto : UpdateProductDto
     {
         public int ProductID { get; set; }
+        public DateTime DateCreated { get; set; }
+
+        // Calculated fields from Inventory
+        public int TotalStock { get; set; } // Calculated from active, non-expired inventory
+        public int ExpiredStock { get; set; } // Expired inventory count
+        public int NearExpiryStock { get; set; } // Stock expiring within 30 days
+        public bool IsCriticalStock { get; set; } // If total stock is below reorder level
+        public bool HasExpiredStock { get; set; } // If there's any expired stock
+
+        // Related entity names for display
+        public string CategoryName { get; set; } = string.Empty;
+        public string BrandName { get; set; } = string.Empty;
+        public string GenericName { get; set; } = string.Empty;
+        public string FormulationName { get; set; } = string.Empty;
+        public string ClassificationName { get; set; } = string.Empty;
+        public string TypeName { get; set; } = string.Empty;
+        public string SupplierName { get; set; } = string.Empty;
     }
 }

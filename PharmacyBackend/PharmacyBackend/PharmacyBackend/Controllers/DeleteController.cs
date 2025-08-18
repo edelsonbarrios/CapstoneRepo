@@ -118,6 +118,45 @@ namespace PharmacyBackend.Controllers
             if (!deleteType) return NotFound();
             return NoContent();
         }
+        //Supplier
+        [HttpDelete("Delete/Supplier")]
+        public async Task<IActionResult> DeleteSupplierByIdAsync(int id)
+        {
+            var deleteSupplier = await _deleteService.DeleteSupplierByIdAsync(id);
+            if (!deleteSupplier)
+                return NotFound("Supplier not found or already deleted.");
+            return Ok("Supplier deleted successfully.");
+        }
+
+        //Inventory
+        [HttpDelete("Delete/Inventory")]
+        public async Task<IActionResult> DeleteInventoryByIdAsync(int id)
+        {
+            var deleteInventory = await _deleteService.DeleteInventoryByIdAsync(id);
+            if (!deleteInventory)
+                return NotFound("Inventory not found or already deleted.");
+            return Ok("Inventory deleted successfully.");
+        }
+
+        //VAT
+        [HttpDelete("Delete/VAT")]
+        public async Task<IActionResult> DeleteVATByIdAsync(int id)
+        {
+            var deleteVAT = await _deleteService.DeleteVATByIdAsync(id);
+            if (!deleteVAT)
+                return NotFound("VAT not found or already deleted.");
+            return Ok("VAT deleted successfully.");
+        }
+
+        //PurchaseOrder
+        [HttpDelete("Delete/PurchaseOrder")]
+        public async Task<IActionResult> DeletePurchaseOrderByIdAsync(int id)
+        {
+            var deletePurchaseOrder = await _deleteService.DeletePurchaseOrderByIdAsync(id);
+            if (!deletePurchaseOrder)
+                return NotFound("Purchase Order not found or already deleted.");
+            return Ok("Purchase Order deleted successfully.");
+        }
     }
 }
 

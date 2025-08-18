@@ -113,5 +113,42 @@ namespace PharmacyBackend.Service.DeleteService
                 return false;
             return true;
         }
+
+        //Supplier
+        public async Task<bool> DeleteSupplierByIdAsync(int id)
+        {
+            var deleteSupplier = await _deleteRepo.DeleteSupplierByIdAsync(id);
+            if (!deleteSupplier)
+                return false;
+            return true;
+        }
+
+        //Inventory
+        public async Task<bool> DeleteInventoryByIdAsync(int id)
+        {
+            var deleteInventory = await _deleteRepo.DeleteInventoryByIdAsync(id);
+            if (!deleteInventory)
+                return false;
+            return true;
+        }
+
+        //VAT
+        public async Task<bool> DeleteVATByIdAsync(int id)
+        {
+            var deleteVAT = await _deleteRepo.DeleteVATByIdAsync(id);
+            if (!deleteVAT)
+                return false;
+            return true;
+        }
+
+        //PurchaseOrder
+        public async Task<bool> DeletePurchaseOrderByIdAsync(int id)
+        {
+            var deletePurchaseOrder = await _deleteRepo.DeletePurchaseOrderByIdAsync(id);
+            if (!deletePurchaseOrder)
+                return false;
+            return true;
+        }
+
     }
 }

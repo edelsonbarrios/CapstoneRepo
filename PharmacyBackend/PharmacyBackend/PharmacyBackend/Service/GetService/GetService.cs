@@ -8,6 +8,12 @@ using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
+using PharmacyBackend.DTOs.PurchaseOrderItemDTOs;
+using PharmacyBackend.DTOs.StockMovementDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -131,7 +137,7 @@ namespace PharmacyBackend.Service.GetService
         public async Task<SalesTransactionDto> GetSalesTransactionByIdAsync(int id)
         {
             var transaction = await _getRepo.GetSalesTransactionByIdAsync(id);
-            if (transaction is null) 
+            if (transaction is null)
                 return null;
             return new SalesTransactionDto
             {
@@ -170,8 +176,8 @@ namespace PharmacyBackend.Service.GetService
         public async Task<DiscountDto?> GetDiscountByIdAsync(int id)
         {
             var d = await _getRepo.GetDiscountByIdAsync(id);
-            if (d == null) 
-               return null;
+            if (d == null)
+                return null;
             return new DiscountDto
             {
                 Id = d.Id,
@@ -196,8 +202,24 @@ namespace PharmacyBackend.Service.GetService
                 TypeID = p.TypeID,
                 SupplierID = p.SupplierID,
                 Price = p.Price,
-                Stock = p.Stock,
-                IsActive = p.IsActive
+                IsActive = p.IsActive,
+                DateCreated = p.DateCreated,
+
+                // CHANGED from InventoryItem to Inventory
+                TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                ExpiredStock = p.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                NearExpiryStock = p.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                IsCriticalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) <= p.Inventory?.FirstOrDefault()?.ReorderLevel,
+                HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
+
+                // Related entity names
+                CategoryName = p.Category?.CategoryName ?? string.Empty,
+                BrandName = p.Brand?.BrandName ?? string.Empty,
+                GenericName = p.Generic?.GenericName ?? string.Empty,
+                FormulationName = p.Formulation?.FormulationName ?? string.Empty,
+                ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
+                TypeName = p.TypeModel?.TypeName ?? string.Empty,
+                SupplierName = p.Supplier?.SupplierName ?? string.Empty
             });
         }
 
@@ -218,8 +240,24 @@ namespace PharmacyBackend.Service.GetService
                 TypeID = p.TypeID,
                 SupplierID = p.SupplierID,
                 Price = p.Price,
-                Stock = p.Stock,
-                IsActive = p.IsActive
+                IsActive = p.IsActive,
+                DateCreated = p.DateCreated,
+
+                // CHANGED from InventoryItem to Inventory
+                TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                ExpiredStock = p.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                NearExpiryStock = p.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                IsCriticalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) <= p.Inventory?.FirstOrDefault()?.ReorderLevel,
+                HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
+
+                // Related entity names
+                CategoryName = p.Category?.CategoryName ?? string.Empty,
+                BrandName = p.Brand?.BrandName ?? string.Empty,
+                GenericName = p.Generic?.GenericName ?? string.Empty,
+                FormulationName = p.Formulation?.FormulationName ?? string.Empty,
+                ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
+                TypeName = p.TypeModel?.TypeName ?? string.Empty,
+                SupplierName = p.Supplier?.SupplierName ?? string.Empty
             };
         }
 
@@ -237,7 +275,7 @@ namespace PharmacyBackend.Service.GetService
         public async Task<CategoryDto> GetCategoryByIdAsync(int id)
         {
             var c = await _getRepo.GetCategoryByIdAsync(id);
-            if (c == null) 
+            if (c == null)
                 return null;
             return new CategoryDto
             {
@@ -262,11 +300,11 @@ namespace PharmacyBackend.Service.GetService
         public async Task<BrandDto?> GetBrandByIdAsync(int id)
         {
             var b = await _getRepo.GetBrandByIdAsync(id);
-            if (b == null) 
+            if (b == null)
                 return null;
-            return new BrandDto 
-            { 
-                BrandID = b.BrandID, 
+            return new BrandDto
+            {
+                BrandID = b.BrandID,
                 BrandName = b.BrandName
             };
         }
@@ -286,7 +324,7 @@ namespace PharmacyBackend.Service.GetService
         public async Task<GenericDto?> GetGenericByIdAsync(int id)
         {
             var g = await _getRepo.GetGenericByIdAsync(id);
-            if (g == null) 
+            if (g == null)
                 return null;
             return new GenericDto
             {
@@ -363,7 +401,405 @@ namespace PharmacyBackend.Service.GetService
                 TypeName = t.TypeName
             };
         }
+        //Supplier
+        public async Task<IEnumerable<SupplierDto>> GetAllSupplierAsync()
+        {
+            var suppliers = await _getRepo.GetAllSupplierAsync();
+            return suppliers.Select(s => new SupplierDto
+            {
+                SupplierID = s.SupplierID,
+                SupplierName = s.SupplierName,
+                ContactNumber = s.ContactNumber,
+                Email = s.Email,
+                Address = s.Address,
+                IsActive = s.IsActive
+            });
+        }
 
+        public async Task<SupplierDto?> GetSupplierByIdAsync(int id)
+        {
+            var s = await _getRepo.GetSupplierByIdAsync(id);
+            if (s == null)
+                return null;
+            return new SupplierDto
+            {
+                SupplierID = s.SupplierID,
+                SupplierName = s.SupplierName,
+                ContactNumber = s.ContactNumber,
+                Email = s.Email,
+                Address = s.Address,
+                IsActive = s.IsActive
+            };
+        }
+
+        //Inventory
+        public async Task<IEnumerable<InventoryDto>> GetAllInventoryAsync()
+        {
+            var inventories = await _getRepo.GetAllInventoryAsync();
+            return inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                QuantityOnHand = i.QuantityOnHand,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                SellingPrice = i.SellingPrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock
+            });
+        }
+
+        public async Task<InventoryDto?> GetInventoryByIdAsync(int id)
+        {
+            var i = await _getRepo.GetInventoryByIdAsync(id);
+            if (i == null)
+                return null;
+            return new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                QuantityOnHand = i.QuantityOnHand,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                SellingPrice = i.SellingPrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock
+            };
+        }
+
+        public async Task<IEnumerable<InventoryDto>> GetInventoryByProductIdAsync(int productId)
+        {
+            var inventories = await _getRepo.GetInventoryByProductIdAsync(productId);
+            return inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                QuantityOnHand = i.QuantityOnHand,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                SellingPrice = i.SellingPrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock
+            });
+        }
+
+        public async Task<IEnumerable<InventoryDto>> GetExpiredInventoryAsync()
+        {
+            var inventories = await _getRepo.GetExpiredInventoryAsync();
+            return inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                QuantityOnHand = i.QuantityOnHand,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                SellingPrice = i.SellingPrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock
+            });
+
+        }
+
+        public async Task<IEnumerable<InventoryDto>> GetNearExpiryInventoryAsync()
+        {
+            var inventories = await _getRepo.GetNearExpiryInventoryAsync();
+            return inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                QuantityOnHand = i.QuantityOnHand,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                SellingPrice = i.SellingPrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock
+            });
+        }
+
+        public async Task<IEnumerable<InventoryDto>> GetCriticalStockInventoryAsync()
+        {
+            var inventories = await _getRepo.GetCriticalStockInventoryAsync();
+            return inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                QuantityOnHand = i.QuantityOnHand,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                SellingPrice = i.SellingPrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock
+            });
+        }
+
+        //VAT 
+        public async Task<IEnumerable<VatDto>> GetAllVATAsync()
+        {
+            var vats = await _getRepo.GetAllVATAsync();
+            return vats.Select(v => new VatDto
+            {
+                VATID = v.VATID,
+                VATName = v.VATName,
+                VATRate = v.VATRate,
+                IsActive = v.IsActive,
+                DateCreated = v.DateCreated
+            });
+        }
+
+        public async Task<VatDto?> GetVATByIdAsync(int id)
+        {
+            var v = await _getRepo.GetVATByIdAsync(id);
+            if (v == null)
+                return null;
+            return new VatDto
+            {
+                VATID = v.VATID,
+                VATName = v.VATName,
+                VATRate = v.VATRate,
+                IsActive = v.IsActive,
+                DateCreated = v.DateCreated
+            };
+        }
+
+        //PurchaseOrder
+        public async Task<IEnumerable<PurchaseOrderDto>> GetAllPurchaseOrderAsync()
+        {
+            var orders = await _getRepo.GetAllPurchaseOrderAsync();
+            return orders.Select(po => new PurchaseOrderDto
+            {
+                PurchaseOrderID = po.PurchaseOrderID,
+                PurchaseOrderNumber = po.PurchaseOrderNumber,
+                OrderDate = po.OrderDate,
+                DeliveryDate = po.DeliveryDate,
+                SupplierID = po.SupplierID,
+                SupplierName = po.Supplier?.SupplierName ?? string.Empty,
+                TotalAmount = po.TotalAmount,
+                Status = po.Status,
+                Notes = po.Notes,
+                PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
+                {
+                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    ProductID = poi.ProductID,
+                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    QuantityReceived = poi.QuantityReceived,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.TotalCost
+                }).ToList()
+            });
+        }
+
+        public async Task<PurchaseOrderDto?> GetPurchaseOrderByIdAsync(int id)
+        {
+            var po = await _getRepo.GetPurchaseOrderByIdAsync(id);
+            if (po == null)
+                return null;
+            return new PurchaseOrderDto
+            {
+                PurchaseOrderID = po.PurchaseOrderID,
+                PurchaseOrderNumber = po.PurchaseOrderNumber,
+                OrderDate = po.OrderDate,
+                DeliveryDate = po.DeliveryDate,
+                SupplierID = po.SupplierID,
+                SupplierName = po.Supplier?.SupplierName ?? string.Empty,
+                TotalAmount = po.TotalAmount,
+                Status = po.Status,
+                Notes = po.Notes,
+                PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
+                {
+                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    ProductID = poi.ProductID,
+                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    QuantityReceived = poi.QuantityReceived,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.TotalCost
+                }).ToList()
+            };
+        }
+
+        public async Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderBySupplierIdAsync(int supplierId)
+        {
+            var orders = await _getRepo.GetPurchaseOrderBySupplierIdAsync(supplierId);
+            return orders.Select(po => new PurchaseOrderDto
+            {
+                PurchaseOrderID = po.PurchaseOrderID,
+                PurchaseOrderNumber = po.PurchaseOrderNumber,
+                OrderDate = po.OrderDate,
+                DeliveryDate = po.DeliveryDate,
+                SupplierID = po.SupplierID,
+                SupplierName = po.Supplier?.SupplierName ?? string.Empty,
+                TotalAmount = po.TotalAmount,
+                Status = po.Status,
+                Notes = po.Notes,
+                PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
+                {
+                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    ProductID = poi.ProductID,
+                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    QuantityReceived = poi.QuantityReceived,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.TotalCost
+                }).ToList()
+            });
+        }
+
+        public async Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderByStatusAsync(string status)
+        {
+            var orders = await _getRepo.GetPurchaseOrderByStatusAsync(status);
+            return orders.Select(po => new PurchaseOrderDto
+            {
+                PurchaseOrderID = po.PurchaseOrderID,
+                PurchaseOrderNumber = po.PurchaseOrderNumber,
+                OrderDate = po.OrderDate,
+                DeliveryDate = po.DeliveryDate,
+                SupplierID = po.SupplierID,
+                SupplierName = po.Supplier?.SupplierName ?? string.Empty,
+                TotalAmount = po.TotalAmount,
+                Status = po.Status,
+                Notes = po.Notes,
+                PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
+                {
+                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    ProductID = poi.ProductID,
+                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    QuantityReceived = poi.QuantityReceived,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.TotalCost
+                }).ToList()
+            });
+        }
+
+        //StockMovement
+        public async Task<IEnumerable<StockMovementDto>> GetAllStockMovementAsync()
+        {
+            var movements = await _getRepo.GetAllStockMovementAsync();
+            return movements.Select(sm => new StockMovementDto
+            {
+                StockMovementID = sm.StockMovementID,
+                InventoryID = sm.InventoryID,
+                ProductName = sm.Inventory?.Product?.ProductName ?? string.Empty,
+                BatchNumber = sm.Inventory?.BatchNumber ?? string.Empty,
+                MovementType = sm.MovementType,
+                QuantityChanged = sm.QuantityChanged,
+                QuantityBefore = sm.QuantityBefore,
+                QuantityAfter = sm.QuantityAfter,
+                ReferenceNumber = sm.ReferenceNumber,
+                Notes = sm.Notes,
+                MovementDate = sm.MovementDate,
+                EmployeeID = sm.EmployeeID,
+                EmployeeName = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty
+            });
+        }
+
+        public async Task<StockMovementDto?> GetStockMovementByIdAsync(int id)
+        {
+            var sm = await _getRepo.GetStockMovementByIdAsync(id);
+            if (sm == null)
+                return null;
+            return new StockMovementDto
+            {
+                StockMovementID = sm.StockMovementID,
+                InventoryID = sm.InventoryID,
+                ProductName = sm.Inventory?.Product?.ProductName ?? string.Empty,
+                BatchNumber = sm.Inventory?.BatchNumber ?? string.Empty,
+                MovementType = sm.MovementType,
+                QuantityChanged = sm.QuantityChanged,
+                QuantityBefore = sm.QuantityBefore,
+                QuantityAfter = sm.QuantityAfter,
+                ReferenceNumber = sm.ReferenceNumber,
+                Notes = sm.Notes,
+                MovementDate = sm.MovementDate,
+                EmployeeID = sm.EmployeeID,
+                EmployeeName = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty
+            };
+        }
+
+        public async Task<IEnumerable<StockMovementDto>> GetStockMovementByInventoryIdAsync(int inventoryId)
+        {
+            var movements = await _getRepo.GetStockMovementByInventoryIdAsync(inventoryId);
+            return movements.Select(sm => new StockMovementDto
+            {
+                StockMovementID = sm.StockMovementID,
+                InventoryID = sm.InventoryID,
+                ProductName = sm.Inventory?.Product?.ProductName ?? string.Empty,
+                BatchNumber = sm.Inventory?.BatchNumber ?? string.Empty,
+                MovementType = sm.MovementType,
+                QuantityChanged = sm.QuantityChanged,
+                QuantityBefore = sm.QuantityBefore,
+                QuantityAfter = sm.QuantityAfter,
+                ReferenceNumber = sm.ReferenceNumber,
+                Notes = sm.Notes,
+                MovementDate = sm.MovementDate,
+                EmployeeID = sm.EmployeeID,
+                EmployeeName = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty
+            });
+        }
+
+        public async Task<IEnumerable<StockMovementDto>> GetStockMovementByProductIdAsync(int productId)
+        {
+            var movements = await _getRepo.GetStockMovementByProductIdAsync(productId);
+            return movements.Select(sm => new StockMovementDto
+            {
+                StockMovementID = sm.StockMovementID,
+                InventoryID = sm.InventoryID,
+                ProductName = sm.Inventory?.Product?.ProductName ?? string.Empty,
+                BatchNumber = sm.Inventory?.BatchNumber ?? string.Empty,
+                MovementType = sm.MovementType,
+                QuantityChanged = sm.QuantityChanged,
+                QuantityBefore = sm.QuantityBefore,
+                QuantityAfter = sm.QuantityAfter,
+                ReferenceNumber = sm.ReferenceNumber,
+                Notes = sm.Notes,
+                MovementDate = sm.MovementDate,
+                EmployeeID = sm.EmployeeID,
+                EmployeeName = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty
+            });
+        }
     }
 }
 

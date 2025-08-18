@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Models/Discount.cs
+using System.ComponentModel.DataAnnotations;
 
 namespace PharmacyBackend.Models
 {

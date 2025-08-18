@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using PharmacyBackend.Models.CashierViewModel;
 
 namespace PharmacyBackend.Models
 {
@@ -23,5 +24,14 @@ namespace PharmacyBackend.Models
         public Role Role { get; set; } 
         [JsonIgnore]
         public Account Account { get; set; }
+
+        //for navigation
+
+        [JsonIgnore]
+        public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
+        [JsonIgnore]
+        public ICollection<SalesTransaction> SalesTransactions { get; set; } = new List<SalesTransaction>();
+        [JsonIgnore]
+        public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
     }
 }

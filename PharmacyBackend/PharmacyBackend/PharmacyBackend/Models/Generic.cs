@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Models/Generic.cs
+using System.ComponentModel.DataAnnotations;
 
 namespace PharmacyBackend.Models
 {
@@ -7,5 +8,7 @@ namespace PharmacyBackend.Models
         [Key]
         public int GenericID { get; set; }
         public string GenericName { get; set; } = string.Empty;
+
+        public ICollection<Product> Products { get; set; }
     }
 }

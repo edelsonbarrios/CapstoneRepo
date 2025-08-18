@@ -1,4 +1,5 @@
-﻿namespace PharmacyBackend.DTOs.ItemDataControlDTOs
+﻿//DTOs/ItemDataControlDtos/UpdateBrandDto.cs
+namespace PharmacyBackend.DTOs.ItemDataControlDTOs
 {
     public class UpdateBrandDto
     {

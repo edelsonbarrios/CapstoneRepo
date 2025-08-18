@@ -10,9 +10,14 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.DTOs.StockMovementDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
 
 namespace PharmacyBackend.Controllers
 {
@@ -137,6 +142,52 @@ namespace PharmacyBackend.Controllers
         {
             var result = await _postService.CreateTypeModelAsync(dto);
             return Ok(result);
+        }
+        //Supplier
+        [HttpPost("Supplier")]
+        public async Task<IActionResult> CreateSupplierAsync([FromBody] CreateSupplierDto dto)
+        {
+            var result = await _postService.CreateSupplierAsync(dto);
+            return Ok(result);
+        }
+
+        //Inventory
+        [HttpPost("Inventory")]
+        public async Task<IActionResult> CreateInventoryAsync([FromBody] CreateInventoryDto dto)
+        {
+            var result = await _postService.CreateInventoryAsync(dto);
+            return Ok(result);
+        }
+
+        //VAT
+        [HttpPost("VAT")]
+        public async Task<IActionResult> CreateVATAsync([FromBody] CreateVATDto dto)
+        {
+            var result = await _postService.CreateVATAsync(dto);
+            return Ok(result);
+        }
+
+        //PurchaseOrder
+        [HttpPost("PurchaseOrder")]
+        public async Task<IActionResult> CreatePurchaseOrderAsync([FromBody] CreatePurchaseOrderDto dto)
+        {
+            var result = await _postService.CreatePurchaseOrderAsync(dto);
+            return Ok(result);
+        }
+
+        //StockMovement
+        [HttpPost("StockMovement")]
+        public async Task<IActionResult> CreateStockMovementAsync([FromBody] CreateStockMovementDto dto)
+        {
+            try
+            {
+                var result = await _postService.CreateStockMovementAsync(dto);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

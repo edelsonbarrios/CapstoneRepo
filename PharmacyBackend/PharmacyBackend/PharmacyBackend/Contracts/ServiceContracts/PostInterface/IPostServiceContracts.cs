@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
+using PharmacyBackend.DTOs.StockMovementDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 {
@@ -43,5 +48,22 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         public Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto);
         //Type
         public Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto);
+
+        //Supplier
+        public Task<SupplierDto> CreateSupplierAsync(CreateSupplierDto dto);
+
+        //Inventory
+        public Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto dto);
+
+        //VAT
+        public Task<VatDto> CreateVATAsync(CreateVATDto dto);
+
+        //PurchaseOrder
+        public Task<PurchaseOrderDto> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto);
+
+        //StockMovement
+        public Task<StockMovementDto> CreateStockMovementAsync(CreateStockMovementDto dto);
+
+
     }
 }

@@ -154,6 +154,45 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return typeModel;
         }
+        //Supplier
+        public async Task<Supplier> CreateSupplierAsync(Supplier supplier)
+        {
+            await _context.Supplier.AddAsync(supplier);
+            await _context.SaveChangesAsync();
+            return supplier;
+        }
+
+        //Inventory
+        public async Task<Inventory> CreateInventoryAsync(Inventory inventory)
+        {
+            await _context.Inventory.AddAsync(inventory);
+            await _context.SaveChangesAsync();
+            return inventory;
+        }
+
+        //VAT
+        public async Task<VAT> CreateVATAsync(VAT vat)
+        {
+            await _context.VAT.AddAsync(vat);
+            await _context.SaveChangesAsync();
+            return vat;
+        }
+
+        //PurchaseOrder
+        public async Task<PurchaseOrder> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder)
+        {
+            await _context.PurchaseOrder.AddAsync(purchaseOrder);
+            await _context.SaveChangesAsync();
+            return purchaseOrder;
+        }
+
+        //StockMovement
+        public async Task<StockMovement> CreateStockMovementAsync(StockMovement stockMovement)
+        {
+            await _context.StockMovement.AddAsync(stockMovement);
+            await _context.SaveChangesAsync();
+            return stockMovement;
+        }
 
     }
 }

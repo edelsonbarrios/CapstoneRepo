@@ -14,7 +14,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
 
         //sales
         public Task<List<SalesTransaction>> GetAllSalesTransactionsAsync();
-        public Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id);
+        public Task<SalesTransaction> GetSalesTransactionByIdAsync(int id);
 
         //Discount
         public Task<IEnumerable<Discount>> GetAllDiscountAsync();
@@ -49,5 +49,33 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         //Types
         public Task<IEnumerable<TypeModel>> GetAllTypeModelAsync();
         public Task<TypeModel> GetTypeModelByIdAsync(int id);
+
+        //Supplier
+        public Task<IEnumerable<Supplier>> GetAllSupplierAsync();
+        public Task<Supplier> GetSupplierByIdAsync(int id);
+
+        //Inventory
+        public Task<IEnumerable<Inventory>> GetAllInventoryAsync();
+        public Task<Inventory> GetInventoryByIdAsync(int id);
+        public Task<IEnumerable<Inventory>> GetInventoryByProductIdAsync(int productId);
+        public Task<IEnumerable<Inventory>> GetExpiredInventoryAsync();
+        public Task<IEnumerable<Inventory>> GetNearExpiryInventoryAsync();
+        public Task<IEnumerable<Inventory>> GetCriticalStockInventoryAsync();
+
+        //VAT
+        public Task<IEnumerable<VAT>> GetAllVATAsync();
+        public Task<VAT> GetVATByIdAsync(int id);
+
+        //PurchaseOrder
+        public Task<IEnumerable<PurchaseOrder>> GetAllPurchaseOrderAsync();
+        public Task<PurchaseOrder> GetPurchaseOrderByIdAsync(int id);
+        public Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderBySupplierIdAsync(int supplierId);
+        public Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderByStatusAsync(string status);
+
+        //StockMovement
+        public Task<IEnumerable<StockMovement>> GetAllStockMovementAsync();
+        public Task<StockMovement> GetStockMovementByIdAsync(int id);
+        public Task<IEnumerable<StockMovement>> GetStockMovementByInventoryIdAsync(int inventoryId);
+        public Task<IEnumerable<StockMovement>> GetStockMovementByProductIdAsync(int productId);
     }
 }

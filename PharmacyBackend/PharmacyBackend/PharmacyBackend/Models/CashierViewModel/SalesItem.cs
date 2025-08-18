@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Model/CashierViewModel/SalesItem.cs
+
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PharmacyBackend.Models.CashierViewModel
 {
@@ -15,6 +18,9 @@ namespace PharmacyBackend.Models.CashierViewModel
 
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Price { get; set; }
         public decimal Subtotal { get; set; }
     }
 }
