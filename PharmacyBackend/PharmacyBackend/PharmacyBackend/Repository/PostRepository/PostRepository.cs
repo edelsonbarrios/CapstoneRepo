@@ -28,7 +28,28 @@ namespace PharmacyBackend.Repository.POST
             _jwtHelper = jwtHelper;
             _config = config;
         }
-        //employee
+        #region Account
+        public async Task<string> AuthenticationAsync(LogInRequest request)
+        {
+            var account = await _context.Accounts.Where(a => a.Username.Equals(request.Username))
+                .Include(a => a.Employee)
+                .ThenInclude(e => e.Role)
+                .FirstOrDefaultAsync();
+            if (account is null)
+                return null;
+            if (!account.EncryptedPassword.Equals(request.Password))
+                return null;
+            string token = _jwtHelper.TokenGeneration(account);
+            return token;
+        }
+
+        public async Task<bool> CreateAccountAsync(Account request)
+        {
+            await _context.Accounts.AddAsync(request);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public string TokenGeneration(Account request)
         {
             var claims = new List<Claim>
@@ -53,107 +74,96 @@ namespace PharmacyBackend.Repository.POST
             return new JwtSecurityTokenHandler().WriteToken(tokenDescription);
 
         }
+        #endregion
 
+        #region Employee
         public async Task<int> CreateEmployeeAsync(Employee request)
         {
             await _context.Employees.AddAsync(request);
             await _context.SaveChangesAsync();
             return request.Id;
         }
+        #endregion
 
-        public async Task<string> AuthenticationAsync(LogInRequest request)
-        {
-            var account = await _context.Accounts.Where(a => a.Username.Equals(request.Username))
-                .Include(a => a.Employee)
-                .ThenInclude(e => e.Role)
-                .FirstOrDefaultAsync();
-            if (account is null)
-                return null;
-            if (!account.EncryptedPassword.Equals(request.Password))
-                return null;
-            string token = _jwtHelper.TokenGeneration(account);
-            return token;
-        }
-
-        public async Task<bool> CreateAccountAsync(Account request)
-        {
-            await _context.Accounts.AddAsync(request);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-        //sale
+        #region Sales
         public async Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction sale)
         {
             await _context.SalesTransaction.AddAsync(sale);
             await _context.SaveChangesAsync();
             return sale;
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<Discount> CreateDiscountAsync(Discount discount)
         {
             await _context.Discounts.AddAsync(discount);
             await _context.SaveChangesAsync();
             return discount;
         }
+        #endregion
 
-        //Product
+        #region Product
         public async Task<Product> CreateProductAsync(Product product)
         {
             await _context.Product.AddAsync(product);
             await _context.SaveChangesAsync();
             return product;
         }
-        //Category
+        #endregion
+
+        #region Category
         public async Task<Category> CreateCategoryAsync(Category category)
         {
             await _context.Category.AddAsync(category);
             await _context.SaveChangesAsync();
             return category;
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<Brand> CreateBrandAsync(Brand brand)
         {
             await _context.Brand.AddAsync(brand);
             await _context.SaveChangesAsync();
             return brand;
         }
+        #endregion
 
-        //Generic 
+        #region Generic
         public async Task<Generic> CreateGenericAsync(Generic generic)
         {
             await _context.Generic.AddAsync(generic);
             await _context.SaveChangesAsync();
             return generic;
         }
+        #endregion
 
-        //Formulation
-
+        #region Formulation
         public async Task<Formulation> CreateFormulationAsync(Formulation formulation)
         {
             await _context.Formulation.AddAsync(formulation);
             await _context.SaveChangesAsync();
             return formulation;
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<Classification> CreateClassificationAsync(Classification classification)
         {
             await _context.Classification.AddAsync(classification);
             await _context.SaveChangesAsync();
             return classification;
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<TypeModel> CreateTypeModelAsync(TypeModel typeModel)
         {
             await _context.TypeModel.AddAsync(typeModel);
             await _context.SaveChangesAsync();
             return typeModel;
         }
-
+        #endregion
     }
 }

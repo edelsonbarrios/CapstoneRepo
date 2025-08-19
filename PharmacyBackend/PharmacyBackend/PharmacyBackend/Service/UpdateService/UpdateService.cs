@@ -27,7 +27,7 @@ namespace PharmacyBackend.Service.UpdateService
             _updateRepo = updateRepo;
             _getRepo = getRepo;
         }
-
+        #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
         {
             if (request is null)
@@ -48,7 +48,9 @@ namespace PharmacyBackend.Service.UpdateService
                 return false;
             return true;
         }
+        #endregion
 
+        #region Employee
         public async Task<bool> UpdateEmployeeAsync(UpdateEmployeeRequest request)
         {
             if (request is null)
@@ -56,7 +58,7 @@ namespace PharmacyBackend.Service.UpdateService
 
             int roleId = 0;
 
-            switch(request.RolePosition)
+            switch (request.RolePosition)
             {
                 case "Administrator":
                     roleId = 1;
@@ -91,8 +93,9 @@ namespace PharmacyBackend.Service.UpdateService
                 return false;
             return true;
         }
+        #endregion
 
-        //sales 
+        #region Sales
         public async Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto)
         {
             var existing = await _getRepo.GetSalesTransactionByIdAsync(id);
@@ -116,8 +119,9 @@ namespace PharmacyBackend.Service.UpdateService
 
             return await _updateRepo.UpdateSalesTransactionAsync(existing);
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto)
         {
             var existing = await _getRepo.GetDiscountByIdAsync(id);
@@ -129,8 +133,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateDiscountAsync(existing);
             return true;
         }
+        #endregion
 
-        //Product
+        #region Product
         public async Task<bool> UpdateProductAsync(int id, UpdateProductDto dto)
         {
             var existing = await _getRepo.GetProductByIdAsync(id);
@@ -151,8 +156,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateProductAsync(existing);
             return true;
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto)
         {
             var existing = await _getRepo.GetCategoryByIdAsync(id);
@@ -164,22 +170,22 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateCategoryAsync(existing);
             return true;
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto)
         {
             var existing = await _getRepo.GetBrandByIdAsync(id);
             if (existing == null) return false;
-            
+
             existing.BrandName = dto.BrandName;
 
             await _updateRepo.UpdateBrandAsync(existing);
             return true;
         }
+        #endregion
 
-        //Generic
+        #region Generic
         public async Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto)
         {
             var existing = await _getRepo.GetGenericByIdAsync(id);
@@ -190,8 +196,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateGenericAsync(existing);
             return true;
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto)
         {
             var existing = await _getRepo.GetFormulationByIdAsync(id);
@@ -202,8 +209,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateFormulationAsync(existing);
             return true;
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto)
         {
             var existing = await _getRepo.GetClassificationByIdAsync(id);
@@ -214,8 +222,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateClassificationAsync(existing);
             return true;
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto)
         {
             var existing = await _getRepo.GetTypeModelByIdAsync(id);
@@ -226,5 +235,6 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateTypeModelAsync(existing);
             return true;
         }
+        #endregion
     }
 }

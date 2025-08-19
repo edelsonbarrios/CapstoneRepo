@@ -23,6 +23,7 @@ namespace PharmacyBackend.Service.PostService
             _postRepo = postRepo;
         }
 
+        #region Account
         public async Task<string> AuthenticationAsync(LogInRequest request)
         {
             var enteredPassword = AesHelper.Encrypt(request.Password);
@@ -50,14 +51,16 @@ namespace PharmacyBackend.Service.PostService
                 return false;
             return createAccount;
         }
+        #endregion
 
+        #region Employee
         public async Task<int> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
             if (request is null)
                 return 0;
 
             int roleId = 0;
-            switch(request.RolePosition)
+            switch (request.RolePosition)
             {
                 case "Administrator":
                     roleId = 1;
@@ -90,9 +93,9 @@ namespace PharmacyBackend.Service.PostService
                 return 0;
             return employeeId;
         }
+        #endregion
 
-        //sale 
-
+        #region Sales
         public async Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto)
         {
             if (dto == null || dto.Items == null || !dto.Items.Any())
@@ -102,7 +105,7 @@ namespace PharmacyBackend.Service.PostService
             {
                 TransactionDate = DateTime.Now,
                 InvoiceNumber = dto.InvoiceNumber,
-                DiscountId = dto.DiscountId, 
+                DiscountId = dto.DiscountId,
                 DiscountAmount = 0,
                 Items = dto.Items.Select(i => new SalesItem
                 {
@@ -127,8 +130,9 @@ namespace PharmacyBackend.Service.PostService
                 NetAmount = created.NetAmount
             };
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<DiscountDto> CreateDiscountAsync(CreateDiscountDto dto)
         {
             var discount = new Discount
@@ -145,7 +149,9 @@ namespace PharmacyBackend.Service.PostService
                 DiscountRate = result.DiscountRate
             };
         }
-        //Product
+        #endregion
+
+        #region Product
         public async Task<ProductDto> CreateProductAsync(CreateProductDto dto)
         {
             var product = new Product
@@ -181,8 +187,9 @@ namespace PharmacyBackend.Service.PostService
                 IsActive = created.IsActive
             };
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto)
         {
             var category = new Category
@@ -198,27 +205,26 @@ namespace PharmacyBackend.Service.PostService
                 CategoryName = created.CategoryName
             };
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<BrandDto> CreateBrandAsync(CreateBrandDto dto)
         {
-            var brand = new Brand 
-            { 
+            var brand = new Brand
+            {
                 BrandName = dto.BrandName
             };
             var created = await _postRepo.CreateBrandAsync(brand);
 
-            return new BrandDto 
-            { 
-                BrandID = created.BrandID, 
+            return new BrandDto
+            {
+                BrandID = created.BrandID,
                 BrandName = created.BrandName
             };
         }
+        #endregion
 
-        //Generic
-
+        #region Generic
         public async Task<GenericDto> CreateGenericAsync(CreateGenericDto dto)
         {
             var generic = new Generic
@@ -233,8 +239,9 @@ namespace PharmacyBackend.Service.PostService
                 GenericName = created.GenericName
             };
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto)
         {
             var formulation = new Formulation
@@ -249,8 +256,9 @@ namespace PharmacyBackend.Service.PostService
                 FormulationName = created.FormulationName
             };
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto)
         {
             var classification = new Classification
@@ -265,8 +273,9 @@ namespace PharmacyBackend.Service.PostService
                 ClassificationName = created.ClassificationName
             };
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto)
         {
             var type = new TypeModel
@@ -281,6 +290,6 @@ namespace PharmacyBackend.Service.PostService
                 TypeName = created.TypeName
             };
         }
-
+        #endregion
     }
 }

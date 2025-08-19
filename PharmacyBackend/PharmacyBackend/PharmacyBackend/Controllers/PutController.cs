@@ -24,6 +24,7 @@ namespace PharmacyBackend.Controllers
             _updateService = updateService;
         }
 
+        #region Employee
         [HttpPut("Employee")]
         public async Task<ActionResult<EmployeeRequestResponse>> UpdateEmployeeAsync(UpdateEmployeeRequest request)
         {
@@ -34,6 +35,9 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new EmployeeRequestResponse { Message = "Failed to updated employee." });
             return Ok(new EmployeeRequestResponse { Message = "Employee updated sucessfully." });
         }
+        #endregion
+
+        #region Account
         [HttpPut("Account")]
         public async Task<ActionResult<UpdateAccountResponse>> UpdateAccountAsync(UpdateAccountRequest request)
         {
@@ -46,6 +50,9 @@ namespace PharmacyBackend.Controllers
 
             return Ok(new UpdateAccountResponse { Message = "Account successfully updated." });
         }
+        #endregion
+
+        #region Sale
         [HttpPut("update/sale")]
         public async Task<IActionResult> UpdateSalesTransactionAsync(int id, [FromBody] UpdateSalesTransactionDto dto)
         {
@@ -55,7 +62,9 @@ namespace PharmacyBackend.Controllers
 
             return Ok("Sales transaction updated successfully.");
         }
+        #endregion
 
+        #region Discount
         [HttpPut("Update/Discount")]
         public async Task<IActionResult> UpdateDiscountAsync(int id, [FromBody] UpdateDiscountDto dto)
         {
@@ -64,7 +73,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
+        #region Product
         [HttpPut("Update/Product")]
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] UpdateProductDto dto)
         {
@@ -73,7 +84,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
+        #region Category
         [HttpPut("Update/Category")]
         public async Task<IActionResult> UpdateCategoryAsync(int id, [FromBody] UpdateCategoryDto dto)
         {
@@ -82,10 +95,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Category not found or update failed.");
             return Ok("Category updated successfully.");
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         [HttpPut("Update/Brand")]
         public async Task<IActionResult> UpdateBrandAsync(int id, [FromBody] UpdateBrandDto dto)
         {
@@ -94,8 +106,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Generic
+        #region Generic
         [HttpPut("Update/Generic")]
         public async Task<IActionResult> UpdateGenericAsync(int id, [FromBody] UpdateGenericDto dto)
         {
@@ -104,8 +117,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         [HttpPut("Update/Formulation")]
         public async Task<IActionResult> UpdateFormulationAsync(int id, [FromBody] UpdateFormulationDto dto)
         {
@@ -114,8 +128,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Classification
+        #region Classification
         [HttpPut("Update/Classification")]
         public async Task<IActionResult> UpdateClassificationAsync(int id, [FromBody] UpdateClassificationDto dto)
         {
@@ -124,8 +139,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Type
+        #region Type
         [HttpPut("Update/Type")]
         public async Task<IActionResult> UpdateTypeModelAsync(int id, [FromBody] UpdateTypeModelDto dto)
         {
@@ -134,5 +150,6 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
     }
 }

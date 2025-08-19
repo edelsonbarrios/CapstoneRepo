@@ -14,6 +14,7 @@ namespace PharmacyBackend.Repository.GET
             _context = context;
         }
 
+        #region Account
         public async Task<bool> AccountUsernameValidation(string userName)
         {
             return await _context.Accounts.AnyAsync(a => a.Username.Equals(userName));
@@ -28,8 +29,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Accounts.ToListAsync();
         }
+        #endregion
 
-        //employee
+        #region Employee
         public async Task<List<Employee>> GetAllEmployeesAsync()
         {
             return await _context.Employees
@@ -43,14 +45,22 @@ namespace PharmacyBackend.Repository.GET
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
+        public async Task<List<Employee>> GetEmployeeByLastName(string lastName)
+        {
+            return await _context.Employees
+                .Include(e => e.Role)
+                .AsNoTracking()
+                .Where(e => e.LastName.Contains(lastName)).ToListAsync();
+        }
+        #endregion
 
-        //sales
+        #region Sales
         public async Task<List<SalesTransaction>> GetAllSalesTransactionsAsync()
         {
             return await _context.SalesTransaction
-                .Include(t => t.Discount) 
-                .Include(t => t.Items)   
-                  .ThenInclude(i => i.Product) 
+                .Include(t => t.Discount)
+                .Include(t => t.Items)
+                  .ThenInclude(i => i.Product)
                 .ToListAsync();
         }
 
@@ -62,8 +72,9 @@ namespace PharmacyBackend.Repository.GET
                 .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<IEnumerable<Discount>> GetAllDiscountAsync()
         {
             return await _context.Discounts.ToListAsync();
@@ -73,19 +84,21 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Discounts.FindAsync(id);
         }
+        #endregion
 
-        //Product
+        #region Product
         public async Task<IEnumerable<Product>> GetAllProductAsync()
         {
             return await _context.Product.ToListAsync();
         }
-        
+
         public async Task<Product?> GetProductByIdAsync(int id)
         {
             return await _context.Product.FindAsync(id);
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<IEnumerable<Category>> GetAllCategoryAsync()
         {
             return await _context.Category.ToListAsync();
@@ -95,10 +108,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Category.FindAsync(id);
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<IEnumerable<Brand>> GetAllBrandAsync()
         {
             return await _context.Brand.ToListAsync();
@@ -107,8 +119,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Brand.FindAsync(id);
         }
+        #endregion
 
-        //Generic
+        #region Generic
         public async Task<IEnumerable<Generic>> GetAllGenericAsync()
         {
             return await _context.Generic.ToListAsync();
@@ -117,8 +130,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Generic.FindAsync(id);
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<IEnumerable<Formulation>> GetAllFormulationAsync()
         {
             return await _context.Formulation.ToListAsync();
@@ -127,8 +141,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Formulation.FindAsync(id);
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<IEnumerable<Classification>> GetAllClassificationAsync()
         {
             return await _context.Classification.ToListAsync();
@@ -137,8 +152,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Classification.FindAsync(id);
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<IEnumerable<TypeModel>> GetAllTypeModelAsync()
         {
             return await _context.TypeModel.ToListAsync();
@@ -147,18 +163,14 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.TypeModel.FindAsync(id);
         }
-        
+        #endregion
+
+        #region Role
         public async Task<IEnumerable<Role>> GetAllRolesAsync()
         {
             return await _context.Roles.ToListAsync();
         }
+        #endregion
 
-        public async Task<List<Employee>> GetEmployeeByLastName(string lastName)
-        {
-            return await _context.Employees
-                .Include(e => e.Role)
-                .AsNoTracking()
-                .Where(e => e.LastName.Contains(lastName)).ToListAsync();
-        }
     }
 }

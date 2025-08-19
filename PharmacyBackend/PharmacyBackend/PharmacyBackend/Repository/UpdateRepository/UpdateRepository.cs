@@ -12,94 +12,103 @@ namespace PharmacyBackend.Repository.UpdateRepository
         {
             _context = context;
         }
-
+        #region Account
         public async Task<bool> UpdateAccountAsync(Account request)
         {
             _context.Update(request);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //employee
+        #region Employee
         public async Task<bool> UpdateEmployeeAsync(Employee request)
         {
             _context.Update(request);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //sales
+        #region Sales
         public async Task<bool> UpdateSalesTransactionAsync(SalesTransaction sale)
         {
             _context.SalesTransaction.Update(sale);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<bool> UpdateDiscountAsync(Discount discount)
         {
             _context.Discounts.Update(discount);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Product
+        #region Product
         public async Task<bool> UpdateProductAsync(Product product)
         {
             _context.Product.Update(product);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<bool> UpdateCategoryAsync(Category category)
         {
             _context.Category.Update(category);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<bool> UpdateBrandAsync(Brand brand)
         {
             _context.Brand.Update(brand);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Generic
+        #region Generic
         public async Task<bool> UpdateGenericAsync(Generic generic)
         {
             _context.Generic.Update(generic);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<bool> UpdateFormulationAsync(Formulation formulation)
         {
             _context.Formulation.Update(formulation);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<bool> UpdateClassificationAsync(Classification classification)
         {
             _context.Classification.Update(classification);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //TypeModel
+        #region Type
         public async Task<bool> UpdateTypeModelAsync(TypeModel typeModel)
         {
             _context.TypeModel.Update(typeModel);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
     }
 }

@@ -21,7 +21,7 @@ namespace PharmacyBackend.Controllers
             _getService = getService;
         }
 
-        #region EmployeeController
+        #region Employee
         [HttpGet("EmployeeAll")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAsync()
         {
@@ -51,7 +51,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
 
-        #region AccountController
+        #region Account
         [HttpGet("AccountAll")]
         public async Task<ActionResult<List<AccountDTO>>> GetAllAccountsAsync()
         {
@@ -73,7 +73,6 @@ namespace PharmacyBackend.Controllers
         #endregion
 
 
-        //SALE
         #region Sales
         [HttpGet("SaleAll")]
         public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesTransactionsAsync()
@@ -94,7 +93,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //DISCOUNT
         #region Discount 
         [HttpGet("DiscountAll")]
         public async Task<IActionResult> GetAllDiscountsAsync()
@@ -114,7 +112,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //Product
         #region Product
         [HttpGet("ProductAll")]
         public async Task<IActionResult> GetAllProductAsync()
@@ -133,7 +130,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //Category
         #region Category
         [HttpGet("CategoryAll")]
         public async Task<IActionResult> GetAllCategoryAsync()
@@ -154,8 +150,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //ItemDataControl
-        //Brand
         #region Brand
         [HttpGet("BrandAll")]
         public async Task<IActionResult> GetAllBrandAsync()
@@ -176,7 +170,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //Generic
         #region Generic
         [HttpGet("GenericAll")]
         public async Task<IActionResult> GetAllGenericAsync()
@@ -197,7 +190,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //Formulation
         #region Formulation
         [HttpGet("FormulationAll")]
         public async Task<IActionResult> GetAllFormulationAsync()
@@ -218,7 +210,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //Classification
         #region Classification
         [HttpGet("ClassificationAll")]
         public async Task<IActionResult> GetAllClassificationAsync()
@@ -239,7 +230,6 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-        //Type
         #region Type
         [HttpGet("TypeAll")]
         public async Task<IActionResult> GetAllTypeModelAsync()

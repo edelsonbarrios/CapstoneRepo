@@ -12,6 +12,7 @@ namespace PharmacyBackend.Repository.DELETE
             _context = context;
         }
 
+        #region Account
         public async Task<bool> DeleteAccountByIdAsync(int id)
         {
             var account = await _context.Accounts.FindAsync(id);
@@ -21,7 +22,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
+        #region Employee
         public async Task<bool> DeleteEmployeeByIdAsync(int id)
         {
             var employee = await _context.Employees.FindAsync(id);
@@ -31,8 +34,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //sales
+        #region Sales
         public async Task<bool> DeleteSalesTransactionByIdAsync(int id)
         {
             var sale = await _context.SalesTransaction.FindAsync(id);
@@ -43,46 +47,48 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<bool> DeleteDiscountByIdAsync(int id)
         {
             var discount = await _context.Discounts.FindAsync(id);
-            if (discount == null) 
+            if (discount == null)
                 return false;
 
             _context.Discounts.Remove(discount);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Product
+        #region Product
         public async Task<bool> DeleteProductByIdAsync(int id)
         {
             var product = await _context.Product.FindAsync(id);
-            if (product == null) 
+            if (product == null)
                 return false;
 
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<bool> DeleteCategoryByIdAsync(int id)
         {
             var category = await _context.Category.FindAsync(id);
-            if (category == null) 
+            if (category == null)
                 return false;
 
             _context.Category.Remove(category);
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<bool> DeleteBrandByIdAsync(int id)
         {
             var brand = await _context.Brand.FindAsync(id);
@@ -93,8 +99,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Generic
+        #region Generic
         public async Task<bool> DeleteGenericByIdAsync(int id)
         {
             var generic = await _context.Generic.FindAsync(id);
@@ -105,8 +112,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<bool> DeleteFormulationByIdAsync(int id)
         {
             var formulation = await _context.Formulation.FindAsync(id);
@@ -117,8 +125,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Classififcation
+        #region Classification
         public async Task<bool> DeleteClassificationByIdAsync(int id)
         {
             var classification = await _context.Classification.FindAsync(id);
@@ -129,11 +138,12 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<bool> DeleteTypeModelByIdAsync(int id)
         {
-            var typemodel= await _context.TypeModel.FindAsync(id);
+            var typemodel = await _context.TypeModel.FindAsync(id);
             if (typemodel == null)
                 return false;
 
@@ -141,5 +151,6 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
     }
 }

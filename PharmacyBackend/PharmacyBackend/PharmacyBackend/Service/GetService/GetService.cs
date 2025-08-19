@@ -21,44 +21,7 @@ namespace PharmacyBackend.Service.GetService
             _getRepo = getRepo;
         }
 
-        public async Task<bool> AccountUsernameValidation(string userName)
-        {
-            if (string.IsNullOrEmpty(userName))
-                return false;
-            var validateUsername = await _getRepo.AccountUsernameValidation(userName);
-            return validateUsername;
-        }
-        public async Task<AccountDTO> GetAccountByIdAsync(int id)
-        {
-            var account = await _getRepo.GetAccountByIdAsync(id);
-            if (account is null)
-                return null;
-            var modifAccount = new AccountDTO
-            {
-                Id = account.Id,
-                AccountCode = account.AccountCode,
-                Username = account.Username,
-                DecryptedPassword = account.EncryptedPassword,
-            };
-            return modifAccount;
-        }
-
-        public async Task<List<AccountDTO>> GetAllAccountsAsync()
-        {
-            var accounts = await _getRepo.GetAllAccountsAsync();
-            if (!accounts.Any() && accounts.Count() == 0)
-                return new List<AccountDTO>();
-            var modifAccounts = accounts.Select(a => new AccountDTO
-            {
-                Id = a.Id,
-                AccountCode = a.AccountCode,
-                Username = a.Username,
-                DecryptedPassword = a.EncryptedPassword,
-            }).ToList();
-            return modifAccounts;
-        }
-
-        //employee
+        #region Employees
         public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()
         {
             var employees = await _getRepo.GetAllEmployeesAsync();
@@ -105,8 +68,76 @@ namespace PharmacyBackend.Service.GetService
             return modifEmployee;
         }
 
-        //sales
+        public async Task<List<EmployeeDTO>> GetEmployeeByLastName(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+                return null;
+            var employee = await _getRepo.GetEmployeeByLastName(lastName);
+            if (employee is null)
+                return null;
+            var modifEmployees = employee.Select(e => new EmployeeDTO
+            {
+                Id = e.Id,
+                EmployeeCode = e.EmployeeCode,
+                LastName = e.LastName,
+                FirstName = e.FirstName,
+                MiddleName = e.MiddleName,
+                Age = e.Age,
+                BirthDate = e.BirthDate,
+                CivilStatus = e.CivilStatus,
+                Gender = e.Gender,
+                Email = e.Email,
+                Address = e.Address,
+                RolePosition = e.Role.RolePosition,
+                FullName = e.FullName
+            }).ToList();
+            return modifEmployees;
+        }
+        #endregion
 
+        #region Account
+        public async Task<bool> AccountUsernameValidation(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return false;
+            var validateUsername = await _getRepo.AccountUsernameValidation(userName);
+            return validateUsername;
+        }
+
+        public async Task<List<AccountDTO>> GetAllAccountsAsync()
+        {
+            var accounts = await _getRepo.GetAllAccountsAsync();
+            if (!accounts.Any() && accounts.Count() == 0)
+                return new List<AccountDTO>();
+            var modifAccounts = accounts.Select(a => new AccountDTO
+            {
+                Id = a.Id,
+                AccountCode = a.AccountCode,
+                Username = a.Username,
+                DecryptedPassword = a.EncryptedPassword,
+            }).ToList();
+            return modifAccounts;
+        }
+
+        public async Task<AccountDTO> GetAccountByIdAsync(int id)
+        {
+            var account = await _getRepo.GetAccountByIdAsync(id);
+            if (account is null)
+                return null;
+            var modifAccount = new AccountDTO
+            {
+                Id = account.Id,
+                AccountCode = account.AccountCode,
+                Username = account.Username,
+                DecryptedPassword = account.EncryptedPassword,
+            };
+            return modifAccount;
+        }
+
+
+        #endregion
+
+        #region Sales
         public async Task<List<SalesTransactionDto>> GetAllSalesTransactionsAsync()
         {
             var transactions = await _getRepo.GetAllSalesTransactionsAsync();
@@ -135,7 +166,7 @@ namespace PharmacyBackend.Service.GetService
         public async Task<SalesTransactionDto> GetSalesTransactionByIdAsync(int id)
         {
             var transaction = await _getRepo.GetSalesTransactionByIdAsync(id);
-            if (transaction is null) 
+            if (transaction is null)
                 return null;
             return new SalesTransactionDto
             {
@@ -159,7 +190,10 @@ namespace PharmacyBackend.Service.GetService
             };
         }
 
-        //Discount
+
+        #endregion
+
+        #region Discount
         public async Task<IEnumerable<DiscountDto>> GetAllDiscountAsync()
         {
             var discounts = await _getRepo.GetAllDiscountAsync();
@@ -174,8 +208,8 @@ namespace PharmacyBackend.Service.GetService
         public async Task<DiscountDto?> GetDiscountByIdAsync(int id)
         {
             var d = await _getRepo.GetDiscountByIdAsync(id);
-            if (d == null) 
-               return null;
+            if (d == null)
+                return null;
             return new DiscountDto
             {
                 Id = d.Id,
@@ -183,8 +217,9 @@ namespace PharmacyBackend.Service.GetService
                 DiscountRate = d.DiscountRate
             };
         }
+        #endregion region
 
-        //Product
+        #region Products
         public async Task<IEnumerable<ProductDto>> GetAllProductAsync()
         {
             var products = await _getRepo.GetAllProductAsync();
@@ -226,8 +261,9 @@ namespace PharmacyBackend.Service.GetService
                 IsActive = p.IsActive
             };
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<IEnumerable<CategoryDto>> GetAllCategoryAsync()
         {
             var categories = await _getRepo.GetAllCategoryAsync();
@@ -241,7 +277,7 @@ namespace PharmacyBackend.Service.GetService
         public async Task<CategoryDto> GetCategoryByIdAsync(int id)
         {
             var c = await _getRepo.GetCategoryByIdAsync(id);
-            if (c == null) 
+            if (c == null)
                 return null;
             return new CategoryDto
             {
@@ -249,10 +285,9 @@ namespace PharmacyBackend.Service.GetService
                 CategoryName = c.CategoryName
             };
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<IEnumerable<BrandDto>> GetAllBrandAsync()
         {
             var brand = await _getRepo.GetAllBrandAsync();
@@ -266,17 +301,17 @@ namespace PharmacyBackend.Service.GetService
         public async Task<BrandDto?> GetBrandByIdAsync(int id)
         {
             var b = await _getRepo.GetBrandByIdAsync(id);
-            if (b == null) 
+            if (b == null)
                 return null;
-            return new BrandDto 
-            { 
-                BrandID = b.BrandID, 
+            return new BrandDto
+            {
+                BrandID = b.BrandID,
                 BrandName = b.BrandName
             };
         }
+        #endregion
 
-        //Generic
-
+        #region Generic
         public async Task<IEnumerable<GenericDto>> GetAllGenericAsync()
         {
             var generic = await _getRepo.GetAllGenericAsync();
@@ -290,7 +325,7 @@ namespace PharmacyBackend.Service.GetService
         public async Task<GenericDto?> GetGenericByIdAsync(int id)
         {
             var g = await _getRepo.GetGenericByIdAsync(id);
-            if (g == null) 
+            if (g == null)
                 return null;
             return new GenericDto
             {
@@ -298,8 +333,9 @@ namespace PharmacyBackend.Service.GetService
                 GenericName = g.GenericName
             };
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<IEnumerable<FormulationDto>> GetAllFormulationAsync()
         {
             var Formulation = await _getRepo.GetAllFormulationAsync();
@@ -321,8 +357,9 @@ namespace PharmacyBackend.Service.GetService
                 FormulationName = f.FormulationName
             };
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<IEnumerable<ClassificationDto>> GetAllClassificationAsync()
         {
             var classification = await _getRepo.GetAllClassificationAsync();
@@ -344,8 +381,9 @@ namespace PharmacyBackend.Service.GetService
                 ClassificationName = c.ClassificationName
             };
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<IEnumerable<TypeModelDto>> GetAllTypeModelAsync()
         {
             var type = await _getRepo.GetAllTypeModelAsync();
@@ -367,32 +405,7 @@ namespace PharmacyBackend.Service.GetService
                 TypeName = t.TypeName
             };
         }
-
-        public async Task<List<EmployeeDTO>> GetEmployeeByLastName(string lastName)
-        {
-            if (string.IsNullOrEmpty(lastName))
-                return null;
-            var employee = await _getRepo.GetEmployeeByLastName(lastName);
-            if (employee is null)
-                return null;
-            var modifEmployees = employee.Select(e => new EmployeeDTO
-            {
-                Id = e.Id,
-                EmployeeCode = e.EmployeeCode,
-                LastName = e.LastName,
-                FirstName = e.FirstName,
-                MiddleName = e.MiddleName,
-                Age = e.Age,
-                BirthDate = e.BirthDate,
-                CivilStatus = e.CivilStatus,
-                Gender = e.Gender,
-                Email = e.Email,
-                Address = e.Address,
-                RolePosition = e.Role.RolePosition,
-                FullName = e.FullName
-            }).ToList();
-            return modifEmployees;
-        }
+        #endregion
     }
 }
 

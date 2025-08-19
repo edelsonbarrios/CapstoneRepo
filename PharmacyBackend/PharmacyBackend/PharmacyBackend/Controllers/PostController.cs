@@ -29,6 +29,8 @@ namespace PharmacyBackend.Controllers
             _postService = postService;
             _getService = getService;
         }
+
+        #region Employee
         [HttpPost("Employee")]
         public async Task<ActionResult<EmployeeRequestResponse>> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
@@ -39,6 +41,9 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new EmployeeRequestResponse { Message = "Employee cannot be created. Please try again." });
             return Ok(new EmployeeRequestResponse { Message = $"Employee successfully created. " });
         }
+        #endregion
+
+        #region Account
         [HttpPost("Login")]
         public async Task<ActionResult<LogInResponse>> AuthenticationAsync(LogInRequest request)
         {
@@ -65,22 +70,28 @@ namespace PharmacyBackend.Controllers
 
             return Ok(new CreateAccountResponse { Message = "Account successfully created." });
         }
-        //salesController
+        #endregion
+
+
+        #region Sales
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSalesTransactionAsync([FromBody] CreateSalesTransactionDto dto)
         {
             var result = await _postService.CreateSalesTransactionAsync(dto);
             return Ok(result);
         }
+        #endregion
 
-        //DiscountController
+        #region Discount
         [HttpPost("Discount")]
         public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
         {
             var result = await _postService.CreateDiscountAsync(dto);
             return Ok(result);
         }
+        #endregion
 
+        #region Product
         [HttpPost("Product")]
         public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductDto dto)
         {
@@ -89,54 +100,60 @@ namespace PharmacyBackend.Controllers
             return Ok(result);
 
         }
+        #endregion
 
+        #region Category
         [HttpPost("Category")]
         public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryDto dto)
         {
             var result = await _postService.CreateCategoryAsync(dto);
             return Ok(result);
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         [HttpPost("Brand")]
         public async Task<IActionResult> CreateBrandAsync([FromBody] CreateBrandDto dto)
         {
             var result = await _postService.CreateBrandAsync(dto);
             return Ok(result);
         }
+        #endregion
 
-        //Generic
+        #region Generic
         [HttpPost("Generic")]
         public async Task<IActionResult> CreateGenericAsync([FromBody] CreateGenericDto dto)
         {
             var result = await _postService.CreateGenericAsync(dto);
             return Ok(result);
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         [HttpPost("Formulation")]
         public async Task<IActionResult> CreateFormulationAsync([FromBody] CreateFormulationDto dto)
         {
             var result = await _postService.CreateFormulationAsync(dto);
             return Ok(result);
         }
+        #endregion
 
-        //Classification
+        #region Classification
         [HttpPost("Classification")]
         public async Task<IActionResult> CreateClassificationAsync([FromBody] CreateClassificationDto dto)
         {
             var result = await _postService.CreateClassificationAsync(dto);
             return Ok(result);
         }
+        #endregion
 
-        //Type
+        #region Type
         [HttpPost("Type")]
         public async Task<IActionResult> CreateTypeModelAsync([FromBody] CreateTypeModelDto dto)
         {
             var result = await _postService.CreateTypeModelAsync(dto);
             return Ok(result);
         }
+        #endregion
     }
 }
