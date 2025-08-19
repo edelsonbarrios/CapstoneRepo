@@ -1,0 +1,46 @@
+.wrapper {
+  width: 600px;
+  height: 600px;
+  background-color: #f9fbfe;
+  border-radius: 1rem;
+  padding: 1rem;
+
+
+  header {
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 30px;
+      margin-right: 7px;
+    }
+
+    h1 {
+      font-size: var(--fs-regular);
+    }
+  }
+
+  .display-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      margin-block: 1rem;
+      width: 120px;
+    }
+
+    h1 {
+      font-size: var(--fs-large);
+    }
+    h2 {
+      font-size: var(--fs-regular);
+    }
+
+
+  }
+
+
+}
+

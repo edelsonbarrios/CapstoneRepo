@@ -24,10 +24,17 @@
           <td>{{ e.email }}</td>
           <td>{{ e.rolePosition }}</td>
           <td>
-            <button class="btn details">See Details</button>
+            <button class="btn details" (click)="openViewEmployeeForm(e)">See Details</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="viewEmployee">
+  <app-view-employee *ngIf="viewEmployee"
+  [employee]="viewEmployee"
+  (closeForm)="closeViewEmployeeForm()"
+  ></app-view-employee>
 </div>
