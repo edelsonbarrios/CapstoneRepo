@@ -9,7 +9,7 @@ namespace PharmacyBackend.Models
         public int PurchaseOrderID { get; set; }
 
         public string PurchaseOrderNumber { get; set; } = string.Empty;
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveryDate { get; set; }
 
         public int SupplierID { get; set; }

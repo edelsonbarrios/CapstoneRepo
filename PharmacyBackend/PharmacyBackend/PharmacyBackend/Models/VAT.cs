@@ -14,6 +14,6 @@ namespace PharmacyBackend.Models
         public decimal VATRate { get; set; } // e.g., 12.00 for 12%
 
         public bool IsActive { get; set; } = true;
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
     }
 }

@@ -24,7 +24,7 @@ namespace PharmacyBackend.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal SellingPrice { get; set; }
 
-        public DateTime DateAdded { get; set; } = DateTime.Now;
+        public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
 
         public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();

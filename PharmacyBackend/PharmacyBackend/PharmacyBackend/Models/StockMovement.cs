@@ -21,7 +21,7 @@ namespace PharmacyBackend.Models
 
         public string? Notes { get; set; }
 
-        public DateTime MovementDate { get; set; } = DateTime.Now;
+        public DateTime MovementDate { get; set; } = DateTime.UtcNow;
 
         public int? EmployeeID { get; set; } // Who made the movement
         public Employee? Employee { get; set; } // Navigation
