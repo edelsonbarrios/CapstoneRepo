@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule} from '@angular/forms'
 import { PostService } from '../../services/PostService/post.service';
 import { Router } from '@angular/router';
+import { LogInToken } from '../../shared/token';
 
 @Component({
   selector: 'app-login-view',
@@ -23,7 +24,14 @@ export class LoginViewComponent {
     this.postService.Authentication(this.userName, this.password).subscribe({
       next: res => {
         console.log(`${res.message}`);
-        this.router.navigateByUrl('/admin-main');
+        
+        if(res.token) {
+          localStorage.setItem(LogInToken, res.token);
+          this.router.navigateByUrl('/admin-main');
+        }else {
+          console.log(`${res.message}`);
+        }
+        
       },
       error: err => {
         console.log(`${err.error}`);

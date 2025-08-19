@@ -17,6 +17,9 @@ export class GetService {
   GetAllEmployees() : Observable<Employee[]> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeAll`);
   }
+  GetEmployeeById(employeeId : number) : Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}/Get/Employee?id=${employeeId}`);
+  }
 
 
   //Accounts Service

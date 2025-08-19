@@ -8,6 +8,12 @@ export const routes: Routes = [
     }
   },
   {
+    path: 'log-in',
+    loadComponent: () => {
+      return import('./components/login-view/login-view.component').then(m => m.LoginViewComponent);
+    }
+  },
+  {
     path: 'admin-main',
     loadComponent: () => {
       return import('./components//admin-view/admin-main/admin-main.component').then(m => m.AdminMainComponent);

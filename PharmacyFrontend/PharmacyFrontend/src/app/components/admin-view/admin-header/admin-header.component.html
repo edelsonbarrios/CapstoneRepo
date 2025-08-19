@@ -4,8 +4,8 @@
     <div class="user-info">
       <div class="avatar"></div>
       <div>
-        <div class="name">Kristine Malto</div>
-        <div class="email">kristinemalto&#64;gmail.com</div>
+        <div class="name">{{employee.fullName}}</div>
+        <div class="email">{{employee.email}}</div>
       </div>
     </div>
   </div>
@@ -20,6 +20,6 @@
 
   <div class="bottom-nav">
     <a>⚙️ Settings</a>
-    <a>↩️ Logout</a>
+    <a (click)="logOut()">↩️ Logout</a>
   </div>
 </div>

@@ -33,7 +33,8 @@
 </div>
 
 <div class="modal-overlay" *ngIf="viewEmployee">
-  <app-view-employee *ngIf="viewEmployee"
+  <app-view-employee 
+  *ngIf="viewEmployee"
   [employee]="viewEmployee"
   (closeForm)="closeViewEmployeeForm()"
   ></app-view-employee>

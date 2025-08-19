@@ -16,7 +16,7 @@ export class ViewEmployeeComponent {
 
   ) {}
 
-  showViewEmployeeForm() {
-
+  closeViewForm() {
+    this.closeForm.emit();
   }
 }

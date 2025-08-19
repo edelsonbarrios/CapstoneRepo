@@ -17,11 +17,6 @@ export class PostService {
 
 
   Authentication(userName: string, password: string) : Observable<{token: string, message: string}> {
-    return this.httpClient.post<{token: string, message: string}>(`${BaseApiUrl}/Post/Login`, {userName, password})
-    .pipe(
-      tap(res => {
-        localStorage.setItem(LogInToken, res.token);
-      })
-    );
+    return this.httpClient.post<{token: string, message: string}>(`${BaseApiUrl}/Post/Login`, {userName, password});
   }
 }
