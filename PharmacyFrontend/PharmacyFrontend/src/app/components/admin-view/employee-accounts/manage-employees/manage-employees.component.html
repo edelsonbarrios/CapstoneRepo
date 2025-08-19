@@ -1,32 +1,33 @@
 <div class="wrapper">
-  <table class="employee-table">
-    <thead>
-      <tr>
-        <th>EmployeeCode</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Civil Status</th>
-        <th>Birth Date</th>
-        <th>Role Position</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let e of employees">
-        <td>{{e.employeeCode}}</td>
-        <td>{{e.fullName}}</td>
-        <td>{{e.age}}</td>
-        <td>{{e.gender}}</td>
-        <td>{{e.civilStatus}}</td>
-        <td>{{e.birthDate}}</td>
-        <td>{{e.rolePosition}}</td>
-        <td>
-          <button class="btn view">View</button>
-          <button class="btn edit">Edit</button>
-          <button class="btn archive">Archive</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="card">
+    <!-- Search & Add Employee -->
+    <div class="table-header">
+      <input type="text" placeholder="🔍 Search employee..." class="search-box" />
+      <button class="btn add">+ Add Employee</button>
+    </div>
+
+    <!-- Employee Table -->
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Employee Code</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role Position</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of employees">
+          <td>{{ e.employeeCode }}</td>
+          <td>{{ e.fullName }}</td>
+          <td>{{ e.email }}</td>
+          <td>{{ e.rolePosition }}</td>
+          <td>
+            <button class="btn details">See Details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

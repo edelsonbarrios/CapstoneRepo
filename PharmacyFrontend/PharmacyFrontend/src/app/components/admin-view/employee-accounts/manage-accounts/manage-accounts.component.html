@@ -1,24 +1,30 @@
 <div class="wrapper">
-  <table class="employee-table">
-    <thead>
-      <tr>
-        <th>Account Code</th>
-        <th>Username</th>
-        <th>Password</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let a of accounts">
-        <td>{{a.accountCode}}</td>
-        <td>{{a.username}}</td>
-        <td>{{a.decryptedPassword}}</td>
-        <td>
-          <button class="btn view">View</button>
-          <button class="btn edit">Edit</button>
-          <button class="btn archive">Archive</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="card">
+    <!-- Search & Add Employee -->
+    <div class="table-header">
+      <input type="text" placeholder="🔍 Search Account Username..." class="search-box" />
+    </div>
+
+    <!-- Employee Table -->
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Account Code</th>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of accounts">
+          <td>{{a.accountCode}}</td>
+          <td>{{a.username}}</td>
+          <td>{{a.decryptedPassword}}</td>
+          <td>
+            <button class="btn details">See Details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

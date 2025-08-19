@@ -152,5 +152,13 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Roles.ToListAsync();
         }
+
+        public async Task<List<Employee>> GetEmployeeByLastName(string lastName)
+        {
+            return await _context.Employees
+                .Include(e => e.Role)
+                .AsNoTracking()
+                .Where(e => e.LastName.Contains(lastName)).ToListAsync();
+        }
     }
 }

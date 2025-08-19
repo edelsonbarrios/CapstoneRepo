@@ -368,6 +368,31 @@ namespace PharmacyBackend.Service.GetService
             };
         }
 
+        public async Task<List<EmployeeDTO>> GetEmployeeByLastName(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+                return null;
+            var employee = await _getRepo.GetEmployeeByLastName(lastName);
+            if (employee is null)
+                return null;
+            var modifEmployees = employee.Select(e => new EmployeeDTO
+            {
+                Id = e.Id,
+                EmployeeCode = e.EmployeeCode,
+                LastName = e.LastName,
+                FirstName = e.FirstName,
+                MiddleName = e.MiddleName,
+                Age = e.Age,
+                BirthDate = e.BirthDate,
+                CivilStatus = e.CivilStatus,
+                Gender = e.Gender,
+                Email = e.Email,
+                Address = e.Address,
+                RolePosition = e.Role.RolePosition,
+                FullName = e.FullName
+            }).ToList();
+            return modifEmployees;
+        }
     }
 }
 

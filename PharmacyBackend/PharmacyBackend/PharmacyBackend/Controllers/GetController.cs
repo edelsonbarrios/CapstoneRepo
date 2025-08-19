@@ -21,6 +21,7 @@ namespace PharmacyBackend.Controllers
             _getService = getService;
         }
 
+        #region EmployeeController
         [HttpGet("EmployeeAll")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAsync()
         {
@@ -37,6 +38,20 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Employee does not exist.");
             return Ok(employee);
         }
+        [HttpGet("EmployeeLastName")]
+        public async Task<ActionResult<List<EmployeeDTO>>> GetEmployeeByLastNameAsync(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+                return BadRequest("Last name field is empty. Please try again.");
+            var employees = await _getService.GetEmployeeByLastName(lastName);
+            if (employees is null)
+                return NotFound("Employee does not exist.");
+            return Ok(employees);
+        }
+        #endregion
+
+
+        #region AccountController
         [HttpGet("AccountAll")]
         public async Task<ActionResult<List<AccountDTO>>> GetAllAccountsAsync()
         {
@@ -55,7 +70,11 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Account does not exist.");
             return Ok(account);
         }
+        #endregion
+
+
         //SALE
+        #region Sales
         [HttpGet("SaleAll")]
         public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesTransactionsAsync()
         {
@@ -73,8 +92,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Sales transaction not found.");
             return Ok(sale);
         }
+        #endregion
 
         //DISCOUNT
+        #region Discount 
         [HttpGet("DiscountAll")]
         public async Task<IActionResult> GetAllDiscountsAsync()
         {
@@ -91,8 +112,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Discount not found");
             return Ok(discount);
         }
+        #endregion
 
         //Product
+        #region Product
         [HttpGet("ProductAll")]
         public async Task<IActionResult> GetAllProductAsync()
         {
@@ -108,8 +131,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return Ok(product);
         }
+        #endregion
 
         //Category
+        #region Category
         [HttpGet("CategoryAll")]
         public async Task<IActionResult> GetAllCategoryAsync()
         {
@@ -127,9 +152,11 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Category not found.");
             return Ok(Category);
         }
+        #endregion
 
         //ItemDataControl
         //Brand
+        #region Brand
         [HttpGet("BrandAll")]
         public async Task<IActionResult> GetAllBrandAsync()
         {
@@ -147,8 +174,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Brand Not Found");
             return Ok(Brand);
         }
+        #endregion
 
         //Generic
+        #region Generic
         [HttpGet("GenericAll")]
         public async Task<IActionResult> GetAllGenericAsync()
         {
@@ -166,8 +195,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Brand Not Found");
             return Ok(generic);
         }
+        #endregion
 
         //Formulation
+        #region Formulation
         [HttpGet("FormulationAll")]
         public async Task<IActionResult> GetAllFormulationAsync()
         {
@@ -185,8 +216,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Brand Not Found");
             return Ok(formulation);
         }
+        #endregion
 
         //Classification
+        #region Classification
         [HttpGet("ClassificationAll")]
         public async Task<IActionResult> GetAllClassificationAsync()
         {
@@ -204,8 +237,10 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Brand Not Found");
             return Ok(classification);
         }
+        #endregion
 
         //Type
+        #region Type
         [HttpGet("TypeAll")]
         public async Task<IActionResult> GetAllTypeModelAsync()
         {
@@ -223,6 +258,7 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Brand Not Found");
             return Ok(type);
         }
+        #endregion
     }
 }
 

@@ -4,32 +4,35 @@
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid #eee;
-  padding: 20px 0;
-  height: 100%;
+  padding: 15px 0;
+  height: 100vh; // full height sidebar
 
   .profile {
-    text-align: center;
     padding: 0 20px;
+    margin-bottom: 20px;
 
     .logo {
       font-size: 20px;
-      margin-bottom: 10px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      text-align: center;
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
 
       .avatar {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         background: #000;
         border-radius: 50%;
       }
 
       .name {
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 14px;
       }
 
       .email {
@@ -40,48 +43,57 @@
   }
 
   .nav {
+    flex-grow: 1; // fills available space
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-    margin-top: 30px;
-    transition: color 0.15s, opacity 0.15s;
+    gap: 8px;
+    padding: 0 15px;
 
     a {
       text-decoration: none;
-      color: #000;
+      color: #333;
       font-size: 14px;
+      padding: 10px 12px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       gap: 8px;
+      transition: all 0.2s ease;
 
       &:hover {
-        margin-left: 5px;
-        background-color: aliceblue;
-        border-radius: 5px;
+        transform: translateX(5px);
+        background-color: #f0f6ff;
         color: #3498ff;
       }
 
       &:active {
-        opacity: 0.8;
+        opacity: 0.85;
       }
     }
   }
 
   .bottom-nav {
     border-top: 1px solid #ddd;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 
     a {
       text-decoration: none;
-      color: #000;
+      color: #333;
       font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       gap: 8px;
+      transition: background 0.2s;
+
+      &:hover {
+        background-color: #f0f6ff;
+        color: #3498ff;
+      }
     }
   }
 }
