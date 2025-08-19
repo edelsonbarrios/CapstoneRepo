@@ -4,29 +4,29 @@
   flex-direction: column;
   justify-content: space-between;
   border-right: 1px solid #eee;
-  padding: 20px 0;
-  height: 100%;
+  padding: 15px 0;
+  height: 100vh; // full height sidebar
 
   .profile {
-    text-align: center;
     padding: 0 20px;
-    
+    margin-bottom: 20px;
 
     .logo {
-      padding: 0 20px 30px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #1e293b;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      text-align: center;
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
 
       .avatar {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
+        background: #000;
         border-radius: 50%;
         background: #1e293b;
         color: white;
@@ -37,7 +37,8 @@
       }
 
       .name {
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 14px;
       }
 
       .email {
@@ -49,66 +50,58 @@
   }
 
   .nav {
+    flex-grow: 1; // fills available space
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-    margin-bottom: 300px;
-    transition: color 0.15s, opacity 0.15s;
+    gap: 8px;
+    padding: 0 15px;
 
     a {
+      text-decoration: none;
+      color: #333;
+      font-size: 14px;
+      padding: 10px 12px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 0;
-      text-decoration: none;
-      color: #282d35;
-      font-size: 14px;
-      border-radius: 6px;
-      transition: all 0.2s;
+      gap: 8px;
+      transition: all 0.2s ease;
 
       &:hover {
-        margin-left: 5px;
-        background-color: aliceblue;
-        border-radius: 5px;
+        transform: translateX(5px);
+        background-color: #f0f6ff;
         color: #3498ff;
         padding-left: 20px;
       }
 
       &:active {
-        opacity: 0.8;
+        opacity: 0.85;
       }
     }
   }
 
   .bottom-nav {
     border-top: 1px solid #ddd;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 
     a {
       text-decoration: none;
-      color: #000;  
+      color: #333;
       font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       gap: 8px;
-      border-radius: 6px;
-      transition: all 0.2s;
+      transition: background 0.2s;
 
       &:hover {
-        margin-left: 5px;
-        background-color: aliceblue;
-        border-radius: 5px;
+        background-color: #f0f6ff;
         color: #3498ff;
-        padding-left: 20px;
       }
-
-      &:active {
-        opacity: 0.8;
-      }
-   }
- }
+    }
+  }
 }

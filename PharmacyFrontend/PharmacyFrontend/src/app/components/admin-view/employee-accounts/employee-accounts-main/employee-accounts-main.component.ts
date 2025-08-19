@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink, RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-employee-accounts-main',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterLink, RouterOutlet],
   templateUrl: './employee-accounts-main.component.html',
   styleUrl: './employee-accounts-main.component.scss'
 })
-export class EmployeeAccountsMainComponent {
+export class EmployeeAccountsMainComponent{
 
+  constructor(
+  ) {}
 }

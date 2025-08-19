@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <header>
-    <a href="#">Manage Employees</a>
-    <a href="#">Manage Accounts</a>
-  </header>
-  <main>
+<div class="wrapper">
+  <div class="header-wrapper">
+    <a routerLink="/admin-main/employee-accounts-main/manage-employees">Manage Employees</a>
+    <a routerLink="/admin-main/employee-accounts-main/manage-accounts">Manage Accounts</a>
+  </div>
+
+  <div class="main-content">
     <router-outlet></router-outlet>
-  </main>
-</body>
-</html>
+  </div>
+</div>

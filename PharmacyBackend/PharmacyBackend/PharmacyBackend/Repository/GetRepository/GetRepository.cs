@@ -32,7 +32,9 @@ namespace PharmacyBackend.Repository.GET
         //employee
         public async Task<List<Employee>> GetAllEmployeesAsync()
         {
-            return await _context.Employees.ToListAsync();
+            return await _context.Employees
+                .Include(e => e.Role)
+                .ToListAsync();
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int id)
@@ -144,6 +146,19 @@ namespace PharmacyBackend.Repository.GET
         public async Task<TypeModel> GetTypeModelByIdAsync(int id)
         {
             return await _context.TypeModel.FindAsync(id);
+        }
+        
+        public async Task<IEnumerable<Role>> GetAllRolesAsync()
+        {
+            return await _context.Roles.ToListAsync();
+        }
+
+        public async Task<List<Employee>> GetEmployeeByLastName(string lastName)
+        {
+            return await _context.Employees
+                .Include(e => e.Role)
+                .AsNoTracking()
+                .Where(e => e.LastName.Contains(lastName)).ToListAsync();
         }
     }
 }
