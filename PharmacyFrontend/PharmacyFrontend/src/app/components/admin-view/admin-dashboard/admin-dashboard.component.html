@@ -4,33 +4,37 @@
       <input class="searchbar" id="search" type="text" placeholder="Search..">
       <div class="notification">🔔<span class="dot"></span></div>
     </div>
-    <div class="top-containers">
-      <div class="sales-status">
-        <div class="sales">
-          <p class="text-sales">Today's Sales</p>
-          <a class="view-report">View Report &gt;</a>
+    <div class="containers">
+      <div class="grid-items sales-status">
+        <div class="content sales">
+          <p class="title sales-title">Today's Sales</p>
+          <a class="interact view-report" routerLink="/admin-main/admin-reports-main">View Report &gt;</a>
         </div>
       </div>
-      <div class="inventory">
-        <div class="inv-status">
-          <p class="status-inventory">Inventory Status</p>
-          <a class="reorder">Reorder &gt;</a>
+
+      <div class="grid-items inventory">
+        <div class="content inv-status">
+          <p class="title inventory-title">Inventory Status</p>
+          <a class="interact reorder">Reorder &gt;</a>
         </div>
       </div>
-      <div class="top-selling-meds">
-        <div class="top-meds">
-          <p class="meds-calendar">Top Selling Medicines</p>
-          <p class="meds-calendar">(This Month)</p>
+
+      <div class="grid-items top-selling-meds">
+        <div class="content top-meds">
+          <p class="title inventory-title">Top Selling Medicines (This month)</p>
+          <a class="interact view-report">See more &gt;</a>
         </div>
       </div>
-    </div>
-    <div class="bottom-containers">
-      <div class="sales-trends">
-          <p class="text-trend">Sales and Inventory trends</p>
+
+      <div class="grid-items sales-trends">
+        <div class="content trend-sales">
+          <p class="title trend-title">Sales and Inventory trends</p>
+        </div>
       </div>
-      <div class="expiry">
-        <div class="expiring-soon">
-          
+
+      <div class="grid-items expiry">
+        <div class="content expiring-soon">
+          <p class="title expiry-title">Expiring Soon</p>
         </div>
       </div>
     </div>
