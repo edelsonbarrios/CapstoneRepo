@@ -2,13 +2,13 @@
   flex: 1;
   padding: 20px;
   background: #f2f6fc;
+  height: 100%;
 
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    border-bottom: rgb(0, 0, 0);
 
     h1 {
       color: #3498ff;
@@ -46,15 +46,16 @@
     grid-template-columns: 1fr 1fr 1.2fr;
     gap: 20px;
     margin-bottom: 20px;
+
+    .sales-status {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #f1f5f9;
+    }
   }
 
-  .sales-status {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 1px solid #f1f5f9;
-  }
 
   .sales {
     height: 200px;

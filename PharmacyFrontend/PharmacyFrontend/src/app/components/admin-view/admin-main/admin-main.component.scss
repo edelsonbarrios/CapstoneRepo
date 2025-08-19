@@ -1,8 +1,13 @@
-body {
-  background: #f9fbfe;
+html {
+  height: 100vh;
+  width: 100vw;
 }
 
-.container {
-  display: flex;
-  height: 100vh;
+body {
+  height: 100%;
+  width: 100%;
+  background: #f9fbfe;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  font-family: var(--ff-poppins);
 }

@@ -20,6 +20,38 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'admin-reports-main',
+        loadComponent:() => {
+          return import('./components/admin-view/admin-reports/admin-reports-main/admin-reports-main.component').then(m => m.AdminReportsMainComponent);
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-reports/sales-reports/sales-reports.component').then(m => m.SalesReportsComponent);
+          }
+          },
+          {
+            path: 'sales-reports',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-reports/sales-reports/sales-reports.component').then(m => m.SalesReportsComponent);
+          }
+          },
+          {
+            path: 'inventory-reports',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-reports/inventory-reports/inventory-reports.component').then(m => m.InventoryReportsComponent);
+          }
+          },
+          {
+            path: 'fast-moving-products',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-reports/fast-moving-products/fast-moving-products.component').then(m => m.FastMovingProductsComponent);
+          }
+          }
+        ]
+      },
+      {
         path: 'employee-accounts-main',
         loadComponent: () => {
           return import('./components/admin-view/employee-accounts/employee-accounts-main/employee-accounts-main.component')

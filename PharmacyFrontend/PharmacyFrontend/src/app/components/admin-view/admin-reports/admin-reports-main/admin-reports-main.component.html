@@ -1,0 +1,13 @@
+<main class="wrapper">
+    <div class="header">
+        <a class="sales-reports" routerLink="/admin-main/admin-reports/sales-reports">Sales Reports</a>
+        <a class="inventory-reports" routerLink="/admin-main/admin-reports/inventory-reports">Inventory Reports</a>
+        <a class="fast-moving-products" routerLink="/admin-main/admin-reports/fast-moving-products">Fast Moving Products</a>
+        <input class="searchbar" id="search" type="text" placeholder="Search..">
+        <div class="notification">🔔<span class="dot"></span></div>
+    </div>
+
+    <div class="main-content">
+        <router-outlet></router-outlet>
+    </div>
+</main>
