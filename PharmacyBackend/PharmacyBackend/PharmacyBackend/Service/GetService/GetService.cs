@@ -63,7 +63,9 @@ namespace PharmacyBackend.Service.GetService
                 CivilStatus = employee.CivilStatus,
                 Gender = employee.Gender,
                 Email = employee.Email,
-                Address = employee.Address
+                Address = employee.Address,
+                FullName = employee.FullName,
+                RolePosition = employee.Role.RolePosition
             };
             return modifEmployee;
         }

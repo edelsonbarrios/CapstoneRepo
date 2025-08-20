@@ -3,7 +3,7 @@
     <!-- Search & Add Employee -->
     <div class="table-header">
       <input type="text" placeholder="🔍 Search employee..." class="search-box" />
-      <button class="btn add">+ Add Employee</button>
+      <button class="btn add" (click)="openCreateEmployeeForm()">+ Add Employee</button>
     </div>
 
     <!-- Employee Table -->
@@ -38,4 +38,12 @@
   [employee]="viewEmployee"
   (closeForm)="closeViewEmployeeForm()"
   ></app-view-employee>
+</div>
+
+<div class="modal-overlay" *ngIf="newEmployee">
+  <app-create-employee
+  *ngIf="newEmployee"
+  [newEmployee]="newEmployee"
+  (closeForm)="closeCreateEmployeeForm()"
+  ></app-create-employee>
 </div>
