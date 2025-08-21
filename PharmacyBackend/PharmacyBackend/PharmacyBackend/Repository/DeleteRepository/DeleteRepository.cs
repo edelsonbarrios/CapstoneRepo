@@ -152,5 +152,54 @@ namespace PharmacyBackend.Repository.DELETE
             return true;
         }
         #endregion
+
+        //Supplier/
+        public async Task<bool> DeleteSupplierByIdAsync(int id)
+        {
+            var supplier = await _context.Supplier.FindAsync(id);
+            if (supplier == null)
+                return false;
+
+            _context.Supplier.Remove(supplier);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //Inventory
+        public async Task<bool> DeleteInventoryByIdAsync(int id)
+        {
+            var inventory = await _context.Inventory.FindAsync(id);
+            if (inventory == null)
+                return false;
+
+            _context.Inventory.Remove(inventory);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //VAT
+        public async Task<bool> DeleteVATByIdAsync(int id)
+        {
+            var vat = await _context.VAT.FindAsync(id);
+            if (vat == null)
+                return false;
+
+            _context.VAT.Remove(vat);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //PurchaseOrder
+        public async Task<bool> DeletePurchaseOrderByIdAsync(int id)
+        {
+            var purchaseOrder = await _context.PurchaseOrder.FindAsync(id);
+            if (purchaseOrder == null)
+                return false;
+
+            _context.PurchaseOrder.Remove(purchaseOrder);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

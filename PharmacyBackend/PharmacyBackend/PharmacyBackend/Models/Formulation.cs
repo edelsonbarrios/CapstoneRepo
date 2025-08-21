@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Models/Formulation.cs
+using System.ComponentModel.DataAnnotations;
 
 namespace PharmacyBackend.Models
 {
@@ -7,5 +8,7 @@ namespace PharmacyBackend.Models
         [Key]
         public int FormulationID { get; set; }
         public string FormulationName { get; set; } = string.Empty;
+
+        public ICollection<Product> Products { get; set; }
     }
 }

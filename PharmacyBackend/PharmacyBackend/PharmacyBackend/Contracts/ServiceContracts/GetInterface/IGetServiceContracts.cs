@@ -7,6 +7,11 @@ using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using System.Collections;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
+using PharmacyBackend.DTOs.StockMovementDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -75,5 +80,34 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<IEnumerable<TypeModelDto>> GetAllTypeModelAsync();
         public Task<TypeModelDto> GetTypeModelByIdAsync(int id);
         #endregion
+
+        //Supplier
+        public Task<IEnumerable<SupplierDto>> GetAllSupplierAsync();
+        public Task<SupplierDto> GetSupplierByIdAsync(int id);
+
+        //Inventory
+        public Task<IEnumerable<InventoryDto>> GetAllInventoryAsync();
+        public Task<InventoryDto> GetInventoryByIdAsync(int id);
+        public Task<IEnumerable<InventoryDto>> GetInventoryByProductIdAsync(int productId);
+        public Task<IEnumerable<InventoryDto>> GetExpiredInventoryAsync();
+        public Task<IEnumerable<InventoryDto>> GetNearExpiryInventoryAsync();
+        public Task<IEnumerable<InventoryDto>> GetCriticalStockInventoryAsync();
+
+        //VAT
+        public Task<IEnumerable<VatDto>> GetAllVATAsync();
+        public Task<VatDto> GetVATByIdAsync(int id);
+
+        //PurchaseOrder
+        public Task<IEnumerable<PurchaseOrderDto>> GetAllPurchaseOrderAsync();
+        public Task<PurchaseOrderDto> GetPurchaseOrderByIdAsync(int id);
+        public Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderBySupplierIdAsync(int supplierId);
+        public Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderByStatusAsync(string status);
+
+        //StockMovement
+        public Task<IEnumerable<StockMovementDto>> GetAllStockMovementAsync();
+        public Task<StockMovementDto> GetStockMovementByIdAsync(int id);
+        public Task<IEnumerable<StockMovementDto>> GetStockMovementByInventoryIdAsync(int inventoryId);
+        public Task<IEnumerable<StockMovementDto>> GetStockMovementByProductIdAsync(int productId);
+
     }
 }

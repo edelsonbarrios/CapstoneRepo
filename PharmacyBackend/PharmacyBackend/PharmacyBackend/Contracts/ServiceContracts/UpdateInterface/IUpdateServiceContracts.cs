@@ -7,6 +7,10 @@ using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
+using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 {
@@ -44,5 +48,18 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         //Type
         public Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto);
+
+        //Supplier
+        public Task<bool> UpdateSupplierAsync(int id, UpdateSupplierDto dto);
+
+        //Inventory
+        public Task<bool> UpdateInventoryAsync(int id, UpdateInventoryDto dto);
+
+        //VAT
+        public Task<bool> UpdateVATAsync(int id, UpdateVATDto dto);
+
+        //PurchaseOrder
+        public Task<bool> UpdatePurchaseOrderAsync(int id, UpdatePurchaseOrderDto dto);
+
     }
 }

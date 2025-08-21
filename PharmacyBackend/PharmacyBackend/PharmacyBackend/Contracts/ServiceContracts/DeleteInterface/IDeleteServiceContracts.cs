@@ -55,5 +55,18 @@
         public Task<bool> DeleteTypeModelByIdAsync(int id);
         #endregion
 
+        //Supplier
+        public Task<bool> DeleteSupplierByIdAsync(int id);
+
+        //Inventory
+        public Task<bool> DeleteInventoryByIdAsync(int id);
+
+        //VAT
+        public Task<bool> DeleteVATByIdAsync(int id);
+
+        //PurchaseOrder
+        public Task<bool> DeletePurchaseOrderByIdAsync(int id);
+
+
     }
 }

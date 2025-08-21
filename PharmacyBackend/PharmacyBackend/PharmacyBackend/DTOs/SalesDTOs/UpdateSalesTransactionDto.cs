@@ -1,4 +1,5 @@
-﻿namespace PharmacyBackend.DTOs.SalesDTOs
+﻿//DTOs/SalesDTOs/UpdateSalesTransactionDto.cs
+namespace PharmacyBackend.DTOs.SalesDTOs
 {
     public class UpdateSalesTransactionDto
     {

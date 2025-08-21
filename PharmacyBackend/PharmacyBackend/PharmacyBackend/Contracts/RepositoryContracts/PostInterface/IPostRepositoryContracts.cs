@@ -62,6 +62,21 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         #region Types
         public Task<TypeModel> CreateTypeModelAsync(TypeModel typeModel);
         #endregion
+
+        //Supplier
+        public Task<Supplier> CreateSupplierAsync(Supplier supplier);
+
+        //Inventory
+        public Task<Inventory> CreateInventoryAsync(Inventory inventory);
+
+        //VAT
+        public Task<VAT> CreateVATAsync(VAT vat);
+
+        //PurchaseOrder
+        public Task<PurchaseOrder> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
+
+        //StockMovement
+        public Task<StockMovement> CreateStockMovementAsync(StockMovement stockMovement);
     }
 }
 

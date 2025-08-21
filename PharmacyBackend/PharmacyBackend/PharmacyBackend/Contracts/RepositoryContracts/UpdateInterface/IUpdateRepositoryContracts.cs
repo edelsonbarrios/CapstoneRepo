@@ -57,5 +57,18 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
         #region TypeModel
         public Task<bool> UpdateTypeModelAsync(TypeModel typeModel);
         #endregion
+
+        //Supplier
+        public Task<bool> UpdateSupplierAsync(Supplier supplier);
+
+        //Inventory
+        public Task<bool> UpdateInventoryAsync(Inventory inventory);
+
+        //VAT
+        public Task<bool> UpdateVATAsync(VAT vat);
+
+        //PurchaseOrder
+        public Task<bool> UpdatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
+
     }
 }

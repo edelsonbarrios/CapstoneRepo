@@ -110,5 +110,37 @@ namespace PharmacyBackend.Repository.UpdateRepository
             return true;
         }
         #endregion
+
+        //Supplier
+        public async Task<bool> UpdateSupplierAsync(Supplier supplier)
+        {
+            _context.Supplier.Update(supplier);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //Inventory
+        public async Task<bool> UpdateInventoryAsync(Inventory inventory)
+        {
+            _context.Inventory.Update(inventory);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //VAT
+        public async Task<bool> UpdateVATAsync(VAT vat)
+        {
+            _context.VAT.Update(vat);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //PurchaseOrder
+        public async Task<bool> UpdatePurchaseOrderAsync(PurchaseOrder purchaseOrder)
+        {
+            _context.PurchaseOrder.Update(purchaseOrder);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

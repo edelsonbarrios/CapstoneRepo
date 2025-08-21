@@ -74,6 +74,10 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
@@ -84,10 +88,12 @@ namespace PharmacyBackend.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Subtotal")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("Id");
 
@@ -95,7 +101,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SalesTransactionId");
 
-                    b.ToTable("SalesItems");
+                    b.ToTable("SalesItem");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesTransaction", b =>
@@ -107,26 +113,38 @@ namespace PharmacyBackend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<int>("DiscountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EmployeeID")
                         .HasColumnType("integer");
 
                     b.Property<string>("InvoiceNumber")
                         .HasColumnType("text");
 
                     b.Property<decimal>("NetAmount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("timestamp with time zone");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountId");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("TransactionDate");
 
                     b.ToTable("SalesTransaction");
                 });
@@ -146,6 +164,9 @@ namespace PharmacyBackend.Migrations
                         .HasColumnType("boolean");
 
                     b.HasKey("CategoryID");
+
+                    b.HasIndex("CategoryName")
+                        .IsUnique();
 
                     b.ToTable("Category");
                 });
@@ -265,6 +286,55 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("Generic");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.Inventory", b =>
+                {
+                    b.Property<int>("InventoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InventoryID"));
+
+                    b.Property<string>("BatchNumber")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("CostPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("ManufacturingDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityOnHand")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReorderLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("SellingPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("InventoryID");
+
+                    b.HasIndex("ExpirationDate");
+
+                    b.HasIndex("ProductID", "BatchNumber");
+
+                    b.ToTable("Inventory");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
@@ -282,6 +352,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("ClassificationID")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("FormulationID")
                         .HasColumnType("integer");
 
@@ -292,15 +365,13 @@ namespace PharmacyBackend.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
 
-                    b.Property<int>("Stock")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SupplierID")
+                    b.Property<int?>("SupplierID")
                         .HasColumnType("integer");
 
                     b.Property<int>("TypeID")
@@ -318,9 +389,96 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("GenericID");
 
+                    b.HasIndex("ProductName");
+
+                    b.HasIndex("SupplierID");
+
                     b.HasIndex("TypeID");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrder", b =>
+                {
+                    b.Property<int>("PurchaseOrderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PurchaseOrderID"));
+
+                    b.Property<DateTime?>("DeliveryDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OrderDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("PurchaseOrderNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("Pending");
+
+                    b.Property<int>("SupplierID")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("PurchaseOrderID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("SupplierID");
+
+                    b.ToTable("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrderItem", b =>
+                {
+                    b.Property<int>("PurchaseOrderItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PurchaseOrderItemID"));
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PurchaseOrderID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityOrdered")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityReceived")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitCost")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("PurchaseOrderItemID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("PurchaseOrderID");
+
+                    b.ToTable("PurchaseOrderItem");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Role", b =>
@@ -339,6 +497,101 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.StockMovement", b =>
+                {
+                    b.Property<int>("StockMovementID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StockMovementID"));
+
+                    b.Property<int?>("EmployeeID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("InventoryID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("MovementDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("MovementType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityAfter")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityBefore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("QuantityChanged")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasColumnType("text");
+
+                    b.HasKey("StockMovementID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("InventoryID");
+
+                    b.HasIndex("MovementDate");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("StockMovement");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
+                {
+                    b.Property<int>("SupplierID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SupplierID"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContactNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SupplierName")
+                        .HasColumnType("text");
+
+                    b.HasKey("SupplierID");
+
+                    b.HasIndex("SupplierName")
+                        .IsUnique();
+
+                    b.ToTable("Supplier");
+
+                    b.HasData(
+                        new
+                        {
+                            SupplierID = 1,
+                            Address = "",
+                            ContactNumber = "",
+                            Email = "",
+                            IsActive = true,
+                            SupplierName = "Default Supplier"
+                        });
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.TypeModel", b =>
                 {
                     b.Property<int>("TypeID")
@@ -355,6 +608,35 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("TypeModel");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.VAT", b =>
+                {
+                    b.Property<int>("VATID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VATID"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("VATName")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("VATRate")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("VATID");
+
+                    b.HasIndex("VATName")
+                        .IsUnique();
+
+                    b.ToTable("VAT");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Account", b =>
                 {
                     b.HasOne("PharmacyBackend.Models.Employee", "Employee")
@@ -369,9 +651,9 @@ namespace PharmacyBackend.Migrations
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesItem", b =>
                 {
                     b.HasOne("PharmacyBackend.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("SalesItem")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.CashierViewModel.SalesTransaction", "SalesTransaction")
@@ -390,10 +672,18 @@ namespace PharmacyBackend.Migrations
                     b.HasOne("PharmacyBackend.Models.Discount", "Discount")
                         .WithMany()
                         .HasForeignKey("DiscountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Employee", "Employee")
+                        .WithMany("SalesTransactions")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Discount");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>
@@ -401,16 +691,27 @@ namespace PharmacyBackend.Migrations
                     b.HasOne("PharmacyBackend.Models.Role", "Role")
                         .WithMany("Employees")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.Inventory", b =>
+                {
+                    b.HasOne("PharmacyBackend.Models.Product", "Product")
+                        .WithMany("Inventory")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
                 {
                     b.HasOne("PharmacyBackend.Models.Brand", "Brand")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -422,25 +723,30 @@ namespace PharmacyBackend.Migrations
                         .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.Classification", "Classification")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("ClassificationID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.Formulation", "Formulation")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("FormulationID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.Generic", "Generic")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("GenericID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("PharmacyBackend.Models.Supplier", "Supplier")
+                        .WithMany("Products")
+                        .HasForeignKey("SupplierID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("PharmacyBackend.Models.TypeModel", "TypeModel")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("TypeID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -455,7 +761,74 @@ namespace PharmacyBackend.Migrations
 
                     b.Navigation("Generic");
 
+                    b.Navigation("Supplier");
+
                     b.Navigation("TypeModel");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrder", b =>
+                {
+                    b.HasOne("PharmacyBackend.Models.Employee", "Employee")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Supplier", "Supplier")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("SupplierID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrderItem", b =>
+                {
+                    b.HasOne("PharmacyBackend.Models.Product", "Product")
+                        .WithMany("PurchaseOrderItem")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("PurchaseOrderItems")
+                        .HasForeignKey("PurchaseOrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.StockMovement", b =>
+                {
+                    b.HasOne("PharmacyBackend.Models.Employee", "Employee")
+                        .WithMany("StockMovements")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PharmacyBackend.Models.Inventory", "Inventory")
+                        .WithMany("StockMovements")
+                        .HasForeignKey("InventoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Product", null)
+                        .WithMany("StockMovement")
+                        .HasForeignKey("ProductID");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Brand", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesTransaction", b =>
@@ -468,14 +841,68 @@ namespace PharmacyBackend.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("PharmacyBackend.Models.Classification", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>
                 {
                     b.Navigation("Account");
+
+                    b.Navigation("PurchaseOrders");
+
+                    b.Navigation("SalesTransactions");
+
+                    b.Navigation("StockMovements");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Formulation", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Generic", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Inventory", b =>
+                {
+                    b.Navigation("StockMovements");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
+                {
+                    b.Navigation("Inventory");
+
+                    b.Navigation("PurchaseOrderItem");
+
+                    b.Navigation("SalesItem");
+
+                    b.Navigation("StockMovement");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrder", b =>
+                {
+                    b.Navigation("PurchaseOrderItems");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Role", b =>
                 {
                     b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.TypeModel", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
