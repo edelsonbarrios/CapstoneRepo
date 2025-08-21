@@ -1,14 +1,16 @@
 .wrapper {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
   background: #f2f6fc;
-  min-height: 100vh;
+  height: 100vh;
 
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    flex-shrink: 0;
 
     h1 {
       color: #3498ff;
@@ -44,9 +46,29 @@
   .containers {
     display: grid;
     grid-template-columns: 1fr 1fr 1.2fr;
-    grid-template-rows: auto, auto;
+    grid-template-rows: 1fr, 1fr;
+    flex: 1;
     gap: 20px;
     margin-bottom: 20px;
+    grid-template-areas: 
+      "sales inventory top-meds"
+      "trends trends expiry";
+
+      .sales-status{
+        grid-area: sales;
+      }
+      .inventory {
+        grid-area: inventory;
+      }
+      .top-selling-meds{
+        grid-area: top-meds;
+      }
+      .sales-trends {
+        grid-area: trends;
+      }
+      .expiry {
+        grid-area: expiry;
+      }
 
     .grid-items {
       background: white;
@@ -54,28 +76,9 @@
       padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       border: 1px solid #f1f5f9;
-      grid-template-areas: 
-      "sales inventory top-meds"
-      "trends trends expiry";
-
-      .sales-status{
-        grid-template-areas: sales;
-      }
-      .inventory {
-        grid-template-areas: inventory;
-      }
-      .top-selling-meds{
-        grid-template-areas: top-meds;
-      }
-      .sales-trends {
-        grid-template-areas: trends;
-      }
-      .expiry {
-        grid-template-areas: expiry;
-      }
 
       .content{
-        min-height: 180px;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -94,7 +97,6 @@
         text-decoration: none;
         transition: all 0.15s ease;
         align-self: flex-start;
-        margin-top: 20px;
         cursor: pointer;
 
         &:hover {
@@ -108,7 +110,7 @@
       }
 
       .trend-sales{
-         min-height: 200px;
+         height: 100%;
 
          .trend-title{
            font-size: 18px;
@@ -117,8 +119,9 @@
            margin-bottom: 20px;
          }
       }
+      
       .expiring-soon{
-          min-height: 200px;
+          height: 100%;
           display: flex;
           flex-direction: column;
 
