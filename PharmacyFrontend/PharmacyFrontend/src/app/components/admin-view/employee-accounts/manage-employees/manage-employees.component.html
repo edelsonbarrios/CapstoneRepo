@@ -2,7 +2,10 @@
   <div class="card">
     <!-- Search & Add Employee -->
     <div class="table-header">
-      <input type="text" placeholder="🔍 Search employee..." class="search-box" />
+      <div class="search-wrapper">
+        <input type="text" placeholder="🔍 Search employee..." class="search-box" [(ngModel)]="this.lastNameSearch"/>
+        <button class="btn search-btn" (click)="getEmployeesByLastName()">Search</button>
+      </div>
       <button class="btn add" (click)="openCreateEmployeeForm()">+ Add Employee</button>
     </div>
 

@@ -36,6 +36,8 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Employees
                 .Include(e => e.Role)
+                .OrderBy(e => e.LastName)
+                .ThenBy(e => e.FirstName)
                 .ToListAsync();
         }
 
@@ -50,6 +52,8 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Employees
                 .Include(e => e.Role)
+                .OrderBy(e => e.LastName)
+                .ThenBy(e => e.FirstName)
                 .AsNoTracking()
                 .Where(e => e.LastName.Contains(lastName)).ToListAsync();
         }

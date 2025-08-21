@@ -4,11 +4,12 @@ import { Employee } from '../../../../models/employee';
 import { NgFor, NgForOf, NgIf } from "../../../../../../node_modules/@angular/common";
 import { ViewEmployeeComponent } from '../view-employee/view-employee.component';
 import { CreateEmployeeComponent } from '../create-employee/create-employee.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-employees',
   standalone: true,
-  imports: [NgForOf, ViewEmployeeComponent, NgIf, CreateEmployeeComponent],
+  imports: [NgForOf, ViewEmployeeComponent, NgIf, CreateEmployeeComponent, FormsModule],
   templateUrl: './manage-employees.component.html',
   styleUrl: './manage-employees.component.scss'
 })
@@ -16,6 +17,7 @@ export class ManageEmployeesComponent implements OnInit{
   employees: Employee[] = []
   viewEmployee ?: Employee | null;
   newEmployee : any;
+  lastNameSearch : string = '';
 
   constructor(
     private getService : GetService
@@ -33,6 +35,19 @@ export class ManageEmployeesComponent implements OnInit{
       },
       error: err => {
         console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getEmployeesByLastName() {
+    this.getService.GetEmployeesByLastName(this.lastNameSearch).subscribe({
+      next: employees => {
+        this.employees = employees;
+        this.lastNameSearch = '';
+      },
+      error: err => {
+        console.log(`${err.error}`);
+        this.getAllEmployees();
       }
     });
   }

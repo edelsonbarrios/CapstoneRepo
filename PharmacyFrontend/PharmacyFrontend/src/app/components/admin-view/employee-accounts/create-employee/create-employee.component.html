@@ -11,49 +11,65 @@
       <legend>📋 Add details of an employee</legend>
 
       <div class="form-grid">
+        <!-- Employee Code -->
         <div class="form-group">
-          <label>Employee Full Name <span>*</span></label>
-          <input type="text" placeholder="Enter full name" />
+          <label>Employee Code <span>*</span></label>
+          <input type="text" placeholder="Enter Employee Code" [(ngModel)]="newEmployee.employeeCode"/>
         </div>
 
         <div class="form-group">
-          <label>Employee ID <span>*</span></label>
-          <input type="text" placeholder="Enter ID" />
+          <label>Last Name <span>*</span></label>
+          <input type="text" placeholder="Enter Last Name" [(ngModel)]="newEmployee.lastName"/>
         </div>
 
         <div class="form-group">
-          <label>Email Address <span>*</span></label>
-          <input type="email" placeholder="Enter email" />
+          <label>First Name<span>*</span></label>
+          <input type="text" placeholder="Enter First Name" [(ngModel)]="newEmployee.firstName"/>
         </div>
 
         <div class="form-group">
-          <label>Phone No. <span>*</span></label>
-          <input type="text" placeholder="Enter phone number" />
+          <label>Middle Name<span>*</span></label>
+          <input type="text" placeholder="Enter Middle Name" [(ngModel)]="newEmployee.middleName"/>
+        </div>
+
+        <div class="form-group">
+          <label>Gender<span>*</span></label>
+          <input type="text" placeholder="Enter Gender" [(ngModel)]="newEmployee.gender"/>
         </div>
 
         <div class="form-group small">
           <label>Age</label>
-          <input type="number" placeholder="Age" />
+          <input type="number" placeholder="Age" [(ngModel)]="newEmployee.age"/>
         </div>
 
         <div class="form-group small">
           <label>Birth Date</label>
-          <input type="date" />
+          <input type="date" [(ngModel)]="newEmployee.birthDate"/>
         </div>
 
         <div class="form-group small">
-          <label>Gender</label>
-          <input type="text" placeholder="Gender" />
+          <label>Phone Number</label>
+          <input type="text" placeholder="Enter Phone No." [(ngModel)]="newEmployee.phoneNumber"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Civil Status</label>
+          <input type="text" placeholder="Enter Civil Status" [(ngModel)]="newEmployee.civilStatus"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Role Position</label>
+          <input type="text" placeholder="Enter Role Position" [(ngModel)]="newEmployee.rolePosition"/>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" placeholder="Enter Email" [(ngModel)]="newEmployee.email"/>
         </div>
 
         <div class="form-group wide">
-          <label>Address</label>
-          <input type="text" placeholder="Enter address" />
-        </div>
-
-        <div class="form-group wide">
-          <label>Role Position <span>*</span></label>
-          <input type="text" placeholder="Enter role position" />
+          <label>Address <span>*</span></label>
+          <input type="text" placeholder="Enter Address" [(ngModel)]="newEmployee.address"/>
         </div>
       </div>
     </fieldset>
@@ -61,6 +77,6 @@
 
   <div class="modal-footer">
     <button class="cancel-btn" (click)="closeCreateEmployeeForm()">Cancel</button>
-    <button class="add-btn">+ Add Employee</button>
+    <button class="add-btn" (click)="createNewEmployee()">+ Add Employee</button>
   </div>
 </div>

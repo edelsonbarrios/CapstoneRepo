@@ -244,6 +244,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("MiddleName")
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 

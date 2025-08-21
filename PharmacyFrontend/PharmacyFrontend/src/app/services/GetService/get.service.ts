@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { last, Observable } from 'rxjs';
 import { Employee } from '../../models/employee';
 import { Account } from '../../models/account';
 @Injectable({
@@ -17,9 +17,16 @@ export class GetService {
   GetAllEmployees() : Observable<Employee[]> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeAll`);
   }
+
   GetEmployeeById(employeeId : number) : Observable<Employee> {
     return this.httpClient.get<Employee>(`${this.apiUrl}/Get/Employee?id=${employeeId}`);
   }
+
+  GetEmployeesByLastName(lastName: string) : Observable<Employee[]>{
+    return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeLastName?lastName=${lastName}`);
+  }
+
+  //Employee Service End
 
 
   //Accounts Service

@@ -46,6 +46,7 @@ namespace PharmacyBackend.Service.GetService
                 CivilStatus = e.CivilStatus,
                 Gender = e.Gender,
                 Email = e.Email,
+                PhoneNumber = e.PhoneNumber,
                 Address = e.Address,
                 FullName = e.FullName,
                 RolePosition = e.Role.RolePosition
@@ -69,6 +70,7 @@ namespace PharmacyBackend.Service.GetService
                 CivilStatus = employee.CivilStatus,
                 Gender = employee.Gender,
                 Email = employee.Email,
+                PhoneNumber = employee.PhoneNumber,
                 Address = employee.Address,
                 FullName = employee.FullName,
                 RolePosition = employee.Role.RolePosition
@@ -95,6 +97,7 @@ namespace PharmacyBackend.Service.GetService
                 CivilStatus = e.CivilStatus,
                 Gender = e.Gender,
                 Email = e.Email,
+                PhoneNumber = e.PhoneNumber,
                 Address = e.Address,
                 RolePosition = e.Role.RolePosition,
                 FullName = e.FullName

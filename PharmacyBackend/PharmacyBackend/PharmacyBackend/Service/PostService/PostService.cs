@@ -79,10 +79,10 @@ namespace PharmacyBackend.Service.PostService
                     roleId = 1;
                     break;
                 case "Cashier":
-                    roleId = 2;
+                    roleId = 3;
                     break;
                 case "Inventory Manager":
-                    roleId = 3;
+                    roleId = 2;
                     break;
             }
 
@@ -97,6 +97,7 @@ namespace PharmacyBackend.Service.PostService
                 CivilStatus = request.CivilStatus,
                 Gender = request.Gender,
                 Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 RoleId = roleId
             };

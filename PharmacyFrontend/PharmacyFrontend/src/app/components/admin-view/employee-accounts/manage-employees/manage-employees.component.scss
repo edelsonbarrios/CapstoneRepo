@@ -15,25 +15,45 @@
     flex-direction: column;
     gap: 1.5rem;
 
-    .table-header {
+  .table-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 1rem;
 
-      .search-box {
-        width: 500px;
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
+      .search-wrapper {
+        display: flex;
+        align-items: center;
         border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
         background: #f1f3f6;
-        font-size: 0.95rem;
-        outline: none;
-        transition: border 0.3s;
 
-        &:focus {
-          border: 1px solid #4a90e2;
-          background: #fff;
+        .search-box {
+          width: 420px;
+          padding: 0.6rem 1rem;
+          border: none;
+          background: transparent;
+          font-size: 0.95rem;
+          outline: none;
+
+          &:focus {
+            background: #fff;
+          }
+        }
+
+        .btn.search-btn {
+          background: #4a90e2;
+          color: #fff;
+          padding: 0.6rem 1rem;
+          border: none;
+          cursor: pointer;
+          font-weight: 600;
+          transition: background 0.3s;
+
+          &:hover {
+            background: #357ab7;
+          }
         }
       }
 
