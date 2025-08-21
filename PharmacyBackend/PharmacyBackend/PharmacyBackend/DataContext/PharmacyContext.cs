@@ -8,6 +8,7 @@ namespace PharmacyBackend.DataContext
     {
         public PharmacyContext(DbContextOptions<PharmacyContext> options) : base(options) { }
 
+        #region Tables
         //AdminView
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -36,6 +37,7 @@ namespace PharmacyBackend.DataContext
 
         // Tax Management
         public DbSet<VAT> VAT { get; set; }
+        #endregion
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

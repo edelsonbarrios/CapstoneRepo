@@ -165,45 +165,50 @@ namespace PharmacyBackend.Repository.POST
             return typeModel;
         }
         #endregion
-        //Supplier
+
+        #region Supplier
         public async Task<Supplier> CreateSupplierAsync(Supplier supplier)
         {
             await _context.Supplier.AddAsync(supplier);
             await _context.SaveChangesAsync();
             return supplier;
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         public async Task<Inventory> CreateInventoryAsync(Inventory inventory)
         {
             await _context.Inventory.AddAsync(inventory);
             await _context.SaveChangesAsync();
             return inventory;
         }
+        #endregion
 
-        //VAT
+        #region VAT
         public async Task<VAT> CreateVATAsync(VAT vat)
         {
             await _context.VAT.AddAsync(vat);
             await _context.SaveChangesAsync();
             return vat;
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public async Task<PurchaseOrder> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder)
         {
             await _context.PurchaseOrder.AddAsync(purchaseOrder);
             await _context.SaveChangesAsync();
             return purchaseOrder;
         }
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         public async Task<StockMovement> CreateStockMovementAsync(StockMovement stockMovement)
         {
             await _context.StockMovement.AddAsync(stockMovement);
             await _context.SaveChangesAsync();
             return stockMovement;
         }
-
+        #endregion
     }
 }

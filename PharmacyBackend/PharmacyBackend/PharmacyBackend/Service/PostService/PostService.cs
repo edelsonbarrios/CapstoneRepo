@@ -302,7 +302,8 @@ namespace PharmacyBackend.Service.PostService
             };
         }
         #endregion
-        //Supplier
+
+        #region Supplier
         public async Task<SupplierDto> CreateSupplierAsync(CreateSupplierDto dto)
         {
             var supplier = new Supplier
@@ -326,8 +327,9 @@ namespace PharmacyBackend.Service.PostService
                 IsActive = created.IsActive
             };
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto dto)
         {
             var inventory = new Inventory
@@ -363,8 +365,9 @@ namespace PharmacyBackend.Service.PostService
                 IsCriticalStock = created.IsCriticalStock
             };
         }
+        #endregion
 
-        //VAT
+        #region VAT
         public async Task<VatDto> CreateVATAsync(CreateVATDto dto)
         {
             var vat = new VAT
@@ -385,8 +388,9 @@ namespace PharmacyBackend.Service.PostService
                 DateCreated = created.DateCreated
             };
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public async Task<PurchaseOrderDto> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
         {
             var purchaseOrder = new PurchaseOrder
@@ -431,8 +435,9 @@ namespace PharmacyBackend.Service.PostService
                 }).ToList()
             };
         }
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         public async Task<StockMovementDto> CreateStockMovementAsync(CreateStockMovementDto dto)
         {
             // Get the current inventory to calculate before/after quantities
@@ -472,5 +477,7 @@ namespace PharmacyBackend.Service.PostService
                 EmployeeID = created.EmployeeID
             };
         }
+        #endregion
+
     }
 }

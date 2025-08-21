@@ -153,7 +153,7 @@ namespace PharmacyBackend.Repository.DELETE
         }
         #endregion
 
-        //Supplier/
+        #region Supplier
         public async Task<bool> DeleteSupplierByIdAsync(int id)
         {
             var supplier = await _context.Supplier.FindAsync(id);
@@ -164,8 +164,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         public async Task<bool> DeleteInventoryByIdAsync(int id)
         {
             var inventory = await _context.Inventory.FindAsync(id);
@@ -176,8 +177,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //VAT
+        #region VAT
         public async Task<bool> DeleteVATByIdAsync(int id)
         {
             var vat = await _context.VAT.FindAsync(id);
@@ -188,8 +190,9 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public async Task<bool> DeletePurchaseOrderByIdAsync(int id)
         {
             var purchaseOrder = await _context.PurchaseOrder.FindAsync(id);
@@ -200,6 +203,7 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
 
     }
 }

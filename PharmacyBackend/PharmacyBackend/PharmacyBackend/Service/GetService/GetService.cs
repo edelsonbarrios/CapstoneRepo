@@ -446,7 +446,8 @@ namespace PharmacyBackend.Service.GetService
             };
         }
         #endregion
-        //Supplier
+
+        #region Supplier
         public async Task<IEnumerable<SupplierDto>> GetAllSupplierAsync()
         {
             var suppliers = await _getRepo.GetAllSupplierAsync();
@@ -476,8 +477,9 @@ namespace PharmacyBackend.Service.GetService
                 IsActive = s.IsActive
             };
         }
+        #endregion
 
-        //Inventory
+        #region Inventory 
         public async Task<IEnumerable<InventoryDto>> GetAllInventoryAsync()
         {
             var inventories = await _getRepo.GetAllInventoryAsync();
@@ -618,8 +620,9 @@ namespace PharmacyBackend.Service.GetService
                 IsCriticalStock = i.IsCriticalStock
             });
         }
+        #endregion
 
-        //VAT 
+        #region VAT
         public async Task<IEnumerable<VatDto>> GetAllVATAsync()
         {
             var vats = await _getRepo.GetAllVATAsync();
@@ -647,8 +650,9 @@ namespace PharmacyBackend.Service.GetService
                 DateCreated = v.DateCreated
             };
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public async Task<IEnumerable<PurchaseOrderDto>> GetAllPurchaseOrderAsync()
         {
             var orders = await _getRepo.GetAllPurchaseOrderAsync();
@@ -758,8 +762,9 @@ namespace PharmacyBackend.Service.GetService
                 }).ToList()
             });
         }
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         public async Task<IEnumerable<StockMovementDto>> GetAllStockMovementAsync()
         {
             var movements = await _getRepo.GetAllStockMovementAsync();
@@ -845,6 +850,8 @@ namespace PharmacyBackend.Service.GetService
                 EmployeeName = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty
             });
         }
+        #endregion
+
     }
 }
 

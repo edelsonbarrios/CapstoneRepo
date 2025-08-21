@@ -240,8 +240,7 @@ namespace PharmacyBackend.Service.UpdateService
         }
         #endregion
 
-
-        //Supplier
+        #region Supplier
         public async Task<bool> UpdateSupplierAsync(int id, UpdateSupplierDto dto)
         {
             var existing = await _getRepo.GetSupplierByIdAsync(id);
@@ -256,8 +255,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateSupplierAsync(existing);
             return true;
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         public async Task<bool> UpdateInventoryAsync(int id, UpdateInventoryDto dto)
         {
             var existing = await _getRepo.GetInventoryByIdAsync(id);
@@ -276,8 +276,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateInventoryAsync(existing);
             return true;
         }
+        #endregion
 
-        //VAT
+        #region VAT
         public async Task<bool> UpdateVATAsync(int id, UpdateVATDto dto)
         {
             var existing = await _getRepo.GetVATByIdAsync(id);
@@ -290,8 +291,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateVATAsync(existing);
             return true;
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public async Task<bool> UpdatePurchaseOrderAsync(int id, UpdatePurchaseOrderDto dto)
         {
             var existing = await _getRepo.GetPurchaseOrderByIdAsync(id);
@@ -320,5 +322,6 @@ namespace PharmacyBackend.Service.UpdateService
             return true;
 
         }
+        #endregion
     }
 }

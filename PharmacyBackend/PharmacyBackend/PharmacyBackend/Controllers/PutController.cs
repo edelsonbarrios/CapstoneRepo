@@ -155,7 +155,8 @@ namespace PharmacyBackend.Controllers
             return NoContent();
         }
         #endregion
-        //Supplier
+
+        #region Supplier
         [HttpPut("Update/Supplier")]
         public async Task<IActionResult> UpdateSupplierAsync(int id, [FromBody] UpdateSupplierDto dto)
         {
@@ -164,8 +165,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Supplier not found or update failed.");
             return Ok("Supplier updated successfully.");
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         [HttpPut("Update/Inventory")]
         public async Task<IActionResult> UpdateInventoryAsync(int id, [FromBody] UpdateInventoryDto dto)
         {
@@ -174,8 +176,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Inventory not found or update failed.");
             return Ok("Inventory updated successfully.");
         }
+        #endregion
 
-        //VAT
+        #region VAT
         [HttpPut("Update/VAT")]
         public async Task<IActionResult> UpdateVATAsync(int id, [FromBody] UpdateVATDto dto)
         {
@@ -184,8 +187,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("VAT not found or update failed.");
             return Ok("VAT updated successfully.");
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         [HttpPut("Update/PurchaseOrder")]
         public async Task<IActionResult> UpdatePurchaseOrderAsync(int id, [FromBody] UpdatePurchaseOrderDto dto)
         {
@@ -194,5 +198,6 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Purchase Order not found or update failed.");
             return Ok("Purchase Order updated successfully.");
         }
+        #endregion
     }
 }

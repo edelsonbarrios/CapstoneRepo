@@ -135,7 +135,8 @@ namespace PharmacyBackend.Controllers
             return NoContent();
         }
         #endregion
-        //Supplier
+
+        #region Supplier
         [HttpDelete("Delete/Supplier")]
         public async Task<IActionResult> DeleteSupplierByIdAsync(int id)
         {
@@ -144,8 +145,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Supplier not found or already deleted.");
             return Ok("Supplier deleted successfully.");
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         [HttpDelete("Delete/Inventory")]
         public async Task<IActionResult> DeleteInventoryByIdAsync(int id)
         {
@@ -154,8 +156,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Inventory not found or already deleted.");
             return Ok("Inventory deleted successfully.");
         }
+        #endregion
 
-        //VAT
+        #region VAT
         [HttpDelete("Delete/VAT")]
         public async Task<IActionResult> DeleteVATByIdAsync(int id)
         {
@@ -164,8 +167,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("VAT not found or already deleted.");
             return Ok("VAT deleted successfully.");
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         [HttpDelete("Delete/PurchaseOrder")]
         public async Task<IActionResult> DeletePurchaseOrderByIdAsync(int id)
         {
@@ -174,6 +178,7 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Purchase Order not found or already deleted.");
             return Ok("Purchase Order deleted successfully.");
         }
+        #endregion
     }
 }
 

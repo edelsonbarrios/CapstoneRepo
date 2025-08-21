@@ -182,8 +182,7 @@ namespace PharmacyBackend.Repository.GET
         }
         #endregion
 
-
-        //Supplier
+        #region Supplier
         public async Task<IEnumerable<Supplier>> GetAllSupplierAsync()
         {
             return await _context.Supplier.ToListAsync();
@@ -193,9 +192,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Supplier.FindAsync(id);
         }
+        #endregion
 
-        //Inventory
-
+        #region Inventory
         public async Task<IEnumerable<Inventory>> GetAllInventoryAsync()
         {
             return await _context.Inventory
@@ -242,8 +241,9 @@ namespace PharmacyBackend.Repository.GET
                 .Where(i => i.QuantityOnHand <= i.ReorderLevel)
                 .ToListAsync();
         }
+        #endregion
 
-        //VAT
+        #region VAT
         public async Task<IEnumerable<VAT>> GetAllVATAsync()
         {
             return await _context.VAT.ToListAsync();
@@ -253,8 +253,9 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.VAT.FindAsync(id);
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public async Task<IEnumerable<PurchaseOrder>> GetAllPurchaseOrderAsync()
         {
             return await _context.PurchaseOrder
@@ -292,8 +293,9 @@ namespace PharmacyBackend.Repository.GET
                 .Where(po => po.Status == status)
                 .ToListAsync();
         }
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         public async Task<IEnumerable<StockMovement>> GetAllStockMovementAsync()
         {
             return await _context.StockMovement
@@ -334,5 +336,7 @@ namespace PharmacyBackend.Repository.GET
                 .OrderByDescending(sm => sm.MovementDate)
                 .ToListAsync();
         }
+        #endregion
+
     }
 }

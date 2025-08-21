@@ -181,15 +181,6 @@ namespace PharmacyBackend.Controllers
 
             return Ok(brand);
         }
-
-        [HttpGet("BrandId")]
-        public async Task<IActionResult> GetBrandByIdAsync(int id)
-        {
-            var Brand = await _getService.GetBrandByIdAsync(id);
-            if (Brand == null)
-                return NotFound("Brand Not Found");
-            return Ok(Brand);
-        }
         #endregion
 
         #region Generic
@@ -279,7 +270,8 @@ namespace PharmacyBackend.Controllers
             return Ok(type);
         }
         #endregion
-        //Supplier
+
+        #region Supplier
         [HttpGet("SupplierAll")]
         public async Task<IActionResult> GetAllSupplierAsync()
         {
@@ -297,8 +289,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Supplier not found.");
             return Ok(supplier);
         }
+        #endregion
 
-        //Inventory
+        #region Inventory
         [HttpGet("InventoryAll")]
         public async Task<IActionResult> GetAllInventoryAsync()
         {
@@ -352,8 +345,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("No critical stock inventory found.");
             return Ok(inventories);
         }
+        #endregion
 
-        //VAT
+        #region VAT
         [HttpGet("VATAll")]
         public async Task<IActionResult> GetAllVATAsync()
         {
@@ -371,8 +365,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("VAT not found.");
             return Ok(vat);
         }
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         [HttpGet("PurchaseOrderAll")]
         public async Task<IActionResult> GetAllPurchaseOrderAsync()
         {
@@ -408,8 +403,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound($"No purchase orders found with status: {status}");
             return Ok(orders);
         }
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         [HttpGet("StockMovementAll")]
         public async Task<IActionResult> GetAllStockMovementAsync()
         {
@@ -445,6 +441,8 @@ namespace PharmacyBackend.Controllers
                 return NotFound("No stock movements found for this product.");
             return Ok(movements);
         }
+        #endregion
+
     }
 }
 

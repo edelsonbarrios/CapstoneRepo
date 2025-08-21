@@ -16,67 +16,61 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         public Task<bool> CreateAccountAsync(Account request);
         #endregion
 
-        //sales
         #region --Sales
         public Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction transaction);
         #endregion
 
-        //Discount
         #region Discount
         public Task<Discount> CreateDiscountAsync(Discount discount);
         #endregion
 
-        //Product
         #region Product
         public Task<Product> CreateProductAsync(Product product);
         #endregion
 
-        //Category
         #region Category
         public Task<Category> CreateCategoryAsync(Category category);
         #endregion
 
-        //ItemDataControl
-
-        //Brand
         #region Brand
         public Task<Brand> CreateBrandAsync(Brand brand);
         #endregion
 
-        //Generic
         #region Generic 
         public Task<Generic> CreateGenericAsync(Generic generic);
         #endregion
 
-        //Formulation
         #region Formulation
         public Task<Formulation> CreateFormulationAsync(Formulation formulation);
         #endregion
 
-        //Classification
         #region Classification
         public Task<Classification> CreateClassificationAsync(Classification classification);
         #endregion
 
-        //Types
         #region Types
         public Task<TypeModel> CreateTypeModelAsync(TypeModel typeModel);
         #endregion
 
-        //Supplier
+        #region Supplier
         public Task<Supplier> CreateSupplierAsync(Supplier supplier);
+        #endregion
 
-        //Inventory
+        #region Inventory
         public Task<Inventory> CreateInventoryAsync(Inventory inventory);
+        #endregion
 
-        //VAT
+        #region VAT
         public Task<VAT> CreateVATAsync(VAT vat);
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public Task<PurchaseOrder> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         public Task<StockMovement> CreateStockMovementAsync(StockMovement stockMovement);
+        #endregion
     }
 }
 

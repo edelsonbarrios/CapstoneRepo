@@ -26,67 +26,61 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         public Task<bool> CreateAccountAsync(CreateAccountRequest request);
         #endregion
 
-        //sales
         #region Sales
         public Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto request);
         #endregion
 
-        //Discount
         #region Discount
         public Task<DiscountDto> CreateDiscountAsync(CreateDiscountDto dto);
         #endregion
 
-        //Product
         #region Product
         public Task<ProductDto> CreateProductAsync(CreateProductDto dto);
         #endregion
 
-        //Category
         #region Category
         public Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto);
         #endregion
 
-        //ItemDataControl
-
-        //Brand
         #region Brand
         public Task<BrandDto> CreateBrandAsync(CreateBrandDto dto);
         #endregion
 
-        //Generic
         #region Generic
         public Task<GenericDto> CreateGenericAsync(CreateGenericDto dto);
         #endregion
 
-        //Formulation
         #region Formulation
         public Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto);
         #endregion
 
-        //Classification
         #region Classification
         public Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto);
         #endregion
-        //Type
+
         #region Type
         public Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto);
         #endregion
 
-        //Supplier
+        #region Supplier
         public Task<SupplierDto> CreateSupplierAsync(CreateSupplierDto dto);
+        #endregion
 
-        //Inventory
+        #region Inventory
         public Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto dto);
+        #endregion
 
-        //VAT
+        #region VAT
         public Task<VatDto> CreateVATAsync(CreateVATDto dto);
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public Task<PurchaseOrderDto> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto);
+        #endregion
 
-        //StockMovement
+        #region StockMovement
         public Task<StockMovementDto> CreateStockMovementAsync(CreateStockMovementDto dto);
-
+        #endregion
 
     }
 }

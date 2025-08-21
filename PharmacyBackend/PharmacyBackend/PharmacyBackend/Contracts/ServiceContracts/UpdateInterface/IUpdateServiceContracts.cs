@@ -16,50 +16,61 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 {
     public interface IUpdateServiceContracts
     {
-        //employee
+        #region Employee
         public Task<bool> UpdateEmployeeAsync(UpdateEmployeeRequest request);
         public Task<bool> UpdateAccountAsync(UpdateAccountRequest request);
+        #endregion
 
-        //sales
+        #region Sales
         public Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto request);
+        #endregion
 
-        //Discount
+        #region Discount
         public Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto);
+        #endregion
 
-        //Product
+        #region Product
         public Task<bool> UpdateProductAsync(int id, UpdateProductDto dto);
+        #endregion
 
-        //Category
+        #region Category
         public Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto);
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto);
+        #endregion
 
-        //Generic
+        #region Generic
         public Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto);
+        #endregion
 
-        //Formulation
+        #region Formulation
         public Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto);
+        #endregion
 
-        //Classification
+        #region Classification
         public Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto);
+        #endregion
 
-        //Type
+        #region Type
         public Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto);
+        #endregion
 
-        //Supplier
+        #region Supplier
         public Task<bool> UpdateSupplierAsync(int id, UpdateSupplierDto dto);
+        #endregion
 
-        //Inventory
+        #region Inventory
         public Task<bool> UpdateInventoryAsync(int id, UpdateInventoryDto dto);
+        #endregion
 
-        //VAT
+        #region VAT
         public Task<bool> UpdateVATAsync(int id, UpdateVATDto dto);
+        #endregion
 
-        //PurchaseOrder
+        #region PurchaseOrder
         public Task<bool> UpdatePurchaseOrderAsync(int id, UpdatePurchaseOrderDto dto);
-
+        #endregion
     }
 }
