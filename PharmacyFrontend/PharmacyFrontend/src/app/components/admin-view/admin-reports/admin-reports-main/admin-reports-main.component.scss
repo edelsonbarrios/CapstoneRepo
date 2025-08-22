@@ -2,7 +2,7 @@
   flex: 1;
   padding: 20px;
   background: #f2f6fc;
-  min-height: 100vh;
+  height: 100vh;
 
   .header{
     display: flex;
@@ -10,36 +10,53 @@
     align-items: center;
     margin-bottom: 30px;
 
+    .nav-group {
+      display: flex;
+      gap: 0;
+    }
+
     a {
-      color: #3498ff;
+      background-color: #3498ff;
+      color: white;
       font-size: 20px;
+      padding: 10px;
+      margin: 4px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: background-color 0.15s, margin-left 0.15s;
 
       &:hover{
-        color: #246cb4;
+        background-color: #2980d9;
+        margin-left: 10px;
       }
     }
 
-    .searchbar{
-      padding: 8px 16px;
-      border: 1px solid #e2e8f0;
-      font-size: 14px;
-      border-radius: 20px;
-      background: white;
-      width: 300px;
-      outline: none;
-    }
+    .notification {
+      position: relative;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.15s;
 
-    .nav-int{
-      border-bottom: #3498ff solid;
+      &:hover{
+        transform: translateY(-2px);
+      }
+
+      &:active{
+        opacity: 0.8;
+      }
     }
   }
-  .container{
+
+  .container {
+    height: 800px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1.2fr;
-    grid-template-rows: auto, auto;
-    gap: 20px;
-    margin-bottom: 20px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    flex: 1;
+    grid-gap: 20px 20px;
+    grid-template-areas: 
+    "total-sales item-2"
+    "total-sales item-3";
 
     .grid-items {
       background: white;
@@ -47,9 +64,25 @@
       padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       border: 1px solid #f1f5f9;
-      grid-template-areas: 
-      "sales inventory top-meds"
-      "trends trends expiry";
+    }
+
+    .total-sales {
+      grid-area: total-sales;
+
+      .title-total{
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e2f47;
+        margin-bottom: 8px;
+      }
+    }
+
+    .item-2 {
+      grid-area: item-2;
+    }
+
+    .item-3 {
+      grid-area: item-3;
     }
   }
 }
