@@ -37,14 +37,14 @@ namespace PharmacyBackend.Controllers
 
         #region Employee
         [HttpPost("Employee")]
-        public async Task<ActionResult<EmployeeRequestResponse>> CreateEmployeeAsync(CreateEmployeeRequest request)
+        public async Task<ActionResult<CreateEmployeeResponse>> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid properties.");
             var employeeId = await _postService.CreateEmployeeAsync(request);
             if (employeeId == 0)
-                return BadRequest(new EmployeeRequestResponse { Message = "Employee cannot be created. Please try again." });
-            return Ok(new EmployeeRequestResponse { Message = $"Employee successfully created. " });
+                return BadRequest(new CreateEmployeeResponse { Message = "Employee cannot be created. Please try again.", EmployeeId = employeeId });
+            return Ok(new CreateEmployeeResponse { Message = $"Employee successfully created. ", EmployeeId = employeeId });
         }
         #endregion
 

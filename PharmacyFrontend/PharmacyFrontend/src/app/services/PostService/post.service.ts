@@ -22,8 +22,8 @@ export class PostService {
   }
 
   //Employee Service
-  createEmployee(employee: Employee) : Observable<{ message: string }> {
-    return this.httpClient.post<{ message: string }>(`${this.apiUrl}/Post/Employee`, employee);
+  createEmployee(employee ?: Employee | null) : Observable<{ message: string, employeeId : number}> {
+    return this.httpClient.post<{ message: string, employeeId : number }>(`${this.apiUrl}/Post/Employee`, employee);
   }
   
 }

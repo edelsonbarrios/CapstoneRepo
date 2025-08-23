@@ -104,6 +104,31 @@ namespace PharmacyBackend.Service.GetService
             }).ToList();
             return modifEmployees;
         }
+
+        public async Task<List<EmployeeDTO>> GetFirstDisplayEmployees()
+        {
+            var employees = await _getRepo.GetFirstDisplayEmployees();
+            if (!employees.Any() || employees.Count() == 0)
+                return new List<EmployeeDTO>();
+            var modifEmployees = employees.Select(e => new EmployeeDTO
+            {
+                Id = e.Id,
+                EmployeeCode = e.EmployeeCode,
+                LastName = e.LastName,
+                FirstName = e.FirstName,
+                MiddleName = e.MiddleName,
+                Age = e.Age,
+                BirthDate = e.BirthDate,
+                CivilStatus = e.CivilStatus,
+                Gender = e.Gender,
+                Email = e.Email,
+                PhoneNumber = e.PhoneNumber,
+                Address = e.Address,
+                RolePosition = e.Role.RolePosition,
+                FullName = e.FullName
+            }).ToList();
+            return modifEmployees;
+        }
         #endregion
 
         #region Account

@@ -10,5 +10,9 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./admin-main.component.scss']
 })
 export class AdminMainComponent {
+  
 
+  constructor(
+
+  ) {}
 }

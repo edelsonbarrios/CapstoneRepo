@@ -48,6 +48,15 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Employee does not exist.");
             return Ok(employees);
         }
+
+        [HttpGet("DisplayEmployees")]
+        public async Task<ActionResult<List<EmployeeDTO>>> GetDisplayEmployeesAsync()
+        {
+            var employees = await _getService.GetFirstDisplayEmployees();
+            if (!employees.Any() || employees.Count() == 0)
+                return NotFound("There is no employees currently registered.");
+            return Ok(employees);
+        }
         #endregion
 
 

@@ -57,6 +57,14 @@ namespace PharmacyBackend.Repository.GET
                 .AsNoTracking()
                 .Where(e => e.LastName.Contains(lastName)).ToListAsync();
         }
+        public async Task<List<Employee>> GetFirstDisplayEmployees()
+        {
+            return await _context.Employees
+                .Include(e => e.Role)
+                .OrderBy(e => e.LastName)
+                .Take(7)
+                .ToListAsync();
+        }
         #endregion
 
         #region Sales

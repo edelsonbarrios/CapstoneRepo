@@ -23,6 +23,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<AccountDTO> GetAccountByIdAsync(int id);
         public Task<bool> AccountUsernameValidation(string userName);
         public Task<List<EmployeeDTO>> GetEmployeeByLastName(string lastName);
+        public Task<List<EmployeeDTO>> GetFirstDisplayEmployees();
         #endregion
 
         #region Sales

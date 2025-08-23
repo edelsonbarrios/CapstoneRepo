@@ -26,6 +26,10 @@ export class GetService {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeLastName?lastName=${lastName}`);
   }
 
+  GetDisplayEmployees() : Observable<Employee[]> {
+    return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/DisplayEmployees`);
+  }
+
   //Employee Service End
 
 

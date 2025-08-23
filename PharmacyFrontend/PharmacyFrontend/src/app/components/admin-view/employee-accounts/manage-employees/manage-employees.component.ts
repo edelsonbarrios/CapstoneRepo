@@ -28,7 +28,7 @@ export class ManageEmployeesComponent implements OnInit{
   }
 
   getAllEmployees() {
-    this.getService.GetAllEmployees().subscribe({
+    this.getService.GetDisplayEmployees().subscribe({
       next: employees => {
         this.employees = employees;
         console.log('Employees successfully selected.');
@@ -66,5 +66,6 @@ export class ManageEmployeesComponent implements OnInit{
 
   closeCreateEmployeeForm() {
     this.newEmployee = null;
+    this.getAllEmployees();
   }
 }
