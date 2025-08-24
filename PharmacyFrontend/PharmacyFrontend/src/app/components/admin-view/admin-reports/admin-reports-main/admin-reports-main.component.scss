@@ -3,6 +3,11 @@
   flex-direction: column;
   padding: 20px;
   background: #f2f6fc;
+  height: 100%;
+
+  .main-content {
+    height: 100%;
+  }
 
   .header{
     display: flex;
