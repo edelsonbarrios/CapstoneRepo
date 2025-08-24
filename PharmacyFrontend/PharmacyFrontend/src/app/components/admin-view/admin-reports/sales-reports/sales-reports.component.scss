@@ -1,26 +1,53 @@
 .wrapper{
-  flex: 1;
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
   background: #f2f6fc;
+  padding: 20px;
+  height: 100vh;
 
-  .header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+  .container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+    margin: 0px;
+    grid-template-areas: 
+    "item-1 item-2"
+    "item-3 item-4";
+    height: 100%;
+    width: 100%;
 
-    a {
-      color: #3498ff;
-      font-size: 20px;
-      margin-right: 30px;
+    .total-sales{
+      grid-area: item-1;
     }
 
-    .sales-reports{
-      border-bottom: #3498ff solid;
+    .sales-trend{
+      grid-area: item-2;
     }
 
-    .fast-moving-products{
-      margin-right: 930px;
+    .transaction-trend{
+      grid-area: item-3;
+    }
+
+    .transactions{
+      grid-area: item-4;
+    }
+
+    .grid-items{  
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #f1f5f9;
+
+      .titles{
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e2f47;
+        margin-bottom: 8px;
+      }
     }
   }
 }

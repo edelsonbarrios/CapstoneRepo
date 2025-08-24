@@ -1,27 +1,13 @@
 <main class="wrapper">
     <div class="header">
         <div class="nav-interact">
-            <a routerLink="/admin-main/admin-reports/sales-reports">Sales Reports</a>
-            <a routerLink="/admin-main/admin-reports/inventory-reports">Inventory Reports</a>
-            <a routerLink="/admin-main/admin-reports/fast-moving-products">Fast Moving Products</a>
+            <a routerLink="/admin-main/admin-reports-main/sales-reports">Sales Reports</a>
+            <a routerLink="/admin-main/admin-reports-main/inventory-reports">Inventory Reports</a>
+            <a routerLink="/admin-main/admin-reports-main/fast-moving-products">Fast Moving Products</a>
         </div>
         <div class="notification">🔔<span class="dot"></span></div>
     </div>
-
-    <div class="container">
-        <div class="grid-items total-sales">
-            <div class="title-total">
-                Total Sales
-            </div>
-        </div>
-        <div class="grid-items item-2">
-            2
-        </div>
-        <div class="grid-items item-3">
-            3
-        </div>
-    </div>
-
+    
     <div class="main-content">
         <router-outlet></router-outlet>
     </div>
