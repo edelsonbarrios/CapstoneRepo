@@ -1,4 +1,5 @@
-﻿namespace PharmacyBackend.DTOs.CategoryDTOs
+﻿//DTOs/CategoryDTOS/CreateCategoryDto.cs
+namespace PharmacyBackend.DTOs.CategoryDTOs
 {
     public class CreateCategoryDto
     {

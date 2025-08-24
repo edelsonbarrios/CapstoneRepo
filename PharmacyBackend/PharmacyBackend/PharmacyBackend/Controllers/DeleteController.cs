@@ -17,6 +17,7 @@ namespace PharmacyBackend.Controllers
         {
             _deleteService = deleteService;
         }
+        #region Employee
         [HttpDelete("Employee")]
         public async Task<ActionResult<EmployeeRequestResponse>> DeleteEmployeeByIdAsync(int id)
         {
@@ -25,6 +26,9 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new EmployeeRequestResponse { Message = "Employee cannot be deleted." });
             return Ok(new EmployeeRequestResponse { Message = "Employee deleted." });
         }
+        #endregion
+
+        #region Account
         [HttpDelete("Account")]
         public async Task<ActionResult<AccountRequestResponse>> DeleteAccountByIdAsync(int id)
         {
@@ -35,6 +39,9 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new AccountRequestResponse { Message = "Account cannot be deleted." });
             return Ok(new AccountRequestResponse { Message = "Account successfully deleted." });
         }
+        #endregion
+
+        #region Sales
         [HttpDelete("delete/sale")]
         public async Task<IActionResult> DeleteSalesTransactionByIdAsync(int id)
         {
@@ -44,7 +51,9 @@ namespace PharmacyBackend.Controllers
 
             return Ok("Sales transaction deleted successfully.");
         }
+        #endregion
 
+        #region Discount
         [HttpDelete("Delete/Discount")]
         public async Task<IActionResult> DeleteDiscountByIdAsync(int id)
         {
@@ -53,7 +62,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
+        #region Product
         [HttpDelete("Delete/Product")]
         public async Task<IActionResult> DeleteProductByIdAsync(int id)
         {
@@ -62,7 +73,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
+        #region Category
         [HttpDelete("Delete/Category")]
         public async Task<IActionResult> DeleteCategoryByIdAsync(int id)
         {
@@ -71,10 +84,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Category not found or already deleted.");
             return Ok("Category deleted successfully.");
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         [HttpDelete("Delete/Brand")]
         public async Task<IActionResult> DeleteBrandByIdAsync(int id)
         {
@@ -82,8 +94,9 @@ namespace PharmacyBackend.Controllers
             if (!deleteBrand) return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Generic
+        #region Generic
         [HttpDelete("Delete/Generic")]
         public async Task<IActionResult> DeleteGenericByIdAsync(int id)
         {
@@ -91,8 +104,9 @@ namespace PharmacyBackend.Controllers
             if (!deleteGeneric) return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         [HttpDelete("Delete/Formulation")]
         public async Task<IActionResult> DeleteFormulationByIdAsync(int id)
         {
@@ -100,8 +114,9 @@ namespace PharmacyBackend.Controllers
             if (!deleteFormulation) return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Classification
+        #region Classification
         [HttpDelete("Delete/Classification")]
         public async Task<IActionResult> DeleteClassificationByIdAsync(int id)
         {
@@ -109,8 +124,9 @@ namespace PharmacyBackend.Controllers
             if (!deleteClassification) return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Type
+        #region Type
         [HttpDelete("Delete/Type")]
         public async Task<IActionResult> DeleteTypeModelByIdAsync(int id)
         {
@@ -118,6 +134,51 @@ namespace PharmacyBackend.Controllers
             if (!deleteType) return NotFound();
             return NoContent();
         }
+        #endregion
+
+        #region Supplier
+        [HttpDelete("Delete/Supplier")]
+        public async Task<IActionResult> DeleteSupplierByIdAsync(int id)
+        {
+            var deleteSupplier = await _deleteService.DeleteSupplierByIdAsync(id);
+            if (!deleteSupplier)
+                return NotFound("Supplier not found or already deleted.");
+            return Ok("Supplier deleted successfully.");
+        }
+        #endregion
+
+        #region Inventory
+        [HttpDelete("Delete/Inventory")]
+        public async Task<IActionResult> DeleteInventoryByIdAsync(int id)
+        {
+            var deleteInventory = await _deleteService.DeleteInventoryByIdAsync(id);
+            if (!deleteInventory)
+                return NotFound("Inventory not found or already deleted.");
+            return Ok("Inventory deleted successfully.");
+        }
+        #endregion
+
+        #region VAT
+        [HttpDelete("Delete/VAT")]
+        public async Task<IActionResult> DeleteVATByIdAsync(int id)
+        {
+            var deleteVAT = await _deleteService.DeleteVATByIdAsync(id);
+            if (!deleteVAT)
+                return NotFound("VAT not found or already deleted.");
+            return Ok("VAT deleted successfully.");
+        }
+        #endregion
+
+        #region PurchaseOrder
+        [HttpDelete("Delete/PurchaseOrder")]
+        public async Task<IActionResult> DeletePurchaseOrderByIdAsync(int id)
+        {
+            var deletePurchaseOrder = await _deleteService.DeletePurchaseOrderByIdAsync(id);
+            if (!deletePurchaseOrder)
+                return NotFound("Purchase Order not found or already deleted.");
+            return Ok("Purchase Order deleted successfully.");
+        }
+        #endregion
     }
 }
 

@@ -1,4 +1,5 @@
-﻿namespace PharmacyBackend.DTOs.DiscountDTOs
+﻿//DTOs//DiscountDTOs/UpdateDiscountDto.cs
+namespace PharmacyBackend.DTOs.DiscountDTOs
 {
     public class UpdateDiscountDto
     {

@@ -2,8 +2,11 @@
   <div class="card">
     <!-- Search & Add Employee -->
     <div class="table-header">
-      <input type="text" placeholder="🔍 Search employee..." class="search-box" />
-      <button class="btn add">+ Add Employee</button>
+      <div class="search-wrapper">
+        <input type="text" placeholder="🔍 Search employee..." class="search-box" [(ngModel)]="this.lastNameSearch"/>
+        <button class="btn search-btn" (click)="getEmployeesByLastName()">Search</button>
+      </div>
+      <button class="btn add" (click)="openCreateEmployeeForm()">+ Add Employee</button>
     </div>
 
     <!-- Employee Table -->
@@ -24,10 +27,26 @@
           <td>{{ e.email }}</td>
           <td>{{ e.rolePosition }}</td>
           <td>
-            <button class="btn details">See Details</button>
+            <button class="btn details" (click)="openViewEmployeeForm(e)">See Details</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="viewEmployee">
+  <app-view-employee 
+  *ngIf="viewEmployee"
+  [employee]="viewEmployee"
+  (closeForm)="closeViewEmployeeForm()"
+  ></app-view-employee>
+</div>
+
+<div class="modal-overlay" *ngIf="newEmployee">
+  <app-create-employee
+  *ngIf="newEmployee"
+  [newEmployee]="newEmployee"
+  (closeForm)="closeCreateEmployeeForm()"
+  ></app-create-employee>
 </div>

@@ -1,4 +1,5 @@
-﻿namespace PharmacyBackend.DTOs.ItemDataControlDTOs
+﻿//DTOs/ItemDataControlDtos/ClassificationDto.cs
+namespace PharmacyBackend.DTOs.ItemDataControlDTOs
 {
     public class ClassificationDto
     {

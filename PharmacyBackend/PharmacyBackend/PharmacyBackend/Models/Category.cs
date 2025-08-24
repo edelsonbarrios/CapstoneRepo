@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿//Models/Category.cs
+using System.ComponentModel.DataAnnotations;
 
 namespace PharmacyBackend.Models
 {
@@ -12,6 +13,6 @@ namespace PharmacyBackend.Models
         public bool IsActive { get; set; } = true;
 
         // Navigation property
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Product> Products { get; set; }
     }
 }

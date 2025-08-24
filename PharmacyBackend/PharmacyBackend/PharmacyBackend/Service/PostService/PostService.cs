@@ -11,18 +11,32 @@ using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
+using PharmacyBackend.DTOs.PurchaseOrderItemDTOs;
+using PharmacyBackend.DTOs.StockMovementDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 
 namespace PharmacyBackend.Service.PostService
 {
     public class PostService : IPostServiceContracts
     {
         private readonly IPostRepositoryContracts _postRepo;
+        private readonly IGetRepositoryContracts _getRepo;
+        private readonly IUpdateRepositoryContracts _updateRepo;
 
-        public PostService(IPostRepositoryContracts postRepo)
+        public PostService(IPostRepositoryContracts postRepo,
+            IGetRepositoryContracts getRepo,
+            IUpdateRepositoryContracts updateRepo)
         {
             _postRepo = postRepo;
+            _getRepo = getRepo;         
+            _updateRepo = updateRepo;
         }
 
+        #region Account
         public async Task<string> AuthenticationAsync(LogInRequest request)
         {
             var enteredPassword = AesHelper.Encrypt(request.Password);
@@ -50,23 +64,25 @@ namespace PharmacyBackend.Service.PostService
                 return false;
             return createAccount;
         }
+        #endregion
 
+        #region Employee
         public async Task<int> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
             if (request is null)
                 return 0;
 
             int roleId = 0;
-            switch(request.RolePosition)
+            switch (request.RolePosition)
             {
                 case "Administrator":
                     roleId = 1;
                     break;
                 case "Cashier":
-                    roleId = 2;
+                    roleId = 3;
                     break;
                 case "Inventory Manager":
-                    roleId = 3;
+                    roleId = 2;
                     break;
             }
 
@@ -81,6 +97,7 @@ namespace PharmacyBackend.Service.PostService
                 CivilStatus = request.CivilStatus,
                 Gender = request.Gender,
                 Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 RoleId = roleId
             };
@@ -90,9 +107,9 @@ namespace PharmacyBackend.Service.PostService
                 return 0;
             return employeeId;
         }
+        #endregion
 
-        //sale 
-
+        #region Sales
         public async Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto)
         {
             if (dto == null || dto.Items == null || !dto.Items.Any())
@@ -102,7 +119,7 @@ namespace PharmacyBackend.Service.PostService
             {
                 TransactionDate = DateTime.Now,
                 InvoiceNumber = dto.InvoiceNumber,
-                DiscountId = dto.DiscountId, 
+                DiscountId = dto.DiscountId,
                 DiscountAmount = 0,
                 Items = dto.Items.Select(i => new SalesItem
                 {
@@ -127,8 +144,9 @@ namespace PharmacyBackend.Service.PostService
                 NetAmount = created.NetAmount
             };
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<DiscountDto> CreateDiscountAsync(CreateDiscountDto dto)
         {
             var discount = new Discount
@@ -145,7 +163,9 @@ namespace PharmacyBackend.Service.PostService
                 DiscountRate = result.DiscountRate
             };
         }
-        //Product
+        #endregion
+
+        #region Product
         public async Task<ProductDto> CreateProductAsync(CreateProductDto dto)
         {
             var product = new Product
@@ -159,7 +179,6 @@ namespace PharmacyBackend.Service.PostService
                 TypeID = dto.TypeID,
                 SupplierID = dto.SupplierID,
                 Price = dto.Price,
-                Stock = dto.Stock,
                 IsActive = true
             };
 
@@ -177,12 +196,12 @@ namespace PharmacyBackend.Service.PostService
                 TypeID = created.TypeID,
                 SupplierID = created.SupplierID,
                 Price = created.Price,
-                Stock = created.Stock,
                 IsActive = created.IsActive
             };
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto)
         {
             var category = new Category
@@ -198,27 +217,26 @@ namespace PharmacyBackend.Service.PostService
                 CategoryName = created.CategoryName
             };
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<BrandDto> CreateBrandAsync(CreateBrandDto dto)
         {
-            var brand = new Brand 
-            { 
+            var brand = new Brand
+            {
                 BrandName = dto.BrandName
             };
             var created = await _postRepo.CreateBrandAsync(brand);
 
-            return new BrandDto 
-            { 
-                BrandID = created.BrandID, 
+            return new BrandDto
+            {
+                BrandID = created.BrandID,
                 BrandName = created.BrandName
             };
         }
+        #endregion
 
-        //Generic
-
+        #region Generic
         public async Task<GenericDto> CreateGenericAsync(CreateGenericDto dto)
         {
             var generic = new Generic
@@ -233,8 +251,9 @@ namespace PharmacyBackend.Service.PostService
                 GenericName = created.GenericName
             };
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto)
         {
             var formulation = new Formulation
@@ -249,8 +268,9 @@ namespace PharmacyBackend.Service.PostService
                 FormulationName = created.FormulationName
             };
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto)
         {
             var classification = new Classification
@@ -265,8 +285,9 @@ namespace PharmacyBackend.Service.PostService
                 ClassificationName = created.ClassificationName
             };
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto)
         {
             var type = new TypeModel
@@ -281,6 +302,183 @@ namespace PharmacyBackend.Service.PostService
                 TypeName = created.TypeName
             };
         }
+        #endregion
+
+        #region Supplier
+        public async Task<SupplierDto> CreateSupplierAsync(CreateSupplierDto dto)
+        {
+            var supplier = new Supplier
+            {
+                SupplierName = dto.SupplierName,
+                ContactNumber = dto.ContactNumber,
+                Email = dto.Email,
+                Address = dto.Address,
+                IsActive = true
+            };
+
+            var created = await _postRepo.CreateSupplierAsync(supplier);
+
+            return new SupplierDto
+            {
+                SupplierID = created.SupplierID,
+                SupplierName = created.SupplierName,
+                ContactNumber = created.ContactNumber,
+                Email = created.Email,
+                Address = created.Address,
+                IsActive = created.IsActive
+            };
+        }
+        #endregion
+
+        #region Inventory
+        public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto dto)
+        {
+            var inventory = new Inventory
+            {
+                ProductID = dto.ProductID,
+                BatchNumber = dto.BatchNumber,
+                ManufacturingDate = dto.ManufacturingDate,
+                ExpirationDate = dto.ExpirationDate,
+                QuantityOnHand = dto.QuantityOnHand,
+                ReorderLevel = dto.ReorderLevel,
+                CostPrice = dto.CostPrice,
+                SellingPrice = dto.SellingPrice,
+                IsActive = true
+            };
+
+            var created = await _postRepo.CreateInventoryAsync(inventory);
+
+            return new InventoryDto
+            {
+                InventoryID = created.InventoryID,
+                ProductID = created.ProductID,
+                BatchNumber = created.BatchNumber,
+                ManufacturingDate = created.ManufacturingDate,
+                ExpirationDate = created.ExpirationDate,
+                QuantityOnHand = created.QuantityOnHand,
+                ReorderLevel = created.ReorderLevel,
+                CostPrice = created.CostPrice,
+                SellingPrice = created.SellingPrice,
+                DateAdded = created.DateAdded,
+                IsActive = created.IsActive,
+                IsExpired = created.IsExpired,
+                IsNearExpiry = created.IsNearExpiry,
+                IsCriticalStock = created.IsCriticalStock
+            };
+        }
+        #endregion
+
+        #region VAT
+        public async Task<VatDto> CreateVATAsync(CreateVATDto dto)
+        {
+            var vat = new VAT
+            {
+                VATName = dto.VATName,
+                VATRate = dto.VATRate,
+                IsActive = true
+            };
+
+            var created = await _postRepo.CreateVATAsync(vat);
+
+            return new VatDto
+            {
+                VATID = created.VATID,
+                VATName = created.VATName,
+                VATRate = created.VATRate,
+                IsActive = created.IsActive,
+                DateCreated = created.DateCreated
+            };
+        }
+        #endregion
+
+        #region PurchaseOrder
+        public async Task<PurchaseOrderDto> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
+        {
+            var purchaseOrder = new PurchaseOrder
+            {
+                PurchaseOrderNumber = dto.PurchaseOrderNumber,
+                DeliveryDate = dto.DeliveryDate,
+                SupplierID = dto.SupplierID,
+                Notes = dto.Notes,
+                Status = "Pending",
+                PurchaseOrderItems = dto.PurchaseOrderItems.Select(poi => new PurchaseOrderItem
+                {
+                    ProductID = poi.ProductID,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.QuantityOrdered * poi.UnitCost
+                }).ToList()
+            };
+
+            // Calculate total amount
+            purchaseOrder.TotalAmount = purchaseOrder.PurchaseOrderItems.Sum(poi => poi.TotalCost);
+
+            var created = await _postRepo.CreatePurchaseOrderAsync(purchaseOrder);
+
+            return new PurchaseOrderDto
+            {
+                PurchaseOrderID = created.PurchaseOrderID,
+                PurchaseOrderNumber = created.PurchaseOrderNumber,
+                OrderDate = created.OrderDate,
+                DeliveryDate = created.DeliveryDate,
+                SupplierID = created.SupplierID,
+                TotalAmount = created.TotalAmount,
+                Status = created.Status,
+                Notes = created.Notes,
+                PurchaseOrderItems = created.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
+                {
+                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    ProductID = poi.ProductID,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    QuantityReceived = poi.QuantityReceived,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.TotalCost
+                }).ToList()
+            };
+        }
+        #endregion
+
+        #region StockMovement
+        public async Task<StockMovementDto> CreateStockMovementAsync(CreateStockMovementDto dto)
+        {
+            // Get the current inventory to calculate before/after quantities
+            var inventory = await _getRepo.GetInventoryByIdAsync(dto.InventoryID);
+            if (inventory == null)
+                throw new ArgumentException("Inventory not found");
+
+            var stockMovement = new StockMovement
+            {
+                InventoryID = dto.InventoryID,
+                MovementType = dto.MovementType,
+                QuantityChanged = dto.QuantityChanged,
+                QuantityBefore = inventory.QuantityOnHand,
+                QuantityAfter = inventory.QuantityOnHand + dto.QuantityChanged,
+                ReferenceNumber = dto.ReferenceNumber,
+                Notes = dto.Notes,
+                EmployeeID = dto.EmployeeID
+            };
+
+            var created = await _postRepo.CreateStockMovementAsync(stockMovement);
+
+            // Update the inventory quantity
+            inventory.QuantityOnHand = stockMovement.QuantityAfter;
+            await _updateRepo.UpdateInventoryAsync(inventory);
+
+            return new StockMovementDto
+            {
+                StockMovementID = created.StockMovementID,
+                InventoryID = created.InventoryID,
+                MovementType = created.MovementType,
+                QuantityChanged = created.QuantityChanged,
+                QuantityBefore = created.QuantityBefore,
+                QuantityAfter = created.QuantityAfter,
+                ReferenceNumber = created.ReferenceNumber,
+                Notes = created.Notes,
+                MovementDate = created.MovementDate,
+                EmployeeID = created.EmployeeID
+            };
+        }
+        #endregion
 
     }
 }

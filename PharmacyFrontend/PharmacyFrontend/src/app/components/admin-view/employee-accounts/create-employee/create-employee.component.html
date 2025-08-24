@@ -1,0 +1,90 @@
+<div class="modal" *ngIf="newEmployee">
+  <div class="modal-header">
+    <h2>👤 Add Employee</h2>
+    <p>Quickly add employee by filling the form</p>
+    <button class="upload-btn">Upload Photo</button>
+  </div>
+  <hr />
+
+  <div class="modal-body">
+    <fieldset>
+      <legend>📋 Add details of an employee</legend>
+
+      <div class="form-grid">
+        <!-- Employee Code -->
+        <div class="form-group">
+          <label>Employee Code <span>*</span></label>
+          <input type="text" placeholder="Enter Employee Code" [(ngModel)]="newEmployee.employeeCode"/>
+        </div>
+
+        <div class="form-group">
+          <label>Last Name <span>*</span></label>
+          <input type="text" placeholder="Enter Last Name" [(ngModel)]="newEmployee.lastName"/>
+        </div>
+
+        <div class="form-group">
+          <label>First Name<span>*</span></label>
+          <input type="text" placeholder="Enter First Name" [(ngModel)]="newEmployee.firstName"/>
+        </div>
+
+        <div class="form-group">
+          <label>Middle Name<span>*</span></label>
+          <input type="text" placeholder="Enter Middle Name" [(ngModel)]="newEmployee.middleName"/>
+        </div>
+
+        <div class="form-group">
+          <label>Gender<span>*</span></label>
+          <input type="text" placeholder="Enter Gender" [(ngModel)]="newEmployee.gender"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Age</label>
+          <input type="number" placeholder="Age" [(ngModel)]="newEmployee.age"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Birth Date</label>
+          <input type="date" [(ngModel)]="newEmployee.birthDate"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Phone Number</label>
+          <input type="text" placeholder="Enter Phone No." [(ngModel)]="newEmployee.phoneNumber"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Civil Status</label>
+          <input type="text" placeholder="Enter Civil Status" [(ngModel)]="newEmployee.civilStatus"/>
+        </div>
+
+        <div class="form-group small">
+          <label>Role Position</label>
+          <input type="text" placeholder="Enter Role Position" [(ngModel)]="newEmployee.rolePosition"/>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" placeholder="Enter Email" [(ngModel)]="newEmployee.email"/>
+        </div>
+
+        <div class="form-group wide">
+          <label>Address <span>*</span></label>
+          <input type="text" placeholder="Enter Address" [(ngModel)]="newEmployee.address"/>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="modal-footer">
+    <button class="cancel-btn" (click)="closeCreateEmployeeForm()">Cancel</button>
+    <button class="add-btn" (click)="openCreateAccountForm()">+ Add Employee</button>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="newAccount">
+  <app-create-account
+  *ngIf="newAccount"
+  [newAccount]="newAccount"
+  (closeForm)="closeCreateAccountForm()"
+  ></app-create-account>
+</div>

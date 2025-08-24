@@ -1,0 +1,86 @@
+<div class="wrapper">
+  <header>
+    <img src="/images/view-employee-images/see-details.png" alt="See Details Image">
+    <h1>See Details</h1>
+  </header>
+  <hr>
+  <div class="display-wrapper">
+    <img src="/images/view-employee-images/nigga-man.png" alt="User Profile Image">
+    <h1>{{employee.fullName}}</h1>
+    <h2 style="margin-bottom: 10px;">{{employee.rolePosition}}</h2>
+  </div>
+  <hr><br>
+  <main>
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/employee-code.png" alt="Employee Code">
+        <h1>Employee Code:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Employee Code" [(ngModel)]="employee.employeeCode">
+      </div>
+    </div>
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/mail.png" alt="Email">
+        <h1>Email:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Email" [(ngModel)]="employee.email">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/phone.png" alt="Phone">
+        <h1>Contact Number:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Contact Number" [(ngModel)]="employee.employeeCode">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/cake.png" alt="Birth Date">
+        <h1>Birth Date:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Birth Date" [(ngModel)]="employee.birthDate">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/mother-child.png" alt="Age">
+        <h1>Age:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Age" [(ngModel)]="employee.age">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/gender.png" alt="Gender">
+        <h1>Gender:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Gender" [(ngModel)]="employee.gender">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/address.png" alt="Address">
+        <h1>Address:</h1>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" placeholder="Address" [(ngModel)]="employee.address">
+      </div>
+    </div>
+  </main>
+  <div class="button-wrapper">
+    <button (click)="closeViewForm()">Close</button>
+  </div>
+</div>

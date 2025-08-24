@@ -7,9 +7,13 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
 
 namespace PharmacyBackend.Controllers
 {
@@ -24,6 +28,7 @@ namespace PharmacyBackend.Controllers
             _updateService = updateService;
         }
 
+        #region Employee
         [HttpPut("Employee")]
         public async Task<ActionResult<EmployeeRequestResponse>> UpdateEmployeeAsync(UpdateEmployeeRequest request)
         {
@@ -34,6 +39,9 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new EmployeeRequestResponse { Message = "Failed to updated employee." });
             return Ok(new EmployeeRequestResponse { Message = "Employee updated sucessfully." });
         }
+        #endregion
+
+        #region Account
         [HttpPut("Account")]
         public async Task<ActionResult<UpdateAccountResponse>> UpdateAccountAsync(UpdateAccountRequest request)
         {
@@ -46,6 +54,9 @@ namespace PharmacyBackend.Controllers
 
             return Ok(new UpdateAccountResponse { Message = "Account successfully updated." });
         }
+        #endregion
+
+        #region Sale
         [HttpPut("update/sale")]
         public async Task<IActionResult> UpdateSalesTransactionAsync(int id, [FromBody] UpdateSalesTransactionDto dto)
         {
@@ -55,7 +66,9 @@ namespace PharmacyBackend.Controllers
 
             return Ok("Sales transaction updated successfully.");
         }
+        #endregion
 
+        #region Discount
         [HttpPut("Update/Discount")]
         public async Task<IActionResult> UpdateDiscountAsync(int id, [FromBody] UpdateDiscountDto dto)
         {
@@ -64,7 +77,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
+        #region Product
         [HttpPut("Update/Product")]
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] UpdateProductDto dto)
         {
@@ -73,7 +88,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
+        #region Category
         [HttpPut("Update/Category")]
         public async Task<IActionResult> UpdateCategoryAsync(int id, [FromBody] UpdateCategoryDto dto)
         {
@@ -82,10 +99,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Category not found or update failed.");
             return Ok("Category updated successfully.");
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         [HttpPut("Update/Brand")]
         public async Task<IActionResult> UpdateBrandAsync(int id, [FromBody] UpdateBrandDto dto)
         {
@@ -94,8 +110,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Generic
+        #region Generic
         [HttpPut("Update/Generic")]
         public async Task<IActionResult> UpdateGenericAsync(int id, [FromBody] UpdateGenericDto dto)
         {
@@ -104,8 +121,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         [HttpPut("Update/Formulation")]
         public async Task<IActionResult> UpdateFormulationAsync(int id, [FromBody] UpdateFormulationDto dto)
         {
@@ -114,8 +132,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Classification
+        #region Classification
         [HttpPut("Update/Classification")]
         public async Task<IActionResult> UpdateClassificationAsync(int id, [FromBody] UpdateClassificationDto dto)
         {
@@ -124,8 +143,9 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
 
-        //Type
+        #region Type
         [HttpPut("Update/Type")]
         public async Task<IActionResult> UpdateTypeModelAsync(int id, [FromBody] UpdateTypeModelDto dto)
         {
@@ -134,5 +154,50 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        #endregion
+
+        #region Supplier
+        [HttpPut("Update/Supplier")]
+        public async Task<IActionResult> UpdateSupplierAsync(int id, [FromBody] UpdateSupplierDto dto)
+        {
+            var success = await _updateService.UpdateSupplierAsync(id, dto);
+            if (!success)
+                return NotFound("Supplier not found or update failed.");
+            return Ok("Supplier updated successfully.");
+        }
+        #endregion
+
+        #region Inventory
+        [HttpPut("Update/Inventory")]
+        public async Task<IActionResult> UpdateInventoryAsync(int id, [FromBody] UpdateInventoryDto dto)
+        {
+            var success = await _updateService.UpdateInventoryAsync(id, dto);
+            if (!success)
+                return NotFound("Inventory not found or update failed.");
+            return Ok("Inventory updated successfully.");
+        }
+        #endregion
+
+        #region VAT
+        [HttpPut("Update/VAT")]
+        public async Task<IActionResult> UpdateVATAsync(int id, [FromBody] UpdateVATDto dto)
+        {
+            var success = await _updateService.UpdateVATAsync(id, dto);
+            if (!success)
+                return NotFound("VAT not found or update failed.");
+            return Ok("VAT updated successfully.");
+        }
+        #endregion
+
+        #region PurchaseOrder
+        [HttpPut("Update/PurchaseOrder")]
+        public async Task<IActionResult> UpdatePurchaseOrderAsync(int id, [FromBody] UpdatePurchaseOrderDto dto)
+        {
+            var success = await _updateService.UpdatePurchaseOrderAsync(id, dto);
+            if (!success)
+                return NotFound("Purchase Order not found or update failed.");
+            return Ok("Purchase Order updated successfully.");
+        }
+        #endregion
     }
 }

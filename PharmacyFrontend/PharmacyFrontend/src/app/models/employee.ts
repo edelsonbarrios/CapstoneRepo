@@ -10,6 +10,7 @@ export class Employee {
   gender: string = '';
   email: string = '';
   address: string = '';
+  phoneNumber : string = '';
   rolePosition: string = '';
   fullName: string = '';
 }

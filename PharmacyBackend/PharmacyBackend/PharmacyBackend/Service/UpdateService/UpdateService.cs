@@ -13,6 +13,10 @@ using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using System.Security.Principal;
+using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.VatEntryDTOs;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -21,13 +25,13 @@ namespace PharmacyBackend.Service.UpdateService
         private readonly IUpdateRepositoryContracts _updateRepo;
         private readonly IGetRepositoryContracts _getRepo;
 
-        public UpdateService(IUpdateRepositoryContracts updateRepo, 
+        public UpdateService(IUpdateRepositoryContracts updateRepo,
             IGetRepositoryContracts getRepo)
         {
             _updateRepo = updateRepo;
             _getRepo = getRepo;
         }
-
+        #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
         {
             if (request is null)
@@ -48,7 +52,9 @@ namespace PharmacyBackend.Service.UpdateService
                 return false;
             return true;
         }
+        #endregion
 
+        #region Employee
         public async Task<bool> UpdateEmployeeAsync(UpdateEmployeeRequest request)
         {
             if (request is null)
@@ -56,7 +62,7 @@ namespace PharmacyBackend.Service.UpdateService
 
             int roleId = 0;
 
-            switch(request.RolePosition)
+            switch (request.RolePosition)
             {
                 case "Administrator":
                     roleId = 1;
@@ -91,8 +97,9 @@ namespace PharmacyBackend.Service.UpdateService
                 return false;
             return true;
         }
+        #endregion
 
-        //sales 
+        #region Sales
         public async Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto)
         {
             var existing = await _getRepo.GetSalesTransactionByIdAsync(id);
@@ -116,8 +123,9 @@ namespace PharmacyBackend.Service.UpdateService
 
             return await _updateRepo.UpdateSalesTransactionAsync(existing);
         }
+        #endregion
 
-        //Discount
+        #region Discount
         public async Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto)
         {
             var existing = await _getRepo.GetDiscountByIdAsync(id);
@@ -129,8 +137,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateDiscountAsync(existing);
             return true;
         }
+        #endregion
 
-        //Product
+        #region Product
         public async Task<bool> UpdateProductAsync(int id, UpdateProductDto dto)
         {
             var existing = await _getRepo.GetProductByIdAsync(id);
@@ -145,14 +154,14 @@ namespace PharmacyBackend.Service.UpdateService
             existing.TypeID = dto.TypeID;
             existing.SupplierID = dto.SupplierID;
             existing.Price = dto.Price;
-            existing.Stock = dto.Stock;
             existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateProductAsync(existing);
             return true;
         }
+        #endregion
 
-        //Category
+        #region Category
         public async Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto)
         {
             var existing = await _getRepo.GetCategoryByIdAsync(id);
@@ -164,22 +173,22 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateCategoryAsync(existing);
             return true;
         }
+        #endregion
 
-        //ItemDataControl
-
-        //Brand
+        #region Brand
         public async Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto)
         {
             var existing = await _getRepo.GetBrandByIdAsync(id);
             if (existing == null) return false;
-            
+
             existing.BrandName = dto.BrandName;
 
             await _updateRepo.UpdateBrandAsync(existing);
             return true;
         }
+        #endregion
 
-        //Generic
+        #region Generic
         public async Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto)
         {
             var existing = await _getRepo.GetGenericByIdAsync(id);
@@ -190,8 +199,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateGenericAsync(existing);
             return true;
         }
+        #endregion
 
-        //Formulation
+        #region Formulation
         public async Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto)
         {
             var existing = await _getRepo.GetFormulationByIdAsync(id);
@@ -202,8 +212,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateFormulationAsync(existing);
             return true;
         }
+        #endregion
 
-        //Classification
+        #region Classification
         public async Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto)
         {
             var existing = await _getRepo.GetClassificationByIdAsync(id);
@@ -214,8 +225,9 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateClassificationAsync(existing);
             return true;
         }
+        #endregion
 
-        //Type
+        #region Type
         public async Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto)
         {
             var existing = await _getRepo.GetTypeModelByIdAsync(id);
@@ -226,5 +238,90 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateTypeModelAsync(existing);
             return true;
         }
+        #endregion
+
+        #region Supplier
+        public async Task<bool> UpdateSupplierAsync(int id, UpdateSupplierDto dto)
+        {
+            var existing = await _getRepo.GetSupplierByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.SupplierName = dto.SupplierName;
+            existing.ContactNumber = dto.ContactNumber;
+            existing.Email = dto.Email;
+            existing.Address = dto.Address;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateSupplierAsync(existing);
+            return true;
+        }
+        #endregion
+
+        #region Inventory
+        public async Task<bool> UpdateInventoryAsync(int id, UpdateInventoryDto dto)
+        {
+            var existing = await _getRepo.GetInventoryByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.ProductID = dto.ProductID;
+            existing.BatchNumber = dto.BatchNumber;
+            existing.ManufacturingDate = dto.ManufacturingDate;
+            existing.ExpirationDate = dto.ExpirationDate;
+            existing.QuantityOnHand = dto.QuantityOnHand;
+            existing.ReorderLevel = dto.ReorderLevel;
+            existing.CostPrice = dto.CostPrice;
+            existing.SellingPrice = dto.SellingPrice;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateInventoryAsync(existing);
+            return true;
+        }
+        #endregion
+
+        #region VAT
+        public async Task<bool> UpdateVATAsync(int id, UpdateVATDto dto)
+        {
+            var existing = await _getRepo.GetVATByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.VATName = dto.VATName;
+            existing.VATRate = dto.VATRate;
+            existing.IsActive = dto.IsActive;
+
+            await _updateRepo.UpdateVATAsync(existing);
+            return true;
+        }
+        #endregion
+
+        #region PurchaseOrder
+        public async Task<bool> UpdatePurchaseOrderAsync(int id, UpdatePurchaseOrderDto dto)
+        {
+            var existing = await _getRepo.GetPurchaseOrderByIdAsync(id);
+            if (existing == null) return false;
+
+            existing.DeliveryDate = dto.DeliveryDate;
+            existing.Status = dto.Status;
+            existing.Notes = dto.Notes;
+
+            // Update purchase order items
+            foreach (var updatedItem in dto.PurchaseOrderItems)
+            {
+                var item = existing.PurchaseOrderItems.FirstOrDefault(poi => poi.PurchaseOrderItemID == updatedItem.PurchaseOrderItemID);
+                if (item != null)
+                {
+                    item.QuantityReceived = updatedItem.QuantityReceived;
+                    item.UnitCost = updatedItem.UnitCost;
+                    item.TotalCost = item.QuantityOrdered * updatedItem.UnitCost;
+                }
+            }
+
+            // Recalculate total amount
+            existing.TotalAmount = existing.PurchaseOrderItems.Sum(poi => poi.TotalCost);
+
+            await _updateRepo.UpdatePurchaseOrderAsync(existing);
+            return true;
+
+        }
+        #endregion
     }
 }

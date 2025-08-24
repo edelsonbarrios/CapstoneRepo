@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap,  } from 'rxjs';
 import { LogInToken } from '../../components/shared/token';
+import { Employee } from '../../models/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,12 @@ export class PostService {
 
 
   Authentication(userName: string, password: string) : Observable<{token: string, message: string}> {
-    return this.httpClient.post<{token: string, message: string}>(`${BaseApiUrl}/Post/Login`, {userName, password})
-    .pipe(
-      tap(res => {
-        localStorage.setItem(LogInToken, res.token);
-      })
-    );
+    return this.httpClient.post<{token: string, message: string}>(`${BaseApiUrl}/Post/Login`, {userName, password});
   }
+
+  //Employee Service
+  createEmployee(employee ?: Employee | null) : Observable<{ message: string, employeeId : number}> {
+    return this.httpClient.post<{ message: string, employeeId : number }>(`${this.apiUrl}/Post/Employee`, employee);
+  }
+  
 }
