@@ -30,8 +30,8 @@ namespace PharmacyBackend.Models
         public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
 
         // Helper properties
-        public bool IsExpired => DateTime.Now > ExpirationDate;
-        public bool IsNearExpiry => DateTime.Now.AddDays(30) > ExpirationDate;
+        public bool IsExpired => DateTime.UtcNow > ExpirationDate;
+        public bool IsNearExpiry => DateTime.UtcNow.AddDays(30) > ExpirationDate;
         public bool IsCriticalStock => QuantityOnHand <= ReorderLevel;
     }
 }

@@ -40,7 +40,8 @@ namespace PharmacyBackend.Controllers
         public async Task<ActionResult<CreateEmployeeResponse>> CreateEmployeeAsync(CreateEmployeeRequest request)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Invalid properties.");
+                return BadRequest(new EmployeeRequestResponse { Message = "Invalid properties." });
+
             var employeeId = await _postService.CreateEmployeeAsync(request);
             if (employeeId == 0)
                 return BadRequest(new CreateEmployeeResponse { Message = "Employee cannot be created. Please try again.", EmployeeId = employeeId });
@@ -53,12 +54,15 @@ namespace PharmacyBackend.Controllers
         public async Task<ActionResult<LogInResponse>> AuthenticationAsync(LogInRequest request)
         {
             if (request is null)
-                return new LogInResponse { Token = null, Message = "Invalid Username or Password." };
+                return BadRequest(new LogInResponse { Token = null, Message = "Invalid Username or Password." });
+
             var token = await _postService.AuthenticationAsync(request);
             if (token is null)
-                return new LogInResponse { Token = null, Message = "Wrong username or password." };
+                return NotFound(new LogInResponse { Token = null, Message = "Wrong username or password." });
+
             return Ok(new LogInResponse { Token = token, Message = "Successfully logged in." });
         }
+
         [HttpPost("Account")]
         public async Task<ActionResult<CreateAccountResponse>> CreateAccountAsync(CreateAccountRequest request)
         {
@@ -77,13 +81,28 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
-
         #region Sales
         [HttpPost("sale")]
         public async Task<IActionResult> CreateSalesTransactionAsync([FromBody] CreateSalesTransactionDto dto)
         {
-            var result = await _postService.CreateSalesTransactionAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid sales transaction data.");
+
+            if (dto == null)
+                return BadRequest("Sales transaction data is required.");
+
+            try
+            {
+                var result = await _postService.CreateSalesTransactionAsync(dto);
+                if (result == null)
+                    return BadRequest("Sales transaction could not be created.");
+
+                return Ok(new { Message = "Sales transaction successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating sales transaction: {ex.Message}");
+            }
         }
         #endregion
 
@@ -91,8 +110,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Discount")]
         public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
         {
-            var result = await _postService.CreateDiscountAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid discount data.");
+
+            if (dto == null)
+                return BadRequest("Discount data is required.");
+
+            try
+            {
+                var result = await _postService.CreateDiscountAsync(dto);
+                if (result == null)
+                    return BadRequest("Discount could not be created.");
+
+                return Ok(new { Message = "Discount successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating discount: {ex.Message}");
+            }
         }
         #endregion
 
@@ -100,10 +135,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Product")]
         public async Task<IActionResult> CreateProductAsync([FromBody] CreateProductDto dto)
         {
-            var result = await _postService.CreateProductAsync(dto);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid product data.");
 
-            return Ok(result);
+            if (dto == null)
+                return BadRequest("Product data is required.");
 
+            try
+            {
+                var result = await _postService.CreateProductAsync(dto);
+                if (result == null)
+                    return BadRequest("Product could not be created.");
+
+                return Ok(new { Message = "Product successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating product: {ex.Message}");
+            }
         }
         #endregion
 
@@ -111,8 +160,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Category")]
         public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryDto dto)
         {
-            var result = await _postService.CreateCategoryAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid category data.");
+
+            if (dto == null)
+                return BadRequest("Category data is required.");
+
+            try
+            {
+                var result = await _postService.CreateCategoryAsync(dto);
+                if (result == null)
+                    return BadRequest("Category could not be created.");
+
+                return Ok(new { Message = "Category successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating category: {ex.Message}");
+            }
         }
         #endregion
 
@@ -120,8 +185,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Brand")]
         public async Task<IActionResult> CreateBrandAsync([FromBody] CreateBrandDto dto)
         {
-            var result = await _postService.CreateBrandAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid brand data.");
+
+            if (dto == null)
+                return BadRequest("Brand data is required.");
+
+            try
+            {
+                var result = await _postService.CreateBrandAsync(dto);
+                if (result == null)
+                    return BadRequest("Brand could not be created.");
+
+                return Ok(new { Message = "Brand successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating brand: {ex.Message}");
+            }
         }
         #endregion
 
@@ -129,8 +210,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Generic")]
         public async Task<IActionResult> CreateGenericAsync([FromBody] CreateGenericDto dto)
         {
-            var result = await _postService.CreateGenericAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid generic data.");
+
+            if (dto == null)
+                return BadRequest("Generic data is required.");
+
+            try
+            {
+                var result = await _postService.CreateGenericAsync(dto);
+                if (result == null)
+                    return BadRequest("Generic could not be created.");
+
+                return Ok(new { Message = "Generic successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating generic: {ex.Message}");
+            }
         }
         #endregion
 
@@ -138,8 +235,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Formulation")]
         public async Task<IActionResult> CreateFormulationAsync([FromBody] CreateFormulationDto dto)
         {
-            var result = await _postService.CreateFormulationAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid formulation data.");
+
+            if (dto == null)
+                return BadRequest("Formulation data is required.");
+
+            try
+            {
+                var result = await _postService.CreateFormulationAsync(dto);
+                if (result == null)
+                    return BadRequest("Formulation could not be created.");
+
+                return Ok(new { Message = "Formulation successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating formulation: {ex.Message}");
+            }
         }
         #endregion
 
@@ -147,8 +260,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Classification")]
         public async Task<IActionResult> CreateClassificationAsync([FromBody] CreateClassificationDto dto)
         {
-            var result = await _postService.CreateClassificationAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid classification data.");
+
+            if (dto == null)
+                return BadRequest("Classification data is required.");
+
+            try
+            {
+                var result = await _postService.CreateClassificationAsync(dto);
+                if (result == null)
+                    return BadRequest("Classification could not be created.");
+
+                return Ok(new { Message = "Classification successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating classification: {ex.Message}");
+            }
         }
         #endregion
 
@@ -156,8 +285,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Type")]
         public async Task<IActionResult> CreateTypeModelAsync([FromBody] CreateTypeModelDto dto)
         {
-            var result = await _postService.CreateTypeModelAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid type data.");
+
+            if (dto == null)
+                return BadRequest("Type data is required.");
+
+            try
+            {
+                var result = await _postService.CreateTypeModelAsync(dto);
+                if (result == null)
+                    return BadRequest("Type could not be created.");
+
+                return Ok(new { Message = "Type successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating type: {ex.Message}");
+            }
         }
         #endregion
 
@@ -165,8 +310,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Supplier")]
         public async Task<IActionResult> CreateSupplierAsync([FromBody] CreateSupplierDto dto)
         {
-            var result = await _postService.CreateSupplierAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid supplier data.");
+
+            if (dto == null)
+                return BadRequest("Supplier data is required.");
+
+            try
+            {
+                var result = await _postService.CreateSupplierAsync(dto);
+                if (result == null)
+                    return BadRequest("Supplier could not be created.");
+
+                return Ok(new { Message = "Supplier successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating supplier: {ex.Message}");
+            }
         }
         #endregion
 
@@ -174,8 +335,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Inventory")]
         public async Task<IActionResult> CreateInventoryAsync([FromBody] CreateInventoryDto dto)
         {
-            var result = await _postService.CreateInventoryAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid inventory data.");
+
+            if (dto == null)
+                return BadRequest("Inventory data is required.");
+
+            try
+            {
+                var result = await _postService.CreateInventoryAsync(dto);
+                if (result == null)
+                    return BadRequest("Inventory could not be created.");
+
+                return Ok(new { Message = "Inventory successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating inventory: {ex.Message}");
+            }
         }
         #endregion
 
@@ -183,8 +360,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("VAT")]
         public async Task<IActionResult> CreateVATAsync([FromBody] CreateVATDto dto)
         {
-            var result = await _postService.CreateVATAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid VAT data.");
+
+            if (dto == null)
+                return BadRequest("VAT data is required.");
+
+            try
+            {
+                var result = await _postService.CreateVATAsync(dto);
+                if (result == null)
+                    return BadRequest("VAT could not be created.");
+
+                return Ok(new { Message = "VAT successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating VAT: {ex.Message}");
+            }
         }
         #endregion
 
@@ -192,8 +385,24 @@ namespace PharmacyBackend.Controllers
         [HttpPost("PurchaseOrder")]
         public async Task<IActionResult> CreatePurchaseOrderAsync([FromBody] CreatePurchaseOrderDto dto)
         {
-            var result = await _postService.CreatePurchaseOrderAsync(dto);
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid purchase order data.");
+
+            if (dto == null)
+                return BadRequest("Purchase order data is required.");
+
+            try
+            {
+                var result = await _postService.CreatePurchaseOrderAsync(dto);
+                if (result == null)
+                    return BadRequest("Purchase order could not be created.");
+
+                return Ok(new { Message = "Purchase order successfully created." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating purchase order: {ex.Message}");
+            }
         }
         #endregion
 
@@ -201,14 +410,27 @@ namespace PharmacyBackend.Controllers
         [HttpPost("StockMovement")]
         public async Task<IActionResult> CreateStockMovementAsync([FromBody] CreateStockMovementDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid stock movement data.");
+
+            if (dto == null)
+                return BadRequest("Stock movement data is required.");
+
             try
             {
                 var result = await _postService.CreateStockMovementAsync(dto);
-                return Ok(result);
+                if (result == null)
+                    return BadRequest("Stock movement could not be created.");
+
+                return Ok(new { Message = "Stock movement successfully created." });
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Invalid argument: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating stock movement: {ex.Message}");
             }
         }
         #endregion
