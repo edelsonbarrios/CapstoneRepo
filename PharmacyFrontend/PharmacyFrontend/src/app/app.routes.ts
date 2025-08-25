@@ -94,5 +94,35 @@ export const routes: Routes = [
         ]
       }
     ]
+  }, 
+  {
+    path: 'inventory-manager-main',
+    loadComponent: () => {
+      return import('./components/inventory-manager-view/inventory-manager-main/inventory-manager-main.component')
+      .then(m => m.InventoryManagerMainComponent);
+    },
+    children: [
+      {
+        path: '',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
+          .then(m => m.InventoryManagerDashboardComponent);
+        }
+      },
+      {
+        path: 'inventory-manager-header',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/inventory-manager-header/inventory-manager-header.component')
+          .then(m => m.InventoryManagerHeaderComponent);
+        },
+      },
+      {
+        path: 'inventory-manager-dashboard',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
+          .then(m => m.InventoryManagerDashboardComponent);  
+        }
+      }
+    ]
   }
 ];

@@ -19,7 +19,7 @@ namespace PharmacyBackend.Helper
             {
                 new Claim(ClaimTypes.NameIdentifier, request.Id.ToString()),
                 new Claim(ClaimTypes.Name, request.Username),
-                new Claim(ClaimTypes.Role, request.Employee.Role.ToString()),
+                new Claim(ClaimTypes.Role, request.Employee.Role.RolePosition),
                 new Claim("EmployeeId", request.Employee.Id.ToString())
             };
 

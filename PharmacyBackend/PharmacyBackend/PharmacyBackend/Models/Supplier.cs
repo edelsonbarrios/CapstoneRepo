@@ -13,7 +13,7 @@ namespace PharmacyBackend.Models
         public bool IsActive { get; set; } = true;
 
         // Navigation properties
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; } = new List<Product>();
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
     }
 }
