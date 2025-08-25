@@ -12,12 +12,10 @@
     grid-template-rows: 1fr 1fr;
     gap: 20px;
     flex: 1;
-    margin: 0px;
     grid-template-areas: 
     "item-1 item-2"
     "item-3 item-4";
     height: 100%;
-    width: 100%;
 
     .total-sales{
       grid-area: item-1;

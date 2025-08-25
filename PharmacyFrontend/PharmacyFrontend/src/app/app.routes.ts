@@ -64,6 +64,38 @@ export const routes: Routes = [
         ]
       },
       {
+        path:'admin-maintenance-main',
+        loadComponent: () => {
+          return import('./components/admin-view/admin-maintenance/admin-maintenance-main/admin-maintenance-main.component').then(m => m.AdminMaintenanceMainComponent);
+        },
+        children:[
+          {
+            path:'',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-maintenance/vat-entry/vat-entry.component').then(m => m.VatEntryComponent);
+            }
+          },
+          {
+            path:'vat-entry',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-maintenance/vat-entry/vat-entry.component').then(m => m.VatEntryComponent);
+            }
+          },
+          {
+            path:'database-backup',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-maintenance/database-backup/database-backup.component').then(m => m.DatabaseBackupComponent);
+            },
+          },
+          {
+            path:'manage-discount',
+            loadComponent: () => {
+              return import('./components/admin-view/admin-maintenance/manage-discount/manage-discount.component').then(m => m.ManageDiscountComponent);
+            },
+          }
+        ]
+      },
+      {
         path: 'employee-accounts-main',
         loadComponent: () => {
           return import('./components/admin-view/employee-accounts/employee-accounts-main/employee-accounts-main.component')

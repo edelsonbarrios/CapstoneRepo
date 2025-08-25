@@ -1,0 +1,31 @@
+.wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  background: #f2f6fc;
+  padding: 20px;
+  height: 100%;
+
+  .container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    .database-backup{
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #f1f5f9;
+      flex: 1;
+
+      .titles{
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e2f47;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
