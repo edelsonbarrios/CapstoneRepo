@@ -1,20 +1,14 @@
 .wrapper{
   height: 100%;
   display: grid;
-  padding: 10px;
-  grid-template-rows: 15% 85%;
+  grid-template-rows: 10% 90%;
   background: #f2f6fc;
-
-  .main-content {
-    height: 100%;
-  }
 
   .header{
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    flex-shrink: 0;
+    align-items: flex-end;
+    margin-bottom: 8px;
 
     .nav-interact {
       display: flex;
