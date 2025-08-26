@@ -1,9 +1,9 @@
 .wrapper{
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background: #f2f6fc;
   height: 100%;
+  display: grid;
+  padding: 10px;
+  grid-template-rows: 15% 85%;
+  background: #f2f6fc;
 
   .main-content {
     height: 100%;
