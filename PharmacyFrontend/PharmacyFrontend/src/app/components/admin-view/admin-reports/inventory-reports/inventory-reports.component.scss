@@ -1,150 +1,146 @@
-.wrapper{
-  background: #f2f6fc;
-  padding: 1rem;
+.container {
   height: 100%;
-
-  .container{
-    display: grid;
-    gap: 10px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    grid-template-areas:
+  padding: 2rem;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 40% 60%;
+  grid-template-areas:
     "inventory-summary total-sales"
     "inventory-details inventory-details";
 
-    .inventory-summary{
-      grid-area: inventory-summary;
+  .inventory-summary {
+    grid-area: inventory-summary;
+  }
+
+  .total-sales {
+    grid-area: total-sales;
+  }
+
+  .inventory-details {
+    grid-area: inventory-details;
+  }
+
+  .grid-items {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
+
+    .titles {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e2f47;
+      margin-bottom: 8px;
     }
 
-    .total-sales{
-      grid-area: total-sales;
-    }
+    .inv-wrapper {
+      display: grid;
+      grid-template-rows: auto, auto;
+      gap: 2rem;
 
-    .inventory-details{
-      grid-area: inventory-details;
-    }
-
-    .grid-items{
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #f1f5f9;
-
-      .titles{
-        font-size: 18px;
-        font-weight: 600;
-        color: #1e2f47;
-        margin-bottom: 8px;
-      }
-
-      .inv-wrapper {
+      .sub-container {
         display: grid;
-        grid-template-rows: auto, auto;
-        gap: 2rem;
+        gap: 4px;
+        grid-template-columns: 1fr 1fr 1fr;
 
-         .sub-container {
-            display: grid;
-            gap: 4px;
-            grid-template-columns: 1fr 1fr 1fr;
+        .sub-items {
+          display: grid;
+          grid-template-rows: auto, auto;
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid #4f8ee6;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          gap: 8px;
 
-          .sub-items {
-            display: grid;
-            grid-template-rows: auto, auto;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid #4f8ee6;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            gap: 8px;
+          .label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+          }
 
-            .label {
-              font-size: 14px;
-              color: #64748b;
-              font-weight: 500;
-            }
-            
-            .value {
-              font-size: 24px;
-              font-weight: 700;
-              color: #1e2f47;
+          .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e2f47;
+          }
+        }
+      }
+
+      .date-controls {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        gap: 16px;
+        align-items: center;
+
+        .date-items {
+          display: grid;
+          grid-template-rows: auto auto;
+          gap: 4px;
+
+          .date-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+          }
+
+          .date-input {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e2f47;
+            background: white;
+            cursor: pointer;
+
+            &:focus {
+              outline: none;
+              border-color: #3a76ca;
             }
           }
         }
 
-        .date-controls {
+        .condition-items {
           display: grid;
-          grid-template-columns: auto auto auto;
-          gap: 16px;
-          align-items: center;
+          grid-template-rows: auto auto;
+          gap: 4px;
 
-          .date-items {
-            display: grid;
-            grid-template-rows: auto auto;
-            gap: 4px;
-
-            .date-label {
-              font-size: 14px;
-              color: #64748b;
-              font-weight: 500;
-            }
-
-            .date-input {
-              padding: 8px 12px;
-              border: 2px solid #e2e8f0;
-              border-radius: 6px;
-              font-size: 14px;
-              color: #1e2f47;
-              background: white;
-              cursor: pointer;
-
-              &:focus {
-                outline: none;
-                border-color: #3a76ca;
-              }
-            }
+          .condition-select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e2f47;
+            background: white;
+            cursor: pointer;
           }
 
-          .condition-items {
-            display: grid;
-            grid-template-rows: auto auto;
-            gap: 4px;
-
-            .condition-select {
-              padding: 8px 12px;
-              border: 2px solid #e2e8f0;
-              border-radius: 6px;
-              font-size: 14px;
-              color: #1e2f47;
-              background: white;
-              cursor: pointer;
-            }
-
-            .con-lable {
-              font-size: 14px;
-              color: #64748b;
-              font-weight: 500;
-            }
+          .con-lable {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
           }
         }
       }
     }
+  }
 
-    .detail-table {
-      width: 100%;
-      border-collapse: collapse;
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
 
-      td {
-        padding: 0.9rem;
-        text-align: left;
-        border-top: 1px solid #58a7db;
-      }
+    td {
+      padding: 0.9rem;
+      text-align: left;
+      border-top: 1px solid #58a7db;
+    }
 
-      th {
-        text-align: left;
-        padding: 0.9rem;
-        font-weight: 600;
-        color: #083258;
-      }
+    th {
+      text-align: left;
+      padding: 0.9rem;
+      font-weight: 600;
+      color: #083258;
     }
   }
 }
