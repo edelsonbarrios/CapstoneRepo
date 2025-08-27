@@ -4,10 +4,9 @@
   height: 100%;
 
   .container{
-    height: 100%;
     display: grid;
     gap: 10px;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     grid-template-areas:
     "inventory-summary total-sales"
