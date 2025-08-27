@@ -1,9 +1,11 @@
 .wrapper {
   height: 100%;
   padding: 2rem;
+  max-width: 1400px;
+  min-width: 1000px; /* optional safeguard */
   display: grid;
   grid-template-rows: repeat(6, 1fr);
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 2fr 1fr;
   gap: 1rem;
 
   .total-sales-wrapper {
