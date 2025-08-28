@@ -14,12 +14,30 @@
       font-size: 1.50rem;
       font-weight: 600;
       color: #1e2f47;
-      margin-bottom: 8px;
+      margin-bottom: 1rem;
     }
 
     .vat-control {
       display: flex;
+      justify-content: space-between;
       gap: 0.5rem;
+
+      input {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 0.4rem;
+        border: 1px solid #3498ff;
+      }
+    }
+
+    button {
+      color: white;
+      font-size: medium;
+      padding: 0.5rem;
+      border-radius: 0.4rem;
+      background-color: rgb(17, 177, 17);
+      border: 1px solid rgb(17, 177, 17);
+      margin-top: 1rem;
     }
   }
 }
