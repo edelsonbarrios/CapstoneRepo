@@ -1,6 +1,6 @@
 .wrapper{
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 10% 90%;
   padding: 20px;
   background: #f2f6fc;
   height: 100%;
@@ -13,7 +13,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     flex-shrink: 0;
 
     .nav-interact {
@@ -23,17 +23,15 @@
 
     a {
       text-decoration: none;
-      border: 1px solid #3498ff;
       color: #3498ff;
       font-size: 20px;
-      padding: 10px 16px;
-      border-radius: 10px;
+      padding: 10px 0.9rem;
       cursor: pointer;
-      transition: background-color 0.15s, color 0.15s, opacity 0.15s;
+      transition: color 0.15s, opacity 0.15s;
 
       &:hover{
-        background-color: #3498ff;
-        color:#ffffff;
+        border-bottom: 3px solid #3498ff;
+        color:#3498ff;
       }
       &:active{
         opacity: 0.8;
