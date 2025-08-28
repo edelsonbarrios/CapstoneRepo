@@ -2,13 +2,14 @@
 
   <div class="total-sales-wrapper">
 
-    <div class="header-wrapper">
-      <h1>Total Sales</h1>
-      <select name="" [(ngModel)]="selectedMonth">
-        <option value="">Monthly</option>
-        <option *ngFor="let m of months" [value]="m">{{m}}</option>
-      </select>
-    </div>
+    <div class="child-wrapper">
+      <div class="header-wrapper">
+        <h1>Total Sales</h1>
+        <select name="" [(ngModel)]="selectedMonth">
+          <option value="">Monthly</option>
+          <option *ngFor="let m of months" [value]="m">{{m}}</option>
+        </select>
+      </div>
 
     <div class="sales-transaction-wrapper">
       <h1>₱24,000</h1>
@@ -44,6 +45,8 @@
         </div>
       </div>
     </div>
+    </div>
+
   </div>
 
   <div class="sales-trend-wrapper">
@@ -61,3 +64,5 @@
   </div>
 
 </div>
+
+<!--SALES REPORT COMPONENT HTML-->
