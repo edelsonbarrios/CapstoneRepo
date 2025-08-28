@@ -2,8 +2,7 @@
 
   <div class="total-sales-wrapper">
 
-    <div class="child-wrapper">
-      <div class="header-wrapper">
+    <div class="header-wrapper">
         <h1>Total Sales</h1>
         <select name="" [(ngModel)]="selectedMonth">
           <option value="">Monthly</option>
@@ -11,17 +10,16 @@
         </select>
       </div>
 
-    <div class="sales-transaction-wrapper">
+    <div class="child-wrapper">
+
       <h1>₱24,000</h1>
       <h2>Number of Transactions</h2>
       <h3>420</h3>
       <p><span>+8%</span> prev. month</p>
-    </div>
+
+      <h1 id="top-selling-header">Top Selling Medicines (This Month)</h1>
 
     <div class="top-selling-wrapper">
-      <div class="header-wrapper">
-        <h1>Top Selling Medicines (This Month)</h1>
-      </div>
       <div class="medicines-wrapper">
         <div class="top-selling-medicine">
           <p>Biogesic</p>
@@ -50,11 +48,11 @@
   </div>
 
   <div class="sales-trend-wrapper">
-
+    SALES TREND
   </div>
 
   <div class="transaction-trend-wrapper">
-    
+    TRANSACTION TREND
   </div>
 
   <div class="transactions-wrapper">

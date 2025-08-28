@@ -1,6 +1,6 @@
 .wrapper {
   height: 100%;
-  padding: 2rem;
+  padding: 1rem;
   display: grid;
   margin-inline: auto;
   max-width: 1200px;
@@ -16,12 +16,7 @@
     box-shadow: 0 0 20px 2px rgba(163, 122, 122, 0.15);
     grid-area: 1 / 1 / 5 / 2;
 
-    .child-wrapper{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: space-between;
-        .header-wrapper {
+    .header-wrapper {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -29,6 +24,7 @@
         h1 {
           font-size: 1.25rem;
           font-weight: var(--fw-regular);
+          margin-bottom: 10px;
         }
 
         select {
@@ -39,11 +35,15 @@
           cursor: pointer;
         }
       }
+
+    .child-wrapper{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: space-between;
     }
 
-    .sales-transaction-wrapper {
-      margin-bottom: 10px;
-      h1 {
+    h1 {
         font-size: clamp(12px, 1.25rem, 2rem); 
         font-weight: var(--fw-heavy);
       }
@@ -64,16 +64,14 @@
           color: green;
         }
       }
-    }
+
+      #top-selling-header {
+        font-size: clamp(12px, 1.25rem, 2rem); 
+        font-weight: var(--fw-heavy);
+        margin-block: 1rem;
+      }
 
     .top-selling-wrapper {
-      .header-wrapper {
-        margin-bottom: 10px;
-        h1{
-          font-size: clamp(12px, 1.25rem, 2rem); 
-          font-weight: var(--fw-heavy);
-        }
-      }
       
       .top-selling-medicine {
         display: flex;
