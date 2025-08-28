@@ -2,84 +2,86 @@
   height: 100%;
   padding: 1rem;
   display: grid;
-  margin-inline: auto;
-  max-width: 1200px;
-  max-height: 630px;
   grid-template-rows: repeat(6, 1fr);
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
 
   .total-sales-wrapper {
+    height: 100%;
+    max-height: 400px;
     padding: 1rem;
     background-color: #f9fbfe;
     border-radius: 1rem;
-    box-shadow: 0 0 20px 2px rgba(163, 122, 122, 0.15);
+    box-shadow: 0 0 20px 2px rgba(181, 167, 167, 0.15);
     grid-area: 1 / 1 / 5 / 2;
 
     .header-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-        h1 {
-          font-size: 1.25rem;
-          font-weight: var(--fw-regular);
-          margin-bottom: 10px;
-        }
-
-        select {
-          padding: 6px 12px;
-          border-radius: 7px;
-          font-size: clamp(12px, 1rem, 2rem); 
-          font-family: var(--ff-poppins);
-          cursor: pointer;
-        }
+      h1 {
+        font-size: 1.25rem;
+        font-weight: var(--fw-regular);
+        margin-bottom: 10px;
       }
 
-    .child-wrapper{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: space-between;
+      select {
+        padding: 6px 12px;
+        border-radius: 7px;
+        font-size: clamp(12px, 1rem, 2rem);
+        font-family: var(--ff-poppins);
+        cursor: pointer;
+      }
     }
 
-    h1 {
-        font-size: clamp(12px, 1.25rem, 2rem); 
-        font-weight: var(--fw-heavy);
-      }
+    .main-wrapper {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto auto;
 
-      h2 {
-        font-size: clamp(12px, 1.25rem, 18px); 
-        font-weight: var(--fw-light);
-      }
-
-      h3 {
-        font-size: clamp(12px, 1.25rem, 2rem); 
-        font-weight: var(--fw-regular);
-      }
-      
-      p{
-        span {
-          font-size: clamp(12px, 1.25rem, 2rem); 
-          color: green;
-        }
-      }
-
-      #top-selling-header {
-        font-size: clamp(12px, 1.25rem, 2rem); 
-        font-weight: var(--fw-heavy);
-        margin-block: 1rem;
-      }
-
-    .top-selling-wrapper {
-      
-      .top-selling-medicine {
+      .header-wrapper {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1;
+        margin-bottom: 1rem;
+        h1 {
+          font-size: clamp(12px, 1.25rem, 2rem);
+          font-weight: var(--fw-heavy);
+        }
+
+        h2 {
+          font-size: clamp(12px, 1.25rem, 18px);
+          font-weight: var(--fw-light);
+        }
+
+        h3 {
+          font-size: clamp(12px, 1.25rem, 2rem);
+          font-weight: var(--fw-heavy);
+        }
 
         p {
-          font-size: clamp(12px, 1.25rem, 2rem); ;
+          span {
+            font-size: clamp(12px, 1.25rem, 2rem);
+            color: green;
+          }
+        }
+      }
+      .top-selling-wrapper {
+        .top-selling-header {
+          h1 {
+            font-size: 1.25rem;
+          }
+        }
+        .top-selling-medicine {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          p {
+            font-size: clamp(12px, 1.25rem, 2rem);
+          }
         }
       }
     }
@@ -89,7 +91,11 @@
     background-color: #f9fbfe;
     border-radius: 1rem;
     box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.15);
-    grid-area: 1 / 2 / 4 / 2
+    grid-area: 1 / 2 / 4 / 2;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .transaction-trend-wrapper {
@@ -98,6 +104,7 @@
     box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.15);
     grid-row: 5 / -1;
     grid-column: 1 / 1;
+    padding: 1rem;
   }
 
   .transactions-wrapper {
@@ -105,14 +112,24 @@
     border-radius: 1rem;
     box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.15);
     grid-area: 4 / 2 / -1 / -1;
-    
+
     .header-wrapper {
-      padding: 1rem;
-      h1 {
-        font-size: clamp(12px, 1.25rem, 2rem); 
-        font-weight: var(--fw-regular);
-      }
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
     }
+  }
+}
+
+@media (min-width: 1600px) {
+  .wrapper {
+    grid-template-columns: 1fr; /* single column */
+  }
+
+  .total-sales-wrapper {
+    grid-area: auto; /* reset to flow naturally */
   }
 }
 

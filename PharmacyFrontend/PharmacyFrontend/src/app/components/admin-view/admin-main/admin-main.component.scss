@@ -11,4 +11,10 @@ body {
   font-family: var(--ff-poppins);
 }
 
+@media (max-width: 2000) {
+  html {
+    font-size: 25px;
+  }
+}
+
 
