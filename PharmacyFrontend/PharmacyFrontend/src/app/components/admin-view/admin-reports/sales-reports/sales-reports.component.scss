@@ -1,9 +1,9 @@
 .wrapper {
   height: 100%;
   padding: 2rem;
-  max-width: 1550px;
-  min-width: 1000px;
   display: grid;
+  max-width: 2000px;
+  min-width: 500px;
   grid-template-rows: repeat(6, 1fr);
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
@@ -21,14 +21,14 @@
       justify-content: space-between;
 
       h1 {
-        font-size: clamp(12px, 1.2vw + 0.5rem, 18px); 
+        font-size: clamp(12px, 1.25rem, 2rem); 
         font-weight: var(--fw-regular);
       }
 
       select {
         padding: 6px 12px;
         border-radius: 7px;
-        font-size: 0.9rem;
+        font-size: clamp(12px, 1rem, 2rem); 
         font-family: var(--ff-poppins);
         cursor: pointer;
       }
@@ -37,16 +37,17 @@
     .sales-transaction-wrapper {
       margin-bottom: 10px;
       h1 {
+        font-size: clamp(12px, 1.25rem, 2rem); 
         font-weight: var(--fw-heavy);
       }
 
       h2 {
-        font-size: clamp(12px, 1.2vw + 0.5rem, 18px); 
+        font-size: clamp(12px, 1.25rem, 18px); 
         font-weight: var(--fw-light);
       }
 
       h3 {
-        font-size: clamp(12px, 1.2vw + 0.5rem, 18px); 
+        font-size: clamp(12px, 1.25rem, 2rem); 
         font-weight: var(--fw-regular);
       }
       
@@ -61,7 +62,7 @@
       .header-wrapper {
         margin-bottom: 10px;
         h1{
-          font-size: clamp(12px, 1.2vw + 0.5rem, 18px); 
+          font-size: clamp(12px, 1.25rem, 2rem); 
           font-weight: var(--fw-heavy);
         }
       }
@@ -98,7 +99,7 @@
     .header-wrapper {
       padding: 1rem;
       h1 {
-        font-size: clamp(12px, 1.2vw + 0.5rem, 18px); 
+        font-size: clamp(12px, 1.25rem, 2rem); 
         font-weight: var(--fw-regular);
       }
     }
