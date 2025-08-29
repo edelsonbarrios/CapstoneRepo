@@ -1,9 +1,74 @@
 <main class="wrapper">
-  <div class="container">
-    <div class="manage-discount">
-      <div class="titles">
-        Manage Discount
-      </div>
+  <div class="manage-vat-rates">
+    <h1>Manage Discount</h1>
+
+    <!-- DISCOUNT CONTROLS -->
+    <div class="vat-control">
+      <input type="text" id="discount-name" name="discount-name" placeholder="Discount Name">
+      <input type="text" id="perecentage" name="perecentage" placeholder="Type (e.g %)">
+      <input type="text" id="value" name="value" placeholder="Value">
+      <input type="date" id="ddate" name="ddate">
     </div>
+    <button class="btn-save">Save Discount</button>
+
+    <!-- VAT TABLES -->
+    <table class="vat-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Value</th>
+          <th>Validity</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Senior Citizen</td>
+          <td>Percentage</td>
+          <td>20%</td>
+          <td>No Expiry</td>
+          <td>Active</td>
+          <td>
+            <button class="btn-edit">Edit</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>PWD Discount</td>
+          <td>Percentage</td>
+          <td>20%</td>
+          <td>No Expiry</td>
+          <td>Active</td>
+          <td>
+            <button class="btn-edit">Edit</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Medicine Promo</td>
+          <td>2%</td>
+          <td>&#8369;50% Off</td>
+          <td>12/31/2025</td>
+          <td>Active</td>
+          <td>
+            <button class="btn-edit">Edit</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Senior Citizen on Medicines</td>
+          <td>1%</td>
+          <td>20%</td>
+          <td>No Expiry</td>
+          <td>Active</td>
+          <td>
+            <button class="btn-edit">Edit</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </main>
