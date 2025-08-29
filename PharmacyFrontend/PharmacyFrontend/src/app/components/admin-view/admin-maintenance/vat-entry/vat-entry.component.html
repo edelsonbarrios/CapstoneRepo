@@ -1,78 +1,79 @@
 <main class="wrapper">
   <div class="manage-vat-rates">
     <h1>Manage Vat Rates</h1>
+    <div class="sub-wrapper">
+      <!-- VAT CONTROLS -->
+      <div class="vat-control">
+        <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name">
+        <input type="text" id="rate" name="rate" placeholder="Rate (%)">
+        <input type="date" id="vdate" name="vdate">
+      </div>
+      <button class="btn-save">Save VAT</button>
 
-    <!-- VAT CONTROLS -->
-    <div class="vat-control">
-      <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name">
-      <input type="text" id="rate" name="rate" placeholder="Rate (%)">
-      <input type="date" id="vdate" name="vdate">
+      <!-- VAT TABLES -->
+      <table class="vat-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Rate</th>
+            <th>Effective Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Standard VAT</td>
+            <td>12%</td>
+            <td>01/02/2025</td>
+            <td>Active</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Reduced VAT</td>
+            <td>13%</td>
+            <td>01/03/2025</td>
+            <td>Active</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Pharmaceutical VAT</td>
+            <td>14%</td>
+            <td>01/04/2025</td>
+            <td>Active</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Medicines VAT</td>
+            <td>15%</td>
+            <td>01/05/2025</td>
+            <td>Active</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Zero</td>
+            <td>16%</td>
+            <td>01/07/2025</td>
+            <td>Inactive</td>
+            <td>
+              <button class="btn-edit">Edit</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <button class="btn-save">Save VAT</button>
-
-    <!-- VAT TABLES -->
-    <table class="vat-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Rate</th>
-          <th>Effective Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Standard VAT</td>
-          <td>12%</td>
-          <td>01/02/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Reduced VAT</td>
-          <td>13%</td>
-          <td>01/03/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Pharmaceutical VAT</td>
-          <td>14%</td>
-          <td>01/04/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Medicines VAT</td>
-          <td>15%</td>
-          <td>01/05/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Zero</td>
-          <td>16%</td>
-          <td>01/07/2025</td>
-          <td>Inactive</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </main>
