@@ -8,7 +8,7 @@
     padding: 1.25rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #f1f5f9;
-    height: 70%;
+    height: 100%;
 
     h1 {
       font-size: 1.50rem;
@@ -17,38 +17,63 @@
       margin-bottom: 1rem;
     }
 
-    .sub-wrapper {
-      height: 100%;
+    .vat-control {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
 
-      .vat-control {
-        display: flex;
-        justify-content: space-between;
-        gap: 0.5rem;
+      input {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 0.4rem;
+        border: 1px solid #3498ff;
+      }
+    }
 
-        input {
-          flex: 1;
-          padding: 1rem;
-          border-radius: 0.4rem;
-          border: 1px solid #3498ff;
-        }
+    .btn-save {
+      color: white;
+      font-size: medium;
+      padding: 0.5rem;
+      border-radius: 0.3rem;
+      background-color: rgb(17, 177, 17);
+      border: 1px solid rgb(17, 177, 17);
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      transition: opacity 0.15s, background-color 0.15s, border 0.15s;
+
+      &:hover {
+        background-color: rgb(16, 143, 16);
+        border: 1px solid rgb(16, 143, 16);
       }
 
-      .btn-save {
-        color: white;
-        font-size: medium;
-        padding: 0.5rem;
-        border-radius: 0.3rem;
-        background-color: rgb(17, 177, 17);
-        border: 1px solid rgb(17, 177, 17);
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      &:active {
+        opacity: 0.8;
+      }
+    }
+
+    .vat-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      .btn-edit,
+      .btn-archive {
+        padding: 0.4rem;
+        border-radius: 0.4rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         cursor: pointer;
-        transition: opacity 0.15s, background-color 0.15s, border 0.15s;
+      }
+
+      .btn-edit {
+        background-color: #3498ff;
+        color: white;
+        border: 1px solid #3498ff;
+        margin-right: 0.2rem;
 
         &:hover {
-          background-color: rgb(16, 143, 16);
-          border: 1px solid rgb(16, 143, 16);
+          background-color: #2183e6;
+          border: 1px solid #2183e6;
         }
 
         &:active {
@@ -56,65 +81,36 @@
         }
       }
 
-      .vat-table {
-        width: 100%;
-        border-collapse: collapse;
+      .btn-archive {
+        background-color: rgb(228, 43, 43);
+        color: white;
+        border: 1px solid rgb(228, 43, 43);
 
-        .btn-edit,
-        .btn-archive {
-          padding: 0.4rem;
-          border-radius: 0.4rem;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          cursor: pointer;
+        &:hover {
+          background-color: rgb(209, 34, 34);
+          border: 1px solid rgb(209, 34, 34);
         }
 
-        .btn-edit {
-          background-color: #3498ff;
-          color: white;
-          border: 1px solid #3498ff;
-          margin-right: 0.2rem;
-
-          &:hover {
-            background-color: #2183e6;
-            border: 1px solid #2183e6;
-          }
-
-          &:active {
-            opacity: 0.8;
-          }
+        &:active {
+          opacity: 0.8;
         }
+      }
 
-        .btn-archive {
-          background-color: rgb(228, 43, 43);
-          color: white;
-          border: 1px solid rgb(228, 43, 43);
+      th,
+      td {
+        padding: 0.8rem;
+        text-align: left;
+        border-bottom: 1px solid #63a8e9;
+      }
 
-          &:hover {
-            background-color: rgb(209, 34, 34);
-            border: 1px solid rgb(209, 34, 34);
-          }
+      th {
+        font-weight: 400;
+        font-size: large;
+        color: #888b8f;
+      }
 
-          &:active {
-            opacity: 0.8;
-          }
-        }
-
-        th,
-        td {
-          padding: 0.8rem;
-          text-align: left;
-          border-bottom: 1px solid #63a8e9;
-        }
-
-        th {
-          font-weight: 400;
-          font-size: large;
-          color: #888b8f;
-        }
-
-        td {
-          font-size: large;
-        }
+      td {
+        font-size: large;
       }
     }
   }
