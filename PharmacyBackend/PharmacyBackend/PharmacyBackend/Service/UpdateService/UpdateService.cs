@@ -43,7 +43,6 @@ namespace PharmacyBackend.Service.UpdateService
 
             var encryptedPassword = AesHelper.Encrypt(request.EncryptedPassword);
 
-            account.AccountCode = request.AccountCode;
             account.Username = request.Username;
             account.EncryptedPassword = encryptedPassword;
 
