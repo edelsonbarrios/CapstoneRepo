@@ -1,19 +1,103 @@
-<main class="wrapper">
-    <div class="container">
-      <div class="grid-items inventory-summary">
-        <div class="titles">
-              Inventory Summary
+<div class="container">
+  <!-- Inventory Summary Container -->
+  <div class="grid-items inventory-summary">
+    <div class="titles">Total Sales</div>
+    <div class="inv-wrapper">
+
+      <!-- 1st grid sub container -->
+      <div class="sub-container">
+        <div class="sub-items item-code">
+          <div class="label">Item Code Tracked</div>
+          <div class="value">120</div>
+        </div>
+        <div class="sub-items units-onhand">
+          <div class="label">Units On Hand</div>
+          <div class="value">8,500</div>
+        </div>
+        <div class="sub-items stock-value">
+          <div class="label">Stock Value</div>
+          <div class="value">&#8369;250,000</div>
         </div>
       </div>
-      <div class="grid-items total-sales">
-          <div class="titles">
-              Total Sales
-          </div>
-      </div>
-      <div class="grid-items inventory-details">
-          <div class="titles">
-              Inventory Details
-          </div>
+
+        <!-- 2nd grid sub container -->
+      <div class="date-controls">
+        <div class="date-items">
+          <div class="date-label">Starting Date</div>
+          <input type="date" class="date-input" placeholder="mm/dd/yy">
+        </div>
+        <div class="date-items">
+          <div class="date-label">Ending Date</div>
+          <input type="date" class="date-input" placeholder="mm/dd/yy">
+        </div>
+        <div class="condition-items">
+          <div class="con-label">Condition</div>
+          <select class="condition-select">
+            <option value="all">All</option>
+            <option value="good">Good</option>
+            <option value="fair">Fair</option>
+            <option value="poor">Poor</option>
+          </select>
+        </div>
       </div>
     </div>
-</main>
+  </div>
+
+  <!-- Total Sales Container -->
+  <div class="grid-items total-sales">
+    <div class="titles">
+      Total Sales
+    </div>
+  </div>
+
+  <!-- Inventory Details Container -->
+  <div class="grid-items inventory-details">
+    <div class="titles">Inventory Details</div>
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>ItemCode</th>
+          <th>Category</th>
+          <th>On Hand</th>
+          <th>Recorder Level</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Biogesic 500mg</td>
+          <td>BIO-500</td>
+          <td>Pain Relief</td>
+          <td>320</td>
+          <td>150</td>
+          <td><span>Ok</span></td>
+        </tr>
+        <tr>
+          <td>Cecon 500mg</td>
+          <td>CEC-500</td>
+          <td>Vitamins</td>
+          <td>60</td>
+          <td>80</td>
+          <td>Critical</td>
+        </tr>
+        <tr>
+          <td>Bioflu 500mg</td>
+          <td>BIOF-500</td>
+          <td>Cold & Flu</td>
+          <td>900</td>
+          <td>200</td>
+          <td>Overstock</td>
+        </tr>
+        <tr>
+          <td>Bioflu 500mg</td>
+          <td>BIOF-500</td>
+          <td>Cold & Flu</td>
+          <td>900</td>
+          <td>200</td>
+          <td>Overstock</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

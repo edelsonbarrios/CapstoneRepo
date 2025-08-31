@@ -1,12 +1,13 @@
 .wrapper {
   height: 100%;
   display: grid;
-  grid-template-rows: 15% 85%;
+  grid-template-rows: 10% 90%;
 
   .header-wrapper {
     margin-left: 1rem;
     display: flex;
     align-items: flex-end;
+    
     a {
       margin-inline: 1rem;
       text-decoration: none;

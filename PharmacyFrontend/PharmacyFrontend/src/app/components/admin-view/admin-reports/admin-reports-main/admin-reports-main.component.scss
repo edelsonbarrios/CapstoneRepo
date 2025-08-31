@@ -1,20 +1,14 @@
 .wrapper{
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background: #f2f6fc;
   height: 100%;
-
-  .main-content {
-    height: 100%;
-  }
+  display: grid;
+  grid-template-rows: 10% 90%;
+  background: #f2f6fc;
 
   .header{
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    flex-shrink: 0;
+    justify-content: space-between;
+    margin-left: 1rem;
 
     .nav-interact {
       display: flex;
@@ -23,35 +17,36 @@
 
     a {
       text-decoration: none;
-      border: 1px solid #3498ff;
       color: #3498ff;
       font-size: 20px;
       padding: 10px 16px;
-      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.15s, color 0.15s, opacity 0.15s;
+      transition: border-bottom 0.15s, opacity 0.15s;
 
       &:hover{
-        background-color: #3498ff;
-        color:#ffffff;
+        border-bottom: 1px solid #3498ff;
       }
       &:active{
         opacity: 0.8;
       }
     }
 
-    .notification {
-      position: relative;
-      font-size: 20px;
-      cursor: pointer;
-      transition: transform 0.15s;
+    .notif-wrapper {
+      display: flex;
+      justify-content: flex-end;
+        .notification {
+        position: relative;
+        font-size: 20px;
+        cursor: pointer;
+        transition: transform 0.15s;
 
-      &:hover{
-        transform: translateY(-2px);
-      }
+        &:hover{
+          transform: translateY(-2px);
+        }
 
-      &:active{
-        opacity: 0.8;
+        &:active{
+          opacity: 0.8;
+        }
       }
     }
   }
