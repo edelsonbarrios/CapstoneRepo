@@ -49,4 +49,8 @@ export class LoginViewComponent {
   goToAdminMain() {
     this.router.navigateByUrl('/admin-main');
   }
+
+  goToInventoryMain() {
+    this.router.navigateByUrl('/inventory-manager-main');
+  }
 }
