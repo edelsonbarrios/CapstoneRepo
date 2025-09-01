@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Employee } from '../../../../models/employee';
 import { PostService } from '../../../../services/PostService/post.service';
 import { FormsModule } from '@angular/forms';
-import { NgIf} from "../../../../../../node_modules/@angular/common";
+import { NgIf } from '../../../../../../node_modules/@angular/common';
 import { Account } from '../../../../models/account';
 import { CreateAccountComponent } from '../create-account/create-account.component';
 
@@ -11,38 +11,37 @@ import { CreateAccountComponent } from '../create-account/create-account.compone
   standalone: true,
   imports: [FormsModule, NgIf, CreateAccountComponent],
   templateUrl: './create-employee.component.html',
-  styleUrl: './create-employee.component.scss'
+  styleUrl: './create-employee.component.scss',
 })
 export class CreateEmployeeComponent {
-  @Input() newEmployee : Employee | null = new Employee();
+  @Input() newEmployee: Employee | null = new Employee();
   @Output() closeForm = new EventEmitter<number>();
-  newAccount ?: Account | null;
-  newEmployeeId : number = 0;
+  newAccount?: Account | null;
+  newEmployeeId: number = 0;
 
-  constructor(
-    private postService : PostService
-  ){}
+  constructor(private postService: PostService) {}
 
   createNewEmployee() {
+    if (this.newEmployee?.birthDate) {
+      this.newEmployee.birthDate = new Date(this.newEmployee.birthDate);
+    }
     this.postService.createEmployee(this.newEmployee).subscribe({
-      next: res => {
+      next: (res) => {
         alert(`${res.message}`);
         this.newEmployeeId = res.employeeId;
         this.clearFields();
-        this.openCreateAccountForm();
-        this.newEmployee = null;
       },
-      error: err => {
+      error: (err) => {
         alert(`${err.error.message}`);
-      }
+      },
     });
   }
 
   clearFields() {
     if (!this.newEmployee) {
-      this.newEmployee = new Employee(); 
+      this.newEmployee = new Employee();
     }
-    this.newEmployee.employeeCode = ''
+    this.newEmployee.employeeCode = '';
     this.newEmployee.lastName = '';
     this.newEmployee.firstName = '';
     this.newEmployee.middleName = '';
@@ -50,19 +49,14 @@ export class CreateEmployeeComponent {
     this.newEmployee.gender = '';
     this.newEmployee.phoneNumber = '';
     this.newEmployee.civilStatus = '';
-    
-
   }
 
   closeCreateEmployeeForm() {
     this.closeForm.emit();
   }
 
-  openCreateAccountForm() {
-    this.newAccount = new Account();
-  }
-
   closeCreateAccountForm() {
-    this.newAccount = null;
+    this.newEmployeeId = 0;
+    this.closeForm.emit();
   }
 }

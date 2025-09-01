@@ -18,6 +18,7 @@ using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using System.Linq.Expressions;
 
 namespace PharmacyBackend.Controllers
 {
@@ -42,10 +43,16 @@ namespace PharmacyBackend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(new EmployeeRequestResponse { Message = "Invalid properties." });
 
-            var employeeId = await _postService.CreateEmployeeAsync(request);
-            if (employeeId == 0)
-                return BadRequest(new CreateEmployeeResponse { Message = "Employee cannot be created. Please try again.", EmployeeId = employeeId });
-            return Ok(new CreateEmployeeResponse { Message = $"Employee successfully created. ", EmployeeId = employeeId });
+            try
+            {
+                var employeeId = await _postService.CreateEmployeeAsync(request);
+                if (employeeId == 0)
+                    return BadRequest(new CreateEmployeeResponse { Message = "Employee cannot be created. Please try again.", EmployeeId = employeeId });
+                return Ok(new CreateEmployeeResponse { Message = $"Employee successfully created. ", EmployeeId = employeeId });
+            }catch(Exception e)
+            {
+                return BadRequest($"{e.Message}");
+            }
         }
         #endregion
 

@@ -47,19 +47,15 @@ namespace PharmacyBackend.Service.PostService
 
         public async Task<bool> CreateAccountAsync(CreateAccountRequest request)
         {
-            if (request is null)
-                return false;
-
-            var encryptedPass = AesHelper.Encrypt(request.Password);
-            var newAcc = new Account()
+            var encryptedPassword = AesHelper.Encrypt(request.Password);
+            var newAccount = new Account()
             {
-                AccountCode = request.AccountCode,
                 Username = request.Username,
-                EncryptedPassword = encryptedPass,
+                EncryptedPassword = encryptedPassword,
                 EmployeeId = request.EmployeeId
             };
 
-            var createAccount = await _postRepo.CreateAccountAsync(newAcc);
+            var createAccount = await _postRepo.CreateAccountAsync(newAccount);
             if (!createAccount)
                 return false;
             return createAccount;

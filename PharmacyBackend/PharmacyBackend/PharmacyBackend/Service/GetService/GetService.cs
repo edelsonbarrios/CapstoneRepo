@@ -148,9 +148,9 @@ namespace PharmacyBackend.Service.GetService
             var modifAccounts = accounts.Select(a => new AccountDTO
             {
                 Id = a.Id,
-                AccountCode = a.AccountCode,
                 Username = a.Username,
                 DecryptedPassword = a.EncryptedPassword,
+                EmployeeId = a.EmployeeId
             }).ToList();
             return modifAccounts;
         }
@@ -163,9 +163,9 @@ namespace PharmacyBackend.Service.GetService
             var modifAccount = new AccountDTO
             {
                 Id = account.Id,
-                AccountCode = account.AccountCode,
                 Username = account.Username,
                 DecryptedPassword = account.EncryptedPassword,
+                EmployeeId = account.EmployeeId
             };
             return modifAccount;
         }
