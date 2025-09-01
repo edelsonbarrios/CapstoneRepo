@@ -150,6 +150,7 @@ namespace PharmacyBackend.Service.GetService
                 Id = a.Id,
                 Username = a.Username,
                 DecryptedPassword = a.EncryptedPassword,
+                EmployeeId = a.EmployeeId
             }).ToList();
             return modifAccounts;
         }
@@ -164,6 +165,7 @@ namespace PharmacyBackend.Service.GetService
                 Id = account.Id,
                 Username = account.Username,
                 DecryptedPassword = account.EncryptedPassword,
+                EmployeeId = account.EmployeeId
             };
             return modifAccount;
         }

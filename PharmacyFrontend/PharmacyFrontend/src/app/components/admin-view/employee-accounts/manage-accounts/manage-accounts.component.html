@@ -9,7 +9,7 @@
     <table class="modern-table">
       <thead>
         <tr>
-          <th>Account Code</th>
+          <th>Employee Id</th>
           <th>Username</th>
           <th>Password</th>
           <th>Action</th>
@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let a of accounts">
-          <td>{{a.accountCode}}</td>
+          <td>{{a.employeeId}}</td>
           <td>{{a.username}}</td>
           <td>{{a.decryptedPassword}}</td>
           <td>

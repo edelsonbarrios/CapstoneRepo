@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Observable, tap,  } from 'rxjs';
 import { LogInToken } from '../../components/shared/token';
 import { Employee } from '../../models/employee';
+import { Account } from '../../models/account';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,12 @@ export class PostService {
   //Employee Service
   createEmployee(employee ?: Employee | null) : Observable<{ message: string, employeeId : number}> {
     return this.httpClient.post<{ message: string, employeeId : number }>(`${this.apiUrl}/Post/Employee`, employee);
+  }
+  
+
+  //Account Service
+  createAccount(account: Account) : Observable<{message : string}> {
+    return this.httpClient.post<{message: string}>(`${this.apiUrl}/Post/Account`, account);
   }
   
 }

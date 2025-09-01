@@ -77,14 +77,14 @@
 
   <div class="modal-footer">
     <button class="cancel-btn" (click)="closeCreateEmployeeForm()">Cancel</button>
-    <button class="add-btn" (click)="openCreateAccountForm()">+ Add Employee</button>
+    <button class="add-btn" (click)="createNewEmployee()">+ Add Employee</button>
   </div>
 </div>
 
-<div class="modal-overlay" *ngIf="newAccount">
+<div class="modal-overlay" *ngIf="newEmployeeId">
   <app-create-account
-  *ngIf="newAccount"
-  [newAccount]="newAccount"
+  *ngIf="newEmployeeId"
+  [employeeId]="newEmployeeId"
   (closeForm)="closeCreateAccountForm()"
   ></app-create-account>
 </div>

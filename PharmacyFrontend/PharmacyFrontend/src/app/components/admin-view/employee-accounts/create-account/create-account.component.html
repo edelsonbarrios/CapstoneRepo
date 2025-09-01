@@ -1,4 +1,4 @@
-<div class="modal" *ngIf="newAccount">
+<div class="modal" *ngIf="employeeId">
   <div class="modal-header">
     <h2>👤 Add Employee</h2>
     <p>Quickly add employee by filling the form</p>
@@ -11,27 +11,22 @@
       <legend>📋 Add details of an employee</legend>
 
       <div class="form-grid">
-        <!-- Employee Code -->
-        <div class="form-group">
-          <label>Account Code <span>*</span></label>
-          <input type="text" placeholder="Enter Account Code"/>
-        </div>
 
         <div class="form-group">
           <label>User Name <span>*</span></label>
-          <input type="text" placeholder="Enter UserName"/>
+          <input type="text" placeholder="Enter UserName" [(ngModel)]="newAccount.username">
         </div>
 
         <div class="form-group">
           <label>Password<span>*</span></label>
-          <input type="text" placeholder="Enter Password"/>
+          <input type="text" placeholder="Enter Password" [(ngModel)]="newAccount.decryptedPassword">
         </div>
       </div>
     </fieldset>
   </div>
 
   <div class="modal-footer">
-    <button class="cancel-btn">Cancel</button>
-    <button class="add-btn">+ Add Employee</button>
+    <button class="cancel-btn" (click)="closeCreateAccountForm()">Cancel</button>
+    <button class="add-btn" (click)="createNewAccount()">Submit</button>
   </div>
 </div>
