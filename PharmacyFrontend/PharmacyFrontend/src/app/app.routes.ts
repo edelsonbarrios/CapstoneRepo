@@ -154,6 +154,13 @@ export const routes: Routes = [
           return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
           .then(m => m.InventoryManagerDashboardComponent);  
         }
+      },
+      {
+        path: 'manage-replenishment',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/manage-replenishment/manage-replenishment.component')
+          .then(m => m.ManageReplenishmentComponent);
+        }
       }
     ]
   }
