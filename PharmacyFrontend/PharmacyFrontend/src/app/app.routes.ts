@@ -176,6 +176,13 @@ export const routes: Routes = [
               .then(m => m.ManageProductComponent);
             }
           },
+          {
+            path: 'manage-category',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/inventory-manager-product/manage-category/manage-category.component')
+              .then(m => m.ManageCategoryComponent);
+            }
+          }
         ]
       }
     ]
