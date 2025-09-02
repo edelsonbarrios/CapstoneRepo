@@ -8,7 +8,6 @@
     padding: 1.25rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #f1f5f9;
-    height: 100%;
 
     .product-control {
       display: flex;
@@ -22,7 +21,7 @@
         border: 2px solid #3498ff;
       }
 
-      .btn-category {
+      .btn-product {
         color: white;
         font-size: medium;
         padding: 0.5rem;
@@ -51,11 +50,28 @@
       border-collapse: collapse;
 
       .btn-update,
-      .btn-archive {
+      .btn-archive,
+      .btn-view {
         padding: 0.4rem;
         border-radius: 0.4rem;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         cursor: pointer;
+      }
+
+      .btn-view {
+        background-color: #3498ff;
+        color: white;
+        border: 1px solid #3498ff;
+        margin-right: 0.2rem;
+
+        &:hover {
+          background-color: #2a85e0;
+          border: 1px solid #3498ff;
+        }
+
+        &:active {
+          opacity: 0.8;
+        }
       }
 
       .btn-update {
