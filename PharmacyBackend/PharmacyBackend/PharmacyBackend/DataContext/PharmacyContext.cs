@@ -11,6 +11,7 @@ namespace PharmacyBackend.DataContext
         #region Tables
         //AdminView
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<EmployeeHistory> EmployeeHistory { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Account> Accounts { get; set; }
 
@@ -55,6 +56,18 @@ namespace PharmacyBackend.DataContext
                 .HasOne(e => e.Role)
                 .WithMany(r => r.Employees)
                 .HasForeignKey(e => e.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .HasOne(eh => eh.Employee)
+                .WithMany()
+                .HasForeignKey(eh => eh.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .HasOne(eh => eh.PerformedByEmployee)
+                .WithMany()
+                .HasForeignKey(eh => eh.PerformedBy)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Product relationships
