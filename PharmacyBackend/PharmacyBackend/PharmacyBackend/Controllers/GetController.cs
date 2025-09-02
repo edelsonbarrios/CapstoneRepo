@@ -79,6 +79,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Account does not exist.");
             return Ok(account);
         }
+        [HttpGet("SearchAccount")]
+        public async Task<ActionResult<AccountDTO>> SearchAccountByUsernameAsync(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return BadRequest("Username field is empty.");
+            var account = await _getService.SearchAccountByUsernameAsync(userName);
+            if (account is null)
+                return NotFound("Username does not exist.");
+            return Ok(account);
+        }
         #endregion
 
 

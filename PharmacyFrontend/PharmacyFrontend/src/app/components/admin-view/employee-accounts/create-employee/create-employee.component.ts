@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { NgIf } from '../../../../../../node_modules/@angular/common';
 import { Account } from '../../../../models/account';
 import { CreateAccountComponent } from '../create-account/create-account.component';
+import { NgFor } from "../../../../../../node_modules/@angular/common";
 
 @Component({
   selector: 'app-create-employee',
   standalone: true,
-  imports: [FormsModule, NgIf, CreateAccountComponent],
+  imports: [FormsModule, NgIf, CreateAccountComponent, NgFor],
   templateUrl: './create-employee.component.html',
   styleUrl: './create-employee.component.scss',
 })
@@ -18,6 +19,8 @@ export class CreateEmployeeComponent {
   @Output() closeForm = new EventEmitter<number>();
   newAccount?: Account | null;
   newEmployeeId: number = 0;
+  genders : string[] = ['Male', 'Female'];
+  rolePositions : string[] = ['Administrator', 'Inventory Manager', 'Cashier'];
 
   constructor(private postService: PostService) {}
 

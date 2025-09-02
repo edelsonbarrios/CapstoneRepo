@@ -2,7 +2,10 @@
   <div class="card">
     <!-- Search & Add Employee -->
     <div class="table-header">
-      <input type="text" placeholder="🔍 Search Account Username..." class="search-box" />
+      <div class="search-wrapper">
+        <input type="text" placeholder="🔍 Search Username" class="search-box" [(ngModel)]="searchUsername">
+        <button class="btn search-btn" (click)="searchAccountByUsername()">Search</button>
+      </div>
     </div>
 
     <!-- Employee Table -->
@@ -19,7 +22,7 @@
         <tr *ngFor="let a of accounts">
           <td>{{a.employeeId}}</td>
           <td>{{a.username}}</td>
-          <td>{{a.decryptedPassword}}</td>
+          <td>{{a.password}}</td>
           <td>
             <button class="btn details">See Details</button>
           </td>

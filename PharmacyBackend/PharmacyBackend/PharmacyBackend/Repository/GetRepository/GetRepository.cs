@@ -29,6 +29,10 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Accounts.ToListAsync();
         }
+        public async Task<Account> SearchAccountByUsernameAsync(string userName)
+        {
+            return await _context.Accounts.FirstOrDefaultAsync(a => a.Username.StartsWith(userName));
+        }
         #endregion
 
         #region Employee

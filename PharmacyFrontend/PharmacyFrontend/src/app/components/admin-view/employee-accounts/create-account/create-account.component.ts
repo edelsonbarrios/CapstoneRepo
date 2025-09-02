@@ -29,16 +29,14 @@ export class CreateAccountComponent {
       next: res => {
         console.log(`${res.message}`);
         this.newAccount.username = '';
-        this.newAccount.decryptedPassword = '';
+        this.newAccount.password = '';
         this.closeCreateAccountForm();
       },
       error: err => {
         console.log(err.error.message);
         this.newAccount.username = '';
-        this.newAccount.decryptedPassword = '';
+        this.newAccount.password = '';
       }
     });
   }
-
-
 }

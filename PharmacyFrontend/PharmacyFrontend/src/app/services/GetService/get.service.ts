@@ -29,7 +29,6 @@ export class GetService {
   GetDisplayEmployees() : Observable<Employee[]> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/DisplayEmployees`);
   }
-
   //Employee Service End
 
 
@@ -37,4 +36,9 @@ export class GetService {
   GetAllAccounts() : Observable<Account[]> {
     return this.httpClient.get<Account[]>(`${this.apiUrl}/Get/AccountAll`);
   }
+
+  SearchAccountByUserName(userName: string) : Observable<Account>{
+    return this.httpClient.get<Account>(`${this.apiUrl}/Get/SearchAccount?userName=${userName}`);
+  }
+  //Account Service End
 }

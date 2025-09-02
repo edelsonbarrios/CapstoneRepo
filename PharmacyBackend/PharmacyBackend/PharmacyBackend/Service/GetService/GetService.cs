@@ -149,7 +149,7 @@ namespace PharmacyBackend.Service.GetService
             {
                 Id = a.Id,
                 Username = a.Username,
-                DecryptedPassword = a.EncryptedPassword,
+                Password = a.EncryptedPassword,
                 EmployeeId = a.EmployeeId
             }).ToList();
             return modifAccounts;
@@ -164,7 +164,22 @@ namespace PharmacyBackend.Service.GetService
             {
                 Id = account.Id,
                 Username = account.Username,
-                DecryptedPassword = account.EncryptedPassword,
+                Password = account.EncryptedPassword,
+                EmployeeId = account.EmployeeId
+            };
+            return modifAccount;
+        }
+
+        public async Task<AccountDTO> SearchAccountByUsernameAsync(string userName)
+        {
+            var account = await _getRepo.SearchAccountByUsernameAsync(userName);
+            if (account is null)
+                return null;
+            var modifAccount = new AccountDTO
+            {
+                Id = account.Id,
+                Username = account.Username,
+                Password = account.EncryptedPassword,
                 EmployeeId = account.EmployeeId
             };
             return modifAccount;
