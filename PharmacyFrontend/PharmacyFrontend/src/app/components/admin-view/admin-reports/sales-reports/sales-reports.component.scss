@@ -32,8 +32,14 @@
       display: flex;
       justify-content: space-between;
       
-
       span {
+        color: #3a76ca;
+      }
+
+      select {
+        border: 1px solid #3a76ca;
+        padding: 0.3rem;
+        border-radius: 10px;
         color: #3a76ca;
       }
     }
