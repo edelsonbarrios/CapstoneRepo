@@ -1,1 +1,101 @@
-<p>inventory-manager-dashboard works!</p>
+<div class="wrapper">
+
+  <!-- DASHBOARD HEADER -->
+  <div class="header">
+    <h1>Dashboard Overview</h1>
+    <div class="notification">🔔<span class="dot"></span></div>
+  </div>
+
+  <!-- GRID CONTAINERS -->
+  <div class="container">
+
+    <!-- FIRST ROW CONTAINERS -->
+    <div class="grid-items total-products">
+      <div class="content">
+        <h1>Total Products</h1>
+        <div class="total-num">128</div>
+      </div>
+    </div>
+    <div class="grid-items critical-stock">
+      <div class="content">
+        <h1>Critical Stock</h1>
+        <div class="critical-num">5</div>
+      </div>
+    </div>
+    <div class="grid-items expiring-soon">
+      <div class="content">
+        <h1>Expiring Soon</h1>
+        <div class="expire-num">8</div>
+      </div>
+    </div>
+
+    <!-- SECOND ROW CONTAINER -->
+    <div class="grid-items critical-items">
+      <h1>Critical Stock Items</h1>
+
+      <!-- CRITICAL ITEMS TABLE -->
+      <table class="crit-table">
+        <thead>
+          <tr>
+            <th>Item Code</th>
+            <th>Name</th>
+            <th>Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RX&ndash;001</td>
+            <td>Biogesic</td>
+            <td>
+              <div class="num">4</div>
+            </td>
+          </tr>
+          <tr>
+            <td>RX&ndash;002</td>
+            <td>Decolgen</td>
+            <td>
+              <div class="num">4</div>
+            </td>
+          </tr>
+          <tr>
+            <td>RX&ndash;003</td>
+            <td>Amoxicillin</td>
+            <td>
+              <div class="num">4</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- THIRD ROW CONTAINER -->
+    <div class="grid-items soon-expire">
+      <h1>Soon-to-Expire Products</h1>
+      <table class="soon-table">
+        <thead>
+          <tr>
+            <th>Item Code</th>
+            <th>Name</th>
+            <th>Expiry Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RX&ndash;201</td>
+            <td>Vitamin C</td>
+            <td>
+              <div class="date-color">2025&ndash;09&ndash;15</div>
+            </td>
+          </tr>
+          <tr>
+            <td>RX&ndash;202</td>
+            <td>Neozep</td>
+            <td>
+              <div class="date-color">2025&ndash;09&ndash;16</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

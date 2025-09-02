@@ -1,0 +1,142 @@
+.wrapper {
+  height: 100%;
+  padding: 1rem;
+  background: #f2f6fc;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.8rem;
+
+    h1 {
+      color: #3498ff;
+      font-size: 1.5rem;
+    }
+  }
+
+  .container {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto, auto, 1fr;
+    grid-template-areas:
+      "total-products critical-stock expiring-soon"
+      "critical-items critical-items critical-items"
+      "soon-expire soon-expire soon-expire";
+
+    .total-products {
+      grid-area: total-products;
+    }
+
+    .critical-stock {
+      grid-area: critical-stock;
+    }
+
+    .expiring-soon {
+      grid-area: expiring-soon;
+    }
+
+    .critical-items {
+      grid-area: critical-items;
+    }
+
+    .soon-expire {
+      grid-area: soon-expire;
+    }
+
+    .grid-items {
+      background: white;
+      border-radius: 12px;
+      padding: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #f1f5f9;
+
+      .content {
+        text-align: center;
+
+        h1 {
+          font-size: 1.8rem;
+          font-weight: 550;
+        }
+
+        .total-num {
+          font-size: 3rem;
+          font-weight: 600;
+          color: #2275c9;
+        }
+
+        .critical-num {
+          font-size: 3rem;
+          font-weight: 600;
+          color: red;
+        }
+
+        .expire-num {
+          font-size: 3rem;
+          font-weight: 600;
+          color: rgb(211, 211, 43);
+        }
+      }
+
+      h1 {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #1e2f47;
+        padding: 0.5rem;
+      }
+
+      .crit-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+          padding: 0.5rem;
+          text-align: left;
+          font-size: 1rem;
+        }
+
+        td {
+          border-top: 1px solid #81bee7;
+          font-size: 1rem;
+        }
+
+        th {
+          font-weight: 600;
+          color: #888686;
+        }
+
+        .num {
+          color: red;
+        }
+      }
+
+      .soon-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+          padding: 0.5rem;
+          text-align: left;
+          font-size: 1rem;
+        }
+
+        td {
+          border-top: 1px solid #81bee7;
+          font-size: 1rem;
+        }
+
+        th {
+          font-weight: 600;
+          color: #888686;
+        }
+
+        .date-color {
+          color: rgb(211, 211, 43);
+        }
+      }
+    }
+  }
+}
