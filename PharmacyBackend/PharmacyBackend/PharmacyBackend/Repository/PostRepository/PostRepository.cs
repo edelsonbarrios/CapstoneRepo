@@ -85,6 +85,15 @@ namespace PharmacyBackend.Repository.POST
         }
         #endregion
 
+        #region EmployeeHistory
+        public async Task<bool> CreateEmployeeHistoryAsync(EmployeeHistory request)
+        {
+            await _context.EmployeeHistory.AddAsync(request);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        #endregion
+
         #region Sales
         public async Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction sale)
         {

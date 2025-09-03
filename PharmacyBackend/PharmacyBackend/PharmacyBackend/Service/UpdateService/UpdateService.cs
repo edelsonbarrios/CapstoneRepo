@@ -17,6 +17,9 @@ using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -24,6 +27,7 @@ namespace PharmacyBackend.Service.UpdateService
     {
         private readonly IUpdateRepositoryContracts _updateRepo;
         private readonly IGetRepositoryContracts _getRepo;
+        private readonly IPostRepositoryContracts _postRepo;
 
         public UpdateService(IUpdateRepositoryContracts updateRepo,
             IGetRepositoryContracts getRepo)
@@ -94,6 +98,30 @@ namespace PharmacyBackend.Service.UpdateService
             var updateEmployee = await _updateRepo.UpdateEmployeeAsync(employeeToUpdate);
             if (!updateEmployee)
                 return false;
+            return true;
+        }
+        public async Task<bool> ArchiveEmployeeByIdAsync(ArchiveEmployeeHistoryRequest request)
+        {
+            var employee = await _getRepo.GetEmployeeByIdAsync(request.EmployeeId);
+            if (employee is null)
+                return false;
+            employee.IsActive = false;
+
+            var updateEmployee = await _updateRepo.UpdateEmployeeAsync(employee);
+            if (!updateEmployee)
+                return false;
+
+            var newEmployeeHistory = new EmployeeHistory()
+            {
+                EmployeeId = request.EmployeeId,
+                ActionPerformed = "Archived",
+                PerformedBy = request.PerformedBy,
+                PerformedAt = DateTime.UtcNow
+            };
+            var createEmployeeHistory = await _postRepo.CreateEmployeeHistoryAsync(newEmployeeHistory);
+            if (!createEmployeeHistory)
+                return false;
+
             return true;
         }
         #endregion

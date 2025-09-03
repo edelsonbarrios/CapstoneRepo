@@ -12,6 +12,10 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         public Task<string> AuthenticationAsync(LogInRequest request);
         #endregion
 
+        #region EmployeeHistory
+        public Task<bool> CreateEmployeeHistoryAsync(EmployeeHistory request);
+        #endregion
+
         #region Account
         public Task<bool> CreateAccountAsync(Account request);
         #endregion

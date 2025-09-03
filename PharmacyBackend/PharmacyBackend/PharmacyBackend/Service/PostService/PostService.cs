@@ -95,14 +95,34 @@ namespace PharmacyBackend.Service.PostService
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
-                RoleId = roleId
+                RoleId = roleId,
+                CreatedBy = request.CreatedBy,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
             };
 
             var employeeId = await _postRepo.CreateEmployeeAsync(newEmployee);
             if (employeeId == 0)
                 return 0;
+
+            var employeeHistory = new EmployeeHistory()
+            {
+                EmployeeId = employeeId,
+                ActionPerformed = "Created",
+                PerformedBy = request.CreatedBy,
+                PerformedAt = DateTime.UtcNow,
+            };
+
+            var createEmployeeHistory = await _postRepo.CreateEmployeeHistoryAsync(employeeHistory);
+            if (!createEmployeeHistory)
+                return 0;
+
             return employeeId;
         }
+        #endregion
+
+        #region EmployeeHistory
+
         #endregion
 
         #region Sales

@@ -13,4 +13,11 @@ export class Employee {
   phoneNumber : string = '';
   rolePosition: string = '';
   fullName: string = '';
+  createdBy: number = 0;
+  createdAt: Date = new Date();
+  isActive: boolean = true;
+  archivedBy: number = 0;
+  archivedAt: Date = new Date();
+  updatedBy: number = 0;
+  updatedAt: Date = new Date();
 }
