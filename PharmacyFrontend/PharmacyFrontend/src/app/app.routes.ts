@@ -154,6 +154,36 @@ export const routes: Routes = [
           return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
           .then(m => m.InventoryManagerDashboardComponent);  
         }
+      },
+      {
+        path: 'inventory-module-main',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/manage-inventory-module/inventory-module-main/inventory-module-main.component')
+          .then(m => m.InventoryModuleMainComponent);
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component')
+              .then(m => m.ManageStockEntryComponent)
+            },
+          },
+          {
+            path: 'manage-stock-entry',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component')
+              .then(m => m.ManageStockEntryComponent)
+            },
+          },
+          {
+            path: 'manage-stock-adjustment',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/manage-inventory-module/manage-stock-adjustment/manage-stock-adjustment.component')
+              .then(m => m.ManageStockAdjustmentComponent)
+            },
+          }
+        ]
       }
     ]
   }

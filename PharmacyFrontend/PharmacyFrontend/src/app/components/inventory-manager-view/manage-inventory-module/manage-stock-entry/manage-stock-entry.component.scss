@@ -1,0 +1,132 @@
+.wrapper {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 10% 90%;
+  padding: 0.5rem;
+  background: #f2f6fc;
+
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.8rem;
+
+    h1 {
+      color: #3498ff;
+      font-size: 1.5rem;
+    }
+  }
+
+  .manage-stock-entry {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
+
+    .entry-control {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .searchbar {
+        font-size: medium;
+        padding: 0.5rem;
+        border-radius: 0.4rem;
+        border: 2px solid #3498ff;
+      }
+
+      .btn-entry {
+        color: white;
+        font-size: medium;
+        padding: 0.5rem;
+        border-radius: 0.3rem;
+        background-color: rgb(17, 177, 17);
+        border: 1px solid rgb(17, 177, 17);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+        transition: opacity 0.15s, background-color 0.15s, border 0.15s;
+
+        &:hover {
+          background-color: rgb(16, 143, 16);
+          border: 1px solid rgb(16, 143, 16);
+        }
+
+        &:active {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .entry-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      .in-stock,
+      .low-stock,
+      .out-stock {
+        font-weight: 500;
+        font-size: 0.9rem;
+        display: inline-block;
+        border-radius: 0.5rem;
+        padding: 0.2rem;
+      }
+
+      .in-stock {
+        background-color: rgb(152, 240, 152);
+        color: rgb(23, 158, 23);
+      }
+
+      .low-stock {
+        background-color: rgb(240, 240, 163);
+        color: rgb(155, 155, 17);
+      }
+
+      .out-stock {
+        background-color: rgb(252, 203, 203);
+        color: rgb(228, 32, 32);
+      }
+
+      th,
+      td {
+        padding: 0.6rem;
+        text-align: left;
+        border-bottom: 1px solid #63a8e9;
+      }
+
+      th {
+        font-weight: 400;
+        font-size: large;
+        color: #888b8f;
+      }
+
+      td {
+        font-size: large;
+      }
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+
+      p {
+        color: rgb(134, 131, 131);
+        font-size: 1rem;
+      }
+
+      button {
+        font-weight: 700;
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        color: rgb(88, 83, 83);
+        border-radius: 10px;
+        border: none;
+        margin-left: 0.3rem;
+      }
+    }
+  }
+}
