@@ -71,6 +71,35 @@ namespace PharmacyBackend.Repository.GET
         }
         #endregion
 
+        #region EmployeeHistory
+        public async Task<List<EmployeeHistory>> GetAllEmployeeHistoryAsync()
+        {
+            return await _context.EmployeeHistory
+                .AsNoTracking()
+                .OrderByDescending(eh => eh.PerformedAt)
+                .Include(eh => eh.Employee)
+                .Include(eh => eh.PerformedByEmployee)
+                .ToListAsync();
+        }
+        public async Task<EmployeeHistory> GetEmployeeHistoryByIdAsync(int employeeHistoryId)
+        {
+            return await _context.EmployeeHistory
+                .AsNoTracking()
+                .Include(eh => eh.Employee)
+                .Include(eh => eh.PerformedByEmployee)
+                .OrderByDescending(eh => eh.PerformedAt)
+                .FirstOrDefaultAsync(eh => eh.Id == employeeHistoryId);
+        }
+        public async Task<List<EmployeeHistory>> GetDisplayEmployeeHistoryAsync()
+        {
+            return await _context.EmployeeHistory
+                .AsNoTracking()
+                .OrderByDescending(eh => eh.PerformedAt)
+                .Take(10)
+                .ToListAsync();
+        }
+        #endregion
+
         #region Sales
         public async Task<List<SalesTransaction>> GetAllSalesTransactionsAsync()
         {

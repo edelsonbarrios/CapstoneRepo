@@ -13,6 +13,12 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<List<Employee>> GetFirstDisplayEmployees();
         #endregion
 
+        #region EmployeeHistory 
+        public Task<List<EmployeeHistory>> GetAllEmployeeHistoryAsync();
+        public Task<EmployeeHistory> GetEmployeeHistoryByIdAsync(int employeeHistoryId);
+        public Task<List<EmployeeHistory>> GetDisplayEmployeeHistoryAsync();
+        #endregion
+
         #region Account
         public Task<List<Account>> GetAllAccountsAsync();
         public Task<Account> GetAccountByIdAsync(int id);

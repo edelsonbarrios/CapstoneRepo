@@ -12,6 +12,7 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -21,6 +22,12 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<EmployeeDTO> GetEmployeeByIdAsync(int id);
         public Task<List<EmployeeDTO>> GetEmployeeByLastName(string lastName);
         public Task<List<EmployeeDTO>> GetFirstDisplayEmployees();
+        #endregion
+
+        #region EmployeeHistory 
+        public Task<List<EmployeeHistoryDTO>> GetAllEmployeeHistoryAsync();
+        public Task<EmployeeHistoryDTO> GetEmployeeHistoryByIdAsync(int employeeHistoryId);
+        public Task<List<EmployeeHistoryDTO>> GetDisplayEmployeeHistoryAsync();
         #endregion
 
         #region Accounts

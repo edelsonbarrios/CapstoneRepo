@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
@@ -59,6 +60,16 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
+        #region EmployeeHistory
+        [HttpGet("EmployeeHistoryAll")]
+        public async Task<ActionResult<List<EmployeeHistoryDTO>>> GetAllEmployeeHistoryAsync()
+        {
+            var employeeHistories = await _getService.GetAllEmployeeHistoryAsync();
+            if (!employeeHistories.Any() || employeeHistories.Count() == 0)
+                return NotFound("No actions currently performed.");
+            return Ok(employeeHistories);
+        }
+        #endregion
 
         #region Account
         [HttpGet("AccountAll")]
@@ -90,7 +101,6 @@ namespace PharmacyBackend.Controllers
             return Ok(account);
         }
         #endregion
-
 
         #region Sales
         [HttpGet("SaleAll")]

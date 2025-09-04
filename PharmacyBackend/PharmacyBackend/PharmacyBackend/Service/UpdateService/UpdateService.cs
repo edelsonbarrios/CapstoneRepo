@@ -30,10 +30,12 @@ namespace PharmacyBackend.Service.UpdateService
         private readonly IPostRepositoryContracts _postRepo;
 
         public UpdateService(IUpdateRepositoryContracts updateRepo,
-            IGetRepositoryContracts getRepo)
+            IGetRepositoryContracts getRepo,
+            IPostRepositoryContracts postRepo)
         {
             _updateRepo = updateRepo;
             _getRepo = getRepo;
+            _postRepo = postRepo;
         }
         #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
