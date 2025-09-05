@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GetService } from '../../../services/GetService/get.service';
-import { Employee } from '../../../models/employee';
+import { Employee } from '../../../models/employee-models/employee';
 import { LogInToken } from '../../shared/token';
 import { jwtDecode } from 'jwt-decode';
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Employee } from '../../../../models/employee';
+import { Employee } from '../../../../models/employee-models/employee';
 import { PostService } from '../../../../services/PostService/post.service';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '../../../../../../node_modules/@angular/common';
@@ -9,7 +9,7 @@ import { NgFor } from "../../../../../../node_modules/@angular/common";
 import { LogInToken } from '../../../shared/token';
 import { jwtDecode } from 'jwt-decode';
 import { GetService } from '../../../../services/GetService/get.service';
-import { CreateEmployeeRequest } from '../../../../models/createEmployeeRequest';
+import { CreateEmployeeRequest } from '../../../../models/employee-models/createEmployeeRequest';
 
 @Component({
   selector: 'app-create-employee',

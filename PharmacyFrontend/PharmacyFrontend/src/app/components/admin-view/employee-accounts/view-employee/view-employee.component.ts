@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Employee } from '../../../../models/employee';
+import { Employee } from '../../../../models/employee-models/employee';
 import { FormsModule } from '@angular/forms';
-import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
-import { NgIf } from '@angular/common';
+import { NgIf, DatePipe} from '@angular/common';
 @Component({
   selector: 'app-view-employee',
   standalone: true,
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule, NgIf, DatePipe],
   templateUrl: './view-employee.component.html',
   styleUrl: './view-employee.component.scss'
 })

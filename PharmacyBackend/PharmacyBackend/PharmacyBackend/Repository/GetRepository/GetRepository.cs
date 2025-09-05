@@ -42,6 +42,7 @@ namespace PharmacyBackend.Repository.GET
                 .Include(e => e.Role)
                 .OrderBy(e => e.LastName)
                 .ThenBy(e => e.FirstName)
+                .Where(e => e.IsActive == true)
                 .ToListAsync();
         }
 
@@ -59,7 +60,8 @@ namespace PharmacyBackend.Repository.GET
                 .OrderBy(e => e.LastName)
                 .ThenBy(e => e.FirstName)
                 .AsNoTracking()
-                .Where(e => e.LastName.Contains(lastName)).ToListAsync();
+                .Where(e => e.LastName.StartsWith(lastName) && e.IsActive == true)
+                .ToListAsync();
         }
         public async Task<List<Employee>> GetFirstDisplayEmployees()
         {
@@ -67,6 +69,7 @@ namespace PharmacyBackend.Repository.GET
                 .Include(e => e.Role)
                 .OrderBy(e => e.LastName)
                 .Take(7)
+                .Where(e => e.IsActive == true)
                 .ToListAsync();
         }
         #endregion

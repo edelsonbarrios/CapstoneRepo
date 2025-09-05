@@ -44,11 +44,11 @@ namespace PharmacyBackend.Controllers
         public async Task<ActionResult<ArchiveEmployeeResponse>> ArchiveEmployeeByIdAsync(ArchiveEmployeeHistoryRequest request)
         {
             if (request is null)
-                return BadRequest(new ArchiveEmployeeResponse { FailedMessage = "Employee does not exist."});
+                return BadRequest(new ArchiveEmployeeResponse { Message = "Employee does not exist."});
             var archiveEmployee = await _updateService.ArchiveEmployeeByIdAsync(request);
             if (!archiveEmployee)
-                return BadRequest(new ArchiveEmployeeResponse { FailedMessage = "Employee cannot be inactive"});
-            return Ok(new ArchiveEmployeeResponse { OkMessage = "Employee is now inactive."});
+                return BadRequest(new ArchiveEmployeeResponse { Message = "Employee cannot be inactive"});
+            return Ok(new ArchiveEmployeeResponse { Message = "Employee is now inactive."});
         }
         #endregion
 

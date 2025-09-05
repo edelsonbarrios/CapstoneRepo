@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { GetService } from '../../../../services/GetService/get.service';
-import { Employee } from '../../../../models/employee';
+import { Employee } from '../../../../models/employee-models/employee';
 import { NgFor, NgForOf, NgIf } from "../../../../../../node_modules/@angular/common";
 import { ViewEmployeeComponent } from '../view-employee/view-employee.component';
 import { CreateEmployeeComponent } from '../create-employee/create-employee.component';
 import { FormsModule } from '@angular/forms';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { ArchiveEmployeeRequest } from '../../../../models/employee-models/archiveEmployeeRequest';
+import { LogInToken } from '../../../shared/token';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-manage-employees',
@@ -18,20 +22,22 @@ export class ManageEmployeesComponent implements OnInit{
   viewEmployee ?: Employee | null;
   newEmployee : any;
   lastNameSearch : string = '';
+  loggedInEmployeeId: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
     this.getAllEmployees();
+    this.getLoggedInEmployee();
   }
 
   getAllEmployees() {
     this.getService.GetDisplayEmployees().subscribe({
       next: employees => {
         this.employees = employees;
-        console.log('Employees successfully selected.');
       },
       error: err => {
         console.log(`${err.error}`);
@@ -52,6 +58,28 @@ export class ManageEmployeesComponent implements OnInit{
     });
   }
 
+  archiveEmployee(employee: Employee) {
+    if(!employee) return ;
+    const requestPayload : ArchiveEmployeeRequest = {
+      employeeId : employee.id,
+      actionPerformed : '',
+      performedBy : this.loggedInEmployeeId,
+      performedAt : new Date(employee.birthDate).toISOString()
+    };
+
+    this.updateService.ArchiveEmployeeAsync(requestPayload).subscribe({
+      next: mes => {
+        alert(`${mes.message}`);
+        this.getAllEmployees();
+      },
+      error: err => {
+        alert(`${err.error}`);
+        this.getAllEmployees();
+      }
+    });
+  }
+
+
   openViewEmployeeForm(employee : Employee) {
     this.viewEmployee = employee;
   }
@@ -68,4 +96,18 @@ export class ManageEmployeesComponent implements OnInit{
     this.newEmployee = null;
     this.getAllEmployees();
   }
+
+  getLoggedInEmployee() {
+      var token = localStorage.getItem(LogInToken);
+      if(!token) {
+        console.log('Token does not exist.');
+        return;
+      }
+  
+      var employee : any = jwtDecode(token);
+      console.log("Decoded token:", employee);
+      var employeeId = parseInt(employee.EmployeeId);
+
+      this.loggedInEmployeeId = employeeId;
+    }
 }

@@ -28,7 +28,7 @@
           <td>{{ e.rolePosition }}</td>
           <td style="text-align: center;">
             <button class="btn details" (click)="openViewEmployeeForm(e)">See Details</button>
-            <button class="btn details" id="red">Archive</button>
+            <button class="btn details" id="red" (click)="archiveEmployee(e)">Archive</button>
           </td>
         </tr>
       </tbody>

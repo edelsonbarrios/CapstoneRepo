@@ -3,7 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LogInToken } from '../../shared/token';
 import { GetService } from '../../../services/GetService/get.service';
 import { jwtDecode }from 'jwt-decode';
-import { Employee } from '../../../models/employee';
+import { Employee } from '../../../models/employee-models/employee';
 
 @Component({
   selector: 'app-admin-header',

@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap,  } from 'rxjs';
 import { LogInToken } from '../../components/shared/token';
-import { Employee } from '../../models/employee';
+import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
-import { CreateEmployeeRequest } from '../../models/createEmployeeRequest';
+import { CreateEmployeeRequest } from '../../models/employee-models/createEmployeeRequest';
 
 @Injectable({
   providedIn: 'root'
