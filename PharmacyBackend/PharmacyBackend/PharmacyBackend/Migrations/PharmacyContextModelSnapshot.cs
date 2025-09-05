@@ -217,10 +217,10 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ArchivedAt")
+                    b.Property<DateTime?>("ArchivedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ArchivedBy")
+                    b.Property<int?>("ArchivedBy")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("BirthDate")
@@ -262,10 +262,10 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UpdatedBy")
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

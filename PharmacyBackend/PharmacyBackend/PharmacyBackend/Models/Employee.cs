@@ -23,10 +23,10 @@ namespace PharmacyBackend.Models
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
-        public int ArchivedBy { get; set; }
-        public DateTime ArchivedAt { get; set; }
-        public int UpdatedBy { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public int? ArchivedBy { get; set; }
+        public DateTime? ArchivedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
 
 

@@ -1,23 +1,25 @@
-﻿using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
-using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
-using PharmacyBackend.Models;
-using PharmacyBackend.DTOs.EmployeeDTOs;
-using PharmacyBackend.DTOs.AccountDTOs;
-using PharmacyBackend.Helper;
+﻿using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
-using PharmacyBackend.DTOs.SalesDTOs;
-using PharmacyBackend.Models.CashierViewModel;
-using PharmacyBackend.DTOs.DiscountDTOs;
-using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
+using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
+using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
+using PharmacyBackend.DataContext;
+using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
-using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.DiscountDTOs;
+using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.PurchaseOrderItemDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
-using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
+using PharmacyBackend.Helper;
+using PharmacyBackend.Models;
+using PharmacyBackend.Models.CashierViewModel;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -26,14 +28,17 @@ namespace PharmacyBackend.Service.PostService
         private readonly IPostRepositoryContracts _postRepo;
         private readonly IGetRepositoryContracts _getRepo;
         private readonly IUpdateRepositoryContracts _updateRepo;
+        private readonly PharmacyContext _context;
 
         public PostService(IPostRepositoryContracts postRepo,
             IGetRepositoryContracts getRepo,
-            IUpdateRepositoryContracts updateRepo)
+            IUpdateRepositoryContracts updateRepo,
+            PharmacyContext context)
         {
             _postRepo = postRepo;
             _getRepo = getRepo;         
             _updateRepo = updateRepo;
+            _context = context;
         }
 
         #region Account
@@ -68,18 +73,11 @@ namespace PharmacyBackend.Service.PostService
             if (request is null)
                 return 0;
 
-            int roleId = 0;
-            switch (request.RolePosition)
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RolePosition == request.RolePosition);
+
+            if (role is null)
             {
-                case "Administrator":
-                    roleId = 1;
-                    break;
-                case "Cashier":
-                    roleId = 3;
-                    break;
-                case "Inventory Manager":
-                    roleId = 2;
-                    break;
+                return 0;
             }
 
             var newEmployee = new Employee
@@ -95,10 +93,14 @@ namespace PharmacyBackend.Service.PostService
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
-                RoleId = roleId,
+                RoleId = role.Id,
                 CreatedBy = request.CreatedBy,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
+                ArchivedBy = request.ArchivedBy,
+                ArchivedAt = request.ArchivedAt,
+                UpdatedBy = request.UpdatedBy,
+                UpdatedAt = request.UpdatedAt
             };
 
             var employeeId = await _postRepo.CreateEmployeeAsync(newEmployee);

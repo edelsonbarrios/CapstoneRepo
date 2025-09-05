@@ -83,7 +83,7 @@
 
   <div class="modal-footer">
     <button class="cancel-btn" (click)="closeCreateEmployeeForm()">Cancel</button>
-    <button class="add-btn" (click)="createNewEmployee()">+ Add Employee</button>
+    <button class="add-btn" [disabled]="isUserLoading" (click)="createNewEmployee()">+ Add Employee</button>
   </div>
 </div>
 

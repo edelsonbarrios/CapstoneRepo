@@ -6,6 +6,7 @@ import { Observable, tap,  } from 'rxjs';
 import { LogInToken } from '../../components/shared/token';
 import { Employee } from '../../models/employee';
 import { Account } from '../../models/account';
+import { CreateEmployeeRequest } from '../../models/createEmployeeRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class PostService {
   }
 
   //Employee Service
-  createEmployee(employee ?: Employee | null) : Observable<{ message: string, employeeId : number}> {
+  createEmployee(employee ?: CreateEmployeeRequest | null) : Observable<{ message: string, employeeId : number}> {
     return this.httpClient.post<{ message: string, employeeId : number }>(`${this.apiUrl}/Post/Employee`, employee);
   }
   

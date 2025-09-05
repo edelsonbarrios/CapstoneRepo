@@ -62,6 +62,7 @@ namespace PharmacyBackend.Service.GetService
                 return null;
             var modifEmployee = new EmployeeDTO
             {
+                Id = employee.Id,
                 EmployeeCode = employee.EmployeeCode,
                 LastName = employee.LastName,
                 FirstName = employee.FirstName,
