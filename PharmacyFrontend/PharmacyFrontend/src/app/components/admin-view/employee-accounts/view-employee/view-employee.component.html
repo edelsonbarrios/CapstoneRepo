@@ -1,86 +1,108 @@
 <div class="wrapper">
   <header>
     <img src="/images/view-employee-images/see-details.png" alt="See Details Image">
-    <h1>See Details</h1>
+    <h1 *ngIf="!isEditMode">See Details</h1>
+    <h1 *ngIf="isEditMode">Edit Employee</h1>
   </header>
   <hr>
+
+  <!-- Profile Info -->
   <div class="display-wrapper">
     <img src="/images/view-employee-images/nigga-man.png" alt="User Profile Image">
-    <h1>{{employee.fullName}}</h1>
-    <h2 style="margin-bottom: 10px;">{{employee.rolePosition}}</h2>
+    <h1>{{ employee.fullName }}</h1>
+    <h2 style="margin-bottom: 10px;">{{ employee.rolePosition }}</h2>
   </div>
   <hr><br>
+
   <main>
+    <!-- Employee Code -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="Employee Code">
         <h1>Employee Code:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Employee Code" [(ngModel)]="employee.employeeCode">
+        <span *ngIf="!isEditMode">{{ employee.employeeCode }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.employeeCode" placeholder="Employee Code">
       </div>
     </div>
+
+    <!-- Email -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/mail.png" alt="Email">
         <h1>Email:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Email" [(ngModel)]="employee.email">
+        <span *ngIf="!isEditMode">{{ employee.email }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.email" placeholder="Email">
       </div>
     </div>
 
+    <!-- Contact Number -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/phone.png" alt="Phone">
         <h1>Contact Number:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Contact Number" [(ngModel)]="employee.employeeCode">
+        <span *ngIf="!isEditMode">{{ employee.phoneNumber }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.phoneNumber" placeholder="Contact Number">
       </div>
     </div>
 
+    <!-- Birth Date -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/cake.png" alt="Birth Date">
         <h1>Birth Date:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Birth Date" [(ngModel)]="employee.birthDate">
+        <span *ngIf="!isEditMode">{{ employee.birthDate }}</span>
+        <input *ngIf="isEditMode" type="date" [(ngModel)]="employee.birthDate" placeholder="Birth Date">
       </div>
     </div>
 
+    <!-- Age -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/mother-child.png" alt="Age">
         <h1>Age:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Age" [(ngModel)]="employee.age">
+        <span *ngIf="!isEditMode">{{ employee.age }}</span>
+        <input *ngIf="isEditMode" type="number" [(ngModel)]="employee.age" placeholder="Age">
       </div>
     </div>
 
+    <!-- Gender -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/gender.png" alt="Gender">
         <h1>Gender:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Gender" [(ngModel)]="employee.gender">
+        <span *ngIf="!isEditMode">{{ employee.gender }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.gender" placeholder="Gender">
       </div>
     </div>
 
+    <!-- Address -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/address.png" alt="Address">
         <h1>Address:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Address" [(ngModel)]="employee.address">
+        <span *ngIf="!isEditMode">{{ employee.address }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.address" placeholder="Address">
       </div>
     </div>
   </main>
+
   <div class="button-wrapper">
+    <button *ngIf="!isEditMode" (click)="toggleEditMode()">Edit</button>
+    <button *ngIf="isEditMode" (click)="toggleEditMode()">Save</button>
     <button (click)="closeViewForm()">Close</button>
   </div>
 </div>
