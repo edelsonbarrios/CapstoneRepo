@@ -7,6 +7,7 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
@@ -38,6 +39,16 @@ namespace PharmacyBackend.Controllers
             if (!updateEmployee)
                 return BadRequest(new EmployeeRequestResponse { Message = "Failed to updated employee." });
             return Ok(new EmployeeRequestResponse { Message = "Employee updated sucessfully." });
+        }
+        [HttpPut("ArchiveEmployee")]
+        public async Task<ActionResult<ArchiveEmployeeResponse>> ArchiveEmployeeByIdAsync(ArchiveEmployeeHistoryRequest request)
+        {
+            if (request is null)
+                return BadRequest(new ArchiveEmployeeResponse { Message = "Employee does not exist."});
+            var archiveEmployee = await _updateService.ArchiveEmployeeByIdAsync(request);
+            if (!archiveEmployee)
+                return BadRequest(new ArchiveEmployeeResponse { Message = "Employee cannot be inactive"});
+            return Ok(new ArchiveEmployeeResponse { Message = "Employee is now inactive."});
         }
         #endregion
 

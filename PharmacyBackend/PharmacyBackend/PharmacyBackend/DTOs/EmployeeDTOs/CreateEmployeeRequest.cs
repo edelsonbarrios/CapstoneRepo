@@ -14,5 +14,13 @@
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string RolePosition { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsActive { get; set; } = true;
+        public int? ArchivedBy { get; set; }
+        public DateTime? ArchivedAt { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+
     }
 }

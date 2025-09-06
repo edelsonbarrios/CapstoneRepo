@@ -1,34 +1,43 @@
 <div class="wrapper">
   <header>
     <img src="/images/view-employee-images/see-details.png" alt="See Details Image">
-    <h1>See Details</h1>
+    <h1 *ngIf="!isEditMode">See Details</h1>
+    <h1 *ngIf="isEditMode">Edit Employee</h1>
   </header>
   <hr>
+
+  <!-- Profile Info -->
   <div class="display-wrapper">
     <img src="/images/view-employee-images/nigga-man.png" alt="User Profile Image">
-    <h1>{{employee.fullName}}</h1>
-    <h2 style="margin-bottom: 10px;">{{employee.rolePosition}}</h2>
+    <h1>{{ employee.fullName }}</h1>
+    <h2 style="margin-bottom: 10px;">{{ employee.rolePosition }}</h2>
   </div>
   <hr><br>
+
   <main>
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="Employee Code">
         <h1>Employee Code:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Employee Code" [(ngModel)]="employee.employeeCode">
+        <span *ngIf="!isEditMode">{{ employee.employeeCode }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.employeeCode" placeholder="Employee Code">
       </div>
     </div>
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/mail.png" alt="Email">
         <h1>Email:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Email" [(ngModel)]="employee.email">
+        <span *ngIf="!isEditMode">{{ employee.email }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.email" placeholder="Email">
       </div>
     </div>
+
 
     <div class="employee-property">
       <div class="label">
@@ -36,9 +45,11 @@
         <h1>Contact Number:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Contact Number" [(ngModel)]="employee.employeeCode">
+        <span *ngIf="!isEditMode">{{ employee.phoneNumber }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.phoneNumber" placeholder="Contact Number">
       </div>
     </div>
+
 
     <div class="employee-property">
       <div class="label">
@@ -46,7 +57,8 @@
         <h1>Birth Date:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Birth Date" [(ngModel)]="employee.birthDate">
+        <span *ngIf="!isEditMode">{{ employee.birthDate | date: 'dd-MM-yyy'}}</span>
+        <input *ngIf="isEditMode" type="date" [(ngModel)]="employee.birthDate" placeholder="Birth Date">
       </div>
     </div>
 
@@ -56,9 +68,11 @@
         <h1>Age:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Age" [(ngModel)]="employee.age">
+        <span *ngIf="!isEditMode">{{ employee.age }}</span>
+        <input *ngIf="isEditMode" type="number" [(ngModel)]="employee.age" placeholder="Age">
       </div>
     </div>
+
 
     <div class="employee-property">
       <div class="label">
@@ -66,9 +80,11 @@
         <h1>Gender:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Gender" [(ngModel)]="employee.gender">
+        <span *ngIf="!isEditMode">{{ employee.gender }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.gender" placeholder="Gender">
       </div>
     </div>
+
 
     <div class="employee-property">
       <div class="label">
@@ -76,11 +92,15 @@
         <h1>Address:</h1>
       </div>
       <div class="input-wrapper">
-        <input type="text" placeholder="Address" [(ngModel)]="employee.address">
+        <span *ngIf="!isEditMode">{{ employee.address }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.address" placeholder="Address">
       </div>
     </div>
   </main>
+
   <div class="button-wrapper">
+    <button *ngIf="!isEditMode" (click)="toggleViewMode()">Edit</button>
+    <button *ngIf="isEditMode" (click)="toggleEditMode(employee)">Save</button>
     <button (click)="closeViewForm()">Close</button>
   </div>
 </div>

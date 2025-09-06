@@ -41,7 +41,7 @@ export class LoginViewComponent {
         }   
       },
       error: err => {
-        console.log(`${err.error}`);
+        console.log(`${err.error.message}`);
       }
     });
   }

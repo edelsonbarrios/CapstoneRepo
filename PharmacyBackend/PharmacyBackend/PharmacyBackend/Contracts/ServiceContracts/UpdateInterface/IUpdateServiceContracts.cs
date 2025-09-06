@@ -11,6 +11,7 @@ using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 {
@@ -19,6 +20,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         #region Employee
         public Task<bool> UpdateEmployeeAsync(UpdateEmployeeRequest request);
         public Task<bool> UpdateAccountAsync(UpdateAccountRequest request);
+        public Task<bool> ArchiveEmployeeByIdAsync(ArchiveEmployeeHistoryRequest request);
         #endregion
 
         #region Sales

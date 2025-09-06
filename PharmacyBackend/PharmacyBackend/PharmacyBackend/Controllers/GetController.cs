@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
@@ -59,6 +60,16 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
+        #region EmployeeHistory
+        [HttpGet("EmployeeHistoryAll")]
+        public async Task<ActionResult<List<EmployeeHistoryDTO>>> GetAllEmployeeHistoryAsync()
+        {
+            var employeeHistories = await _getService.GetAllEmployeeHistoryAsync();
+            if (!employeeHistories.Any() || employeeHistories.Count() == 0)
+                return NotFound("No actions currently performed.");
+            return Ok(employeeHistories);
+        }
+        #endregion
 
         #region Account
         [HttpGet("AccountAll")]
@@ -79,8 +90,17 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Account does not exist.");
             return Ok(account);
         }
+        [HttpGet("SearchAccount")]
+        public async Task<ActionResult<AccountDTO>> SearchAccountByUsernameAsync(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return BadRequest("Username field is empty.");
+            var account = await _getService.SearchAccountByUsernameAsync(userName);
+            if (account is null)
+                return NotFound("Username does not exist.");
+            return Ok(account);
+        }
         #endregion
-
 
         #region Sales
         [HttpGet("SaleAll")]

@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   justify-content: center;
-  align-items: flex-start; 
+  align-items: flex-start;
   background: #f9fbfe;
   padding: 1rem;
 
@@ -14,9 +14,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    
 
-  .table-header {
+    .table-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -78,7 +77,8 @@
       width: 100%;
       border-collapse: collapse;
 
-      th, td {
+      th,
+      td {
         padding: 0.9rem;
         text-align: left;
         border-bottom: 1px solid #e6e6e6;
@@ -96,6 +96,7 @@
       }
 
       .btn.details {
+        margin-inline: 7px;
         background: #6c5ce7;
         color: white;
         padding: 0.4rem 0.8rem;
@@ -107,6 +108,9 @@
         &:hover {
           background: #4834d4;
         }
+      }
+      #red {
+        background-color: #ff1111;
       }
     }
   }

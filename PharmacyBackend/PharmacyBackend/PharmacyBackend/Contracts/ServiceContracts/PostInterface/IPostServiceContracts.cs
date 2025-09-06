@@ -12,6 +12,7 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 {
@@ -20,6 +21,9 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         #region Employee
         public Task<int> CreateEmployeeAsync(CreateEmployeeRequest request);
         public Task<string> AuthenticationAsync(LogInRequest request);
+        #endregion
+
+        #region EmployeeHistory
         #endregion
 
         #region Account

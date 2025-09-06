@@ -15,6 +15,7 @@ using PharmacyBackend.DTOs.PurchaseOrderItemDTOs;
 using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -61,6 +62,7 @@ namespace PharmacyBackend.Service.GetService
                 return null;
             var modifEmployee = new EmployeeDTO
             {
+                Id = employee.Id,
                 EmployeeCode = employee.EmployeeCode,
                 LastName = employee.LastName,
                 FirstName = employee.FirstName,
@@ -131,6 +133,53 @@ namespace PharmacyBackend.Service.GetService
         }
         #endregion
 
+        #region EmployeeHistory
+        public async Task<List<EmployeeHistoryDTO>> GetAllEmployeeHistoryAsync()
+        {
+            var employeeHistories = await _getRepo.GetAllEmployeeHistoryAsync();
+            if (!employeeHistories.Any() || employeeHistories.Count() == 0)
+                return new List<EmployeeHistoryDTO>();
+            var modifHistories = employeeHistories.Select(e => new EmployeeHistoryDTO
+            {
+                EmployeeChanged = e.Employee.FullName,
+                ActionPerformed = e.ActionPerformed,
+                PerformedBy = e.PerformedByEmployee.FullName,
+                PerformedAt = e.PerformedAt
+            }).ToList();
+            return modifHistories;
+        }
+        public async Task<EmployeeHistoryDTO> GetEmployeeHistoryByIdAsync(int employeeHistoryId)
+        {
+            var employeeHistory = await _getRepo.GetEmployeeHistoryByIdAsync(employeeHistoryId);
+            if (employeeHistory is null)
+                return null;
+            var modifHistory = new EmployeeHistoryDTO()
+            {
+                EmployeeChanged = employeeHistory.Employee.FullName,
+                ActionPerformed = employeeHistory.ActionPerformed,
+                PerformedBy = employeeHistory.PerformedByEmployee.FullName,
+                PerformedAt = employeeHistory.PerformedAt
+            };
+            return modifHistory;
+        }
+        public async Task<List<EmployeeHistoryDTO>> GetDisplayEmployeeHistoryAsync()
+        {
+            var employeeHistories = await _getRepo.GetDisplayEmployeeHistoryAsync();
+            if (!employeeHistories.Any() || employeeHistories.Count() == 0)
+                return new List<EmployeeHistoryDTO>();
+
+            var modifHistories = employeeHistories.Select(e => new EmployeeHistoryDTO
+            {
+                EmployeeChanged = e.Employee.FullName,
+                ActionPerformed = e.ActionPerformed,
+                PerformedBy = e.PerformedByEmployee.FullName,
+                PerformedAt = e.PerformedAt
+            }).ToList();
+
+            return modifHistories;
+        }
+        #endregion
+
         #region Account
         public async Task<bool> AccountUsernameValidation(string userName)
         {
@@ -149,7 +198,7 @@ namespace PharmacyBackend.Service.GetService
             {
                 Id = a.Id,
                 Username = a.Username,
-                DecryptedPassword = a.EncryptedPassword,
+                Password = a.EncryptedPassword,
                 EmployeeId = a.EmployeeId
             }).ToList();
             return modifAccounts;
@@ -164,7 +213,22 @@ namespace PharmacyBackend.Service.GetService
             {
                 Id = account.Id,
                 Username = account.Username,
-                DecryptedPassword = account.EncryptedPassword,
+                Password = account.EncryptedPassword,
+                EmployeeId = account.EmployeeId
+            };
+            return modifAccount;
+        }
+
+        public async Task<AccountDTO> SearchAccountByUsernameAsync(string userName)
+        {
+            var account = await _getRepo.SearchAccountByUsernameAsync(userName);
+            if (account is null)
+                return null;
+            var modifAccount = new AccountDTO
+            {
+                Id = account.Id,
+                Username = account.Username,
+                Password = account.EncryptedPassword,
                 EmployeeId = account.EmployeeId
             };
             return modifAccount;

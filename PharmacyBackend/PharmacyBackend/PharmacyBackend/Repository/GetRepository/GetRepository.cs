@@ -29,6 +29,10 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Accounts.ToListAsync();
         }
+        public async Task<Account> SearchAccountByUsernameAsync(string userName)
+        {
+            return await _context.Accounts.FirstOrDefaultAsync(a => a.Username.StartsWith(userName));
+        }
         #endregion
 
         #region Employee
@@ -38,6 +42,7 @@ namespace PharmacyBackend.Repository.GET
                 .Include(e => e.Role)
                 .OrderBy(e => e.LastName)
                 .ThenBy(e => e.FirstName)
+                .Where(e => e.IsActive == true)
                 .ToListAsync();
         }
 
@@ -55,7 +60,8 @@ namespace PharmacyBackend.Repository.GET
                 .OrderBy(e => e.LastName)
                 .ThenBy(e => e.FirstName)
                 .AsNoTracking()
-                .Where(e => e.LastName.Contains(lastName)).ToListAsync();
+                .Where(e => e.LastName.StartsWith(lastName) && e.IsActive == true)
+                .ToListAsync();
         }
         public async Task<List<Employee>> GetFirstDisplayEmployees()
         {
@@ -63,6 +69,36 @@ namespace PharmacyBackend.Repository.GET
                 .Include(e => e.Role)
                 .OrderBy(e => e.LastName)
                 .Take(7)
+                .Where(e => e.IsActive == true)
+                .ToListAsync();
+        }
+        #endregion
+
+        #region EmployeeHistory
+        public async Task<List<EmployeeHistory>> GetAllEmployeeHistoryAsync()
+        {
+            return await _context.EmployeeHistory
+                .AsNoTracking()
+                .OrderByDescending(eh => eh.PerformedAt)
+                .Include(eh => eh.Employee)
+                .Include(eh => eh.PerformedByEmployee)
+                .ToListAsync();
+        }
+        public async Task<EmployeeHistory> GetEmployeeHistoryByIdAsync(int employeeHistoryId)
+        {
+            return await _context.EmployeeHistory
+                .AsNoTracking()
+                .Include(eh => eh.Employee)
+                .Include(eh => eh.PerformedByEmployee)
+                .OrderByDescending(eh => eh.PerformedAt)
+                .FirstOrDefaultAsync(eh => eh.Id == employeeHistoryId);
+        }
+        public async Task<List<EmployeeHistory>> GetDisplayEmployeeHistoryAsync()
+        {
+            return await _context.EmployeeHistory
+                .AsNoTracking()
+                .OrderByDescending(eh => eh.PerformedAt)
+                .Take(10)
                 .ToListAsync();
         }
         #endregion

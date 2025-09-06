@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
 import { HttpClient } from '@angular/common/http';
-import { last, Observable } from 'rxjs';
-import { Employee } from '../../models/employee';
+import { last, Observable, ObservedValueOf } from 'rxjs';
+import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,6 @@ export class GetService {
   GetDisplayEmployees() : Observable<Employee[]> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/DisplayEmployees`);
   }
-
   //Employee Service End
 
 
@@ -37,4 +36,9 @@ export class GetService {
   GetAllAccounts() : Observable<Account[]> {
     return this.httpClient.get<Account[]>(`${this.apiUrl}/Get/AccountAll`);
   }
+
+  SearchAccountByUserName(userName: string) : Observable<Account>{
+    return this.httpClient.get<Account>(`${this.apiUrl}/Get/SearchAccount?userName=${userName}`);
+  }
+  //Account Service End
 }

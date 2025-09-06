@@ -6,7 +6,6 @@
   padding: 1rem;
   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.15);
 
-
   header {
     display: flex;
     align-items: center;
@@ -38,16 +37,14 @@
     h2 {
       font-size: var(--fs-regular);
     }
-
-
   }
 
   main {
     .employee-property {
       display: grid;
-      grid-template-columns: 35% 65%; /* first col fits content, second takes rest */
+      grid-template-columns: 35% 65%;
       align-items: center;
-      gap: 10px; /* spacing between label area and input */
+      gap: 10px;
       margin-bottom: 8px;
 
       .label {
@@ -62,14 +59,18 @@
       h1 {
         margin: 0 5px 0 0;
         font-size: var(--fs-regular);
-        white-space: nowrap; /* keep labels in one line */
+        white-space: nowrap;
       }
 
-      input {
-        width: 100%; /* fills available space */
+      input{
+        width: 100%;
         padding: 5px 8px;
         border: 1px solid #ccc;
         border-radius: 6px;
+      }
+
+      span {
+        background-color: #fff;
       }
     }
   }
@@ -79,6 +80,7 @@
     justify-content: flex-end;
 
     button {
+      margin-inline: 5px;
       padding: 3px 10px;
       border-radius: 10px;
       border-width: 1px;
@@ -97,4 +99,3 @@
     }
   }
 }
-

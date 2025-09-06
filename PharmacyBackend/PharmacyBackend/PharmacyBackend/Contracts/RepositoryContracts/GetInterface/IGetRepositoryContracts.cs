@@ -9,11 +9,21 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #region Employees
         public Task<List<Employee>> GetAllEmployeesAsync();
         public Task<Employee> GetEmployeeByIdAsync(int id);
+        public Task<List<Employee>> GetEmployeeByLastName(string lastName);
+        public Task<List<Employee>> GetFirstDisplayEmployees();
+        #endregion
+
+        #region EmployeeHistory 
+        public Task<List<EmployeeHistory>> GetAllEmployeeHistoryAsync();
+        public Task<EmployeeHistory> GetEmployeeHistoryByIdAsync(int employeeHistoryId);
+        public Task<List<EmployeeHistory>> GetDisplayEmployeeHistoryAsync();
+        #endregion
+
+        #region Account
         public Task<List<Account>> GetAllAccountsAsync();
         public Task<Account> GetAccountByIdAsync(int id);
         public Task<bool> AccountUsernameValidation(string userName);
-        public Task<List<Employee>> GetEmployeeByLastName(string lastName);
-        public Task<List<Employee>> GetFirstDisplayEmployees();
+        public Task<Account> SearchAccountByUsernameAsync(string userName);
         #endregion
 
         #region Sales
