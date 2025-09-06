@@ -154,6 +154,57 @@ export const routes: Routes = [
           return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
           .then(m => m.InventoryManagerDashboardComponent);  
         }
+      },
+      {
+        path: 'item-data-control-main',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/item-data-control/item-data-control-main/item-data-control-main.component')
+          .then(m => m.ItemDataControlMainComponent);
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/item-data-control/manage-brand-name/manage-brand-name.component')
+              .then(m => m.ManageBrandNameComponent);
+            }
+          },
+          {
+            path: 'manage-brand-name',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/item-data-control/manage-brand-name/manage-brand-name.component')
+              .then(m => m.ManageBrandNameComponent);
+            }
+          },
+          {
+            path: 'manage-generic-name',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/item-data-control/manage-generic-name/manage-generic-name.component')
+              .then(m => m.ManageGenericNameComponent);
+            }
+          },
+          {
+            path: 'manage-formulation',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/item-data-control/manage-formulation/manage-formulation.component')
+              .then(m => m.ManageFormulationComponent);
+            }
+          },
+          {
+            path: 'manage-classification',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/item-data-control/manage-classification/manage-classification.component')
+              .then(m => m.ManageClassificationComponent);
+            }
+          },
+          {
+            path: 'manage-type',
+            loadComponent: () => {
+              return import('./components/inventory-manager-view/item-data-control/manage-type/manage-type.component')
+              .then(m => m.ManageTypeComponent);
+            },
+          }
+        ]
       }
     ]
   }
