@@ -1,23 +1,138 @@
-<div class="wrapper">
+<div class="container">
 
-  <div class="total-sales-wrapper">
-    TOTAL SALES WRAPPER
-  </div>
+  <!-- TOTAL SALES CONTAINER -->
+  <div class="grid-items total-sales">
 
-  <div class="sales-trend-wrapper">
-    SALES TREND
-  </div>
+    <!-- 1st Container HEADER -->
+    <div class="total-header">
+      <div class="title-header">Total Sales of <span>(Month)</span></div>
+      <select name="month" id="month">
+        <option>January</option>
+        <option>February</option>
+        <option>March</option>
+        <option>April</option>
+        <option>May</option>
+        <option>June</option>
+        <option>July</option>
+        <option>August</option>
+        <option>Septemper</option>
+        <option>October</option>
+        <option>November</option>
+        <option>December</option>
+      </select>
+    </div>
 
-  <div class="transaction-trend-wrapper">
-    <h1>SALES TREND</h1>
-  </div>
-
-  <div class="transactions-wrapper">
-    <div class="header-wrapper">
-      <div class="element">TRASNACTION</div>
+    <!-- 1st Container BODY -->
+    <div class="total">&#8369;24,000</div>
+    <h4>Number of transactions</h4>
+    <p>420</p>
+    <div class="growth-count">
+      <p>&#43;8&#37;<span> prev. month</span></p>
     </div>
   </div>
 
-</div>
+  <!-- TOP SELLING MEDS CONTAINER -->
+  <div class="grid-items top-selling">
 
-<!--SALES REPORT COMPONENT HTML-->
+    <!-- 2nd Container HEADER -->
+    <div class="total-header">
+      <div class="title-header">Top Selling Medicines <span>(Month)</span></div>
+      <select name="month" id="month">
+        <option>January</option>
+        <option>February</option>
+        <option>March</option>
+        <option>April</option>
+        <option>May</option>
+        <option>June</option>
+        <option>July</option>
+        <option>August</option>
+        <option>Septemper</option>
+        <option>October</option>
+        <option>November</option>
+        <option>December</option>
+      </select>
+    </div>
+
+    <!-- 2nd Container BODY (TABLE) -->
+    <table class="top-meds-table">
+      <tbody>
+        <tr>
+          <td>Biogesic</td>
+          <td>500mg</td>
+          <td>320 sold</td>
+        </tr>
+        <tr>
+          <td>Cecon</td>
+          <td>500mg</td>
+          <td>280 sold</td>
+        </tr>
+        <tr>
+          <td>Bioflu</td>
+          <td>500mg</td>
+          <td>250 sold</td>
+        </tr>
+        <tr>
+          <td>Amoxicillin</td>
+          <td>500mg</td>
+          <td>200 sold</td>
+        </tr>
+        <tr>
+          <td>Cetirizine</td>
+          <td>10mg</td>
+          <td>180 sold</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TRANSACTION CONTAINER -->
+  <div class="grid-items transaction">
+
+    <!-- 3rd Container HEADER-->
+    <div class="title-header">Transaction</div>
+
+    <!-- 3rd Container BODY (TABLE) -->
+    <table class="transaction-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Order #</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025&ndash;06&ndash;10</td>
+          <td>SO&ndash;1000</td>
+          <td>&#8369;1,500</td>
+          <td>Pending</td>
+        </tr>
+        <tr>
+          <td>2025&ndash;06&ndash;11</td>
+          <td>SO&ndash;1001</td>
+          <td>&#8369;2,000</td>
+          <td>Paid</td>
+        </tr>
+        <tr>
+          <td>2025&ndash;06&ndash;12</td>
+          <td>SO&ndash;1002</td>
+          <td>&#8369;2,500</td>
+          <td>Pending</td>
+        </tr>
+        <tr>
+          <td>2025&ndash;06&ndash;13</td>
+          <td>SO&ndash;1003</td>
+          <td>&#8369;3,000</td>
+          <td>Paid</td>
+        </tr>
+        <tr>
+          <td>2025&ndash;06&ndash;14</td>
+          <td>SO&ndash;1004</td>
+          <td>&#8369;3,500</td>
+          <td>Pending</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
