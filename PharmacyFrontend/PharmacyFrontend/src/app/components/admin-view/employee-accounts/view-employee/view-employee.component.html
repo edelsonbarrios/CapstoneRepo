@@ -15,7 +15,7 @@
   <hr><br>
 
   <main>
-    <!-- Employee Code -->
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="Employee Code">
@@ -27,7 +27,6 @@
       </div>
     </div>
 
-    <!-- Email -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/mail.png" alt="Email">
@@ -39,7 +38,7 @@
       </div>
     </div>
 
-    <!-- Contact Number -->
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/phone.png" alt="Phone">
@@ -51,7 +50,7 @@
       </div>
     </div>
 
-    <!-- Birth Date -->
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/cake.png" alt="Birth Date">
@@ -63,7 +62,6 @@
       </div>
     </div>
 
-    <!-- Age -->
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/mother-child.png" alt="Age">
@@ -75,7 +73,7 @@
       </div>
     </div>
 
-    <!-- Gender -->
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/gender.png" alt="Gender">
@@ -87,7 +85,7 @@
       </div>
     </div>
 
-    <!-- Address -->
+
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/address.png" alt="Address">
@@ -101,8 +99,8 @@
   </main>
 
   <div class="button-wrapper">
-    <button *ngIf="!isEditMode" (click)="toggleEditMode()">Edit</button>
-    <button *ngIf="isEditMode" (click)="toggleEditMode()">Save</button>
+    <button *ngIf="!isEditMode" (click)="toggleViewMode()">Edit</button>
+    <button *ngIf="isEditMode" (click)="toggleEditMode(employee)">Save</button>
     <button (click)="closeViewForm()">Close</button>
   </div>
 </div>
