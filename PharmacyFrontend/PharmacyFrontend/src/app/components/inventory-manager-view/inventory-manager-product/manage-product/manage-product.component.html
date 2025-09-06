@@ -5,7 +5,7 @@
     <div class="product-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-product">&#43; Add Product</button>
+      <button class="btn-product" (click)="openCreateProductForm()">&#43; Add Product</button>
     </div>
 
     <!-- PRODUCT TABLE -->
@@ -77,4 +77,8 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="newProduct">
+  <app-create-product *ngIf="newProduct"></app-create-product>
 </div>
