@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { last, Observable, ObservedValueOf } from 'rxjs';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
+import { VAT } from '../../models/vat-models/vat';
 @Injectable({
   providedIn: 'root'
 })
@@ -41,4 +42,10 @@ export class GetService {
     return this.httpClient.get<Account>(`${this.apiUrl}/Get/SearchAccount?userName=${userName}`);
   }
   //Account Service End
+
+  //VAT Service
+  getAllVatAsync() : Observable<VAT[]> {
+    return this.httpClient.get<VAT[]>(`${this.apiUrl}/Get/VATAll`);
+  }
+  //VAT Service End
 }

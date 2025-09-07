@@ -7,6 +7,8 @@ import { LogInToken } from '../../components/shared/token';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
 import { CreateEmployeeRequest } from '../../models/employee-models/createEmployeeRequest';
+import { VAT } from '../../models/vat-models/vat';
+import { CreateVatRequest } from '../../models/vat-models/createVatRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -27,11 +29,17 @@ export class PostService {
   createEmployee(employee ?: CreateEmployeeRequest | null) : Observable<{ message: string, employeeId : number}> {
     return this.httpClient.post<{ message: string, employeeId : number }>(`${this.apiUrl}/Post/Employee`, employee);
   }
-  
+  //Employee Service End
 
   //Account Service
   createAccount(account: Account) : Observable<{message : string}> {
     return this.httpClient.post<{message: string}>(`${this.apiUrl}/Post/Account`, account);
   }
+  //Account Service End
   
+  //VAT Service
+  createVatAsync(newVat: CreateVatRequest) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/VAT`, newVat);
+  }
+  //VAT Service End
 }

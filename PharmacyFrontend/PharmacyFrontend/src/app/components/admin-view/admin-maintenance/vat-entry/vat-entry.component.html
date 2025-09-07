@@ -4,11 +4,11 @@
 
     <!-- VAT CONTROLS -->
     <div class="vat-control">
-      <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name">
-      <input type="text" id="rate" name="rate" placeholder="Rate (%)">
-      <input type="date" id="vdate" name="vdate">
+      <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name" [(ngModel)]="createdVat.vatName">
+      <input type="text" id="rate" name="rate" placeholder="Rate (%)" [(ngModel)]="createdVat.vatRate">
+      <input type="date" id="vdate" name="vdate" [(ngModel)]="createdVat.dateCreated">
     </div>
-    <button class="btn-save">Save VAT</button>
+    <button class="btn-save" (click)="createNewVat()">Save VAT</button>
 
     <!-- VAT TABLES -->
     <table class="vat-table">
@@ -17,56 +17,14 @@
           <th>Name</th>
           <th>Rate</th>
           <th>Effective Date</th>
-          <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Standard VAT</td>
-          <td>12%</td>
-          <td>01/02/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Reduced VAT</td>
-          <td>13%</td>
-          <td>01/03/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Pharmaceutical VAT</td>
-          <td>14%</td>
-          <td>01/04/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Medicines VAT</td>
-          <td>15%</td>
-          <td>01/05/2025</td>
-          <td>Active</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Zero</td>
-          <td>16%</td>
-          <td>01/07/2025</td>
-          <td>Inactive</td>
+        <tr *ngFor="let v of vats">
+          <td>{{v.vatName}}</td>
+          <td>{{v.vatRate}}%</td>
+          <td>{{v.dateCreated | date: 'dd-MM-yyyy'}}</td>
           <td>
             <button class="btn-edit">Edit</button>
             <button class="btn-archive">Archive</button>
