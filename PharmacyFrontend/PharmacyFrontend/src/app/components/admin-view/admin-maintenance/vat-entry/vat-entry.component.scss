@@ -11,7 +11,7 @@
     height: 100%;
 
     h1 {
-      font-size: 1.50rem;
+      font-size: 1.5rem;
       font-weight: 600;
       color: #1e2f47;
       margin-bottom: 1rem;
@@ -28,6 +28,18 @@
         border-radius: 0.4rem;
         border: 1px solid #3498ff;
       }
+
+      &.error {
+        input {
+          border: 1px solid red;
+        }
+      }
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
     }
 
     .btn-save {

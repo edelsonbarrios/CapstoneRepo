@@ -5,6 +5,7 @@ import { last, Observable, ObservedValueOf } from 'rxjs';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
 import { VAT } from '../../models/vat-models/vat';
+import { Discount } from '../../models/discount-models/discount';
 @Injectable({
   providedIn: 'root'
 })
@@ -48,4 +49,10 @@ export class GetService {
     return this.httpClient.get<VAT[]>(`${this.apiUrl}/Get/VATAll`);
   }
   //VAT Service End
+
+  //Discount Service
+  getAllDiscountAsync() : Observable<Discount[]> {
+    return this.httpClient.get<Discount[]>(`${this.apiUrl}/Get/DiscountAll`);
+  }
+  //Discount Service End
 }

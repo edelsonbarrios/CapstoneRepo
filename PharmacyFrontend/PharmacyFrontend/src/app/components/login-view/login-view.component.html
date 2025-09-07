@@ -12,12 +12,13 @@
       <h1>Welcome back!</h1>
       <h2>Please login to your account</h2>
     </div>
-    <div class="input-wrapper">
+    <div class="input-wrapper" [class.error]="loginError">
       <input type="text" [(ngModel)]="userName" placeholder="Username">
       <input type="password" [(ngModel)]="password" placeholder="Password">
+      <p class="error-message" *ngIf="loginError">{{ loginError }}</p>
     </div>
     <div class="button-wrapper">
-      <button (click)="goToAdminMain()">Login</button>
+      <button (click)="Authenticate()">Login</button>
     </div>
   </main>
 </body>

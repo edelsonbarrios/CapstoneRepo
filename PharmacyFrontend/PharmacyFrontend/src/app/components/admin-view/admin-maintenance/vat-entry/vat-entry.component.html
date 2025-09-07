@@ -3,11 +3,12 @@
     <h1>Manage Vat Rates</h1>
 
     <!-- VAT CONTROLS -->
-    <div class="vat-control">
+    <div class="vat-control" [class.error]="vatError">
       <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name" [(ngModel)]="createdVat.vatName">
       <input type="text" id="rate" name="rate" placeholder="Rate (%)" [(ngModel)]="createdVat.vatRate">
       <input type="date" id="vdate" name="vdate" [(ngModel)]="createdVat.dateCreated">
     </div>
+    <p class="error-message" *ngIf="vatError">{{ vatError }}</p>
     <button class="btn-save" (click)="createNewVat()">Save VAT</button>
 
     <!-- VAT TABLES -->
@@ -26,7 +27,6 @@
           <td>{{v.vatRate}}%</td>
           <td>{{v.dateCreated | date: 'dd-MM-yyyy'}}</td>
           <td>
-            <button class="btn-edit">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>

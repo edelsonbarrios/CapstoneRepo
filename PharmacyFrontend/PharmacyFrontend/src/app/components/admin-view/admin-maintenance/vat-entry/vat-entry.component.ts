@@ -2,20 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { GetService } from '../../../../services/GetService/get.service';
 import { VAT } from '../../../../models/vat-models/vat';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, NgForOf } from "../../../../../../node_modules/@angular/common";
+import { DatePipe, NgForOf, NgIf } from "../../../../../../node_modules/@angular/common";
 import { CreateVatRequest } from '../../../../models/vat-models/createVatRequest';
 import { PostService } from '../../../../services/PostService/post.service';
 
 @Component({
   selector: 'app-vat-entry',
   standalone: true,
-  imports: [FormsModule, NgForOf, DatePipe],
+  imports: [FormsModule, NgForOf, DatePipe, NgIf],
   templateUrl: './vat-entry.component.html',
   styleUrl: './vat-entry.component.scss'
 })
 export class VatEntryComponent implements OnInit{
   vats : VAT[] = [];
   createdVat : VAT = new VAT();
+  vatError: string = '';
 
   constructor(
     private getService: GetService,
@@ -38,6 +39,15 @@ export class VatEntryComponent implements OnInit{
   }
 
   createNewVat() {
+    if(!this.createdVat.vatName) {
+      this.vatError = 'VAT Name is required';
+      return;
+    }
+    if (!this.createdVat.vatRate || this.createdVat.vatRate <= 0) {
+      this.vatError = "Rate must be greater than 0";
+      return;
+    }
+    this.vatError = '';
     const requestPayload: CreateVatRequest = {
       vatName : this.createdVat.vatName,
       vatRate : this.createdVat.vatRate,

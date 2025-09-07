@@ -4,17 +4,19 @@ import { PostService } from '../../services/PostService/post.service';
 import { Router } from '@angular/router';
 import { LogInToken } from '../../shared/token';
 import { jwtDecode } from 'jwt-decode';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login-view',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf],
   templateUrl: './login-view.component.html',
   styleUrl: './login-view.component.scss'
 })
 export class LoginViewComponent {
   userName: string = '';
   password: string = '';
+  loginError: string = '';
 
   constructor(
     private postService: PostService,
@@ -24,6 +26,7 @@ export class LoginViewComponent {
   Authenticate() {
     this.postService.Authentication(this.userName, this.password).subscribe({
       next: res => {
+        this.loginError = '';
         console.log(`${res.message}`);
         console.log(`${res.token}`);
         localStorage.setItem(LogInToken, res.token);
@@ -42,6 +45,9 @@ export class LoginViewComponent {
       },
       error: err => {
         console.log(`${err.error.message}`);
+        this.userName = '';
+        this.password = '';
+        this.loginError = "Invalid username or password";
       }
     });
   }
