@@ -69,6 +69,14 @@ namespace PharmacyBackend.Controllers
                 return NotFound("No actions currently performed.");
             return Ok(employeeHistories);
         }
+        [HttpGet("EmployeeHistoryDisplay")]
+        public async Task<ActionResult<List<EmployeeHistoryDTO>>> GetDisplayEmployeeHistoriesAsync()
+        {
+            var employeeHistories = await _getService.GetDisplayEmployeeHistoryAsync();
+            if (!employeeHistories.Any() || employeeHistories.Count() == 0)
+                return NotFound("Employee History is empty.");
+            return Ok(employeeHistories);
+        }
         #endregion
 
         #region Account

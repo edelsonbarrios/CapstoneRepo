@@ -1,0 +1,31 @@
+<div class="wrapper">
+  <div class="card">
+    <!-- Search & Add Employee -->
+    <div class="table-header">
+      <div class="search-wrapper">
+        <input type="text" placeholder="🔍 Search Employee" class="search-box"/>
+        <button class="btn search-btn">Search</button>
+      </div>
+    </div>
+
+    <!-- Employee Table -->
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Employee Changed</th>
+          <th>Change Made</th>
+          <th>Performed By</th>
+          <th>Time Stamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let eh of employeeHistories">
+          <td>{{eh.employeeChanged}}</td>
+          <td>{{eh.actionPerformed}}</td>
+          <td>{{eh.performedBy}}</td>
+          <td>{{eh.performedAt | date: 'dd-MM-yyyy'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

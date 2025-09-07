@@ -122,6 +122,13 @@ export const routes: Routes = [
               return import('./components/admin-view/employee-accounts/manage-accounts/manage-accounts.component')
               .then(m => m.ManageAccountsComponent);
             }
+          },
+          {
+            path: 'manage-employee-history',
+            loadComponent: () => {
+              return import('./components/admin-view/employee-accounts/manage-employee-history/manage-employee-history.component')
+              .then(m => m.ManageEmployeeHistoryComponent);
+            },
           }
         ]
       }

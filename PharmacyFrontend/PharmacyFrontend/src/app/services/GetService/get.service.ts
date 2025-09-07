@@ -6,6 +6,7 @@ import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
 import { VAT } from '../../models/vat-models/vat';
 import { Discount } from '../../models/discount-models/discount';
+import { EmployeeHistory } from '../../models/employee-history-models/employee-history';
 @Injectable({
   providedIn: 'root'
 })
@@ -55,4 +56,13 @@ export class GetService {
     return this.httpClient.get<Discount[]>(`${this.apiUrl}/Get/DiscountAll`);
   }
   //Discount Service End
+  //Employee History Service 
+  getAllEmployeeHistoriesAsync() : Observable<EmployeeHistory[]> {
+    return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryAll`);
+  }
+  
+  getDisplayEmployeeHistoriesAsync() : Observable<EmployeeHistory[]>{
+    return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryDisplay`);
+  }
+  //Employee History Service End
 }
