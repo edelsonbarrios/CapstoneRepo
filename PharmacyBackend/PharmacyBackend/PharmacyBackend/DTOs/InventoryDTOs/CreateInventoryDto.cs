@@ -9,7 +9,6 @@
         public int QuantityOnHand { get; set; }
         public int ReorderLevel { get; set; }
         public decimal CostPrice { get; set; }
-        public decimal UnitCost { get; set; }
         public decimal SellingPrice { get; set; }
     }
 }
