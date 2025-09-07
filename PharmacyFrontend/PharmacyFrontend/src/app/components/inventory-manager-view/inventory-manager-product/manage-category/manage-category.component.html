@@ -5,7 +5,7 @@
     <div class="category-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-category">&#43; Add Category</button>
+      <button class="btn-category" (click)="openCreateCategoryForm()">&#43; Add Category</button>
     </div>
 
     <!-- CATEGORY TABLE -->
@@ -24,7 +24,7 @@
           <td>Biogesic</td>
           <td>Pain reliever and fever reducer</td>
           <td>
-            <button class="btn-update">Update</button>
+            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -33,7 +33,7 @@
           <td>Decolgen</td>
           <td>For cold, runny nose, and mild fever</td>
           <td>
-            <button class="btn-update">Update</button>
+            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -42,7 +42,7 @@
           <td>Neozep</td>
           <td>Relieves clogged nose, and mild fever</td>
           <td>
-            <button class="btn-update">Update</button>
+            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -58,4 +58,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="newCategory">
+  <app-create-category *ngIf="newCategory"></app-create-category>
+</div>
+
+<div class="modal-overlay" *ngIf="viewCategory">
+  <app-view-category *ngIf="viewCategory"></app-view-category>
 </div>

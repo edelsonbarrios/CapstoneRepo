@@ -32,7 +32,7 @@
           <td>200</td>
           <td>2025&ndash;05&ndash;10</td>
           <td>
-            <button class="btn-view">See Detais</button>
+            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
             <button class="btn-update">Update</button>
             <button class="btn-archive">Archive</button>
           </td>
@@ -46,7 +46,7 @@
           <td>100</td>
           <td>2025&ndash;05&ndash;11</td>
           <td>
-            <button class="btn-view">See Detais</button>
+            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
             <button class="btn-update">Update</button>
             <button class="btn-archive">Archive</button>
           </td>
@@ -60,7 +60,7 @@
           <td>150</td>
           <td>2025&ndash;05&ndash;13</td>
           <td>
-            <button class="btn-view">See Detais</button>
+            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
             <button class="btn-update">Update</button>
             <button class="btn-archive">Archive</button>
           </td>
@@ -81,4 +81,8 @@
 
 <div class="modal-overlay" *ngIf="newProduct">
   <app-create-product *ngIf="newProduct"></app-create-product>
+</div>
+
+<div class="modal-overlay" *ngIf="viewProduct">
+  <app-view-product *ngIf="viewProduct"></app-view-product>
 </div>
