@@ -1,0 +1,88 @@
+<div class="wrapper">
+  <div class="manage-product">
+
+    <!-- PRODUCT CONTROLS/HEADER -->
+    <div class="product-control">
+      <input type="text" name="searchbar" id="searchbar" class="searchbar"
+        placeholder="🔍 Search by Item Code, Brand...">
+      <button class="btn-product" (click)="openCreateProductForm()">&#43; Add Product</button>
+    </div>
+
+    <!-- PRODUCT TABLE -->
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Brand</th>
+          <th>Classification</th>
+          <th>Price</th>
+          <th>Stock on Hand</th>
+          <th>Reorder</th>
+          <th>Expiry</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RX&ndash;001</td>
+          <td>Biogesic</td>
+          <td>Analgesic/Antipyrectic</td>
+          <td>&#8369;6.00</td>
+          <td>500</td>
+          <td>200</td>
+          <td>2025&ndash;05&ndash;10</td>
+          <td>
+            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
+            <button class="btn-update">Update</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>RX&ndash;002</td>
+          <td>Decolgen</td>
+          <td>Cold/Flu Remedy</td>
+          <td>&#8369;8.75</td>
+          <td>350</td>
+          <td>100</td>
+          <td>2025&ndash;05&ndash;11</td>
+          <td>
+            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
+            <button class="btn-update">Update</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>RX&ndash;003</td>
+          <td>Neozep</td>
+          <td>Cold/Flu</td>
+          <td>&#8369;8.75</td>
+          <td>400</td>
+          <td>150</td>
+          <td>2025&ndash;05&ndash;13</td>
+          <td>
+            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
+            <button class="btn-update">Update</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FOOTER/PAGINATION -->
+    <div class="footer">
+      <p>Page 1 of 1</p>
+      <div class="page-buttons">
+        <button>&lt;</button>
+        <button>&gt;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="newProduct">
+  <app-create-product *ngIf="newProduct"></app-create-product>
+</div>
+
+<div class="modal-overlay" *ngIf="viewProduct">
+  <app-view-product *ngIf="viewProduct"></app-view-product>
+</div>

@@ -1,0 +1,96 @@
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 800px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .modal-header {
+    border-bottom: 1px solid #89baee;
+    margin-bottom: 0.5rem;
+
+    .modal-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        font-size: 1.2rem;
+        color: #007bff;
+      }
+    }
+
+    .desc {
+      color: gray;
+      font-size: 0.9rem;
+    }
+  }
+
+  .form {
+    gap: 0.9rem;
+    border-bottom: 1px solid #89baee;
+    padding-bottom: 0.5rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 5px;
+        color: #25405e;
+      }
+
+      input {
+        padding: 0.5rem 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 0.8rem;
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: right;
+    margin-top: 0.9rem;
+
+    button {
+      padding: 0.4rem;
+      margin-right: 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+
+       &:active {
+        opacity: 0.8;
+      }
+    }
+
+    .btn-update {
+      color: white;
+      background-color: rgba(206, 175, 0, 1);
+
+      &:hover {
+        background-color: rgb(172, 147, 8);
+      }
+    }
+
+    .btn-cancel {
+      color: #007bff;
+      background-color: white;
+      border: 1px solid #007bff;
+
+      &:hover {
+        background-color: #007bff;
+        color: white;
+      }
+    }
+  }
+}

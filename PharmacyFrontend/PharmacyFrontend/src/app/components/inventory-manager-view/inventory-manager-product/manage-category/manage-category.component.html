@@ -1,0 +1,69 @@
+<div class="wrapper">
+  <div class="manage-category">
+
+    <!-- CATEGORY CONTROLS/HEADER -->
+    <div class="category-control">
+      <input type="text" name="searchbar" id="searchbar" class="searchbar"
+        placeholder="🔍 Search by Item Code, Brand...">
+      <button class="btn-category" (click)="openCreateCategoryForm()">&#43; Add Category</button>
+    </div>
+
+    <!-- CATEGORY TABLE -->
+    <table class="category-table">
+      <thead>
+        <tr>
+          <th>Item Code</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RX&ndash;001</td>
+          <td>Biogesic</td>
+          <td>Pain reliever and fever reducer</td>
+          <td>
+            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>RX&ndash;002</td>
+          <td>Decolgen</td>
+          <td>For cold, runny nose, and mild fever</td>
+          <td>
+            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+        <tr>
+          <td>RX&ndash;003</td>
+          <td>Neozep</td>
+          <td>Relieves clogged nose, and mild fever</td>
+          <td>
+            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FOOTER/PAGINATION -->
+    <div class="footer">
+      <p>Page 1 of 1</p>
+      <div class="page-buttons">
+        <button>&lt;</button>
+        <button>&gt;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="newCategory">
+  <app-create-category *ngIf="newCategory"></app-create-category>
+</div>
+
+<div class="modal-overlay" *ngIf="viewCategory">
+  <app-view-category *ngIf="viewCategory"></app-view-category>
+</div>
