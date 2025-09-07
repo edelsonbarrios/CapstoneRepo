@@ -57,7 +57,6 @@
       width: 100%;
       border-collapse: collapse;
 
-      .btn-edit,
       .btn-archive {
         padding: 0.4rem;
         border-radius: 0.4rem;
@@ -65,21 +64,6 @@
         cursor: pointer;
       }
 
-      .btn-edit {
-        background-color: #3498ff;
-        color: white;
-        border: 1px solid #3498ff;
-        margin-right: 0.2rem;
-
-        &:hover {
-          background-color: #2183e6;
-          border: 1px solid #2183e6;
-        }
-
-        &:active {
-          opacity: 0.8;
-        }
-      }
 
       .btn-archive {
         background-color: rgb(228, 43, 43);
