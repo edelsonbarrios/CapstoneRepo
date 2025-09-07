@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { last, Observable, ObservedValueOf } from 'rxjs';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
+import { EmployeeHistory } from '../../models/employee-history-models/employee-history';
 @Injectable({
   providedIn: 'root'
 })
@@ -41,4 +42,14 @@ export class GetService {
     return this.httpClient.get<Account>(`${this.apiUrl}/Get/SearchAccount?userName=${userName}`);
   }
   //Account Service End
+
+  //Employee History Service 
+  getAllEmployeeHistoriesAsync() : Observable<EmployeeHistory[]> {
+    return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryAll`);
+  }
+  
+  getDisplayEmployeeHistoriesAsync() : Observable<EmployeeHistory[]>{
+    return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryDisplay`);
+  }
+  //Employee History Service End
 }

@@ -97,8 +97,10 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.EmployeeHistory
                 .AsNoTracking()
+                .Include(eh => eh.Employee)
+                .Include(eh => eh.PerformedByEmployee)
                 .OrderByDescending(eh => eh.PerformedAt)
-                .Take(10)
+                .Take(8)
                 .ToListAsync();
         }
         #endregion
