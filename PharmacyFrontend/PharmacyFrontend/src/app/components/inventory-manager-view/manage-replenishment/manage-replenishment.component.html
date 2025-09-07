@@ -1,0 +1,81 @@
+<div class="wrapper">
+
+  <!-- REPS HEADER -->
+  <div class="header">
+    
+  </div>
+
+  <div class="container">
+    <div class="manage-replenish">
+
+      <!-- REPS CONTROLS/HEADER -->
+      <div class="replenish-control">
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          placeholder="🔍 Search by Item Code, Brand...">
+        <button class="btn-reps">&#43; Add Replenishment</button>
+      </div>
+
+      <!-- REPS TABLE -->
+      <table class="reps-table">
+        <thead>
+          <tr>
+            <th>PO Number</th>
+            <th>Supplier</th>
+            <th>Item</th>
+            <th>Ordered Qty</th>
+            <th>Received Qty</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RX&ndash;001</td>
+            <td>Unilab</td>
+            <td>Biogesic</td>
+            <td>500</td>
+            <td>480</td>
+            <td>Pending</td>
+            <td>
+              <button class="btn-confirm">Confirm Received</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+          <tr>
+            <td>RX&ndash;002</td>
+            <td>Pfizer</td>
+            <td>Decolgen</td>
+            <td>300</td>
+            <td>300</td>
+            <td>Received</td>
+            <td>
+              <button class="btn-confirm">Confirm Received</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+          <tr>
+            <td>RX&ndash;003</td>
+            <td>GSK</td>
+            <td>Neozep</td>
+            <td>400</td>
+            <td>0</td>
+            <td>Pending</td>
+            <td>
+              <button class="btn-confirm">Confirm Received</button>
+              <button class="btn-archive">Archive</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- FOOTER/PAGINATION -->
+      <div class="footer">
+        <p>Page 1 of 1</p>
+        <div class="page-buttons">
+          <button>&lt;</button>
+          <button>&gt;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -184,6 +184,11 @@ export const routes: Routes = [
             }
           }
         ]
+        path: 'manage-replenishment',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/manage-replenishment/manage-replenishment.component')
+          .then(m => m.ManageReplenishmentComponent);
+        }
       }
     ]
   }
