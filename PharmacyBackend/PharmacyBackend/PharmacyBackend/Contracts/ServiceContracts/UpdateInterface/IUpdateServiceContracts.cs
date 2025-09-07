@@ -29,6 +29,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Discount
         public Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto);
+        public Task<bool> ArchiveDiscountByIdAsync(int discountId);
         #endregion
 
         #region Product
@@ -69,6 +70,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region VAT
         public Task<bool> UpdateVATAsync(int id, UpdateVATDto dto);
+        public Task<bool> ArchiveVATByIdAsync(int vatId);
         #endregion
 
         #region PurchaseOrder

@@ -20,6 +20,7 @@ using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
+using System.Runtime.InteropServices;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -165,6 +166,20 @@ namespace PharmacyBackend.Service.UpdateService
 
             await _updateRepo.UpdateDiscountAsync(existing);
             return true;
+        }
+        public async Task<bool> ArchiveDiscountByIdAsync(int discountId)
+        {
+            var discount = await _getRepo.GetDiscountByIdAsync(discountId);
+            if (discount is null)
+                return false;
+
+            discount.IsActive = false;
+
+            var updateDiscount = await _updateRepo.UpdateDiscountAsync(discount);
+            if (!updateDiscount)
+                return false;
+
+            return updateDiscount;
         }
         #endregion
 
@@ -319,6 +334,20 @@ namespace PharmacyBackend.Service.UpdateService
 
             await _updateRepo.UpdateVATAsync(existing);
             return true;
+        }
+        public async Task<bool> ArchiveVATByIdAsync(int vatId)
+        {
+            var vat = await _getRepo.GetVATByIdAsync(vatId);
+            if (vat is null)
+                return false;
+
+            vat.IsActive = false;
+
+            var updateVat = await _updateRepo.UpdateVATAsync(vat);
+            if (!updateVat)
+                return false;
+
+            return updateVat;
         }
         #endregion
 

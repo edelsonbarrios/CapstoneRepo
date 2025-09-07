@@ -1,5 +1,6 @@
 ﻿using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
+using System.Runtime.CompilerServices;
 
 namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 {

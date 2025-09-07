@@ -198,6 +198,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<decimal>("DiscountRate")
                         .HasColumnType("numeric");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("Discounts");

@@ -5,6 +5,7 @@ import { Discount } from '../../../../models/discount-models/discount';
 import { CreateDiscountRequest } from '../../../../models/discount-models/create-discount';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-discount',
@@ -20,7 +21,8 @@ export class ManageDiscountComponent implements OnInit {
 
   constructor(
     private getService: GetService,
-    private postService: PostService
+    private postService: PostService,
+    private updateService : UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +65,18 @@ export class ManageDiscountComponent implements OnInit {
         alert(`${err.error}`);
         this.errorMessage = err.error;
       },
+    });
+  }
+
+  archiveDiscount(discount: Discount) {
+    if(!discount) return;
+    this.updateService.archiveDiscountAsync(discount.id).subscribe({
+      next: mes => {
+        alert(`${mes.message}`);
+      },
+      error: err => {
+        alert(`${err.error.message}`);
+      }
     });
   }
 }

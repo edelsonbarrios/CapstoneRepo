@@ -126,12 +126,16 @@ namespace PharmacyBackend.Repository.GET
         #region Discount
         public async Task<IEnumerable<Discount>> GetAllDiscountAsync()
         {
-            return await _context.Discounts.ToListAsync();
+            return await _context.Discounts
+                .Where(d => d.IsActive == true)
+                .ToListAsync();
         }
 
         public async Task<Discount?> GetDiscountByIdAsync(int id)
         {
-            return await _context.Discounts.FindAsync(id);
+            return await _context.Discounts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.Id == id && d.IsActive == true);
         }
         #endregion
 
@@ -294,7 +298,9 @@ namespace PharmacyBackend.Repository.GET
         #region VAT
         public async Task<IEnumerable<VAT>> GetAllVATAsync()
         {
-            return await _context.VAT.ToListAsync();
+            return await _context.VAT
+                .Where(v => v.IsActive == true)
+                .ToListAsync();
         }
 
         public async Task<VAT> GetVATByIdAsync(int id)

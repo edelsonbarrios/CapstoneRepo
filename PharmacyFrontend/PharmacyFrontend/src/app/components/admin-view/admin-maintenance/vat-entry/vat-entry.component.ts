@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe, NgForOf, NgIf } from "../../../../../../node_modules/@angular/common";
 import { CreateVatRequest } from '../../../../models/vat-models/createVatRequest';
 import { PostService } from '../../../../services/PostService/post.service';
+import { Discount } from '../../../../models/discount-models/discount';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-vat-entry',
@@ -20,7 +22,8 @@ export class VatEntryComponent implements OnInit{
 
   constructor(
     private getService: GetService,
-    private postService: PostService
+    private postService: PostService,
+    private updateService: UpdateService
   ){}
 
   ngOnInit(): void {
@@ -63,6 +66,19 @@ export class VatEntryComponent implements OnInit{
         alert(`${err.error}`);
         this.createdVat.vatName = ''
         this.createdVat.vatRate = 0;
+      }
+    });
+  }
+
+  archiveVat(vat : VAT) {
+    if(!vat) return;
+    this.updateService.archiveVatAsync(vat.vatid).subscribe({
+      next: mes => {
+        alert(`${mes.message}`);
+        this.getAllVat();
+      },
+      error: err => {
+        alert(`${err.error.message}`);
       }
     });
   }

@@ -80,13 +80,25 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Discount
-        [HttpPut("Update/Discount")]
+        [HttpPut("Discount")]
         public async Task<IActionResult> UpdateDiscountAsync(int id, [FromBody] UpdateDiscountDto dto)
         {
             var success = await _updateService.UpdateDiscountAsync(id, dto);
             if (!success)
                 return NotFound();
             return NoContent();
+        }
+        [HttpPut("ArchiveDiscount")]
+        public async Task<ActionResult<ArchiveDiscountResponse>> ArchiveDiscountByIdAsync(int discountId)
+        {
+            if (discountId == 0)
+                return BadRequest(new ArchiveDiscountResponse { Message = "Discount does not exist." });
+
+            var archiveDiscount = await _updateService.ArchiveDiscountByIdAsync(discountId);
+            if (!archiveDiscount)
+                return BadRequest(new ArchiveDiscountResponse { Message = "Discount cannot be archived." });
+
+            return Ok(new ArchiveDiscountResponse { Message = "Discount is now inactive" });
         }
         #endregion
 
@@ -190,13 +202,25 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region VAT
-        [HttpPut("Update/VAT")]
+        [HttpPut("VAT")]
         public async Task<IActionResult> UpdateVATAsync(int id, [FromBody] UpdateVATDto dto)
         {
             var success = await _updateService.UpdateVATAsync(id, dto);
             if (!success)
                 return NotFound("VAT not found or update failed.");
             return Ok("VAT updated successfully.");
+        }
+        [HttpPut("ArchiveVat")]
+        public async Task<ActionResult<ArchiveVatResponse>> ArchiveVatByIdAsync(int vatId)
+        {
+            if (vatId == 0)
+                return BadRequest(new ArchiveVatResponse { Message = "VAT does not exist" });
+
+            var archiveVat = await _updateService.ArchiveVATByIdAsync(vatId);
+            if (!archiveVat)
+                return BadRequest(new ArchiveVatResponse { Message = "Vat cannot be archived." });
+
+            return Ok(new ArchiveVatResponse { Message = "VAT is now inactive." });
         }
         #endregion
 
