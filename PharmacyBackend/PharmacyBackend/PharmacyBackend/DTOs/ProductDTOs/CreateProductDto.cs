@@ -4,13 +4,13 @@ namespace PharmacyBackend.DTOs.ProductDTOs
     public class CreateProductDto
     {
         public string ProductName { get; set; } = string.Empty;
-        public int CategoryID { get; set; }
-        public int BrandID { get; set; }
-        public int GenericID { get; set; }
-        public int FormulationID { get; set; }
-        public int ClassificationID { get; set; }
-        public int TypeID { get; set; }
-        public int SupplierID { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
+        public string BrandName { get; set; } = string.Empty;
+        public string GenericName { get; set; } = string.Empty;
+        public string FormulationName { get; set; } = string.Empty;
+        public string ClassificationName { get; set; } = string.Empty;
+        public string TypeName { get; set; } = string.Empty;
+        public string? SupplierName { get; set; } = string.Empty;
         public decimal Price { get; set; }
     }
 }

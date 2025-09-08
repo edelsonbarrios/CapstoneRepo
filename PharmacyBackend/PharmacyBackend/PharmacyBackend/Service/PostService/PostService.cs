@@ -183,40 +183,162 @@ namespace PharmacyBackend.Service.PostService
         }
         #endregion
 
-        #region Product
+        #region product helper
+        private async Task<int?> GetCategoryIdByNameAsync(string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+                return null;
+
+            var category = await _context.Category
+                .FirstOrDefaultAsync(c => c.CategoryName.ToLower() == categoryName.ToLower());
+            return category?.CategoryID;
+        }
+
+        private async Task<int?> GetBrandIdByNameAsync(string brandName)
+        {
+            if (string.IsNullOrEmpty(brandName))
+                return null;
+
+            var brand = await _context.Brand
+                .FirstOrDefaultAsync(b => b.BrandName.ToLower() == brandName.ToLower());
+            return brand?.BrandID;
+        }
+
+        private async Task<int?> GetGenericIdByNameAsync(string genericName)
+        {
+            if (string.IsNullOrEmpty(genericName))
+                return null;
+
+            var generic = await _context.Generic
+                .FirstOrDefaultAsync(g => g.GenericName.ToLower() == genericName.ToLower());
+            return generic?.GenericID;
+        }
+
+        private async Task<int?> GetFormulationIdByNameAsync(string formulationName)
+        {
+            if (string.IsNullOrEmpty(formulationName))
+                return null;
+
+            var formulation = await _context.Formulation
+                .FirstOrDefaultAsync(f => f.FormulationName.ToLower() == formulationName.ToLower());
+            return formulation?.FormulationID;
+        }
+
+        private async Task<int?> GetClassificationIdByNameAsync(string classificationName)
+        {
+            if (string.IsNullOrEmpty(classificationName))
+                return null;
+
+            var classification = await _context.Classification
+                .FirstOrDefaultAsync(c => c.ClassificationName.ToLower() == classificationName.ToLower());
+            return classification?.ClassificationID;
+        }
+
+        private async Task<int?> GetTypeIdByNameAsync(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return null;
+
+            var type = await _context.TypeModel
+                .FirstOrDefaultAsync(t => t.TypeName.ToLower() == typeName.ToLower());
+            return type?.TypeID;
+        }
+
+        private async Task<int?> GetSupplierIdByNameAsync(string supplierName)
+        {
+            if (string.IsNullOrEmpty(supplierName))
+                return null;
+
+            var supplier = await _context.Supplier
+                .FirstOrDefaultAsync(s => s.SupplierName.ToLower() == supplierName.ToLower());
+            return supplier?.SupplierID;
+        }
+
+        #endregion
+
+        #region Product crud
+
         public async Task<ProductDto> CreateProductAsync(CreateProductDto dto)
         {
+            // Resolve names to IDs
+            var categoryId = await GetCategoryIdByNameAsync(dto.CategoryName);
+            var brandId = await GetBrandIdByNameAsync(dto.BrandName);
+            var genericId = await GetGenericIdByNameAsync(dto.GenericName);
+            var formulationId = await GetFormulationIdByNameAsync(dto.FormulationName);
+            var classificationId = await GetClassificationIdByNameAsync(dto.ClassificationName);
+            var typeId = await GetTypeIdByNameAsync(dto.TypeName);
+            var supplierId = !string.IsNullOrEmpty(dto.SupplierName)
+                ? await GetSupplierIdByNameAsync(dto.SupplierName)
+                : null;
+
+            // Validate that all required entities exist
+            if (categoryId == null)
+                throw new ArgumentException($"Category '{dto.CategoryName}' not found.");
+            if (brandId == null)
+                throw new ArgumentException($"Brand '{dto.BrandName}' not found.");
+            if (genericId == null)
+                throw new ArgumentException($"Generic '{dto.GenericName}' not found.");
+            if (formulationId == null)
+                throw new ArgumentException($"Formulation '{dto.FormulationName}' not found.");
+            if (classificationId == null)
+                throw new ArgumentException($"Classification '{dto.ClassificationName}' not found.");
+            if (typeId == null)
+                throw new ArgumentException($"Type '{dto.TypeName}' not found.");
+            if (!string.IsNullOrEmpty(dto.SupplierName) && supplierId == null)
+                throw new ArgumentException($"Supplier '{dto.SupplierName}' not found.");
+
             var product = new Product
             {
                 ProductName = dto.ProductName,
-                CategoryID = dto.CategoryID,
-                BrandID = dto.BrandID,
-                GenericID = dto.GenericID,
-                FormulationID = dto.FormulationID,
-                ClassificationID = dto.ClassificationID,
-                TypeID = dto.TypeID,
-                SupplierID = dto.SupplierID,
+                CategoryID = categoryId.Value,
+                BrandID = brandId.Value,
+                GenericID = genericId.Value,
+                FormulationID = formulationId.Value,
+                ClassificationID = classificationId.Value,
+                TypeID = typeId.Value,
+                SupplierID = supplierId,
                 Price = dto.Price,
-                IsActive = true
+                IsActive = true,
+                DateCreated = DateTime.UtcNow
             };
 
             var created = await _postRepo.CreateProductAsync(product);
 
+            // Return complete ProductDto with all properties populated
+            var fullProduct = await _getRepo.GetProductByIdAsync(created.ProductID);
             return new ProductDto
             {
-                ProductID = created.ProductID,
-                ProductName = created.ProductName,
-                CategoryID = created.CategoryID,
-                BrandID = created.BrandID,
-                GenericID = created.GenericID,
-                FormulationID = created.FormulationID,
-                ClassificationID = created.ClassificationID,
-                TypeID = created.TypeID,
-                SupplierID = created.SupplierID,
-                Price = created.Price,
-                IsActive = created.IsActive
+                ProductID = fullProduct.ProductID,
+                ProductName = fullProduct.ProductName,
+                CategoryID = fullProduct.CategoryID,
+                BrandID = fullProduct.BrandID,
+                GenericID = fullProduct.GenericID,
+                FormulationID = fullProduct.FormulationID,
+                ClassificationID = fullProduct.ClassificationID,
+                TypeID = fullProduct.TypeID,
+                SupplierID = fullProduct.SupplierID,
+                Price = fullProduct.Price,
+                IsActive = fullProduct.IsActive,
+                DateCreated = fullProduct.DateCreated,
+
+                // Initialize stock values (will be 0 for new products)
+                TotalStock = 0,
+                ExpiredStock = 0,
+                NearExpiryStock = 0,
+                IsCriticalStock = false,
+                HasExpiredStock = false,
+
+                // Related entity names
+                CategoryName = fullProduct.Category?.CategoryName ?? string.Empty,
+                BrandName = fullProduct.Brand?.BrandName ?? string.Empty,
+                GenericName = fullProduct.Generic?.GenericName ?? string.Empty,
+                FormulationName = fullProduct.Formulation?.FormulationName ?? string.Empty,
+                ClassificationName = fullProduct.Classification?.ClassificationName ?? string.Empty,
+                TypeName = fullProduct.TypeModel?.TypeName ?? string.Empty,
+                SupplierName = fullProduct.Supplier?.SupplierName ?? string.Empty
             };
         }
+
         #endregion
 
         #region Category

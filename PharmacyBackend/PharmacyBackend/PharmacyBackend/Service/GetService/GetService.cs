@@ -338,7 +338,7 @@ namespace PharmacyBackend.Service.GetService
                 IsActive = p.IsActive,
                 DateCreated = p.DateCreated,
 
-                // CHANGED from InventoryItem to Inventory
+                // Inventory calculations
                 TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
                 ExpiredStock = p.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
                 NearExpiryStock = p.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
@@ -356,11 +356,12 @@ namespace PharmacyBackend.Service.GetService
             });
         }
 
-        public async Task<ProductDto> GetProductByIdAsync(int id)
+        public async Task<ProductDto?> GetProductByIdAsync(int id)
         {
             var p = await _getRepo.GetProductByIdAsync(id);
             if (p == null)
                 return null;
+
             return new ProductDto
             {
                 ProductID = p.ProductID,
@@ -376,7 +377,7 @@ namespace PharmacyBackend.Service.GetService
                 IsActive = p.IsActive,
                 DateCreated = p.DateCreated,
 
-                // CHANGED from InventoryItem to Inventory
+                // Inventory calculations
                 TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
                 ExpiredStock = p.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
                 NearExpiryStock = p.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
