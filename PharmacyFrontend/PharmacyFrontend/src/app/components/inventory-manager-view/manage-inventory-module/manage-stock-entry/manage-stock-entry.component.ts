@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CreateInventory } from '../../../../models/inventory-module-models/createInventory';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-manage-stock-entry',
@@ -8,5 +10,9 @@ import { Component } from '@angular/core';
   styleUrl: './manage-stock-entry.component.scss'
 })
 export class ManageStockEntryComponent {
+  createStock ?: CreateInventory | null;
 
+  openCreateCategoryForm() {
+    this.createStock = new CreateInventory;
+  }
 }
