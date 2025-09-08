@@ -296,7 +296,7 @@ namespace PharmacyBackend.Service.PostService
                 FormulationID = formulationId.Value,
                 ClassificationID = classificationId.Value,
                 TypeID = typeId.Value,
-                SupplierID = supplierId,
+                SupplierID = (int)supplierId,
                 Price = dto.Price,
                 IsActive = true,
                 DateCreated = DateTime.UtcNow

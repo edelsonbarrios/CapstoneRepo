@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../../../models/product';
+import { Product } from '../../../../models/product-models/product';
 
 @Component({
   selector: 'app-view-category',

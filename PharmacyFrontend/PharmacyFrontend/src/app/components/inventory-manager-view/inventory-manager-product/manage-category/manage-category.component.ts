@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { Product } from '../../../../models/product';
+import { Product } from '../../../../models/product-models/product';
 import { CreateCategoryComponent } from '../create-category/create-category.component';
 import { ViewCategoryComponent } from '../view-category/view-category.component';
 

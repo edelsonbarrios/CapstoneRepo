@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
+﻿using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
@@ -7,20 +6,16 @@ using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
-using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
-using System.Security.Principal;
 using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
-using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.DataContext;
 
@@ -300,7 +295,7 @@ namespace PharmacyBackend.Service.UpdateService
             existing.FormulationID = formulationId.Value;
             existing.ClassificationID = classificationId.Value;
             existing.TypeID = typeId.Value;
-            existing.SupplierID = supplierId;
+            existing.SupplierID = (int)supplierId;
             existing.Price = dto.Price;
             existing.IsActive = dto.IsActive;
 

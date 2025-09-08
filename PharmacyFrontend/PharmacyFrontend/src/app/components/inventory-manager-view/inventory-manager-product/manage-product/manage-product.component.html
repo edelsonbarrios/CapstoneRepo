@@ -12,53 +12,29 @@
     <table class="product-table">
       <thead>
         <tr>
-          <th>Item Code</th>
+          <th>Product Name</th>
+          <th>Category</th>
           <th>Brand</th>
+          <th>Generic</th>
+          <th>Type</th>
+          <th>Supplier</th>
           <th>Classification</th>
+          <th>Formulation</th>  
           <th>Price</th>
-          <th>Stock on Hand</th>
-          <th>Reorder</th>
-          <th>Expiry</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>RX&ndash;001</td>
-          <td>Biogesic</td>
-          <td>Analgesic/Antipyrectic</td>
-          <td>&#8369;6.00</td>
-          <td>500</td>
-          <td>200</td>
-          <td>2025&ndash;05&ndash;10</td>
-          <td>
-            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
-            <button class="btn-update">Update</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>RX&ndash;002</td>
-          <td>Decolgen</td>
-          <td>Cold/Flu Remedy</td>
-          <td>&#8369;8.75</td>
-          <td>350</td>
-          <td>100</td>
-          <td>2025&ndash;05&ndash;11</td>
-          <td>
-            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
-            <button class="btn-update">Update</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>RX&ndash;003</td>
-          <td>Neozep</td>
-          <td>Cold/Flu</td>
-          <td>&#8369;8.75</td>
-          <td>400</td>
-          <td>150</td>
-          <td>2025&ndash;05&ndash;13</td>
+        <tr *ngFor="let p of products">
+          <td>{{p.productName}}</td>
+          <td>{{p.categoryName}}</td>
+          <td>{{p.brandName}}</td>
+          <td>{{p.genericName}}</td>
+          <td>{{p.typeName}}</td>
+          <td>{{p.supplierName}}</td>
+          <td>{{p.classificationName}}</td>
+          <td>{{p.formulationName}}</td>
+          <td>{{p.price}}</td>
           <td>
             <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
             <button class="btn-update">Update</button>
@@ -80,7 +56,10 @@
 </div>
 
 <div class="modal-overlay" *ngIf="newProduct">
-  <app-create-product *ngIf="newProduct"></app-create-product>
+  <app-create-product 
+  *ngIf="newProduct"
+  (closeForm)="closeCreateProductForm()"
+  ></app-create-product>
 </div>
 
 <div class="modal-overlay" *ngIf="viewProduct">
