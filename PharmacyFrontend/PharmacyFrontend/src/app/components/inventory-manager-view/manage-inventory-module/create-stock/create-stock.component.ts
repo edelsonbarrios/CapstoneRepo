@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CreateInventory } from '../../../../models/inventory-module-models/createInventory';
 
 @Component({
   selector: 'app-create-stock',
@@ -8,5 +9,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './create-stock.component.scss'
 })
 export class CreateStockComponent {
-  
+  @Input() createStock: CreateInventory = new CreateInventory;
 }

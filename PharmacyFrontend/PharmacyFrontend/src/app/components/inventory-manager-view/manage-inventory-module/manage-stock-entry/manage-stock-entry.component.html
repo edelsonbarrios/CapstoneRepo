@@ -60,10 +60,7 @@
   </div>
 </div>
 
-<div class="modal-overlay" *ngIf="viewEmployee">
-  <app-view-employee 
-  *ngIf="viewEmployee"
-  [employee]="viewEmployee"
-  (closeForm)="closeViewEmployeeForm()"
-  ></app-view-employee>
+<div class="modal-overlay" *ngIf="createStock">
+  <app-create-stock 
+  ></app-create-stock >
 </div>
