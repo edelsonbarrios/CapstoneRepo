@@ -10,7 +10,7 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public int FormulationID { get; set; }
         public int ClassificationID { get; set; }
         public int TypeID { get; set; }
-        public int? SupplierID { get; set; }
+        public int SupplierID { get; set; }
         public decimal Price { get; set; }
     }
 }
