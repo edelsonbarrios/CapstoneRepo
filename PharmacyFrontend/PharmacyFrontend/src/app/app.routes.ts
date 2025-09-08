@@ -200,5 +200,28 @@ export const routes: Routes = [
         }
       }
     ]
+  },
+  {
+    path: 'cashier-main',
+    loadComponent: () => {
+      return import('./components/cashier-view/cashier-main/cashier-main.component')
+      .then(m => m.CashierMainComponent);
+    },
+    children: [
+      {
+        path: '',
+        loadComponent: () => {
+          return import('./components/cashier-view/cashier-dashboard/cashier-dashboard.component')
+          .then(m => m.CashierDashboardComponent);
+        }
+      },
+      {
+        path: 'cashier-header',
+        loadComponent: () => {
+          return import('./components/cashier-view/cashier-header/cashier-header.component')
+          .then(m => m.CashierHeaderComponent);
+        }
+      },
+    ]
   }
 ];

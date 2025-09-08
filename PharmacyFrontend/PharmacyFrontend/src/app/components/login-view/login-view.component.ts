@@ -41,7 +41,9 @@ export class LoginViewComponent {
           this.router.navigateByUrl('/admin-main');
         }else if(rolePosition == "Inventory Manager") {
           this.router.navigateByUrl('/inventory-manager-main');
-        }   
+        }else if(rolePosition == "Cashier") {
+          this.router.navigateByUrl('/cashier-main');
+        }  
       },
       error: err => {
         console.log(`${err.error.message}`);
