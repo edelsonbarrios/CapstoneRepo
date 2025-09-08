@@ -1,0 +1,88 @@
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 800px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .modal-header {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #b4b4b4;
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #020c16;
+    }
+  }
+
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.9rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: rgb(77, 77, 77);
+      }
+
+      input {
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+      }
+
+      p {
+        font-size: 0.8rem;
+        color: rgb(77, 77, 77);
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+
+    .btn-save {
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      background-color: rgb(17, 177, 17);
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgb(15, 155, 15);
+      }
+    }
+
+    .btn-cancel {
+      padding: 8px 16px;
+      background: white;
+      color: #007bff;
+      border: 1px solid #007bff;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background: #0066dd;
+        color: white;
+      }
+    }
+  }
+}

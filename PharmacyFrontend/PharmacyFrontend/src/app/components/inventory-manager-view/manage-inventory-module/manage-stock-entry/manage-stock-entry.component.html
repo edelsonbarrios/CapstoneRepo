@@ -7,7 +7,7 @@
       <div class="entry-control">
         <input type="text" name="searchbar" id="searchbar" class="searchbar"
           placeholder="🔍 Search by Item Code, Brand...">
-        <button class="btn-entry">&#43; Stock Entry</button>
+        <button class="btn-entry" (click)="openCreateStockForm()">&#43; Stock Entry</button>
       </div>
 
       <!-- STOCK ENTRY TABLE -->
@@ -61,6 +61,5 @@
 </div>
 
 <div class="modal-overlay" *ngIf="createStock">
-  <app-create-stock 
-  ></app-create-stock >
+  <app-create-stock *ngIf="createStock"></app-create-stock >
 </div>

@@ -13,7 +13,7 @@ import { CreateStockComponent } from '../create-stock/create-stock.component';
 export class ManageStockEntryComponent {
   createStock ?: CreateInventory | null;
 
-  openCreateCategoryForm() {
+  openCreateStockForm() {
     this.createStock = new CreateInventory;
   }
 }
