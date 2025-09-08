@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { Product } from '../../../../models/product';
+import { Product } from '../../../../models/product-models/product';
 import { CreateCategoryComponent } from '../create-category/create-category.component';
 import { ViewCategoryComponent } from '../view-category/view-category.component';
+import { CreateCategory } from '../../../../models/product-models/createCategory';
+import { Category } from '../../../../models/product-models/category';
 
 @Component({
   selector: 'app-manage-category',
@@ -12,14 +14,14 @@ import { ViewCategoryComponent } from '../view-category/view-category.component'
   styleUrl: './manage-category.component.scss'
 })
 export class ManageCategoryComponent {
-  newCategory ?: Product | null;
-  viewCategory ?: Product | null;
+  newCategory ?: CreateCategory | null;
+  viewCategory ?: Category | null;
 
   openCreateCategoryForm() {
-    this.newCategory= new Product;
+    this.newCategory= new CreateCategory;
   }
 
   openViewCategoryForm() {
-    this.viewCategory= new Product;
+    this.viewCategory= new Category;
   }
 }
