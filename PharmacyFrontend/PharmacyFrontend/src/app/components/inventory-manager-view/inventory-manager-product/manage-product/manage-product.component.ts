@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CreateProductComponent } from '../create-product/create-product.component';
-import { Product } from '../../../../models/product';
+import { Product } from '../../../../models/product-models/product';
 import { NgIf } from '@angular/common';
 import { ViewProductComponent } from '../view-product/view-product.component';
+import { CreateProduct } from '../../../../models/product-models/createProduct';
 
 @Component({
   selector: 'app-manage-product',
@@ -12,11 +13,11 @@ import { ViewProductComponent } from '../view-product/view-product.component';
   styleUrl: './manage-product.component.scss'
 })
 export class ManageProductComponent {
-  newProduct ?: Product | null;
+  newProduct ?: CreateProduct | null;
   viewProduct ?: Product | null;
 
   openCreateProductForm(){
-    this.newProduct= new Product();
+    this.newProduct= new CreateProduct();
   }
 
   openViewProductForm() {

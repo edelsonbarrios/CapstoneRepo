@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../../../models/product';
+import { Product } from '../../../../models/product-models/product';
+import { CreateCategory } from '../../../../models/product-models/createCategory';
 
 @Component({
   selector: 'app-create-category',
@@ -9,5 +10,5 @@ import { Product } from '../../../../models/product';
   styleUrl: './create-category.component.scss'
 })
 export class CreateCategoryComponent {
-  @Input() newProduct: Product = new Product;
+  @Input() newProduct: CreateCategory = new CreateCategory;
 }

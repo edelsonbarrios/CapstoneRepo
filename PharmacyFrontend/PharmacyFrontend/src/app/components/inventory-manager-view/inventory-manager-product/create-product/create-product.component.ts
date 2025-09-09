@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../../../models/product';
+import { Product } from '../../../../models/product-models/product';
+import { CreateProduct } from '../../../../models/product-models/createProduct';
 
 @Component({
   selector: 'app-create-product',
@@ -9,5 +10,5 @@ import { Product } from '../../../../models/product';
   styleUrl: './create-product.component.scss'
 })
 export class CreateProductComponent {
-  @Input() newProduct: Product = new Product;
+  @Input() newProduct: CreateProduct = new CreateProduct;
 }
