@@ -233,40 +233,6 @@ export const routes: Routes = [
               ).then((m) => m.ManageCategoryComponent);
             },
           },
-          {
-            path: 'inventory-module-main',
-            loadComponent: () => {
-              return import(
-                './components/inventory-manager-view/manage-inventory-module/inventory-module-main/inventory-module-main.component'
-              ).then((m) => m.InventoryModuleMainComponent);
-            },
-            children: [
-              {
-                path: '',
-                loadComponent: () => {
-                  return import(
-                    './components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component'
-                  ).then((m) => m.ManageStockEntryComponent);
-                },
-              },
-              {
-                path: 'manage-stock-entry',
-                loadComponent: () => {
-                  return import(
-                    './components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component'
-                  ).then((m) => m.ManageStockEntryComponent);
-                },
-              },
-              {
-                path: 'manage-stock-adjustment',
-                loadComponent: () => {
-                  return import(
-                    './components/inventory-manager-view/manage-inventory-module/manage-stock-adjustment/manage-stock-adjustment.component'
-                  ).then((m) => m.ManageStockAdjustmentComponent);
-                },
-              },
-            ],
-          },
         ],
       },
       {
@@ -276,6 +242,40 @@ export const routes: Routes = [
             './components/inventory-manager-view/manage-replenishment/manage-replenishment.component'
           ).then((m) => m.ManageReplenishmentComponent);
         },
+      },
+      {
+        path: 'inventory-module-main',
+        loadComponent: () => {
+          return import(
+            './components/inventory-manager-view/manage-inventory-module/inventory-module-main/inventory-module-main.component'
+          ).then((m) => m.InventoryModuleMainComponent);
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import(
+                './components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component'
+              ).then((m) => m.ManageStockEntryComponent);
+            },
+          },
+          {
+            path: 'manage-stock-entry',
+            loadComponent: () => {
+              return import(
+                './components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component'
+              ).then((m) => m.ManageStockEntryComponent);
+            },
+          },
+          {
+            path: 'manage-stock-adjustment',
+            loadComponent: () => {
+              return import(
+                './components/inventory-manager-view/manage-inventory-module/manage-stock-adjustment/manage-stock-adjustment.component'
+              ).then((m) => m.ManageStockAdjustmentComponent);
+            },
+          },
+        ],
       },
     ],
   },
