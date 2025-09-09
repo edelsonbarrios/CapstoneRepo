@@ -10,20 +10,23 @@
     flex: 1;
     gap: 8px;
     padding: 0 0.9rem;
+    margin-top: 0.8rem;
 
     a {
       display: flex;
       align-items: center;
-      color: #333;
+      color: #3498ff;
+      border: 1px solid #3498ff;
       font-size: 1.5rem;
       padding: 10px 12px;
       border-radius: 6px;
       transition: all 0.2s ease;
+      cursor: pointer;
 
       &:hover {
         transform: translateX(5px);
-        background-color: #f0f6ff;
-        color: #3498ff;
+        background-color: #3498ff;
+        color: white;
         
       }
 
@@ -44,7 +47,6 @@
       font-size: 1rem;
       padding: 8px 10px;
       border-radius: 6px;
-      cursor: pointer;
     }
   }
 }
