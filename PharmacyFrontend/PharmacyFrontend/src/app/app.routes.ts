@@ -4,224 +4,305 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => {
-      return import('./components/login-view/login-view.component').then(m => m.LoginViewComponent);
-    }
+      return import('./components/login-view/login-view.component').then(
+        (m) => m.LoginViewComponent
+      );
+    },
   },
   {
     path: 'log-in',
     loadComponent: () => {
-      return import('./components/login-view/login-view.component').then(m => m.LoginViewComponent);
-    }
+      return import('./components/login-view/login-view.component').then(
+        (m) => m.LoginViewComponent
+      );
+    },
   },
   {
     path: 'admin-main',
     loadComponent: () => {
-      return import('./components//admin-view/admin-main/admin-main.component').then(m => m.AdminMainComponent);
+      return import(
+        './components//admin-view/admin-main/admin-main.component'
+      ).then((m) => m.AdminMainComponent);
     },
     children: [
       {
         path: '',
         loadComponent: () => {
-          return import('./components/admin-view/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent);
+          return import(
+            './components/admin-view/admin-dashboard/admin-dashboard.component'
+          ).then((m) => m.AdminDashboardComponent);
         },
       },
       {
         path: 'admin-dashboard',
         loadComponent: () => {
-          return import('./components/admin-view/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent);
-        }
+          return import(
+            './components/admin-view/admin-dashboard/admin-dashboard.component'
+          ).then((m) => m.AdminDashboardComponent);
+        },
       },
       {
         path: 'admin-reports-main',
-        loadComponent:() => {
-          return import('./components/admin-view/admin-reports/admin-reports-main/admin-reports-main.component').then(m => m.AdminReportsMainComponent);
+        loadComponent: () => {
+          return import(
+            './components/admin-view/admin-reports/admin-reports-main/admin-reports-main.component'
+          ).then((m) => m.AdminReportsMainComponent);
         },
         children: [
           {
             path: '',
             loadComponent: () => {
-              return import('./components/admin-view/admin-reports/sales-reports/sales-reports.component').then(m => m.SalesReportsComponent);
-          }
+              return import(
+                './components/admin-view/admin-reports/sales-reports/sales-reports.component'
+              ).then((m) => m.SalesReportsComponent);
+            },
           },
           {
             path: 'sales-reports',
             loadComponent: () => {
-              return import('./components/admin-view/admin-reports/sales-reports/sales-reports.component').then(m => m.SalesReportsComponent);
-          }
+              return import(
+                './components/admin-view/admin-reports/sales-reports/sales-reports.component'
+              ).then((m) => m.SalesReportsComponent);
+            },
           },
           {
             path: 'inventory-reports',
             loadComponent: () => {
-              return import('./components/admin-view/admin-reports/inventory-reports/inventory-reports.component').then(m => m.InventoryReportsComponent);
-          }
+              return import(
+                './components/admin-view/admin-reports/inventory-reports/inventory-reports.component'
+              ).then((m) => m.InventoryReportsComponent);
+            },
           },
           {
             path: 'fast-moving-products',
             loadComponent: () => {
-              return import('./components/admin-view/admin-reports/fast-moving-products/fast-moving-products.component').then(m => m.FastMovingProductsComponent);
-          }
-          }
-        ]
-      },
-      {
-        path:'admin-maintenance-main',
-        loadComponent: () => {
-          return import('./components/admin-view/admin-maintenance/admin-maintenance-main/admin-maintenance-main.component').then(m => m.AdminMaintenanceMainComponent);
-        },
-        children:[
-          {
-            path:'',
-            loadComponent: () => {
-              return import('./components/admin-view/admin-maintenance/vat-entry/vat-entry.component').then(m => m.VatEntryComponent);
-            }
-          },
-          {
-            path:'vat-entry',
-            loadComponent: () => {
-              return import('./components/admin-view/admin-maintenance/vat-entry/vat-entry.component').then(m => m.VatEntryComponent);
-            }
-          },
-          {
-            path:'database-backup',
-            loadComponent: () => {
-              return import('./components/admin-view/admin-maintenance/database-backup/database-backup.component').then(m => m.DatabaseBackupComponent);
+              return import(
+                './components/admin-view/admin-reports/fast-moving-products/fast-moving-products.component'
+              ).then((m) => m.FastMovingProductsComponent);
             },
           },
-          {
-            path:'manage-discount',
-            loadComponent: () => {
-              return import('./components/admin-view/admin-maintenance/manage-discount/manage-discount.component').then(m => m.ManageDiscountComponent);
-            },
-          }
-        ]
+        ],
       },
       {
-        path: 'employee-accounts-main',
+        path: 'admin-maintenance-main',
         loadComponent: () => {
-          return import('./components/admin-view/employee-accounts/employee-accounts-main/employee-accounts-main.component')
-          .then(m => m.EmployeeAccountsMainComponent);
+          return import(
+            './components/admin-view/admin-maintenance/admin-maintenance-main/admin-maintenance-main.component'
+          ).then((m) => m.AdminMaintenanceMainComponent);
         },
         children: [
           {
             path: '',
             loadComponent: () => {
-              return import('./components/admin-view/employee-accounts/manage-employees/manage-employees.component')
-              .then(m => m.ManageEmployeesComponent);
-            }
+              return import(
+                './components/admin-view/admin-maintenance/vat-entry/vat-entry.component'
+              ).then((m) => m.VatEntryComponent);
+            },
+          },
+          {
+            path: 'vat-entry',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-maintenance/vat-entry/vat-entry.component'
+              ).then((m) => m.VatEntryComponent);
+            },
+          },
+          {
+            path: 'database-backup',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-maintenance/database-backup/database-backup.component'
+              ).then((m) => m.DatabaseBackupComponent);
+            },
+          },
+          {
+            path: 'manage-discount',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-maintenance/manage-discount/manage-discount.component'
+              ).then((m) => m.ManageDiscountComponent);
+            },
+          },
+        ],
+      },
+      {
+        path: 'employee-accounts-main',
+        loadComponent: () => {
+          return import(
+            './components/admin-view/employee-accounts/employee-accounts-main/employee-accounts-main.component'
+          ).then((m) => m.EmployeeAccountsMainComponent);
+        },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/employee-accounts/manage-employees/manage-employees.component'
+              ).then((m) => m.ManageEmployeesComponent);
+            },
           },
           {
             path: 'manage-employees',
             loadComponent: () => {
-              return import('./components/admin-view/employee-accounts/manage-employees/manage-employees.component')
-              .then(m => m.ManageEmployeesComponent);
-            }
+              return import(
+                './components/admin-view/employee-accounts/manage-employees/manage-employees.component'
+              ).then((m) => m.ManageEmployeesComponent);
+            },
           },
           {
             path: 'manage-accounts',
             loadComponent: () => {
-              return import('./components/admin-view/employee-accounts/manage-accounts/manage-accounts.component')
-              .then(m => m.ManageAccountsComponent);
-            }
+              return import(
+                './components/admin-view/employee-accounts/manage-accounts/manage-accounts.component'
+              ).then((m) => m.ManageAccountsComponent);
+            },
           },
           {
             path: 'manage-employee-history',
             loadComponent: () => {
-              return import('./components/admin-view/employee-accounts/manage-employee-history/manage-employee-history.component')
-              .then(m => m.ManageEmployeeHistoryComponent);
+              return import(
+                './components/admin-view/employee-accounts/manage-employee-history/manage-employee-history.component'
+              ).then((m) => m.ManageEmployeeHistoryComponent);
             },
-          }
-        ]
-      }
-    ]
-  }, 
+          },
+        ],
+      },
+    ],
+  },
   {
     path: 'inventory-manager-main',
     loadComponent: () => {
-      return import('./components/inventory-manager-view/inventory-manager-main/inventory-manager-main.component')
-      .then(m => m.InventoryManagerMainComponent);
+      return import(
+        './components/inventory-manager-view/inventory-manager-main/inventory-manager-main.component'
+      ).then((m) => m.InventoryManagerMainComponent);
     },
     children: [
       {
         path: '',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
-          .then(m => m.InventoryManagerDashboardComponent);
-        }
+          return import(
+            './components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component'
+          ).then((m) => m.InventoryManagerDashboardComponent);
+        },
       },
       {
         path: 'inventory-manager-header',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/inventory-manager-header/inventory-manager-header.component')
-          .then(m => m.InventoryManagerHeaderComponent);
+          return import(
+            './components/inventory-manager-view/inventory-manager-header/inventory-manager-header.component'
+          ).then((m) => m.InventoryManagerHeaderComponent);
         },
       },
       {
         path: 'inventory-manager-dashboard',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component')
-          .then(m => m.InventoryManagerDashboardComponent);  
-        }
+          return import(
+            './components/inventory-manager-view/inventory-manager-dashboard/inventory-manager-dashboard.component'
+          ).then((m) => m.InventoryManagerDashboardComponent);
+        },
       },
       {
         path: 'inventory-manager-product-main',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/inventory-manager-product/inventory-manager-product-main/inventory-manager-product-main.component')
-          .then(m => m.InventoryManagerProductMainComponent);
+          return import(
+            './components/inventory-manager-view/inventory-manager-product/inventory-manager-product-main/inventory-manager-product-main.component'
+          ).then((m) => m.InventoryManagerProductMainComponent);
         },
         children: [
           {
             path: '',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/inventory-manager-product/manage-product/manage-product.component')
-              .then(m => m.ManageProductComponent);
-            }
+              return import(
+                './components/inventory-manager-view/inventory-manager-product/manage-product/manage-product.component'
+              ).then((m) => m.ManageProductComponent);
+            },
           },
           {
             path: 'manage-product',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/inventory-manager-product/manage-product/manage-product.component')
-              .then(m => m.ManageProductComponent);
-            }
+              return import(
+                './components/inventory-manager-view/inventory-manager-product/manage-product/manage-product.component'
+              ).then((m) => m.ManageProductComponent);
+            },
           },
           {
             path: 'manage-category',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/inventory-manager-product/manage-category/manage-category.component')
-              .then(m => m.ManageCategoryComponent);
-            }
-          }
-        ]
+              return import(
+                './components/inventory-manager-view/inventory-manager-product/manage-category/manage-category.component'
+              ).then((m) => m.ManageCategoryComponent);
+            },
+          },
+          {
+            path: 'inventory-module-main',
+            loadComponent: () => {
+              return import(
+                './components/inventory-manager-view/manage-inventory-module/inventory-module-main/inventory-module-main.component'
+              ).then((m) => m.InventoryModuleMainComponent);
+            },
+            children: [
+              {
+                path: '',
+                loadComponent: () => {
+                  return import(
+                    './components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component'
+                  ).then((m) => m.ManageStockEntryComponent);
+                },
+              },
+              {
+                path: 'manage-stock-entry',
+                loadComponent: () => {
+                  return import(
+                    './components/inventory-manager-view/manage-inventory-module/manage-stock-entry/manage-stock-entry.component'
+                  ).then((m) => m.ManageStockEntryComponent);
+                },
+              },
+              {
+                path: 'manage-stock-adjustment',
+                loadComponent: () => {
+                  return import(
+                    './components/inventory-manager-view/manage-inventory-module/manage-stock-adjustment/manage-stock-adjustment.component'
+                  ).then((m) => m.ManageStockAdjustmentComponent);
+                },
+              },
+            ],
+          },
+        ],
       },
       {
         path: 'manage-replenishment',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/manage-replenishment/manage-replenishment.component')
-          .then(m => m.ManageReplenishmentComponent);
-        }
-      }
-    ]
+          return import(
+            './components/inventory-manager-view/manage-replenishment/manage-replenishment.component'
+          ).then((m) => m.ManageReplenishmentComponent);
+        },
+      },
+    ],
   },
   {
     path: 'cashier-main',
     loadComponent: () => {
-      return import('./components/cashier-view/cashier-main/cashier-main.component')
-      .then(m => m.CashierMainComponent);
+      return import(
+        './components/cashier-view/cashier-main/cashier-main.component'
+      ).then((m) => m.CashierMainComponent);
     },
     children: [
       {
         path: '',
         loadComponent: () => {
-          return import('./components/cashier-view/cashier-dashboard/cashier-dashboard.component')
-          .then(m => m.CashierDashboardComponent);
-        }
+          return import(
+            './components/cashier-view/cashier-dashboard/cashier-dashboard.component'
+          ).then((m) => m.CashierDashboardComponent);
+        },
       },
       {
         path: 'cashier-header',
         loadComponent: () => {
-          return import('./components/cashier-view/cashier-header/cashier-header.component')
-          .then(m => m.CashierHeaderComponent);
-        }
+          return import(
+            './components/cashier-view/cashier-header/cashier-header.component'
+          ).then((m) => m.CashierHeaderComponent);
+        },
       },
-    ]
-  }
+    ],
+  },
 ];
