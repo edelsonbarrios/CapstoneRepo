@@ -1,15 +1,12 @@
 html {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  font-size: 18px;
 }
 
 body {
   height: 100%;
-  width: 100%;
   background: #f9fbfe;
   display: grid;
   grid-template-columns: 20% 80%;
   font-family: var(--ff-poppins);
 }
-
-
