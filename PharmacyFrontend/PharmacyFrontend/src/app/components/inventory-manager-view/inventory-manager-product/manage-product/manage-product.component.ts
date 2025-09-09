@@ -4,7 +4,6 @@ import { Product } from '../../../../models/product-models/product';
 import { NgFor, NgIf } from '@angular/common';
 import { ViewProductComponent } from '../view-product/view-product.component';
 import { GetService } from '../../../../services/GetService/get.service';
-import { NgForOf } from "../../../../../../node_modules/@angular/common/index";
 
 @Component({
   selector: 'app-manage-product',
@@ -35,6 +34,7 @@ export class ManageProductComponent implements OnInit{
         console.log(`${err.error}`);
       }
     });
+      
   }
 
   openCreateProductForm(){
@@ -47,5 +47,4 @@ export class ManageProductComponent implements OnInit{
 
   closeCreateProductForm() {
     this.newProduct = null;
-  }
 }
