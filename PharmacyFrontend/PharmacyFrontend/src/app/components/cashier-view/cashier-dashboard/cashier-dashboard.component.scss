@@ -1,0 +1,141 @@
+.wrapper {
+  padding: 1rem;
+  height: 100%;
+
+  .containers {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 10px;
+    padding: 1rem;
+
+    .grid-items {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #f1f5f9;
+
+      .prod-control {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+
+        input {
+          flex: 1;
+          padding: 1rem;
+          border: 1px solid rgba(0, 109, 186, 1);
+          border-radius: 10px;
+        }
+
+        select {
+          padding: 1rem;
+          border: 1px solid rgba(0, 109, 186, 1);
+          border-radius: 10px;
+        }
+      }
+
+      .compute-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+
+        input {
+          flex: 1;
+          padding: 1rem;
+          border: 1px solid rgba(0, 109, 186, 1);
+          border-radius: 10px;
+        }
+      }
+
+      .compute-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid rgb(199, 199, 199);
+        margin-bottom: 0.6rem;
+
+        input {
+          padding: 0.8rem;
+          border: 1px solid rgba(0, 109, 186, 1);
+          border-radius: 10px;
+        }
+
+        th,
+        td {
+          padding: 0.5rem;
+          text-align: left;
+        }
+
+        th {
+          font-weight: 500;
+          font-size: large;
+        }
+
+        td {
+          font-size: large;
+          font-weight: 300;
+        }
+      }
+
+      .bot-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 4px;
+
+        .gross {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .amount {
+            font-size: 2rem;
+          }
+        }
+      }
+
+      .bottom-btn {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+
+        .btn-print,
+        .btn-cancel,
+        .btn-settle {
+          padding: 0.7rem;
+          font-size: 0.9rem;
+          font-weight: 550;
+          border: none;
+          border-radius: 4px;
+          color: white;
+          width: 100px;
+          cursor: pointer;
+        }
+
+        .btn-print {
+          background-color: rgba(0, 109, 186, 1);
+          
+          &:hover {
+            background-color: rgb(1, 98, 167);
+          }
+        }
+
+        .btn-cancel {
+          background-color: rgba(161, 0, 3, 1);
+
+          &:hover {
+            background-color: rgb(145, 1, 4);
+          }
+        }
+
+        .btn-settle {
+          background-color: rgba(0, 161, 19, 1);
+
+           &:hover {
+            background-color: rgb(1, 139, 17);
+          }
+        }
+      }
+    }
+  }
+}
