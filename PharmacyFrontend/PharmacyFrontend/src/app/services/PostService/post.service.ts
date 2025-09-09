@@ -10,6 +10,7 @@ import { CreateEmployeeRequest } from '../../models/employee-models/createEmploy
 import { VAT } from '../../models/vat-models/vat';
 import { CreateVatRequest } from '../../models/vat-models/createVatRequest';
 import { CreateDiscountRequest } from '../../models/discount-models/create-discount';
+import { CreateProductRequest } from '../../models/product-models/create-product-request';
 
 @Injectable({
   providedIn: 'root'
@@ -49,4 +50,10 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Discount`, newDiscount);
   }
   //Discount Service end
+
+  //Product Service
+  createProductAsync(newProduct: CreateProductRequest) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Product`, newProduct);
+  }
+  //Product Service End
 }

@@ -29,8 +29,8 @@ namespace PharmacyBackend.Models
         public int TypeID { get; set; }
         public TypeModel TypeModel { get; set; }  // Navigation
 
-        public int? SupplierID { get; set; }
-        public Supplier? Supplier { get; set; }  // Navigation 
+        public int SupplierID { get; set; }
+        public Supplier Supplier { get; set; }  // Navigation 
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }

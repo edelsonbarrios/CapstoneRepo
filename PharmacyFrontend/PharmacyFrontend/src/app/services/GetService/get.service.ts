@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
 import { HttpClient } from '@angular/common/http';
 import { last, Observable, ObservedValueOf } from 'rxjs';
@@ -7,6 +7,14 @@ import { Account } from '../../models/account';
 import { VAT } from '../../models/vat-models/vat';
 import { Discount } from '../../models/discount-models/discount';
 import { EmployeeHistory } from '../../models/employee-history-models/employee-history';
+import { Category } from '../../models/category-models/category';
+import { Brand } from '../../models/brand-models/brand';
+import { Generic } from '../../models/generic-models/generic';
+import { TypeModel } from '../../models/type-models/type';
+import { Formulation } from '../../models/formulation-models/formulation';
+import { Classification } from '../../models/classification-models/classification';
+import { Supplier } from '../../models/supplier-models/supplier';
+import { Product } from '../../models/product-models/product';
 @Injectable({
   providedIn: 'root'
 })
@@ -65,4 +73,52 @@ export class GetService {
     return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryDisplay`);
   }
   //Employee History Service End
+
+  //Category Service
+  getAllCategoriesAsync() : Observable<Category[]> {
+    return this.httpClient.get<Category[]>(`${this.apiUrl}/Get/CategoryAll`);
+  }
+  //CategoryService End 
+
+  //Brand Service
+  getAllBrandsAsync() : Observable<Brand[]> {
+    return this.httpClient.get<Brand[]>(`${this.apiUrl}/Get/BrandAll`);
+  }
+  //Brand Service End
+
+  //Generic Service
+  getAllGenericsAsync() : Observable<Generic[]> {
+    return this.httpClient.get<Generic[]>(`${this.apiUrl}/Get/GenericAll`);
+  }
+  //Generic Service End
+
+  //Type Service
+  getAllTypesAsync() : Observable<TypeModel[]> {
+    return this.httpClient.get<TypeModel[]>(`${this.apiUrl}/Get/TypeAll`);
+  }
+  //Type Service End
+
+  //Formulation Service
+  getAllFormulationsAsync() : Observable<Formulation[]> {
+    return this.httpClient.get<Formulation[]>(`${this.apiUrl}/Get/FormulationAll`);
+  }
+  //FormulationS Service End
+
+  //Classification Service
+  getAllClassificationAsync() : Observable<Classification[]> {
+    return this.httpClient.get<Classification[]>(`${this.apiUrl}/Get/ClassificationAll`);
+  }
+  //Classification Service End
+
+  //Supplier Service
+  getAllSuppliersAsync() : Observable<Supplier[]> {
+    return this.httpClient.get<Supplier[]>(`${this.apiUrl}/Get/SupplierAll`);
+  }
+  //Supplier Service End
+
+  //Product Service
+  getAllProductsAsync() : Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/Get/ProductAll`);
+  }
+  //Product Service End
 }

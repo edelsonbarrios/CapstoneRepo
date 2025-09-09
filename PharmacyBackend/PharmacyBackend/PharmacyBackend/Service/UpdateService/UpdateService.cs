@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
+﻿using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
@@ -7,20 +6,18 @@ using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
-using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.ProductDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
-using System.Security.Principal;
 using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
-using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
+using PharmacyBackend.DataContext;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -29,14 +26,17 @@ namespace PharmacyBackend.Service.UpdateService
         private readonly IUpdateRepositoryContracts _updateRepo;
         private readonly IGetRepositoryContracts _getRepo;
         private readonly IPostRepositoryContracts _postRepo;
+        private readonly PharmacyContext _context;
 
         public UpdateService(IUpdateRepositoryContracts updateRepo,
             IGetRepositoryContracts getRepo,
-            IPostRepositoryContracts postRepo)
+            IPostRepositoryContracts postRepo,
+            PharmacyContext context)
         {
             _updateRepo = updateRepo;
             _getRepo = getRepo;
             _postRepo = postRepo;
+            _context = context;
         }
         #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
@@ -182,6 +182,77 @@ namespace PharmacyBackend.Service.UpdateService
             return updateDiscount;
         }
         #endregion
+        #region Product Helper
+        private async Task<int?> GetCategoryIdByNameAsync(string categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+                return null;
+
+            var category = await _context.Category
+                .FirstOrDefaultAsync(c => c.CategoryName.ToLower() == categoryName.ToLower());
+            return category?.CategoryID;
+        }
+
+        private async Task<int?> GetBrandIdByNameAsync(string brandName)
+        {
+            if (string.IsNullOrEmpty(brandName))
+                return null;
+
+            var brand = await _context.Brand
+                .FirstOrDefaultAsync(b => b.BrandName.ToLower() == brandName.ToLower());
+            return brand?.BrandID;
+        }
+
+        private async Task<int?> GetGenericIdByNameAsync(string genericName)
+        {
+            if (string.IsNullOrEmpty(genericName))
+                return null;
+
+            var generic = await _context.Generic
+                .FirstOrDefaultAsync(g => g.GenericName.ToLower() == genericName.ToLower());
+            return generic?.GenericID;
+        }
+
+        private async Task<int?> GetFormulationIdByNameAsync(string formulationName)
+        {
+            if (string.IsNullOrEmpty(formulationName))
+                return null;
+
+            var formulation = await _context.Formulation
+                .FirstOrDefaultAsync(f => f.FormulationName.ToLower() == formulationName.ToLower());
+            return formulation?.FormulationID;
+        }
+
+        private async Task<int?> GetClassificationIdByNameAsync(string classificationName)
+        {
+            if (string.IsNullOrEmpty(classificationName))
+                return null;
+
+            var classification = await _context.Classification
+                .FirstOrDefaultAsync(c => c.ClassificationName.ToLower() == classificationName.ToLower());
+            return classification?.ClassificationID;
+        }
+
+        private async Task<int?> GetTypeIdByNameAsync(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return null;
+
+            var type = await _context.TypeModel
+                .FirstOrDefaultAsync(t => t.TypeName.ToLower() == typeName.ToLower());
+            return type?.TypeID;
+        }
+
+        private async Task<int?> GetSupplierIdByNameAsync(string supplierName)
+        {
+            if (string.IsNullOrEmpty(supplierName))
+                return null;
+
+            var supplier = await _context.Supplier
+                .FirstOrDefaultAsync(s => s.SupplierName.ToLower() == supplierName.ToLower());
+            return supplier?.SupplierID;
+        }
+        #endregion
 
         #region Product
         public async Task<bool> UpdateProductAsync(int id, UpdateProductDto dto)
@@ -189,14 +260,42 @@ namespace PharmacyBackend.Service.UpdateService
             var existing = await _getRepo.GetProductByIdAsync(id);
             if (existing == null) return false;
 
+            // Resolve names to IDs using the same helper methods
+            var categoryId = await GetCategoryIdByNameAsync(dto.CategoryName);
+            var brandId = await GetBrandIdByNameAsync(dto.BrandName);
+            var genericId = await GetGenericIdByNameAsync(dto.GenericName);
+            var formulationId = await GetFormulationIdByNameAsync(dto.FormulationName);
+            var classificationId = await GetClassificationIdByNameAsync(dto.ClassificationName);
+            var typeId = await GetTypeIdByNameAsync(dto.TypeName);
+            var supplierId = !string.IsNullOrEmpty(dto.SupplierName)
+                ? await GetSupplierIdByNameAsync(dto.SupplierName)
+                : null;
+
+            // Validate that all required entities exist
+            if (categoryId == null)
+                throw new ArgumentException($"Category '{dto.CategoryName}' not found.");
+            if (brandId == null)
+                throw new ArgumentException($"Brand '{dto.BrandName}' not found.");
+            if (genericId == null)
+                throw new ArgumentException($"Generic '{dto.GenericName}' not found.");
+            if (formulationId == null)
+                throw new ArgumentException($"Formulation '{dto.FormulationName}' not found.");
+            if (classificationId == null)
+                throw new ArgumentException($"Classification '{dto.ClassificationName}' not found.");
+            if (typeId == null)
+                throw new ArgumentException($"Type '{dto.TypeName}' not found.");
+            if (!string.IsNullOrEmpty(dto.SupplierName) && supplierId == null)
+                throw new ArgumentException($"Supplier '{dto.SupplierName}' not found.");
+
+            // Update the product with resolved IDs
             existing.ProductName = dto.ProductName;
-            existing.CategoryID = dto.CategoryID;
-            existing.BrandID = dto.BrandID;
-            existing.GenericID = dto.GenericID;
-            existing.FormulationID = dto.FormulationID;
-            existing.ClassificationID = dto.ClassificationID;
-            existing.TypeID = dto.TypeID;
-            existing.SupplierID = dto.SupplierID;
+            existing.CategoryID = categoryId.Value;
+            existing.BrandID = brandId.Value;
+            existing.GenericID = genericId.Value;
+            existing.FormulationID = formulationId.Value;
+            existing.ClassificationID = classificationId.Value;
+            existing.TypeID = typeId.Value;
+            existing.SupplierID = (int)supplierId;
             existing.Price = dto.Price;
             existing.IsActive = dto.IsActive;
 

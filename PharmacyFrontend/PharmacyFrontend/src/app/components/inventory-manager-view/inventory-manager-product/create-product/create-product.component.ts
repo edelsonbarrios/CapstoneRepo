@@ -1,14 +1,153 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../../../models/product-models/product';
-import { CreateProduct } from '../../../../models/product-models/createProduct';
+import { PostService } from '../../../../services/PostService/post.service';
+import { FormsModule } from '@angular/forms';
+import { CreateProductRequest } from '../../../../models/product-models/create-product-request';
+import { Category } from '../../../../models/category-models/category';
+import { GetService } from '../../../../services/GetService/get.service';
+import { NgFor } from '@angular/common';
+import { Brand } from '../../../../models/brand-models/brand';
+import { Generic } from '../../../../models/generic-models/generic';
+import { TypeModel } from '../../../../models/type-models/type';
+import { Formulation } from '../../../../models/formulation-models/formulation';
+import { Classification } from '../../../../models/classification-models/classification';
+import { Supplier } from '../../../../models/supplier-models/supplier';
 
 @Component({
   selector: 'app-create-product',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, NgFor],
   templateUrl: './create-product.component.html',
   styleUrl: './create-product.component.scss'
 })
-export class CreateProductComponent {
-  @Input() newProduct: CreateProduct = new CreateProduct;
+export class CreateProductComponent implements OnInit{
+  @Input() newProduct: Product = new Product;
+  @Output() closeForm = new EventEmitter<void>();
+  categories : Category[] = [];
+  brands: Brand[] = [];
+  generics : Generic[] = [];
+  types: TypeModel[] = [];
+  formulations : Formulation[] = [];
+  classifications : Classification[] = [];
+  suppliers : Supplier[] = [];
+
+  constructor(
+    private postService : PostService,
+    private getService : GetService
+  ) {}
+
+  ngOnInit(): void {
+    this.getAllCategories();
+    this.getAllBrands();
+    this.getAllGenerics();
+    this.getAllTypeModels();
+    this.getAllFormulation();
+    this.getAllClassification();
+    this.getAllSuppliers();
+  }
+
+  getAllCategories() {
+    this.getService.getAllCategoriesAsync().subscribe({
+      next: categories => {
+        this.categories = categories;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllBrands() {
+    this.getService.getAllBrandsAsync().subscribe({
+      next: brands => {
+        this.brands = brands;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllGenerics() {
+    this.getService.getAllGenericsAsync().subscribe({
+      next: generics => {
+        this.generics = generics;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllTypeModels() {
+    this.getService.getAllTypesAsync().subscribe({
+      next: types => {
+        this.types = types;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllFormulation() {
+    this.getService.getAllFormulationsAsync().subscribe({
+      next: res => {
+        this.formulations = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllClassification() {
+    this.getService.getAllClassificationAsync().subscribe({
+      next: res => {
+        this.classifications = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllSuppliers() {
+    this.getService.getAllSuppliersAsync().subscribe({
+      next: res => {
+        this.suppliers = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  createProduct() {
+    if(!this.newProduct) return;
+    const requestPayload : CreateProductRequest = {
+      productName: this.newProduct.productName,
+      categoryName : this.newProduct.categoryName,
+      brandName : this.newProduct.brandName,
+      genericName : this.newProduct.genericName,
+      formulationName : this.newProduct.formulationName,
+      classificationName : this.newProduct.classificationName,
+      typeName : this.newProduct.typeName,
+      supplierName : this.newProduct.supplierName,
+      price: this.newProduct.price
+    };
+    this.postService.createProductAsync(requestPayload).subscribe({
+      next: res => {
+        alert(`Product created successfully.`);
+        this.closeForm.emit();
+      },
+      error: err => {
+        alert(`${err.error}`);
+      }
+    });
+  }
+
+  closeCreateProductForm() {
+    this.closeForm.emit();
+  }
 }

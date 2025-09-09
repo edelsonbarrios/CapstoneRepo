@@ -12,64 +12,90 @@
   <!-- MODAL BODY -->
   <div class="modal-body">
 
-   <div class="form-grid">
-     <div class="form-group">
-      <label>Item Code</label>
-      <input type="text">
-    </div>
+    <div class="form-grid">
 
-    <div class="form-group">
-      <label>Brand Name</label>
-      <input type="text">
-    </div>
-    
-    <div class="form-group">
-      <label>Generic Name</label>
-      <input type="text">
-    </div>
+      <!-- Product Name (Text Input) -->
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" [(ngModel)]="newProduct.productName">
+      </div>
 
-    <div class="form-group">
-      <label>Classification</label>
-      <input type="text">
-    </div>
-    
-    <div class="form-group">
-      <label>Type</label>
-      <input type="text">
-    </div>
+      <!-- Brand Name -->
+      <div class="form-group">
+        <label>Brand Name</label>
+        <select [(ngModel)]="newProduct.brandName">
+          <option value="">-- Select Brand --</option>
+          <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Formulation</label>
-      <input type="text">
-    </div>
-    
-    <div class="form-group">
-      <label>Unit Price (&#8369;)</label>
-      <input type="number">
-    </div>
+      <!-- Generic Name -->
+      <div class="form-group">
+        <label>Generic Name</label>
+        <select [(ngModel)]="newProduct.genericName">
+          <option value="">-- Select Generic --</option>
+          <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Re-order Level</label>
-      <input type="number">
-    </div>
+      <!-- Classification -->
+      <div class="form-group">
+        <label>Classification</label>
+        <select [(ngModel)]="newProduct.classificationName">
+          <option value="">-- Select Classification --</option>
+          <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Stock on Hand</label>
-      <input type="number">
-    </div>
+      <!-- Type -->
+      <div class="form-group">
+        <label>Type</label>
+        <select [(ngModel)]="newProduct.typeName">
+          <option value="">-- Select Type --</option>
+          <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Expiry (dd/mm/yyyy)</label>
-      <input type="date">
-    </div>
+      <!-- Formulation -->
+      <div class="form-group">
+        <label>Formulation</label>
+        <select [(ngModel)]="newProduct.formulationName">
+          <option value="">-- Select Formulation --</option>
+          <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
+        </select>
+      </div>
 
-   </div>
+      <!-- Unit Price -->
+      <div class="form-group">
+        <label>Unit Price (&#8369;)</label>
+        <input type="number" [(ngModel)]="newProduct.price">
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label>Category Name</label>
+        <select [(ngModel)]="newProduct.categoryName">
+          <option value="">-- Select Category --</option>
+          <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
+        </select>
+      </div>
+
+      <!-- Supplier -->
+      <div class="form-group">
+        <label>Supplier</label>
+        <select [(ngModel)]="newProduct.supplierName">
+          <option value="">-- Select Supplier --</option>
+          <option *ngFor="let s of suppliers" [value]="s.supplierName">{{s.supplierName}}</option>
+        </select>
+      </div>
+
+    </div>
 
   </div>
 
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save">Save</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-save" (click)="createProduct()">Save</button>
+    <button class="btn-cancel" (click)="closeCreateProductForm()">Cancel</button>
   </div>
 </div>

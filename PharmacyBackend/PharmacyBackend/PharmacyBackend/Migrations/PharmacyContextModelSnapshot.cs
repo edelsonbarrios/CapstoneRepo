@@ -424,7 +424,7 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("SupplierID")
+                    b.Property<int>("SupplierID")
                         .HasColumnType("integer");
 
                     b.Property<int>("TypeID")
@@ -815,7 +815,8 @@ namespace PharmacyBackend.Migrations
                     b.HasOne("PharmacyBackend.Models.Supplier", "Supplier")
                         .WithMany("Products")
                         .HasForeignKey("SupplierID")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.TypeModel", "TypeModel")
                         .WithMany("Products")
