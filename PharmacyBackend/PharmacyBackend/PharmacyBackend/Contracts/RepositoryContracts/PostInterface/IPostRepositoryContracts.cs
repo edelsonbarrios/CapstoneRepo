@@ -57,7 +57,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         #endregion
 
         #region Supplier
-        public Task<Supplier> CreateSupplierAsync(Supplier supplier);
+        public Task<bool> CreateSupplierAsync(Supplier supplier);
         #endregion
 
         #region Inventory
@@ -69,7 +69,11 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         #endregion
 
         #region PurchaseOrder
-        public Task<PurchaseOrder> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
+        public Task<bool> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
+        #endregion
+
+        #region PurchaserOrderItem
+        public Task<bool> CreatePurchaseOrderItemsAsync(List<PurchaseOrderItem> request);
         #endregion
 
         #region StockMovement

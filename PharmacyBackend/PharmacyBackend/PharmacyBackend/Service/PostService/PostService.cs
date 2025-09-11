@@ -251,7 +251,7 @@ namespace PharmacyBackend.Service.PostService
 
             var supplier = await _context.Supplier
                 .FirstOrDefaultAsync(s => s.SupplierName.ToLower() == supplierName.ToLower());
-            return supplier?.SupplierID;
+            return supplier?.Id;
         }
 
         #endregion
@@ -445,7 +445,7 @@ namespace PharmacyBackend.Service.PostService
         #endregion
 
         #region Supplier
-        public async Task<SupplierDto> CreateSupplierAsync(CreateSupplierDto dto)
+        public async Task<bool> CreateSupplierAsync(CreateSupplierDto dto)
         {
             var supplier = new Supplier
             {
@@ -458,15 +458,7 @@ namespace PharmacyBackend.Service.PostService
 
             var created = await _postRepo.CreateSupplierAsync(supplier);
 
-            return new SupplierDto
-            {
-                SupplierID = created.SupplierID,
-                SupplierName = created.SupplierName,
-                ContactNumber = created.ContactNumber,
-                Email = created.Email,
-                Address = created.Address,
-                IsActive = created.IsActive
-            };
+            return created;
         }
         #endregion
 
@@ -532,7 +524,7 @@ namespace PharmacyBackend.Service.PostService
         #endregion
 
         #region PurchaseOrder
-        public async Task<PurchaseOrderDto> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
+        public async Task<bool> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
         {
             var purchaseOrder = new PurchaseOrder
             {
@@ -555,26 +547,7 @@ namespace PharmacyBackend.Service.PostService
 
             var created = await _postRepo.CreatePurchaseOrderAsync(purchaseOrder);
 
-            return new PurchaseOrderDto
-            {
-                PurchaseOrderID = created.PurchaseOrderID,
-                PurchaseOrderNumber = created.PurchaseOrderNumber,
-                OrderDate = created.OrderDate,
-                DeliveryDate = created.DeliveryDate,
-                SupplierID = created.SupplierID,
-                TotalAmount = created.TotalAmount,
-                Status = created.Status,
-                Notes = created.Notes,
-                PurchaseOrderItems = created.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
-                {
-                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
-                    ProductID = poi.ProductID,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    QuantityReceived = poi.QuantityReceived,
-                    UnitCost = poi.UnitCost,
-                    TotalCost = poi.TotalCost
-                }).ToList()
-            };
+            return created;
         }
         #endregion
 

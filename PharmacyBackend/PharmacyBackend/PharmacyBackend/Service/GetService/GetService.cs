@@ -541,12 +541,12 @@ namespace PharmacyBackend.Service.GetService
         #endregion
 
         #region Supplier
-        public async Task<IEnumerable<SupplierDto>> GetAllSupplierAsync()
+        public async Task<IEnumerable<SupplierDTO>> GetAllSupplierAsync()
         {
             var suppliers = await _getRepo.GetAllSupplierAsync();
-            return suppliers.Select(s => new SupplierDto
+            return suppliers.Select(s => new SupplierDTO
             {
-                SupplierID = s.SupplierID,
+                Id = s.Id,
                 SupplierName = s.SupplierName,
                 ContactNumber = s.ContactNumber,
                 Email = s.Email,
@@ -555,14 +555,14 @@ namespace PharmacyBackend.Service.GetService
             });
         }
 
-        public async Task<SupplierDto?> GetSupplierByIdAsync(int id)
+        public async Task<SupplierDTO?> GetSupplierByIdAsync(int id)
         {
             var s = await _getRepo.GetSupplierByIdAsync(id);
             if (s == null)
                 return null;
-            return new SupplierDto
+            return new SupplierDTO
             {
-                SupplierID = s.SupplierID,
+                Id = s.Id,
                 SupplierName = s.SupplierName,
                 ContactNumber = s.ContactNumber,
                 Email = s.Email,
@@ -746,12 +746,12 @@ namespace PharmacyBackend.Service.GetService
         #endregion
 
         #region PurchaseOrder
-        public async Task<IEnumerable<PurchaseOrderDto>> GetAllPurchaseOrderAsync()
+        public async Task<IEnumerable<PurchaseOrderDTO>> GetAllPurchaseOrderAsync()
         {
             var orders = await _getRepo.GetAllPurchaseOrderAsync();
-            return orders.Select(po => new PurchaseOrderDto
+            return orders.Select(po => new PurchaseOrderDTO
             {
-                PurchaseOrderID = po.PurchaseOrderID,
+                Id = po.Id,
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
@@ -762,7 +762,7 @@ namespace PharmacyBackend.Service.GetService
                 Notes = po.Notes,
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
-                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    Id = poi.Id,
                     ProductID = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
                     QuantityOrdered = poi.QuantityOrdered,
@@ -773,14 +773,14 @@ namespace PharmacyBackend.Service.GetService
             });
         }
 
-        public async Task<PurchaseOrderDto?> GetPurchaseOrderByIdAsync(int id)
+        public async Task<PurchaseOrderDTO?> GetPurchaseOrderByIdAsync(int id)
         {
             var po = await _getRepo.GetPurchaseOrderByIdAsync(id);
             if (po == null)
                 return null;
-            return new PurchaseOrderDto
+            return new PurchaseOrderDTO
             {
-                PurchaseOrderID = po.PurchaseOrderID,
+                Id = po.Id,
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
@@ -791,7 +791,7 @@ namespace PharmacyBackend.Service.GetService
                 Notes = po.Notes,
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
-                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    Id = poi.Id,
                     ProductID = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
                     QuantityOrdered = poi.QuantityOrdered,
@@ -802,12 +802,12 @@ namespace PharmacyBackend.Service.GetService
             };
         }
 
-        public async Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderBySupplierIdAsync(int supplierId)
+        public async Task<IEnumerable<PurchaseOrderDTO>> GetPurchaseOrderBySupplierIdAsync(int supplierId)
         {
             var orders = await _getRepo.GetPurchaseOrderBySupplierIdAsync(supplierId);
-            return orders.Select(po => new PurchaseOrderDto
+            return orders.Select(po => new PurchaseOrderDTO
             {
-                PurchaseOrderID = po.PurchaseOrderID,
+                Id = po.Id,
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
@@ -818,7 +818,7 @@ namespace PharmacyBackend.Service.GetService
                 Notes = po.Notes,
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
-                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    Id = poi.Id,
                     ProductID = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
                     QuantityOrdered = poi.QuantityOrdered,
@@ -829,12 +829,12 @@ namespace PharmacyBackend.Service.GetService
             });
         }
 
-        public async Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderByStatusAsync(string status)
+        public async Task<IEnumerable<PurchaseOrderDTO>> GetPurchaseOrderByStatusAsync(string status)
         {
             var orders = await _getRepo.GetPurchaseOrderByStatusAsync(status);
-            return orders.Select(po => new PurchaseOrderDto
+            return orders.Select(po => new PurchaseOrderDTO
             {
-                PurchaseOrderID = po.PurchaseOrderID,
+                Id = po.Id,
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
@@ -845,9 +845,9 @@ namespace PharmacyBackend.Service.GetService
                 Notes = po.Notes,
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
-                    PurchaseOrderItemID = poi.PurchaseOrderItemID,
+                    Id = poi.Id,
                     ProductID = poi.ProductID,
-                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    ProductName = poi.Product.ProductName,
                     QuantityOrdered = poi.QuantityOrdered,
                     QuantityReceived = poi.QuantityReceived,
                     UnitCost = poi.UnitCost,

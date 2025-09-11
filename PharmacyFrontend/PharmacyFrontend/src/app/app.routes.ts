@@ -167,6 +167,13 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'admin-supplier',
+        loadComponent: () => {
+          return import('./components/admin-view/admin-supplier/admin-supplier.component')
+          .then(m => m.AdminSupplierComponent);
+        }
+      }
     ],
   },
   {

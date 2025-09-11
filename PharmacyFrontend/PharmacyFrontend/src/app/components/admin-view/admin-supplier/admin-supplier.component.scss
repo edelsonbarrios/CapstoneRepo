@@ -1,0 +1,168 @@
+.wrapper {
+  flex: 1;
+  padding: 20px;
+  background: #f8fbff;
+  border-radius: 10px;
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-right: 12px;
+    }
+
+    .new-supplier {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        background: #0066dd;
+      }
+    }
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+
+    .modern-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        text-align: left;
+        font-weight: 600;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+      }
+
+      td {
+        padding: 12px;
+        font-size: 14px;
+        vertical-align: top;
+        border-bottom: 1px solid #f1f1f1;
+      }
+
+      .supplier-info {
+        strong {
+          font-size: 14px;
+          display: block;
+        }
+        span {
+          color: #555;
+          font-size: 13px;
+        }
+        small {
+          color: #888;
+          font-size: 12px;
+        }
+      }
+
+      .product-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+
+        span {
+          background: #f2f2f2;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 12px;
+        }
+      }
+
+      .status {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+
+        &.active {
+          background: #e6f9ed;
+          color: #28a745;
+          border: 1px solid #28a745;
+        }
+      }
+
+      .action-btns {
+        display: flex;
+        gap: 6px;
+
+        .btn {
+          border: none;
+          padding: 6px 10px;
+          border-radius: 6px;
+          font-size: 13px;
+          cursor: pointer;
+          transition: 0.2s;
+
+          &.add {
+            background: #007bff;
+            color: #fff;
+
+            &:hover {
+              background: #0066dd;
+            }
+          }
+
+          &.edit {
+            background: #fff;
+            border: 1px solid #007bff;
+            color: #007bff;
+
+            &:hover {
+              background: #f1f5ff;
+            }
+          }
+
+          &.archive {
+            background: #dc3545;
+            color: #fff;
+
+            &:hover {
+              background: #bb2d3b;
+            }
+          }
+        }
+      }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #555;
+
+      button {
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 4px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+
+        &:hover {
+          background: #f5f5f5;
+        }
+      }
+    }
+  }
+}

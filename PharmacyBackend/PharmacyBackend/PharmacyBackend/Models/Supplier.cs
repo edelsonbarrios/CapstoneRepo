@@ -5,15 +5,15 @@ namespace PharmacyBackend.Models
     public class Supplier
     {
         [Key]
-        public int SupplierID { get; set; }
+        public int Id { get; set; }
         public string SupplierName { get; set; } = string.Empty;
         public string ContactNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
+        public List<Product> Products { get; set; } = new List<Product>();
 
         // Navigation properties
-        public List<Product> Products { get; set; } = new List<Product>();
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
     }
 }

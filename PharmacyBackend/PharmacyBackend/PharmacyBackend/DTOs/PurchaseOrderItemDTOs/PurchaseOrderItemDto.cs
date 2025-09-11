@@ -2,7 +2,7 @@
 {
     public class PurchaseOrderItemDto
     {
-        public int PurchaseOrderItemID { get; set; }
+        public int Id { get; set; }
         public int ProductID { get; set; }
         public string ProductName { get; set; } = string.Empty;
         public int QuantityOrdered { get; set; }

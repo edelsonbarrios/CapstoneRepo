@@ -83,8 +83,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #endregion
 
         #region Supplier
-        public Task<IEnumerable<SupplierDto>> GetAllSupplierAsync();
-        public Task<SupplierDto> GetSupplierByIdAsync(int id);
+        public Task<IEnumerable<SupplierDTO>> GetAllSupplierAsync();
+        public Task<SupplierDTO> GetSupplierByIdAsync(int id);
         #endregion
 
         #region Inventory
@@ -102,10 +102,10 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #endregion
 
         #region PurchaseOrder
-        public Task<IEnumerable<PurchaseOrderDto>> GetAllPurchaseOrderAsync();
-        public Task<PurchaseOrderDto> GetPurchaseOrderByIdAsync(int id);
-        public Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderBySupplierIdAsync(int supplierId);
-        public Task<IEnumerable<PurchaseOrderDto>> GetPurchaseOrderByStatusAsync(string status);
+        public Task<IEnumerable<PurchaseOrderDTO>> GetAllPurchaseOrderAsync();
+        public Task<PurchaseOrderDTO> GetPurchaseOrderByIdAsync(int id);
+        public Task<IEnumerable<PurchaseOrderDTO>> GetPurchaseOrderBySupplierIdAsync(int supplierId);
+        public Task<IEnumerable<PurchaseOrderDTO>> GetPurchaseOrderByStatusAsync(string status);
         #endregion
 
         #region StockMovement

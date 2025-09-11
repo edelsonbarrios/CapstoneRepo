@@ -2,9 +2,9 @@
 
 namespace PharmacyBackend.DTOs.PuchaseOrderDTOs
 {
-    public class PurchaseOrderDto
+    public class PurchaseOrderDTO
     {
-        public int PurchaseOrderID { get; set; }
+        public int Id { get; set; }
         public string PurchaseOrderNumber { get; set; } = string.Empty;
         public DateTime OrderDate { get; set; }
         public DateTime? DeliveryDate { get; set; }

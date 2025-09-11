@@ -1,8 +1,8 @@
 ﻿namespace PharmacyBackend.DTOs.SupplierDTOs
 {
-    public class SupplierDto
+    public class SupplierDTO
     {
-        public int SupplierID { get; set; }
+        public int Id { get; set; }
         public string SupplierName { get; set; } = string.Empty;
         public string ContactNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

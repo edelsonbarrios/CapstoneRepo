@@ -176,11 +176,11 @@ namespace PharmacyBackend.Repository.POST
         #endregion
 
         #region Supplier
-        public async Task<Supplier> CreateSupplierAsync(Supplier supplier)
+        public async Task<bool> CreateSupplierAsync(Supplier supplier)
         {
             await _context.Supplier.AddAsync(supplier);
             await _context.SaveChangesAsync();
-            return supplier;
+            return true;
         }
         #endregion
 
@@ -203,11 +203,20 @@ namespace PharmacyBackend.Repository.POST
         #endregion
 
         #region PurchaseOrder
-        public async Task<PurchaseOrder> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder)
+        public async Task<bool> CreatePurchaseOrderAsync(PurchaseOrder purchaseOrder)
         {
             await _context.PurchaseOrder.AddAsync(purchaseOrder);
             await _context.SaveChangesAsync();
-            return purchaseOrder;
+            return true;
+        }
+        #endregion
+
+        #region PurchaseOrderItem
+        public async Task<bool> CreatePurchaseOrderItemsAsync(List<PurchaseOrderItem> request)
+        {
+            await _context.PurchaseOrderItem.AddRangeAsync(request);
+            await _context.SaveChangesAsync();
+            return true;
         }
         #endregion
 
