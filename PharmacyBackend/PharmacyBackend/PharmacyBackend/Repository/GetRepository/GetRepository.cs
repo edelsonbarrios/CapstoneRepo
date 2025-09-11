@@ -239,12 +239,16 @@ namespace PharmacyBackend.Repository.GET
         #region Supplier
         public async Task<IEnumerable<Supplier>> GetAllSupplierAsync()
         {
-            return await _context.Supplier.ToListAsync();
+            return await _context.Supplier
+                .Include(s => s.Products)
+                .ToListAsync();
         }
 
         public async Task<Supplier> GetSupplierByIdAsync(int id)
         {
-            return await _context.Supplier.FindAsync(id);
+            return await _context.Supplier
+                .Include(s => s.Products)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
         #endregion
 
@@ -327,7 +331,7 @@ namespace PharmacyBackend.Repository.GET
                 .Include(po => po.Supplier)
                 .Include(po => po.PurchaseOrderItems)
                     .ThenInclude(poi => poi.Product)
-                .FirstOrDefaultAsync(po => po.PurchaseOrderID == id);
+                .FirstOrDefaultAsync(po => po.Id == id);
         }
 
         public async Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderBySupplierIdAsync(int supplierId)

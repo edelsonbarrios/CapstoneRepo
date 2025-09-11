@@ -170,8 +170,15 @@ export const routes: Routes = [
       {
         path: 'admin-supplier',
         loadComponent: () => {
-          return import('./components/admin-view/admin-supplier/admin-supplier.component')
+          return import('./components/admin-view/supplier/admin-supplier/admin-supplier.component')
           .then(m => m.AdminSupplierComponent);
+        }
+      },
+      {
+        path: 'create-supplier',
+        loadComponent: () => {
+          return import('./components/admin-view/supplier/create-supplier/create-supplier.component')
+          .then(m => m.CreateSupplierComponent);
         }
       }
     ],

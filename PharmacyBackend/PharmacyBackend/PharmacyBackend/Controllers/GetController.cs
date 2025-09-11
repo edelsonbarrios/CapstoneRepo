@@ -6,6 +6,7 @@ using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
 
@@ -310,16 +311,16 @@ namespace PharmacyBackend.Controllers
 
         #region Supplier
         [HttpGet("SupplierAll")]
-        public async Task<IActionResult> GetAllSupplierAsync()
+        public async Task<ActionResult<List<SupplierDTO>>> GetAllSupplierAsync()
         {
             var suppliers = await _getService.GetAllSupplierAsync();
-            if (!suppliers.Any())
+            if (!suppliers.Any() || suppliers.Count() == 0)
                 return NotFound("No suppliers found.");
             return Ok(suppliers);
         }
 
         [HttpGet("SupplierId")]
-        public async Task<IActionResult> GetSupplierByIdAsync(int id)
+        public async Task<ActionResult<SupplierDTO>> GetSupplierByIdAsync(int id)
         {
             var supplier = await _getService.GetSupplierByIdAsync(id);
             if (supplier == null)

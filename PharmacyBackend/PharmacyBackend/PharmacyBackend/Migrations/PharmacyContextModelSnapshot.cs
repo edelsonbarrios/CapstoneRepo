@@ -453,11 +453,11 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrder", b =>
                 {
-                    b.Property<int>("PurchaseOrderID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PurchaseOrderID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DeliveryDate")
                         .HasColumnType("timestamp with time zone");
@@ -488,7 +488,7 @@ namespace PharmacyBackend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("PurchaseOrderID");
+                    b.HasKey("Id");
 
                     b.HasIndex("EmployeeID");
 
@@ -499,11 +499,11 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrderItem", b =>
                 {
-                    b.Property<int>("PurchaseOrderItemID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PurchaseOrderItemID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");
@@ -525,7 +525,7 @@ namespace PharmacyBackend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("PurchaseOrderItemID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductID");
 
@@ -605,11 +605,11 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
                 {
-                    b.Property<int>("SupplierID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SupplierID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("text");
@@ -626,7 +626,7 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("SupplierName")
                         .HasColumnType("text");
 
-                    b.HasKey("SupplierID");
+                    b.HasKey("Id");
 
                     b.HasIndex("SupplierName")
                         .IsUnique();
@@ -636,7 +636,7 @@ namespace PharmacyBackend.Migrations
                     b.HasData(
                         new
                         {
-                            SupplierID = 1,
+                            Id = 1,
                             Address = "",
                             ContactNumber = "",
                             Email = "",

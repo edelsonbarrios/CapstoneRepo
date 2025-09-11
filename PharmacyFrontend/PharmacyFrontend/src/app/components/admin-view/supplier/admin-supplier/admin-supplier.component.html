@@ -1,44 +1,33 @@
 <div class="wrapper">
   <div class="top-bar">
     <input type="text" class="search-box" placeholder="🔍 Search Supplier...">
-    <button class="btn new-supplier">+ New Supplier</button>
+    <button class="btn new-supplier" (click)="openCreateSupplierForm()">+ New Supplier</button>
   </div>
 
   <div class="card">
     <table class="modern-table">
       <thead>
         <tr>
-          <th>Supplier</th>
+          <th>Supplier Name</th>
           <th>Contact</th>
-          <th>Product</th>
+          <th>Email</th>
+          <th>Address</th>
           <th>Status</th>
-          <th>Action</th>
+          <th style="text-align: center;">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <div class="supplier-info">
-              <strong>Supplier No.1</strong><br>
-              <span>supplierno1gmail.com</span><br>
-              <small>Fairview, Quezon City</small>
-            </div>
-          </td>
-          <td>0912345667890</td>
-          <td>
-            <div class="product-tags">
-              <span>Amoxicillin</span>
-              <span>Vitamin C</span>
-              <span>Cetirizine</span>
-              <span>Mefenamic Acid</span>
-            </div>
-          </td>
+        <tr *ngFor="let s of suppliers">
+          <td>{{s.supplierName}}</td>
+          <td>{{s.contactNumber}}</td>
+          <td>{{s.email}}</td>
+          <td>{{s.address}}</td>
           <td>
             <span class="status active">Active</span>
           </td>
           <td>
             <div class="action-btns">
-              <button class="btn add">+ Add Product</button>
+              <button class="btn add">+ Assign Product</button>
               <button class="btn edit">Edit</button>
               <button class="btn archive">Archive</button>
             </div>
@@ -53,4 +42,10 @@
       <button>&gt;</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="newSupplier">
+  <app-create-supplier
+  *ngIf="newSupplier"
+  ></app-create-supplier>
 </div>

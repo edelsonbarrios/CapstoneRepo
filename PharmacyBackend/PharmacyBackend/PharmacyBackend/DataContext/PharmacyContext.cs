@@ -287,7 +287,7 @@ namespace PharmacyBackend.DataContext
             modelBuilder.Entity<Supplier>().HasData(
                 new Supplier
                 {
-                    SupplierID = 1,
+                    Id = 1,
                     SupplierName = "Default Supplier",
                     ContactNumber = "",
                     Email = "",

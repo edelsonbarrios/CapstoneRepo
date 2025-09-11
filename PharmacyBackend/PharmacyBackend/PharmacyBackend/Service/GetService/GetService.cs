@@ -555,7 +555,7 @@ namespace PharmacyBackend.Service.GetService
             });
         }
 
-        public async Task<SupplierDTO?> GetSupplierByIdAsync(int id)
+        public async Task<SupplierDTO> GetSupplierByIdAsync(int id)
         {
             var s = await _getRepo.GetSupplierByIdAsync(id);
             if (s == null)
@@ -744,7 +744,7 @@ namespace PharmacyBackend.Service.GetService
             };
         }
         #endregion
-
+            
         #region PurchaseOrder
         public async Task<IEnumerable<PurchaseOrderDTO>> GetAllPurchaseOrderAsync()
         {

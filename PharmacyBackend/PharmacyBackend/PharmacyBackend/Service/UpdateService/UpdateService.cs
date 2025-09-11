@@ -250,7 +250,7 @@ namespace PharmacyBackend.Service.UpdateService
 
             var supplier = await _context.Supplier
                 .FirstOrDefaultAsync(s => s.SupplierName.ToLower() == supplierName.ToLower());
-            return supplier?.SupplierID;
+            return supplier?.Id;
         }
         #endregion
 
@@ -463,7 +463,7 @@ namespace PharmacyBackend.Service.UpdateService
             // Update purchase order items
             foreach (var updatedItem in dto.PurchaseOrderItems)
             {
-                var item = existing.PurchaseOrderItems.FirstOrDefault(poi => poi.PurchaseOrderItemID == updatedItem.PurchaseOrderItemID);
+                var item = existing.PurchaseOrderItems.FirstOrDefault(poi => poi.Id == updatedItem.PurchaseOrderItemID);
                 if (item != null)
                 {
                     item.QuantityReceived = updatedItem.QuantityReceived;
