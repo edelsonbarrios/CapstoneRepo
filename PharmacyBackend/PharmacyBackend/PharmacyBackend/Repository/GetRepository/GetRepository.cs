@@ -241,6 +241,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Supplier
                 .Include(s => s.Products)
+                .Where(s => s.IsActive == true)
                 .ToListAsync();
         }
 

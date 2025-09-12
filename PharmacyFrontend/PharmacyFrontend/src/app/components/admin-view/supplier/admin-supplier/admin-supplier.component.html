@@ -29,7 +29,7 @@
             <div class="action-btns">
               <button class="btn add">+ Assign Product</button>
               <button class="btn edit">Edit</button>
-              <button class="btn archive">Archive</button>
+              <button class="btn archive" (click)="archiveSupplier(s)">Archive</button>
             </div>
           </td>
         </tr>
@@ -47,5 +47,7 @@
 <div class="modal-overlay" *ngIf="newSupplier">
   <app-create-supplier
   *ngIf="newSupplier"
+  [newSupplier]="newSupplier"
+  (closeForm)="closeCreateSupplierForm()"
   ></app-create-supplier>
 </div>

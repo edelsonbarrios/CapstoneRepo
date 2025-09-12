@@ -182,6 +182,7 @@ namespace PharmacyBackend.Service.UpdateService
             return updateDiscount;
         }
         #endregion
+
         #region Product Helper
         private async Task<int?> GetCategoryIdByNameAsync(string categoryName)
         {
@@ -397,6 +398,15 @@ namespace PharmacyBackend.Service.UpdateService
 
             await _updateRepo.UpdateSupplierAsync(existing);
             return true;
+        }
+        public async Task<bool> ArchiveSupplierByIdAsync(int supplierId)
+        {
+            var supplier = await _getRepo.GetSupplierByIdAsync(supplierId);
+            if (supplier is null)
+                return false;
+            supplier.IsActive = false;
+
+            return await _updateRepo.UpdateSupplierAsync(supplier);
         }
         #endregion
 

@@ -36,4 +36,10 @@ export class UpdateService {
     return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/ArchiveVat?vatId=${vatId}`, {});
   }
  //VAT Service End
+
+ //Supplier Service
+  archiveSupplierAsync(supplierId : number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveSupplier?supplierId=${supplierId}`, {});
+  }
+ //Supplier Service End
 }

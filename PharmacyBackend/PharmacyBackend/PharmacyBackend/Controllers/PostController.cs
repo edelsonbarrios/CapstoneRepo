@@ -326,7 +326,7 @@ namespace PharmacyBackend.Controllers
             try
             {
                 var result = await _postService.CreateSupplierAsync(dto);
-                if (result == null)
+                if (!result)
                     return BadRequest("Supplier could not be created.");
 
                 return Ok(new { Message = "Supplier successfully created." });

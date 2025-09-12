@@ -1,5 +1,5 @@
 export class Supplier {
-  supplierID : number = 0;
+  id : number = 0;
   supplierName : string = '';
   contactNumber : string = '';
   email : string = '';

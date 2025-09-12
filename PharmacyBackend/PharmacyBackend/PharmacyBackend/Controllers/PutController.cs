@@ -15,6 +15,7 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using System.Diagnostics.Contracts;
 
 namespace PharmacyBackend.Controllers
 {
@@ -180,13 +181,23 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Supplier
-        [HttpPut("Update/Supplier")]
+        [HttpPut("Supplier")]
         public async Task<IActionResult> UpdateSupplierAsync(int id, [FromBody] UpdateSupplierDto dto)
         {
             var success = await _updateService.UpdateSupplierAsync(id, dto);
             if (!success)
                 return NotFound("Supplier not found or update failed.");
             return Ok("Supplier updated successfully.");
+        }
+        [HttpPut("ArchiveSupplier")]
+        public async Task<ActionResult<ArchiveSupplierResponse>> ArchiveSupplierByIdAsync(int supplierId)
+        {
+            if (supplierId == 0)
+                return BadRequest(new ArchiveSupplierResponse { Message = "Supplier does not exist." });
+            var archiveSupplier = await _updateService.ArchiveSupplierByIdAsync(supplierId);
+            if (!archiveSupplier)
+                return BadRequest(new ArchiveSupplierResponse { Message = "Supplier cannot be archived." });
+            return Ok(new ArchiveSupplierResponse { Message = "Supplier is now inactive" });
         }
         #endregion
 

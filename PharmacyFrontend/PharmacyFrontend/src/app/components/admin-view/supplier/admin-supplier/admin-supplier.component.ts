@@ -3,6 +3,7 @@ import { Supplier } from '../../../../models/supplier-models/supplier';
 import { GetService } from '../../../../services/GetService/get.service';
 import { NgFor, NgIf } from '@angular/common';
 import { CreateSupplierComponent } from '../create-supplier/create-supplier.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-admin-supplier',
@@ -16,7 +17,8 @@ export class AdminSupplierComponent implements OnInit{
   newSupplier ?: Supplier | null;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService : UpdateService
   ){}
 
   ngOnInit(): void {
@@ -27,6 +29,7 @@ export class AdminSupplierComponent implements OnInit{
     this.getService.getAllSuppliersAsync().subscribe({
       next: res => {
         this.suppliers = res;
+        console.log(res);
       },
       error: err => {
         console.log(`${err.error}`);
@@ -36,5 +39,22 @@ export class AdminSupplierComponent implements OnInit{
 
   openCreateSupplierForm() {
     this.newSupplier = new Supplier();
+  }
+
+  closeCreateSupplierForm() {
+    this.newSupplier = null;
+    this.getAllSuppliers();
+  }
+
+  archiveSupplier(supplier : Supplier) {
+    this.updateService.archiveSupplierAsync(supplier.id).subscribe({
+      next: res => {
+        alert(`${res.message}`);
+        this.getAllSuppliers();
+      },
+      error: err => {
+        console.log(`${err.error.message}`);
+      }
+    });
   }
 }

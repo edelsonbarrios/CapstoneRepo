@@ -11,6 +11,7 @@ import { VAT } from '../../models/vat-models/vat';
 import { CreateVatRequest } from '../../models/vat-models/createVatRequest';
 import { CreateDiscountRequest } from '../../models/discount-models/create-discount';
 import { CreateProductRequest } from '../../models/product-models/create-product-request';
+import { Supplier } from '../../models/supplier-models/supplier';
 
 @Injectable({
   providedIn: 'root'
@@ -56,4 +57,10 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Product`, newProduct);
   }
   //Product Service End
+
+  //Supplier Service
+  createSupplierAsync(newSupplier: Supplier) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Supplier`, newSupplier);
+  }
+  //Supplier Service End
 }
