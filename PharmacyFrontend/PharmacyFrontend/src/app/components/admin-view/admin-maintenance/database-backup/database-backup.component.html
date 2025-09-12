@@ -1,9 +1,55 @@
 <main class="wrapper">
-  <div class="container">
-    <div class="database-backup">
-      <div class="titles">
-        Database Backup
+
+  <!-- DATABSE BACKUP CONTAINER -->
+  <div class="database-backup">
+
+    <!-- DATABASE BACKUP HEADER -->
+    <div class="header">
+      <h1>Database Backup</h1>
+
+      <div class="header-control">
+        <button class="btn backup-now">Backup Now</button>
+        <button class="btn restore-backup">Restore Backup</button>
+      </div>
+
+    </div>
+
+    <!-- DATABASE BACKUP NOTIFICATION -->
+    <div class="notif-containers">
+      <div class="container">
+        <h2>Last Backup</h2>
+        <div class="last-backup">
+          08/20/2025 10:00AM
+        </div>
+      </div>
+
+      <div class="container">
+        <h2>Total Backup</h2>
+        <div class="total-backup">
+          1
+        </div>
       </div>
     </div>
+
+    <!-- DATABASE BACKUP TABLE -->
+    <table class="database-table">
+      <thead>
+        <tr>
+          <th>Date&amp;Time</th>
+          <th>Size</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>08/20/2025 10:00AM</td>
+          <td>50mb</td>
+          <td>
+            <p>Successful</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
 </main>
