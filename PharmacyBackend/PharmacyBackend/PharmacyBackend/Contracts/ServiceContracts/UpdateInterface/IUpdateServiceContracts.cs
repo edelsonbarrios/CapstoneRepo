@@ -76,6 +76,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region PurchaseOrder
         public Task<bool> UpdatePurchaseOrderAsync(int id, UpdatePurchaseOrderDto dto);
+        public Task<bool> MarkAsReceivedAsync(PurchaseOrderDTO request);
         #endregion
     }
 }

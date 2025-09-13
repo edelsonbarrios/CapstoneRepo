@@ -489,6 +489,48 @@ namespace PharmacyBackend.Service.UpdateService
             return true;
 
         }
+        public async Task<bool> MarkAsReceivedAsync(PurchaseOrderDTO request)
+        {
+            var purchaseOrder = await _getRepo.GetPurchaseOrderByIdAsync(request.Id);
+            if (purchaseOrder is null)
+                return false;
+
+            foreach(var item in request.PurchaseOrderItems)
+            {
+                var poItem = purchaseOrder.PurchaseOrderItems
+                    .FirstOrDefault(po => po.Id == item.Id);
+                if (poItem is null)
+                    continue;
+
+                poItem.QuantityReceived = item.QuantityReceived;
+
+                var inventory = await _context.Inventory
+                    .FirstOrDefaultAsync(i => i.ProductID == poItem.ProductID);
+
+                if(inventory is null)
+                {
+                    var newInventory = new Inventory()
+                    {
+                        ProductID = inventory.ProductID,
+                        QuantityOnHand = item.QuantityReceived,
+                        BatchNumber = item.BatchNumber,
+                        ManufacturingDate = item.ManufacturingDate,
+                        ExpirationDate = item.ExpirationDate,
+                        CostPrice = item.UnitCost,
+                        SellingPrice = item.UnitCost
+                    };
+                    await _context.Inventory.AddAsync(newInventory);
+                }else if(inventory is not null)
+                {
+                    inventory.QuantityOnHand = item.QuantityReceived;
+                }
+            }
+            await _context.SaveChangesAsync();
+            purchaseOrder.Status = "Received";
+            purchaseOrder.DeliveryDate = DateTime.UtcNow;
+
+            return true;
+        }
         #endregion
     }
 }

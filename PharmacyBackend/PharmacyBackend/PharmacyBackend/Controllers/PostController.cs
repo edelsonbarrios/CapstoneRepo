@@ -401,7 +401,7 @@ namespace PharmacyBackend.Controllers
             try
             {
                 var result = await _postService.CreatePurchaseOrderAsync(dto);
-                if (result == null)
+                if (!result)
                     return BadRequest("Purchase order could not be created.");
 
                 return Ok(new { Message = "Purchase order successfully created." });

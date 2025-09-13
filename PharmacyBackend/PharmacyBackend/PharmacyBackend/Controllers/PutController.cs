@@ -236,13 +236,25 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region PurchaseOrder
-        [HttpPut("Update/PurchaseOrder")]
+        [HttpPut("PurchaseOrder")]
         public async Task<IActionResult> UpdatePurchaseOrderAsync(int id, [FromBody] UpdatePurchaseOrderDto dto)
         {
             var success = await _updateService.UpdatePurchaseOrderAsync(id, dto);
             if (!success)
                 return NotFound("Purchase Order not found or update failed.");
             return Ok("Purchase Order updated successfully.");
+        }
+        [HttpPut("MarkAsReceived")]
+        public async Task<ActionResult<bool>> MarkAsReceivedAsync(PurchaseOrderDTO request)
+        {
+            if (request is null)
+                return BadRequest("Purchase order is empty");
+
+            var purchaseOrder = await _updateService.MarkAsReceivedAsync(request);
+            if (!purchaseOrder)
+                return BadRequest("Please fill all the required properties.");
+
+            return Ok(purchaseOrder);
         }
         #endregion
     }

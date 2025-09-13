@@ -526,11 +526,19 @@ namespace PharmacyBackend.Service.PostService
         #region PurchaseOrder
         public async Task<bool> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
         {
+            var supplier = await _context.Supplier.FirstOrDefaultAsync(s => s.SupplierName == dto.SupplierName);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.LastName == dto.EmployeeLastName);
+
+            if (supplier == null || employee == null)
+                return false;
+
             var purchaseOrder = new PurchaseOrder
             {
                 PurchaseOrderNumber = dto.PurchaseOrderNumber,
+                OrderDate = DateTime.UtcNow,
                 DeliveryDate = dto.DeliveryDate,
-                SupplierID = dto.SupplierID,
+                EmployeeID = employee.Id,
+                SupplierID = supplier.Id,
                 Notes = dto.Notes,
                 Status = "Pending",
                 PurchaseOrderItems = dto.PurchaseOrderItems.Select(poi => new PurchaseOrderItem
@@ -538,17 +546,22 @@ namespace PharmacyBackend.Service.PostService
                     ProductID = poi.ProductID,
                     QuantityOrdered = poi.QuantityOrdered,
                     UnitCost = poi.UnitCost,
-                    TotalCost = poi.QuantityOrdered * poi.UnitCost
+                    TotalCost = poi.QuantityOrdered * poi.UnitCost,
+                    BatchNumber = poi.BatchNumber,
+                    ManufacturingDate = poi.ManufacturingDate,
+                    ExpirationDate = poi.ExpirationDate
                 }).ToList()
             };
 
-            // Calculate total amount
+            // Compute total amount after items are added
             purchaseOrder.TotalAmount = purchaseOrder.PurchaseOrderItems.Sum(poi => poi.TotalCost);
 
-            var created = await _postRepo.CreatePurchaseOrderAsync(purchaseOrder);
+            await _context.PurchaseOrder.AddAsync(purchaseOrder);
+            await _context.SaveChangesAsync();
 
-            return created;
+            return true;
         }
+
         #endregion
 
         #region StockMovement

@@ -99,6 +99,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<PurchaseOrder> GetPurchaseOrderByIdAsync(int id);
         public Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderBySupplierIdAsync(int supplierId);
         public Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderByStatusAsync(string status);
+        public Task<List<PurchaseOrder>> GetPendingPurchaseOrdersAsync();
         #endregion
 
         #region StockMovement

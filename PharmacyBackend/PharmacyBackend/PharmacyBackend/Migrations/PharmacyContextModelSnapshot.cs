@@ -505,6 +505,15 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BatchNumber")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ManufacturingDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");
 

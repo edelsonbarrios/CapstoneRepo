@@ -354,6 +354,15 @@ namespace PharmacyBackend.Repository.GET
                 .Where(po => po.Status == status)
                 .ToListAsync();
         }
+        public async Task<List<PurchaseOrder>> GetPendingPurchaseOrdersAsync()
+        {
+            return await _context.PurchaseOrder
+                .Include(po => po.Supplier)
+                .Include(po => po.PurchaseOrderItems)
+                    .ThenInclude(poi => poi.Product)
+                .Where(po => po.Status.Equals("Pending"))
+                .ToListAsync();
+        }
         #endregion
 
         #region StockMovement
