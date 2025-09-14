@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  <!-- REPS HEADER -->
+  <!-- PURCHASE ORDER HEADER -->
   <div class="header">
     
   </div>
@@ -8,61 +8,70 @@
   <div class="container">
     <div class="manage-replenish">
 
-      <!-- REPS CONTROLS/HEADER -->
+      <!-- PURCHASE ORDER CONTROLS/HEADER -->
       <div class="replenish-control">
         <input type="text" name="searchbar" id="searchbar" class="searchbar"
           placeholder="🔍 Search by Item Code, Brand...">
-        <button class="btn-reps">&#43; Add Replenishment</button>
+        <select name="slct-supplier" id="slct-supplier">
+          <option>Select Supplier</option>
+        </select>
+        <input type="number" class='unit-num' placeholder="0">
+        <select name="slct-unit" id="slct-unit">
+          <option>By Unit (unit)</option>
+        </select>
       </div>
 
-      <!-- REPS TABLE -->
-      <table class="reps-table">
+      <button class="btn-purchase-order">Create Purchase Order</button>
+
+      <!-- PURCHASE ORDER TABLE -->
+      <table class="purchase-table">
         <thead>
           <tr>
-            <th>PO Number</th>
+            <th>Reference No.</th>
+            <th>Product</th>
             <th>Supplier</th>
-            <th>Item</th>
-            <th>Ordered Qty</th>
-            <th>Received Qty</th>
+            <th>Qty</th>
+            <th>Units</th>
+            <th>Pieces</th>
+            <th>Batch No.</th>
+            <th>Expiry Date</th>
+            <th>Date Created</th>
+            <th>Created By</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>RX&ndash;001</td>
-            <td>Unilab</td>
-            <td>Biogesic</td>
-            <td>500</td>
-            <td>480</td>
-            <td>Pending</td>
-            <td>
-              <button class="btn-confirm">Confirm Received</button>
-              <button class="btn-archive">Archive</button>
-            </td>
-          </tr>
-          <tr>
-            <td>RX&ndash;002</td>
-            <td>Pfizer</td>
-            <td>Decolgen</td>
-            <td>300</td>
-            <td>300</td>
+            <td>PO&ndash;1757432385845</td>
+            <td>Vitamin C 500mg &ndash; 30 tablets</td>
+            <td>HealthLine Trading</td>
+            <td>3 piece(s) (~1 box(s))</td>
+            <td>1</td>
+            <td>3</td>
+            <td>BATCH-19466</td>
+            <td>2027-09-09</td>
+            <td>9/9/2025, 11:39:45 PM</td>
+            <td>Inventory Manager</td>
             <td>Received</td>
             <td>
-              <button class="btn-confirm">Confirm Received</button>
-              <button class="btn-archive">Archive</button>
+              <button class="btn-confirm">Mark Received</button>
             </td>
           </tr>
           <tr>
-            <td>RX&ndash;003</td>
-            <td>GSK</td>
-            <td>Neozep</td>
-            <td>400</td>
-            <td>0</td>
+            <td>PO&ndash;1757430654585</td>
+            <td>Ibuprofen 400mg &ndash; 20 tablets</td>
+            <td>Pharma Distributors</td>
+            <td>1 box(s) = 20 piece(s)</td>
+            <td>1</td>
+            <td>20</td>
+            <td>BATCH-98360</td>
+            <td>2027-09-09</td>
+            <td>9/9/2025, 11:38:33 PM</td>
+            <td>Inventory Manager</td>
             <td>Pending</td>
             <td>
-              <button class="btn-confirm">Confirm Received</button>
-              <button class="btn-archive">Archive</button>
+              <button class="btn-confirm">Mark Received</button>
             </td>
           </tr>
         </tbody>

@@ -1,122 +1,70 @@
-<div class="wrapper">
+<div class="purchase-order-form">
+  <h2>Create Purchase Order</h2>
 
-  <!-- PURCHASE ORDER HEADER -->
-  <div class="header">
-    
+  <div class="form-row">
+    <div class="form-group">
+      <label for="poNumber">Purchase Order Number</label>
+      <input type="text" id="poNumber" placeholder="Enter PO Number" />
+    </div>
+    <div class="form-group">
+      <label for="deliveryDate">Delivery Date</label>
+      <input type="date" id="deliveryDate" />
+    </div>
   </div>
 
-  <div class="container">
-    <div class="manage-replenish">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="supplier">Supplier Name</label>
+      <select id="supplier">
+        <option value="">-- Select Supplier --</option>
+        <option value="supplier1">Supplier 1</option>
+        <option value="supplier2">Supplier 2</option>
+        <option value="supplier3">Supplier 3</option>
+      </select>
+    </div>
+  </div>
 
-      <!-- PURCHASE ORDER CONTROLS/HEADER -->
-      <div class="replenish-control">
-        <input type="text" name="searchbar" id="searchbar" class="searchbar"
-          placeholder="🔍 Search by Item Code, Brand...">
-        <select name="slct-supplier" id="slct-supplier">
-          <option>Select Supplier</option>
-        </select>
-        <input type="number" class='unit-num' placeholder="0">
-        <select name="slct-unit" id="slct-unit">
-          <option>By Unit (unit)</option>
-        </select>
-      </div>
+  <div class="form-group full-width">
+    <label for="notes">Notes</label>
+    <textarea id="notes" rows="3" placeholder="Add notes"></textarea>
+  </div>
 
-      <button class="btn-purchase-order">Create Purchase Order</button>
+  <h3>Order Items</h3>
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Unit Cost</th>
+        <th>Total</th>
+        <th>Batch Number</th>
+        <th>Manufacturing Date</th>
+        <th>Expiration Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><select><option>--</option></select></td>
+        <td><input type="number" /></td>
+        <td><input type="number" /></td>
+        <td><input type="text" readonly /></td>
+        <td><input type="text" /></td>
+        <td><input type="date" /></td>
+        <td><input type="date" /></td>
+        <td><button class="remove-btn">✕</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="add-item-btn">+ Add Item</button>
 
-      <!-- PURCHASE ORDER TABLE -->
-      <table class="purchase-table">
-        <thead>
-          <tr>
-            <th>Reference No.</th>
-            <th>Product</th>
-            <th>Supplier</th>
-            <th>Qty</th>
-            <th>Units</th>
-            <th>Pieces</th>
-            <th>Batch No.</th>
-            <th>Expiry Date</th>
-            <th>Date Created</th>
-            <th>Created By</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>PO&ndash;1757432385845</td>
-            <td>Vitamin C 500mg &ndash; 30 tablets</td>
-            <td>HealthLine Trading</td>
-            <td>3 piece(s) (~1 box(s))</td>
-            <td>1</td>
-            <td>3</td>
-            <td>BATCH-19466</td>
-            <td>2027-09-09</td>
-            <td>9/9/2025, 11:39:45 PM</td>
-            <td>Inventory Manager</td>
-            <td>Received</td>
-            <td>
-              <button class="btn-confirm">Mark Received</button>
-            </td>
-          </tr>
-          <tr>
-            <td>PO&ndash;1757430654585</td>
-            <td>Ibuprofen 400mg &ndash; 20 tablets</td>
-            <td>Pharma Distributors</td>
-            <td>1 box(s) = 20 piece(s)</td>
-            <td>1</td>
-            <td>20</td>
-            <td>BATCH-98360</td>
-            <td>2027-09-09</td>
-            <td>9/9/2025, 11:38:33 PM</td>
-            <td>Inventory Manager</td>
-            <td>Pending</td>
-            <td>
-              <button class="btn-confirm">Mark Received</button>
-            </td>
-          </tr>
-          <tr>
-            <td>PO&ndash;1757431319275</td>
-            <td>Amoxicillin 500mg &ndash; 14 capsules</td>
-            <td>MediSupply Inc.</td>
-            <td>1 box(s) = 14 piece(s)</td>
-            <td>1</td>
-            <td>14</td>
-            <td>BATCH-94771</td>
-            <td>2027-09-09</td>
-            <td>9/9/2025, 11:21:59 PM</td>
-            <td>Inventory Manager</td>
-            <td>Pending</td>
-            <td>
-              <button class="btn-confirm">Mark Received</button>
-            </td>
-          </tr>
-          <tr>
-            <td>PO&ndash;1757430668158</td>
-            <td>Cough Syrup 100ml &ndash; bottle</td>
-            <td>MediSupply Inc.</td>
-            <td>4 bottle(s) = 4 piece(s)</td>
-            <td>4</td>
-            <td>4</td>
-            <td>BATCH-2911</td>
-            <td>2027-09-09</td>
-            <td>9/9/2025, 11:11:08 PM</td>
-            <td>Inventory Manager</td>
-            <td>Pending</td>
-            <td>
-              <button class="btn-confirm">Mark Received</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- FOOTER/PAGINATION -->
-      <div class="footer">
-        <p>Page 1 of 1</p>
-        <div class="page-buttons">
-          <button>&lt;</button>
-          <button>&gt;</button>
-        </div>
-      </div>
+  <div class="footer">
+    <div class="total">
+      <strong>Total Amount:</strong> <span id="totalAmount">$0.00</span>
+    </div>
+    <div class="actions">
+      <button class="cancel-btn">Cancel</button>
+      <button class="create-btn">Create PO</button>
     </div>
   </div>
 </div>
