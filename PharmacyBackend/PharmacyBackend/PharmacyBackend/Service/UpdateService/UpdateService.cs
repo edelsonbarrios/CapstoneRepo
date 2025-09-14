@@ -489,9 +489,9 @@ namespace PharmacyBackend.Service.UpdateService
             return true;
 
         }
-        public async Task<bool> MarkAsReceivedAsync(PurchaseOrderDTO request)
+        public async Task<bool> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
         {
-            var purchaseOrder = await _getRepo.GetPurchaseOrderByIdAsync(request.Id);
+            var purchaseOrder = await _getRepo.GetPurchaseOrderByIdAsync(request.PurchaseOrderId);
             if (purchaseOrder is null)
                 return false;
 
@@ -511,23 +511,21 @@ namespace PharmacyBackend.Service.UpdateService
                 {
                     var newInventory = new Inventory()
                     {
-                        ProductID = inventory.ProductID,
+                        ProductID = item.ProductId,
                         QuantityOnHand = item.QuantityReceived,
                         BatchNumber = item.BatchNumber,
                         ManufacturingDate = item.ManufacturingDate,
                         ExpirationDate = item.ExpirationDate,
-                        CostPrice = item.UnitCost,
-                        SellingPrice = item.UnitCost
                     };
-                    await _context.Inventory.AddAsync(newInventory);
+                    await _postRepo.CreateInventoryAsync(newInventory);
                 }else if(inventory is not null)
                 {
-                    inventory.QuantityOnHand = item.QuantityReceived;
-                }
+                    inventory.QuantityOnHand += item.QuantityReceived;
+                } 
             }
-            await _context.SaveChangesAsync();
             purchaseOrder.Status = "Received";
             purchaseOrder.DeliveryDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
 
             return true;
         }

@@ -245,7 +245,7 @@ namespace PharmacyBackend.Controllers
             return Ok("Purchase Order updated successfully.");
         }
         [HttpPut("MarkAsReceived")]
-        public async Task<ActionResult<bool>> MarkAsReceivedAsync(PurchaseOrderDTO request)
+        public async Task<ActionResult<bool>> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
         {
             if (request is null)
                 return BadRequest("Purchase order is empty");
