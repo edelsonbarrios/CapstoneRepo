@@ -250,6 +250,14 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'inventory-purchase-order',
+        loadComponent: () => {
+          return import(
+            './components/inventory-manager-view/inventory-purchase-order/inventory-purchase-order.component'
+          ).then((m) => m.InventoryPurchaseOrderComponent);
+        },
+      },
+      {
         path: 'manage-replenishment',
         loadComponent: () => {
           return import(
