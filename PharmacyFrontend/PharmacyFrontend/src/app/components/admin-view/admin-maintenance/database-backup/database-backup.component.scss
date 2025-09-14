@@ -1,30 +1,105 @@
-.wrapper{
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; 
-  background: #f2f6fc;
-  padding: 20px;
+.wrapper {
+  padding: 0.5rem;
   height: 100%;
 
-  .container{
-    display: flex;
-    flex-direction: column;
+  .database-backup {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
     height: 100%;
-    width: 100%;
 
-    .database-backup{
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #f1f5f9;
-      flex: 1;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-      .titles{
-        font-size: 18px;
+      h1 {
+        font-size: 1.50rem;
         font-weight: 600;
         color: #1e2f47;
-        margin-bottom: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .btn {
+        font-size: 1rem;
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+
+        &:active {
+          opacity: 0.8;
+        }
+      }
+
+      .backup-now {
+        background-color: rgba(0, 161, 19, 1);
+        color: white;
+        margin-right: 0.5rem;
+
+        &:hover {
+          background-color: rgb(1, 136, 17);
+        }
+      }
+
+      .restore-backup {
+        background-color: rgba(250, 181, 32, 1);
+        color: white;
+
+        &:hover {
+          background-color: rgb(226, 164, 29);
+        }
+      }
+    }
+
+    .notif-containers {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+
+      .container {
+        background: rgba(223, 234, 255, 1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(223, 234, 255, 1);
+        border-radius: 8px;
+        padding: 0.8rem;
+        flex: 1;
+
+        h2 {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: rgba(0, 68, 170, 1);
+        }
+      }
+    }
+
+    .database-table {
+      border-collapse: collapse;
+      width: 100%;
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.8rem;
+      }
+
+      th {
+        border-bottom: 1px solid rgba(202, 221, 255, 1);
+        font-weight: 500;
+        font-size: 1.1rem;
+        color: rgba(74, 96, 112, 1);
+      }
+
+      td {
+        font-size: 1.2rem;
+
+        p {
+          color: rgba(2, 118, 15, 1);
+        }
       }
     }
   }
