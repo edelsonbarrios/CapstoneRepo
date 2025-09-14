@@ -253,9 +253,16 @@ export const routes: Routes = [
         path: 'inventory-purchase-order',
         loadComponent: () => {
           return import(
-            './components/inventory-manager-view/inventory-purchase-order/inventory-purchase-order.component'
+            './components/inventory-manager-view/inventory-manager-purchase-order/inventory-purchase-order/inventory-purchase-order.component'
           ).then((m) => m.InventoryPurchaseOrderComponent);
         },
+      },
+      {
+        path: 'purchase-order-products',
+        loadComponent: () => {
+          return import('./components/inventory-manager-view/inventory-manager-purchase-order/purchase-order-products/purchase-order-products.component')
+          .then(m => m.PurchaseOrderProductsComponent);
+        }
       },
       {
         path: 'manage-replenishment',

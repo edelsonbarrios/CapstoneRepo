@@ -27,4 +27,6 @@ export class Product {
   classificationName: string = '';
   typeName: string = '';
   supplierName: string = '';
+
+  selected?: boolean;
 }
