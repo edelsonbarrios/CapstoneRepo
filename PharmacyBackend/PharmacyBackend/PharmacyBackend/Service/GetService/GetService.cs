@@ -755,7 +755,6 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
-                SupplierID = po.SupplierID,
                 SupplierName = po.Supplier?.SupplierName ?? string.Empty,
                 TotalAmount = po.TotalAmount,
                 Status = po.Status,
@@ -784,7 +783,6 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
-                SupplierID = po.SupplierID,
                 SupplierName = po.Supplier?.SupplierName ?? string.Empty,
                 TotalAmount = po.TotalAmount,
                 Status = po.Status,
@@ -811,7 +809,6 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
-                SupplierID = po.SupplierID,
                 SupplierName = po.Supplier?.SupplierName ?? string.Empty,
                 TotalAmount = po.TotalAmount,
                 Status = po.Status,
@@ -838,8 +835,7 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderNumber = po.PurchaseOrderNumber,
                 OrderDate = po.OrderDate,
                 DeliveryDate = po.DeliveryDate,
-                SupplierID = po.SupplierID,
-                SupplierName = po.Supplier?.SupplierName ?? string.Empty,
+                SupplierName = po.Supplier.SupplierName,
                 TotalAmount = po.TotalAmount,
                 Status = po.Status,
                 Notes = po.Notes,
@@ -854,6 +850,35 @@ namespace PharmacyBackend.Service.GetService
                     TotalCost = poi.TotalCost
                 }).ToList()
             });
+        }
+        public async Task<List<PurchaseOrderDTO>> GetPendingPurchaseOrdersAsync()
+        {
+            var purchaseOrders = await _getRepo.GetPendingPurchaseOrdersAsync();
+            if (!purchaseOrders.Any() || purchaseOrders.Count() == 0)
+                return new List<PurchaseOrderDTO>();
+
+            var modifPurchaseOrders = purchaseOrders.Select(po => new PurchaseOrderDTO
+            {
+                Id = po.Id,
+                PurchaseOrderNumber = po.PurchaseOrderNumber,
+                OrderDate = po.OrderDate,
+                DeliveryDate = po.DeliveryDate,
+                SupplierName = po.Supplier.SupplierName,
+                TotalAmount = po.TotalAmount,
+                Status = po.Status,
+                Notes = po.Notes,
+                PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
+                {
+                    Id = poi.Id,
+                    ProductID = poi.ProductID,
+                    ProductName = poi.Product.ProductName,
+                    QuantityOrdered = poi.QuantityOrdered,
+                    QuantityReceived = poi.QuantityReceived,
+                    UnitCost = poi.UnitCost,
+                    TotalCost = poi.TotalCost
+                }).ToList()
+            }).ToList();
+            return modifPurchaseOrders;
         }
         #endregion
 
