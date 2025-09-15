@@ -4,29 +4,30 @@
   <div class="form-row">
     <div class="form-group">
       <label for="poNumber">Purchase Order Number</label>
-      <input type="text" id="poNumber" placeholder="Enter PO Number" />
+      <input type="text" id="poNumber" placeholder="Enter PO Number" [(ngModel)]="purchaseOrders.purchaseOrderNumber">
     </div>
     <div class="form-group">
       <label for="deliveryDate">Delivery Date</label>
-      <input type="date" id="deliveryDate" />
+      <input type="date" id="deliveryDate" [(ngModel)]="purchaseOrders.deliveryDate">
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
       <label for="supplier">Supplier Name</label>
-      <select id="supplier">
+      <select id="supplier" [(ngModel)]="purchaseOrders.supplierName">
         <option value="">-- Select Supplier --</option>
-        <option value="supplier1">Supplier 1</option>
-        <option value="supplier2">Supplier 2</option>
-        <option value="supplier3">Supplier 3</option>
+        <option 
+        *ngFor="let s of suppliers" 
+        [value]="s.supplierName"
+        >{{s.supplierName}}</option>
       </select>
     </div>
   </div>
 
   <div class="form-group full-width">
     <label for="notes">Notes</label>
-    <textarea id="notes" rows="3" placeholder="Add notes"></textarea>
+    <textarea id="notes" rows="3" placeholder="Add notes" [(ngModel)]="purchaseOrders.notes"></textarea>
   </div>
 
   <h3>Order Items</h3>
@@ -65,8 +66,7 @@
       <strong>Total Amount:</strong> <span>{{ purchaseOrders.totalAmount | currency }}</span>
     </div>
     <div class="actions">
-      <button class="cancel-btn">Cancel</button>
-      <button class="create-btn">Create PO</button>
+      <button class="create-btn" (click)="createPurchaseOrder()">Create PO</button>
     </div>
   </div>
 </div>

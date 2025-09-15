@@ -1,3 +1,4 @@
+import { CreatePurchaseOrderItem } from "../purchase-order-item-models/create-purchase-order-item";
 import { PurchaseOrderItem } from "../purchase-order-item-models/purchase-order-item";
 
 export class PurchaseOrder {

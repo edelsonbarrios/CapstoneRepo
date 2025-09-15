@@ -8,6 +8,11 @@ import { PurchaseOrderProductsComponent } from '../purchase-order-products/purch
 import { PurchaseOrderItem } from '../../../../models/purchase-order-item-models/purchase-order-item';
 import { CurrencyPipe } from '@angular/common';
 import { Product } from '../../../../models/product-models/product';
+import { Supplier } from '../../../../models/supplier-models/supplier';
+import { CreatePurchaseOrder } from '../../../../models/purchase-order-models/create-purchase-order';
+import { Employee } from '../../../../models/employee-models/employee';
+import { LogInToken } from '../../../shared/token';
+import { jwtDecode } from 'jwt-decode';
 @Component({
   selector: 'app-inventory-purchase-order',
   standalone: true,
@@ -24,13 +29,18 @@ import { Product } from '../../../../models/product-models/product';
 export class InventoryPurchaseOrderComponent implements OnInit {
   purchaseOrders: PurchaseOrder = new PurchaseOrder();
   openProductForm: boolean = false;
+  suppliers: Supplier[] = [];
+  employee: Employee = new Employee();
 
   constructor(
     private getService: GetService,
     private postService: PostService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getAllSuppliers();
+    this.getLoggedInUser();
+  }
 
   openProductsForm() {
     this.openProductForm = true;
@@ -41,9 +51,10 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   onProductsSelected(products: Product[]) {
+    console.log(products);
     const items: PurchaseOrderItem[] = products.map((p) => ({
       id: 0,
-      productId: p.productId,
+      productId: p.productID,
       productName: p.productName,
       quantityOrdered: 1, // default, user can edit later
       quantityReceived: 0,
@@ -75,5 +86,68 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   removeItem(index: number) {
     this.purchaseOrders.purchaseOrderItems.splice(index, 1);
     this.computeTotalAmount();
+  }
+
+  createPurchaseOrder() {
+    const requestPayload: CreatePurchaseOrder = {
+      purchaseOrderNumber: this.purchaseOrders.purchaseOrderNumber,
+      orderDate: new Date(this.purchaseOrders.orderDate).toISOString(),
+      deliveryDate: new Date(this.purchaseOrders.deliveryDate).toISOString(),
+      employeeLastName: this.employee.lastName,
+      supplierName: this.purchaseOrders.supplierName,
+      notes: this.purchaseOrders.notes,
+      purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
+        item => ({
+          productID: item.productId,
+          quantityOrdered: item.quantityOrdered,
+          unitCost: item.unitCost,
+          batchNumber: item.batchNumber,
+          manufacturingDate: new Date(item.manufacturingDate).toISOString(),
+          expirationDate: new Date(item.expirationDate).toISOString()
+        })
+      ),
+    };
+
+    this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
+      next: (res) => {
+        alert(`Purchase Order successfully`);
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+        console.log(this.purchaseOrders);
+        console.log(requestPayload);
+      },
+    });
+  }
+
+  getAllSuppliers() {
+    this.getService.getAllSuppliersAsync().subscribe({
+      next: res => {
+        this.suppliers = res;
+      },
+      error: err => {
+        console.log('Has an error getting all the suppliers.');
+        console.log(`${err.error}`);
+      },
+    });
+  }
+
+  getLoggedInUser() {
+    var token = localStorage.getItem(LogInToken);
+    if (!token) return;
+
+    var employee: any = jwtDecode(token);
+
+    const employeeId = parseInt(employee.EmployeeId);
+    if (!employeeId) console.log(`Employee Id does not exist.`);
+
+    this.getService.GetEmployeeById(employeeId).subscribe({
+      next: (res) => {
+        this.employee = res;
+      },
+      error: (err) => {
+        console.log(`Logged-in user does not exist.`);
+      },
+    });
   }
 }

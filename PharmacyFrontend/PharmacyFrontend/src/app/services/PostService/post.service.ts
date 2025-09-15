@@ -12,6 +12,8 @@ import { CreateVatRequest } from '../../models/vat-models/createVatRequest';
 import { CreateDiscountRequest } from '../../models/discount-models/create-discount';
 import { CreateProductRequest } from '../../models/product-models/create-product-request';
 import { Supplier } from '../../models/supplier-models/supplier';
+import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order';
+import { CreatePurchaseOrder } from '../../models/purchase-order-models/create-purchase-order';
 
 @Injectable({
   providedIn: 'root'
@@ -63,4 +65,10 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Supplier`, newSupplier);
   }
   //Supplier Service End
+
+  //Purchase Order & Purchase Order Item Service End
+  createPurchaseOrderAsync(purchaseOrder: CreatePurchaseOrder) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/PurchaseOrder`, purchaseOrder);
+  }
+  //Purchase Order Service End
 }

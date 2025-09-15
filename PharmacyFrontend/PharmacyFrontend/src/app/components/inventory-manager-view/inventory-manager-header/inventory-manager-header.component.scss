@@ -5,7 +5,10 @@
   justify-content: space-between;
   border-right: 1px solid #eee;
   padding: 15px 0;
-  height: 100vh; // full height sidebar
+  height: 100vh;
+  position: fixed;      // always visible on the left
+  top: 0;               // stick from top
+  left: 0;   
 
   .profile {
     padding: 0 20px;
