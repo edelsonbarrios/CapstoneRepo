@@ -97,13 +97,13 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       supplierName: this.purchaseOrders.supplierName,
       notes: this.purchaseOrders.notes,
       purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
-        item => ({
-          productID: item.productId,
+        (item) => ({
+          productId: item.productId,
           quantityOrdered: item.quantityOrdered,
           unitCost: item.unitCost,
           batchNumber: item.batchNumber,
           manufacturingDate: new Date(item.manufacturingDate).toISOString(),
-          expirationDate: new Date(item.expirationDate).toISOString()
+          expirationDate: new Date(item.expirationDate).toISOString(),
         })
       ),
     };
@@ -111,6 +111,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
       next: (res) => {
         alert(`Purchase Order successfully`);
+        this.clearFields();
       },
       error: (err) => {
         console.log(`${err.error}`);
@@ -120,12 +121,17 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     });
   }
 
+  clearFields() {
+    this.purchaseOrders = new PurchaseOrder(); // resets everything
+    this.purchaseOrders.purchaseOrderItems = []; // ensure items array cleared
+  }
+
   getAllSuppliers() {
     this.getService.getAllSuppliersAsync().subscribe({
-      next: res => {
+      next: (res) => {
         this.suppliers = res;
       },
-      error: err => {
+      error: (err) => {
         console.log('Has an error getting all the suppliers.');
         console.log(`${err.error}`);
       },

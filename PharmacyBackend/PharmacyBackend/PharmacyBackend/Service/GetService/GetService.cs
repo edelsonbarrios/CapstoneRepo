@@ -762,10 +762,11 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
                     Id = poi.Id,
-                    ProductID = poi.ProductID,
+                    ProductId = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
                     QuantityOrdered = poi.QuantityOrdered,
                     QuantityReceived = poi.QuantityReceived,
+                    BatchNumber = poi.BatchNumber,
                     UnitCost = poi.UnitCost,
                     TotalCost = poi.TotalCost
                 }).ToList()
@@ -790,10 +791,11 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
                     Id = poi.Id,
-                    ProductID = poi.ProductID,
+                    ProductId = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
                     QuantityOrdered = poi.QuantityOrdered,
                     QuantityReceived = poi.QuantityReceived,
+                    BatchNumber = poi.BatchNumber,
                     UnitCost = poi.UnitCost,
                     TotalCost = poi.TotalCost
                 }).ToList()
@@ -816,10 +818,11 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
                     Id = poi.Id,
-                    ProductID = poi.ProductID,
+                    ProductId = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
                     QuantityOrdered = poi.QuantityOrdered,
                     QuantityReceived = poi.QuantityReceived,
+                    BatchNumber = poi.BatchNumber,
                     UnitCost = poi.UnitCost,
                     TotalCost = poi.TotalCost
                 }).ToList()
@@ -842,10 +845,11 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
                     Id = poi.Id,
-                    ProductID = poi.ProductID,
+                    ProductId = poi.ProductID,
                     ProductName = poi.Product.ProductName,
                     QuantityOrdered = poi.QuantityOrdered,
                     QuantityReceived = poi.QuantityReceived,
+                    BatchNumber = poi.BatchNumber,
                     UnitCost = poi.UnitCost,
                     TotalCost = poi.TotalCost
                 }).ToList()
@@ -870,10 +874,11 @@ namespace PharmacyBackend.Service.GetService
                 PurchaseOrderItems = po.PurchaseOrderItems.Select(poi => new PurchaseOrderItemDto
                 {
                     Id = poi.Id,
-                    ProductID = poi.ProductID,
+                    ProductId = poi.ProductID,
                     ProductName = poi.Product.ProductName,
                     QuantityOrdered = poi.QuantityOrdered,
                     QuantityReceived = poi.QuantityReceived,
+                    BatchNumber = poi.BatchNumber,
                     UnitCost = poi.UnitCost,
                     TotalCost = poi.TotalCost
                 }).ToList()

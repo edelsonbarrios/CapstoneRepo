@@ -1,0 +1,80 @@
+<div class="wrapper" *ngIf="purchaseOrder">
+  <header>
+    <h1>Purchase Order Details</h1>
+  </header>
+  <main>
+    <div class="po-details">
+      <div class="po-properties">
+        <h1>Purchase Order Number</h1>
+        <h1>Order Date</h1>
+        <h1>Supplier</h1>
+        <h1>Status</h1>
+      </div>
+      <div class="po-property-values">
+        <h1>{{ purchaseOrder.purchaseOrderNumber }}</h1>
+        <h1>{{ purchaseOrder.orderDate | date: 'dd-MM-yyyy' }}</h1>
+        <h1>{{ purchaseOrder.supplierName }}</h1>
+        <h1>{{ purchaseOrder.status }}</h1>
+      </div>
+      <div class="po-properties">
+        <h1>Delivery Date</h1>
+        <h1>Issued By</h1>
+      </div>
+      <div class="po-property-values">
+        <h1>{{ purchaseOrder.deliveryDate | date: 'dd-MM-yyyy' }}</h1>
+        <h1>Employee Name</h1>
+      </div>
+    </div>
+
+    <div class="po-table">
+      <div class="po-items">
+        <h3>Ordered Products</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Batch No.</th>
+              <th>Manufacturing Date</th>
+              <th>Expiration Date</th>
+              <th>Qty Ordered</th>
+              <th>Qty Received</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of purchaseOrder.purchaseOrderItems">
+              <td>{{ item.productName }}</td>
+              <td>
+                {{item.batchNumber}}
+              </td>
+              <td>
+                <input type="date" [(ngModel)]="item.manufacturingDate" />
+              </td>
+              <td>
+                <input type="date" [(ngModel)]="item.expirationDate" />
+              </td>
+              <td>{{ item.quantityOrdered }}</td>
+              <td>
+                <input type="number" [(ngModel)]="item.quantityReceived"
+                  [max]="item.quantityOrdered" (input)="updateItemTotal(item)" />
+              </td>
+              <td>{{ item.unitCost | currency }}</td>
+              <td>{{ item.totalCost | currency }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="po-footer">
+      <p><strong>Total Amount:</strong> {{ purchaseOrder.totalAmount| currency }}</p>
+      <div class="button-wrapper">
+        <button class="btn-primary" (click)="closeViewPOForm()">Cancel</button>
+        <button class="btn-primary" (click)="markAsReceived()">Mark as Received</button>
+      </div>
+    </div>
+  </footer>
+</div>

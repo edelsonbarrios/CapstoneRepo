@@ -511,7 +511,7 @@ namespace PharmacyBackend.Service.UpdateService
                 {
                     var newInventory = new Inventory()
                     {
-                        ProductID = item.ProductId,
+                        ProductID = item.ProductID,
                         QuantityOnHand = item.QuantityReceived,
                         BatchNumber = item.BatchNumber,
                         ManufacturingDate = item.ManufacturingDate,
@@ -525,6 +525,7 @@ namespace PharmacyBackend.Service.UpdateService
             }
             purchaseOrder.Status = "Received";
             purchaseOrder.DeliveryDate = DateTime.UtcNow;
+            purchaseOrder.TotalAmount = request.TotalAmount;
             await _context.SaveChangesAsync();
 
             return true;

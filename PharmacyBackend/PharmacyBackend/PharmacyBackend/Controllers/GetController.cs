@@ -5,6 +5,7 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.Models;
@@ -440,6 +441,14 @@ namespace PharmacyBackend.Controllers
             if (!orders.Any())
                 return NotFound($"No purchase orders found with status: {status}");
             return Ok(orders);
+        }
+        [HttpGet("PurchaseOrderPendings")]
+        public async Task<ActionResult<List<PurchaseOrderDTO>>> GetPendingPurchaseOrdersAsync()
+        {
+            var purchaseOrders = await _getService.GetPendingPurchaseOrdersAsync();
+            if (!purchaseOrders.Any() || purchaseOrders.Count() == 0)
+                return NotFound("No Purchase Orders currently created.");
+            return Ok(purchaseOrders);
         }
         #endregion
 

@@ -15,6 +15,7 @@ import { Formulation } from '../../models/formulation-models/formulation';
 import { Classification } from '../../models/classification-models/classification';
 import { Supplier } from '../../models/supplier-models/supplier';
 import { Product } from '../../models/product-models/product';
+import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order';
 @Injectable({
   providedIn: 'root'
 })
@@ -121,4 +122,10 @@ export class GetService {
     return this.httpClient.get<Product[]>(`${this.apiUrl}/Get/ProductAll`);
   }
   //Product Service End
+
+  //Purchase Order Service
+  getAllPendingPurchaseOrdersAsync() : Observable<PurchaseOrder[]> {
+    return this.httpClient.get<PurchaseOrder[]>(`${this.apiUrl}/Get/PurchaseOrderPendings`);
+  }
+  //Purchase Order Service End
 }

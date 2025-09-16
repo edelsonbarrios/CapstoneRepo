@@ -21,7 +21,7 @@ export class InventoryManagerHeaderComponent {
     ) {}
   
     ngOnInit(): void {
-        this.getLoggedInEmployee();
+      this.getLoggedInEmployee();
     }
   
     logOut() {
@@ -42,7 +42,6 @@ export class InventoryManagerHeaderComponent {
       this.getService.GetEmployeeById(employeeId).subscribe({
         next: employee => {
           this.employee = employee;
-          console.log(employee);
         },
         error: err => {
           console.log(`${err.error}`);

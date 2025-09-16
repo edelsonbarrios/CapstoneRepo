@@ -3,7 +3,7 @@
     public class PurchaseOrderReceivedItemDTO
     {
         public int Id { get; set; }
-        public int ProductId { get; set; }
+        public int ProductID { get; set; }
         public int QuantityReceived { get; set; }
         public string BatchNumber { get; set; }
         public DateTime ManufacturingDate { get; set; }
