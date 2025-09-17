@@ -61,4 +61,8 @@ export class LoginViewComponent {
   goToInventoryMain() {
     this.router.navigateByUrl('/inventory-manager-main');
   }
+
+  goToCashierMain() {
+    this.router.navigateByUrl('/cashier-main');
+  }
 }

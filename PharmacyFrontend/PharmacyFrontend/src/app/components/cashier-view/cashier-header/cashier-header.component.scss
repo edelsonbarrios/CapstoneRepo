@@ -2,22 +2,21 @@
   background: #fff;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-right: 1px solid #eee;
-  height: 100%;
 
   .nav {
     display: flex;
     flex: 1;
     gap: 8px;
     padding: 0 0.9rem;
-    margin-top: 0.8rem;
 
     a {
       display: flex;
       align-items: center;
       color: #3498ff;
       border: 1px solid #3498ff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       padding: 10px 12px;
       border-radius: 6px;
       transition: all 0.2s ease;

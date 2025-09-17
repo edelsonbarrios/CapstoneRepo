@@ -1,8 +1,8 @@
 .wrapper {
-  padding: 1rem;
   height: 100%;
 
   .containers {
+    height: 100%;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     grid-template-rows: 1fr;
@@ -10,11 +10,12 @@
     padding: 1rem;
 
     .grid-items {
+      height: 100%;
       background: white;
       border-radius: 12px;
       padding: 1.5rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border: 1px solid #f1f5f9;
+      
 
       .prod-control {
         display: flex;
@@ -69,11 +70,11 @@
 
         th {
           font-weight: 500;
-          font-size: large;
+          font-size: medium;
         }
 
         td {
-          font-size: large;
+          font-size: medium;
           font-weight: 300;
         }
       }
