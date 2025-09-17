@@ -1,20 +1,21 @@
 .wrapper {
-  background: #fff;
+  background: #f2f6fc;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-right: 1px solid #eee;
 
-  .nav {
+  .left-nav {
     display: flex;
-    flex: 1;
     gap: 8px;
-    padding: 0 0.9rem;
+    padding: 0.9rem 0.9rem;
 
     a {
+      text-decoration: none;
       display: flex;
       align-items: center;
-      color: #3498ff;
+      color: white;
+      background-color: rgba(0, 109, 186, 0.6);
       border: 1px solid #3498ff;
       font-size: 1rem;
       padding: 10px 12px;
@@ -24,9 +25,7 @@
 
       &:hover {
         transform: translateX(5px);
-        background-color: #3498ff;
-        color: white;
-        
+        background-color: rgb(2, 93, 158);
       }
 
       &:active {
@@ -35,17 +34,32 @@
     }
   }
 
-  .bottom-nav {
+  .right-nav {
     display: flex;
-    align-items: center;
-    padding: 0.9rem;
+    gap: 8px;
+    padding: 0.9rem 0.9rem;
 
-    h2 {
-      border: 1px solid #6d9add;
-      color: #333;
+    a {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      color: white;
+      background-color: rgba(0, 109, 186, 0.6);
+      border: 1px solid #3498ff;
       font-size: 1rem;
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: 6px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        transform: translateX(5px);
+        background-color: rgb(2, 93, 158);
+      }
+
+      &:active {
+        opacity: 0.8;
+      }
     }
   }
 }

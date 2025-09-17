@@ -1,0 +1,161 @@
+.wrapper {
+  height: 100%;
+
+  .container {
+    display: grid;
+    padding: 0.7rem;
+    gap: 10px;
+    height: 100%;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'total-sales total-transaction item-sold total-product'
+      'transactions transactions transactions transactions'
+      'product product table-container table-container';
+
+    .total-sales {
+      grid-area: total-sales;
+    }
+
+    .total-transaction {
+      grid-area: total-transaction;
+    }
+
+    .item-sold {
+      grid-area: item-sold;
+    }
+
+    .total-product {
+      grid-area: total-product;
+    }
+
+    .transactions {
+      grid-area: transactions;
+    }
+
+    .product {
+      grid-area: product;
+    }
+
+    .table-container {
+      grid-area: table-container;
+    }
+
+    .grid-items {
+      height: 100%;
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+      .upper-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h2 {
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
+
+        p {
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+      }
+
+      .mid-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+
+        h2 {
+          font-weight: 600;
+        }
+
+        .tab-container {
+          background-color: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 6px;
+          display: flex;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+          .text-item {
+            padding: 12px 25px 12px 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #303641;
+
+            &:first-child {
+              border-right: 1px solid rgba(142, 193, 230, 0.22);
+              background: rgba(0, 109, 186, 0.22);
+            }
+          }
+
+          select {
+            border: 1px solid rgba(0, 109, 186, 0.22);
+          }
+        }
+      }
+
+      h1 {
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+
+      .product-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+          padding: 0.5rem;
+          text-align: left;
+          border-bottom: 1px solid #63a8e9;
+          border-right: 1px solid #63a8e9;
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+
+        th {
+          font-weight: 500;
+          font-size: large;
+        }
+
+        td {
+          font-size: large;
+          font-weight: 300;
+        }
+      }
+
+      .sales-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        tr:nth-child(odd) {
+          background-color: rgb(189, 214, 238);
+        }
+
+        th,
+        td {
+          padding: 0.5rem;
+          text-align: left;
+          border: 1px solid rgba(0, 109, 186, 0.22);
+        }
+
+        th {
+          font-weight: 500;
+          font-size: large;
+          background-color: rgba(0, 109, 186, 0.22);
+        }
+
+        td {
+          font-size: large;
+          font-weight: 300;
+        }
+      }
+    }
+  }
+}

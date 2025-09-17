@@ -293,7 +293,15 @@ export const routes: Routes = [
           return import(
             './components/cashier-view/cashier-dashboard/cashier-dashboard.component'
           ).then((m) => m.CashierDashboardComponent);
-        },
+        }
+      },
+      {
+        path: 'cashier-dashboard',
+        loadComponent: () => {
+          return import(
+            './components/cashier-view/cashier-dashboard/cashier-dashboard.component'
+          ).then((m) => m.CashierDashboardComponent);
+        }
       },
       {
         path: 'cashier-header',
@@ -301,8 +309,16 @@ export const routes: Routes = [
           return import(
             './components/cashier-view/cashier-header/cashier-header.component'
           ).then((m) => m.CashierHeaderComponent);
-        },
+        }
       },
+      {
+        path: 'cashier-transaction',
+        loadComponent: () => {
+          return import(
+            './components/cashier-view/cashier-transaction/cashier-transaction.component'
+          ).then((m) => m.CashierTransactionComponent);
+        }
+      }
     ],
   },
 ];
