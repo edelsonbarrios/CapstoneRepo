@@ -46,7 +46,7 @@
             <tr *ngFor="let item of purchaseOrder.purchaseOrderItems">
               <td>{{ item.productName }}</td>
               <td>
-                {{item.batchNumber}}
+                <input type="text" [(ngModel)]="item.batchNumber">
               </td>
               <td>
                 <input type="date" [(ngModel)]="item.manufacturingDate" />

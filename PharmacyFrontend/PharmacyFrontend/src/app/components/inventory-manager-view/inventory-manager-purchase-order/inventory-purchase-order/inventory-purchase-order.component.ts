@@ -63,6 +63,9 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       batchNumber: '',
       manufacturingDate: new Date(),
       expirationDate: new Date(),
+      category: p.categoryName,
+      classification: p.classificationName,
+      type: p.typeName
     }));
 
     this.purchaseOrders.purchaseOrderItems.push(...items);

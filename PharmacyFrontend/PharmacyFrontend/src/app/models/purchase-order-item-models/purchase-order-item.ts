@@ -9,4 +9,8 @@ export class PurchaseOrderItem {
   batchNumber: string = '';
   manufacturingDate : Date = new Date();
   expirationDate: Date = new Date();
+
+  category: string = '';
+  type: string = '';
+  classification: string = '';
 }

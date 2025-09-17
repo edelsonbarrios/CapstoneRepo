@@ -17,10 +17,7 @@
       <label for="supplier">Supplier Name</label>
       <select id="supplier" [(ngModel)]="purchaseOrders.supplierName">
         <option value="">-- Select Supplier --</option>
-        <option 
-        *ngFor="let s of suppliers" 
-        [value]="s.supplierName"
-        >{{s.supplierName}}</option>
+        <option *ngFor="let s of suppliers" [value]="s.supplierName">{{s.supplierName}}</option>
       </select>
     </div>
   </div>
@@ -35,26 +32,26 @@
     <thead>
       <tr>
         <th>Product</th>
-        <th>Qty</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Classification</th>
         <th>Unit Cost</th>
+        <th>Qty</th>
         <th>Total</th>
-        <th>Batch Number</th>
-        <th>Manufacturing Date</th>
-        <th>Expiration Date</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of purchaseOrders.purchaseOrderItems; let i = index">
         <td>{{ item.productName }}</td>
+        <td>{{item.category}}</td>
+        <td>{{item.type}}</td>
+        <td>{{item.classification}}</td>
+        <td>{{item.unitCost}}</td>
         <td><input type="number" [(ngModel)]="item.quantityOrdered"
-            (input)="item.totalCost = item.quantityOrdered * item.unitCost" (ngModelChange)="updateItemTotal(item)"/></td>
-        <td><input type="number" [(ngModel)]="item.unitCost"
-            (input)="item.totalCost = item.quantityOrdered * item.unitCost"  (ngModelChange)="updateItemTotal(item)"/></td>
-        <td><input type="text" [value]="item.totalCost" /></td>
-        <td><input type="text" [(ngModel)]="item.batchNumber" /></td>
-        <td><input type="date" [(ngModel)]="item.manufacturingDate" /></td>
-        <td><input type="date" [(ngModel)]="item.expirationDate" /></td>
+            (input)="item.totalCost = item.quantityOrdered * item.unitCost" (ngModelChange)="updateItemTotal(item)" />
+        </td>
+        <td>{{item.totalCost}}</td>
         <td><button class="remove-btn" (click)="purchaseOrders.purchaseOrderItems.splice(i,1)">✕</button></td>
       </tr>
     </tbody>
