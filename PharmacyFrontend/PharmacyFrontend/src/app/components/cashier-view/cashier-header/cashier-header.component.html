@@ -1,9 +1,9 @@
 <div class="wrapper">
   
   <nav class="left-nav">
-    <a routerLink="/cashier-main/cashier-dashboard">📊 Product</a>
+    <a (click)="openViewCashierProductForm()">📊 Product</a>
     <a routerLink="/cashier-main/cashier-transaction">📈 Transaction</a>
-    <a routerLink="/admin-main/admin-maintenance-main">🛠️ Daily Sales</a>
+    <a routerLink="/cashier-main/cashier-dashboard">📇 POS</a>
   </nav>
 
   <nav class="right-nav">
@@ -12,4 +12,8 @@
     <a>👥 Administrator</a>
     <a>↩️ Logout</a>
   </nav>
+</div>
+
+<div class="modal-overlay" *ngIf="viewCashierProduct">
+  <app-view-cashier-products *ngIf="viewCashierProduct"></app-view-cashier-products>
 </div>

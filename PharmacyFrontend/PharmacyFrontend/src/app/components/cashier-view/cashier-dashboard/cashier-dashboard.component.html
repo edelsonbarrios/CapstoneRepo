@@ -95,11 +95,19 @@
           </div>
         </div>
         <div class="bottom-btn">
-          <button class="btn-print">Print</button>
+          <button class="btn-print" (click)="openPrintReceiptForm()">Print</button>
           <button class="btn-cancel">Cancel</button>
-          <button class="btn-settle">Settle</button>
+          <button class="btn-settle" (click)="openViewSettleForm()">Settle</button>
         </div>
       </div>
     </div>
   </div>
 </main>
+
+<div class="modal-overlay" *ngIf="viewSettle">
+  <app-view-settle *ngIf="viewSettle"></app-view-settle>
+</div>
+
+<div class="modal-overlay" *ngIf="printReceipt">
+  <app-print-receipt *ngIf="printReceipt"></app-print-receipt>
+</div>
