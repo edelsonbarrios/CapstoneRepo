@@ -1,69 +1,71 @@
-<div class="purchase-order-form">
-  <h2>Create Purchase Order</h2>
+<div class="wrapper">
+  <div class="purchase-order-form">
+    <h2>Create Purchase Order</h2>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label for="poNumber">Purchase Order Number</label>
-      <input type="text" id="poNumber" placeholder="Enter PO Number" [(ngModel)]="purchaseOrders.purchaseOrderNumber">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="poNumber">Purchase Order Number</label>
+        <input type="text" id="poNumber" placeholder="Enter PO Number" [(ngModel)]="purchaseOrders.purchaseOrderNumber">
+      </div>
+      <div class="form-group">
+        <label for="deliveryDate">Delivery Date</label>
+        <input type="date" id="deliveryDate" [(ngModel)]="purchaseOrders.deliveryDate">
+      </div>
     </div>
-    <div class="form-group">
-      <label for="deliveryDate">Delivery Date</label>
-      <input type="date" id="deliveryDate" [(ngModel)]="purchaseOrders.deliveryDate">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="supplier">Supplier Name</label>
+        <select id="supplier" [(ngModel)]="purchaseOrders.supplierName">
+          <option value="">-- Select Supplier --</option>
+          <option *ngFor="let s of suppliers" [value]="s.supplierName">{{s.supplierName}}</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <label for="supplier">Supplier Name</label>
-      <select id="supplier" [(ngModel)]="purchaseOrders.supplierName">
-        <option value="">-- Select Supplier --</option>
-        <option *ngFor="let s of suppliers" [value]="s.supplierName">{{s.supplierName}}</option>
-      </select>
+    <div class="form-group full-width">
+      <label for="notes">Notes</label>
+      <textarea id="notes" rows="3" placeholder="Add notes" [(ngModel)]="purchaseOrders.notes"></textarea>
     </div>
-  </div>
 
-  <div class="form-group full-width">
-    <label for="notes">Notes</label>
-    <textarea id="notes" rows="3" placeholder="Add notes" [(ngModel)]="purchaseOrders.notes"></textarea>
-  </div>
+    <h3>Order Items</h3>
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Type</th>
+          <th>Classification</th>
+          <th>Unit Cost</th>
+          <th>Qty</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of purchaseOrders.purchaseOrderItems; let i = index">
+          <td>{{ item.productName }}</td>
+          <td>{{item.category}}</td>
+          <td>{{item.type}}</td>
+          <td>{{item.classification}}</td>
+          <td>{{item.unitCost}}</td>
+          <td><input type="number" [(ngModel)]="item.quantityOrdered"
+              (input)="item.totalCost = item.quantityOrdered * item.unitCost" (ngModelChange)="updateItemTotal(item)" />
+          </td>
+          <td>{{item.totalCost}}</td>
+          <td><button class="remove-btn" (click)="purchaseOrders.purchaseOrderItems.splice(i,1)">✕</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="add-item-btn" (click)="openProductsForm()">+ Add Item</button>
 
-  <h3>Order Items</h3>
-  <table class="items-table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Category</th>
-        <th>Type</th>
-        <th>Classification</th>
-        <th>Unit Cost</th>
-        <th>Qty</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of purchaseOrders.purchaseOrderItems; let i = index">
-        <td>{{ item.productName }}</td>
-        <td>{{item.category}}</td>
-        <td>{{item.type}}</td>
-        <td>{{item.classification}}</td>
-        <td>{{item.unitCost}}</td>
-        <td><input type="number" [(ngModel)]="item.quantityOrdered"
-            (input)="item.totalCost = item.quantityOrdered * item.unitCost" (ngModelChange)="updateItemTotal(item)" />
-        </td>
-        <td>{{item.totalCost}}</td>
-        <td><button class="remove-btn" (click)="purchaseOrders.purchaseOrderItems.splice(i,1)">✕</button></td>
-      </tr>
-    </tbody>
-  </table>
-  <button class="add-item-btn" (click)="openProductsForm()">+ Add Item</button>
-
-  <div class="footer">
-    <div class="total">
-      <strong>Total Amount:</strong> <span>{{ purchaseOrders.totalAmount | currency }}</span>
-    </div>
-    <div class="actions">
-      <button class="create-btn" (click)="createPurchaseOrder()">Create PO</button>
+    <div class="footer">
+      <div class="total">
+        <strong>Total Amount:</strong> <span>{{ purchaseOrders.totalAmount | currency }}</span>
+      </div>
+      <div class="actions">
+        <button class="create-btn" (click)="createPurchaseOrder()">Create PO</button>
+      </div>
     </div>
   </div>
 </div>

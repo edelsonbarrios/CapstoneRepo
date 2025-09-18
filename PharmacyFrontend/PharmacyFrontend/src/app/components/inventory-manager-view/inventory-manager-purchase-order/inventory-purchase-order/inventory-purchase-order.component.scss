@@ -1,135 +1,142 @@
-.purchase-order-form {
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  font-family: Arial, sans-serif;
+.wrapper {
+  height: 100%;
+  padding: 1rem;
+  .purchase-order-form {
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    font-family: Arial, sans-serif;
 
-  h2 {
-    margin-bottom: 1.5rem;
-    font-size: 1.6rem;
-    font-weight: bold;
-  }
-
-  .form-row {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-
-    .form-group {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-
-      label {
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
-        color: #333;
-      }
-
-      input, select, textarea {
-        padding: 0.6rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 0.95rem;
-      }
-    }
-  }
-
-  .form-group.full-width {
-    margin-bottom: 1.5rem;
-
-    textarea {
-      width: 100%;
-      resize: none;
-    }
-  }
-
-  h3 {
-    margin: 1.5rem 0 0.5rem;
-    font-size: 1.2rem;
-  }
-
-  .items-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 0.6rem;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    th {
-      background: #f9f9f9;
-      font-weight: 600;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 0.4rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .remove-btn {
-      background: none;
-      border: none;
-      color: #e74c3c;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-  }
-
-  .add-item-btn {
-    padding: 0.5rem 1rem;
-    background: #f1f1f1;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-
-    &:hover {
-      background: #e9e9e9;
-    }
-  }
-
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2rem;
-
-    .total {
-      font-size: 1.1rem;
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
       font-weight: bold;
     }
 
-    .actions {
+    .form-row {
       display: flex;
-      gap: 1rem;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
 
-      .cancel-btn {
-        padding: 0.6rem 1.2rem;
-        border: 1px solid #ccc;
-        background: #f9f9f9;
-        border-radius: 6px;
-        cursor: pointer;
+      .form-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        label {
+          font-size: 0.9rem;
+          margin-bottom: 0.3rem;
+          color: #333;
+        }
+
+        input,
+        select,
+        textarea {
+          padding: 0.6rem;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-size: 0.95rem;
+        }
+      }
+    }
+
+    .form-group.full-width {
+      margin-bottom: 1.5rem;
+
+      textarea {
+        width: 100%;
+        resize: none;
+      }
+    }
+
+    h3 {
+      margin: 1.5rem 0 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 0.6rem;
+        text-align: center;
+        font-size: 0.9rem;
       }
 
-      .create-btn {
-        padding: 0.6rem 1.2rem;
-        border: none;
-        background: #007bff;
-        color: #fff;
-        border-radius: 6px;
-        cursor: pointer;
+      th {
+        background: #f9f9f9;
+        font-weight: 600;
+      }
 
-        &:hover {
-          background: #0069d9;
+      input,
+      select {
+        width: 100%;
+        padding: 0.4rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .remove-btn {
+        background: none;
+        border: none;
+        color: #e74c3c;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    }
+
+    .add-item-btn {
+      padding: 0.5rem 1rem;
+      background: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &:hover {
+        background: #e9e9e9;
+      }
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+
+      .total {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+
+        .cancel-btn {
+          padding: 0.6rem 1.2rem;
+          border: 1px solid #ccc;
+          background: #f9f9f9;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .create-btn {
+          padding: 0.6rem 1.2rem;
+          border: none;
+          background: #007bff;
+          color: #fff;
+          border-radius: 6px;
+          cursor: pointer;
+
+          &:hover {
+            background: #0069d9;
+          }
         }
       }
     }

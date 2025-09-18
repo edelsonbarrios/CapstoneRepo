@@ -170,17 +170,19 @@ export const routes: Routes = [
       {
         path: 'admin-supplier',
         loadComponent: () => {
-          return import('./components/admin-view/supplier/admin-supplier/admin-supplier.component')
-          .then(m => m.AdminSupplierComponent);
-        }
+          return import(
+            './components/admin-view/supplier/admin-supplier/admin-supplier.component'
+          ).then((m) => m.AdminSupplierComponent);
+        },
       },
       {
         path: 'create-supplier',
         loadComponent: () => {
-          return import('./components/admin-view/supplier/create-supplier/create-supplier.component')
-          .then(m => m.CreateSupplierComponent);
-        }
-      }
+          return import(
+            './components/admin-view/supplier/create-supplier/create-supplier.component'
+          ).then((m) => m.CreateSupplierComponent);
+        },
+      },
     ],
   },
   {
@@ -260,9 +262,10 @@ export const routes: Routes = [
       {
         path: 'purchase-order-products',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/inventory-manager-purchase-order/purchase-order-products/purchase-order-products.component')
-          .then(m => m.PurchaseOrderProductsComponent);
-        }
+          return import(
+            './components/inventory-manager-view/inventory-manager-purchase-order/purchase-order-products/purchase-order-products.component'
+          ).then((m) => m.PurchaseOrderProductsComponent);
+        },
       },
       {
         path: 'manage-replenishment',
@@ -309,54 +312,61 @@ export const routes: Routes = [
       {
         path: 'item-data-control-main',
         loadComponent: () => {
-          return import('./components/inventory-manager-view/item-data-control/item-data-control-main/item-data-control-main.component')
-          .then(m => m.ItemDataControlMainComponent);
+          return import(
+            './components/inventory-manager-view/item-data-control/item-data-control-main/item-data-control-main.component'
+          ).then((m) => m.ItemDataControlMainComponent);
         },
         children: [
           {
             path: '',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/item-data-control/manage-brand-name/manage-brand-name.component')
-              .then(m => m.ManageBrandNameComponent);
-            }
+              return import(
+                './components/inventory-manager-view/item-data-control/manage-brand-name/manage-brand-name.component'
+              ).then((m) => m.ManageBrandNameComponent);
+            },
           },
           {
             path: 'manage-brand-name',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/item-data-control/manage-brand-name/manage-brand-name.component')
-              .then(m => m.ManageBrandNameComponent);
-            }
+              return import(
+                './components/inventory-manager-view/item-data-control/manage-brand-name/manage-brand-name.component'
+              ).then((m) => m.ManageBrandNameComponent);
+            },
           },
           {
             path: 'manage-generic-name',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/item-data-control/manage-generic-name/manage-generic-name.component')
-              .then(m => m.ManageGenericNameComponent);
-            }
+              return import(
+                './components/inventory-manager-view/item-data-control/manage-generic-name/manage-generic-name.component'
+              ).then((m) => m.ManageGenericNameComponent);
+            },
           },
           {
             path: 'manage-formulation',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/item-data-control/manage-formulation/manage-formulation.component')
-              .then(m => m.ManageFormulationComponent);
-            }
+              return import(
+                './components/inventory-manager-view/item-data-control/manage-formulation/manage-formulation.component'
+              ).then((m) => m.ManageFormulationComponent);
+            },
           },
           {
             path: 'manage-classification',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/item-data-control/manage-classification/manage-classification.component')
-              .then(m => m.ManageClassificationComponent);
-            }
+              return import(
+                './components/inventory-manager-view/item-data-control/manage-classification/manage-classification.component'
+              ).then((m) => m.ManageClassificationComponent);
+            },
           },
           {
             path: 'manage-type',
             loadComponent: () => {
-              return import('./components/inventory-manager-view/item-data-control/manage-type/manage-type.component')
-              .then(m => m.ManageTypeComponent);
+              return import(
+                './components/inventory-manager-view/item-data-control/manage-type/manage-type.component'
+              ).then((m) => m.ManageTypeComponent);
             },
-          }
-        ]
-      }
+          },
+        ],
+      },
     ],
   },
   {
