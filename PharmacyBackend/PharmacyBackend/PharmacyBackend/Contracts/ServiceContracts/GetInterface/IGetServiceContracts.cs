@@ -13,6 +13,7 @@ using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using PharmacyBackend.Models.CashierViewModel;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -38,8 +39,14 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #endregion
 
         #region Sales
-        public Task<List<SalesTransactionDto>> GetAllSalesTransactionsAsync();
-        public Task<SalesTransactionDto> GetSalesTransactionByIdAsync(int id);
+        // Sales Transaction methods
+        public Task<SalesTransactionDto?> GetSalesTransactionByIdAsync(int id);
+        public Task<IEnumerable<SalesTransactionDto>> GetAllSalesTransactionsAsync();
+        public Task<IEnumerable<SalesTransactionDto>> GetSalesTransactionsByEmployeeIdAsync(int employeeId);
+        public Task<IEnumerable<SalesTransactionDto>> GetSalesTransactionsByDateRangeAsync(DateTime startDate, DateTime endDate);
+        public Task<IEnumerable<SalesTransactionDto>> GetSalesTransactionsByInvoiceNumberAsync(string invoiceNumber);
+        public Task<SalesItemDto?> GetSalesItemByIdAsync(int id);
+        public Task<IEnumerable<SalesItemDto>> GetSalesItemsByTransactionIdAsync(int transactionId);
         #endregion
 
         #region Discount

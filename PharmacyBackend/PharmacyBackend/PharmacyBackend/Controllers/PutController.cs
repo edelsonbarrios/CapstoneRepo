@@ -69,7 +69,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Sale
-        [HttpPut("update/sale")]
+        [HttpPut("Transaction/{id}")]
         public async Task<IActionResult> UpdateSalesTransactionAsync(int id, [FromBody] UpdateSalesTransactionDto dto)
         {
             var success = await _updateService.UpdateSalesTransactionAsync(id, dto);

@@ -1,4 +1,5 @@
-﻿using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
+﻿using Microsoft.EntityFrameworkCore;
+using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
@@ -31,11 +32,45 @@ namespace PharmacyBackend.Repository.UpdateRepository
         #endregion
 
         #region Sales
-        public async Task<bool> UpdateSalesTransactionAsync(SalesTransaction sale)
+        public async Task<SalesTransaction?> UpdateSalesTransactionAsync(SalesTransaction salesTransaction)
         {
-            _context.SalesTransaction.Update(sale);
-            await _context.SaveChangesAsync();
-            return true;
+            try
+            {
+                _context.SalesTransaction.Update(salesTransaction);
+                await _context.SaveChangesAsync();
+
+                // Return the updated transaction with navigation properties
+                return await _context.SalesTransaction
+                    .Include(st => st.Discount)
+                    .Include(st => st.Employee)
+                    .Include(st => st.VAT)
+                    .Include(st => st.Items)
+                        .ThenInclude(si => si.Product)
+                    .FirstOrDefaultAsync(st => st.Id == salesTransaction.Id);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<SalesItem?> UpdateSalesItemAsync(SalesItem salesItem)
+        {
+            try
+            {
+                _context.SalesItem.Update(salesItem);
+                await _context.SaveChangesAsync();
+
+                // Return the updated item with navigation properties
+                return await _context.SalesItem
+                    .Include(si => si.Product)
+                    .Include(si => si.SalesTransaction)
+                    .FirstOrDefaultAsync(si => si.Id == salesItem.Id);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
         #endregion
 

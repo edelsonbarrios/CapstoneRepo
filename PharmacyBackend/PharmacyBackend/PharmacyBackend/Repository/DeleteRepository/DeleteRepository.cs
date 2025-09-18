@@ -37,6 +37,7 @@ namespace PharmacyBackend.Repository.DELETE
         #endregion
 
         #region Sales
+        //transaction
         public async Task<bool> DeleteSalesTransactionByIdAsync(int id)
         {
             var sale = await _context.SalesTransaction.FindAsync(id);
@@ -44,6 +45,17 @@ namespace PharmacyBackend.Repository.DELETE
                 return false;
 
             _context.SalesTransaction.Remove(sale);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        //salesitem
+        public async Task<bool> DeleteSalesItemAsync(int id)
+        {
+            var salesItem = await _context.SalesItem.FindAsync(id);
+            if (salesItem == null)
+                return false;
+
+            _context.SalesItem.Remove(salesItem);
             await _context.SaveChangesAsync();
             return true;
         }

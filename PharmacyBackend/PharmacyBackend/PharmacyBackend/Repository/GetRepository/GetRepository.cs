@@ -106,22 +106,140 @@ namespace PharmacyBackend.Repository.GET
         #endregion
 
         #region Sales
-        public async Task<List<SalesTransaction>> GetAllSalesTransactionsAsync()
-        {
-            return await _context.SalesTransaction
-                .Include(t => t.Discount)
-                .Include(t => t.Items)
-                  .ThenInclude(i => i.Product)
-                .ToListAsync();
-        }
-
+        // Sales Transaction methods
         public async Task<SalesTransaction?> GetSalesTransactionByIdAsync(int id)
         {
-            return await _context.SalesTransaction
-                .Include(t => t.Discount)
-                .Include(t => t.Items)
-                .ThenInclude(i => i.Product)
-                .FirstOrDefaultAsync(t => t.Id == id);
+            try
+            {
+                return await _context.SalesTransaction
+                    .Include(st => st.Discount)
+                    .Include(st => st.Employee)
+                    .Include(st => st.VAT)
+                    .Include(st => st.Items)
+                        .ThenInclude(si => si.Product)
+                    .FirstOrDefaultAsync(st => st.Id == id);
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving sales transaction with ID {id}: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<SalesTransaction>> GetAllSalesTransactionsAsync()
+        {
+            try
+            {
+                return await _context.SalesTransaction
+                    .Include(st => st.Discount)
+                    .Include(st => st.Employee)
+                    .Include(st => st.VAT)
+                    .Include(st => st.Items)
+                        .ThenInclude(si => si.Product)
+                    .OrderByDescending(st => st.TransactionDate)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving all sales transactions: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<SalesTransaction>> GetSalesTransactionsByEmployeeIdAsync(int employeeId)
+        {
+            try
+            {
+                return await _context.SalesTransaction
+                    .Include(st => st.Discount)
+                    .Include(st => st.Employee)
+                    .Include(st => st.VAT)
+                    .Include(st => st.Items)
+                        .ThenInclude(si => si.Product)
+                    .Where(st => st.EmployeeID == employeeId)
+                    .OrderByDescending(st => st.TransactionDate)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving sales transactions for employee ID {employeeId}: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<SalesTransaction>> GetSalesTransactionsByDateRangeAsync(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                return await _context.SalesTransaction
+                    .Include(st => st.Discount)
+                    .Include(st => st.Employee)
+                    .Include(st => st.VAT)
+                    .Include(st => st.Items)
+                        .ThenInclude(si => si.Product)
+                    .Where(st => st.TransactionDate.Date >= startDate.Date && st.TransactionDate.Date <= endDate.Date)
+                    .OrderByDescending(st => st.TransactionDate)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving sales transactions for date range {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<SalesTransaction>> GetSalesTransactionsByInvoiceNumberAsync(string invoiceNumber)
+        {
+            try
+            {
+                return await _context.SalesTransaction
+                    .Include(st => st.Discount)
+                    .Include(st => st.Employee)
+                    .Include(st => st.VAT)
+                    .Include(st => st.Items)
+                        .ThenInclude(si => si.Product)
+                    .Where(st => st.InvoiceNumber.Contains(invoiceNumber))
+                    .OrderByDescending(st => st.TransactionDate)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving sales transactions for invoice number {invoiceNumber}: {ex.Message}", ex);
+            }
+        }
+
+        // Sales Item methods
+        public async Task<SalesItem?> GetSalesItemByIdAsync(int id)
+        {
+            try
+            {
+                return await _context.SalesItem
+                    .Include(si => si.Product)
+                    .Include(si => si.SalesTransaction)
+                    .FirstOrDefaultAsync(si => si.Id == id);
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving sales item with ID {id}: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<IEnumerable<SalesItem>> GetSalesItemsByTransactionIdAsync(int transactionId)
+        {
+            try
+            {
+                return await _context.SalesItem
+                    .Include(si => si.Product)
+                    .Where(si => si.SalesTransactionId == transactionId)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                throw new Exception($"Error retrieving sales items for transaction ID {transactionId}: {ex.Message}", ex);
+            }
         }
         #endregion
 

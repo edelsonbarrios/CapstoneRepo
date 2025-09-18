@@ -71,10 +71,6 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
@@ -86,7 +82,7 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
@@ -98,7 +94,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SalesTransactionId");
 
-                    b.ToTable("SalesItem");
+                    b.ToTable("SalesItem", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesTransaction", b =>
@@ -109,9 +105,15 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ChangeAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("DiscountAmount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("DiscountId")
                         .HasColumnType("integer");
@@ -124,16 +126,25 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<decimal>("NetAmount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("TransactionDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<decimal>("VATAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("VATId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -142,6 +153,8 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("EmployeeID");
 
                     b.HasIndex("TransactionDate");
+
+                    b.HasIndex("VATId");
 
                     b.ToTable("SalesTransaction");
                 });
@@ -743,9 +756,15 @@ namespace PharmacyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("PharmacyBackend.Models.VAT", "VAT")
+                        .WithMany()
+                        .HasForeignKey("VATId");
+
                     b.Navigation("Discount");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("VAT");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>

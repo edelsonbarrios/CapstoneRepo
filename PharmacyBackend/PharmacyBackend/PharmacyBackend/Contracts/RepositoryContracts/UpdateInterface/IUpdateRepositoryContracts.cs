@@ -1,4 +1,5 @@
-﻿using PharmacyBackend.Models;
+﻿using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 using System.Runtime.CompilerServices;
 
@@ -13,7 +14,9 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
         #endregion
 
         #region Sales
-        public Task<bool> UpdateSalesTransactionAsync(SalesTransaction transaction);
+        public Task<SalesTransaction?> UpdateSalesTransactionAsync(SalesTransaction salesTransaction);
+        public Task<SalesItem?> UpdateSalesItemAsync(SalesItem salesItem);
+
         #endregion
 
         #region Discount

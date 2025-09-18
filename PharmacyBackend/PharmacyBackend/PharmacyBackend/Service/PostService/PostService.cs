@@ -130,37 +130,101 @@ namespace PharmacyBackend.Service.PostService
         #region Sales
         public async Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto)
         {
-            if (dto == null || dto.Items == null || !dto.Items.Any())
-                return null;
-
-            var transaction = new SalesTransaction
+            try
             {
-                TransactionDate = DateTime.Now,
-                InvoiceNumber = dto.InvoiceNumber,
-                DiscountId = dto.DiscountId,
-                DiscountAmount = 0,
-                Items = dto.Items.Select(i => new SalesItem
+                if (dto == null || dto.Items == null || !dto.Items.Any())
+                    throw new ArgumentException("Sales transaction must have at least one item");
+
+                // Create the sales transaction entity
+                var transaction = new SalesTransaction
                 {
-                    ProductId = i.ProductId,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice,
-                    Subtotal = i.Quantity * i.UnitPrice
-                }).ToList()
-            };
+                    TransactionDate = DateTime.UtcNow,
+                    InvoiceNumber = dto.InvoiceNumber,
+                    PaymentMethod = dto.PaymentMethod,
+                    AmountPaid = dto.AmountPaid,
+                    ChangeAmount = dto.ChangeAmount,
+                    DiscountId = dto.DiscountId,
+                    EmployeeID = dto.EmployeeID,
+                    VATId = dto.VATId,
+                    DiscountAmount = dto.DiscountAmount,
+                    VATAmount = dto.VATAmount,
+                    Items = dto.Items.Select(i => new SalesItem
+                    {
+                        ProductId = i.ProductId,
+                        Quantity = i.Quantity,
+                        UnitPrice = i.UnitPrice,
+                        Subtotal = i.Quantity * i.UnitPrice
+                    }).ToList()
+                };
 
-            transaction.TotalAmount = transaction.Items.Sum(i => i.Subtotal);
-            transaction.NetAmount = transaction.TotalAmount - transaction.DiscountAmount;
+                // Repository will handle inventory deduction and stock movements
+                var createdTransaction = await _postRepo.CreateSalesTransactionAsync(transaction);
 
-            var created = await _postRepo.CreateSalesTransactionAsync(transaction);
-
-            return new SalesTransactionDto
+                // Return DTO
+                return new SalesTransactionDto
+                {
+                    Id = createdTransaction.Id,
+                    TransactionDate = createdTransaction.TransactionDate,
+                    InvoiceNumber = createdTransaction.InvoiceNumber,
+                    TotalAmount = createdTransaction.TotalAmount,
+                    DiscountAmount = createdTransaction.DiscountAmount,
+                    VATAmount = createdTransaction.VATAmount,
+                    NetAmount = createdTransaction.NetAmount,
+                    PaymentMethod = createdTransaction.PaymentMethod,
+                    AmountPaid = createdTransaction.AmountPaid,
+                    ChangeAmount = createdTransaction.ChangeAmount,
+                    DiscountId = createdTransaction.DiscountId,
+                    EmployeeID = createdTransaction.EmployeeID,
+                    VATId = createdTransaction.VATId,
+                    DiscountName = createdTransaction.Discount?.DiscountName ?? string.Empty,
+                    EmployeeName = createdTransaction.Employee != null ? $"{createdTransaction.Employee.FirstName} {createdTransaction.Employee.LastName}" : string.Empty,
+                    VATRate = createdTransaction.VAT?.VATRate,
+                    Items = createdTransaction.Items.Select(i => new SalesItemDto
+                    {
+                        Id = i.Id,
+                        ProductId = i.ProductId,
+                        ProductName = i.Product?.ProductName ?? string.Empty,
+                        Quantity = i.Quantity,
+                        UnitPrice = i.UnitPrice,
+                        Subtotal = i.Subtotal
+                    }).ToList()
+                };
+            }
+            catch (Exception ex)
             {
-                Id = created.Id,
-                InvoiceNumber = created.InvoiceNumber,
-                TransactionDate = created.TransactionDate,
-                TotalAmount = created.TotalAmount,
-                NetAmount = created.NetAmount
-            };
+                throw new Exception($"Error creating sales transaction: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<SalesItemDto> CreateSalesItemAsync(CreateSalesItemDto dto)
+        {
+            try
+            {
+                var salesItem = new SalesItem
+                {
+                    SalesTransactionId = dto.SalesTransactionId,
+                    ProductId = dto.ProductId,
+                    Quantity = dto.Quantity,
+                    UnitPrice = dto.UnitPrice,
+                    Subtotal = dto.Quantity * dto.UnitPrice
+                };
+
+                var created = await _postRepo.CreateSalesItemAsync(salesItem);
+
+                return new SalesItemDto
+                {
+                    Id = created.Id,
+                    ProductId = created.ProductId,
+                    ProductName = created.Product?.ProductName ?? string.Empty,
+                    Quantity = created.Quantity,
+                    UnitPrice = created.UnitPrice,
+                    Subtotal = created.Subtotal
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating sales item: {ex.Message}", ex);
+            }
         }
         #endregion
 
@@ -171,6 +235,7 @@ namespace PharmacyBackend.Service.PostService
             {
                 DiscountName = dto.DiscountName,
                 DiscountRate = dto.DiscountRate
+
             };
 
             var result = await _postRepo.CreateDiscountAsync(discount);

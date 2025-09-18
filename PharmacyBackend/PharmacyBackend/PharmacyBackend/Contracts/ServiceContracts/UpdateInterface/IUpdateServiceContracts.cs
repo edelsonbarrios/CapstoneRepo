@@ -24,7 +24,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         #endregion
 
         #region Sales
-        public Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto request);
+        public Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto);
         #endregion
 
         #region Discount

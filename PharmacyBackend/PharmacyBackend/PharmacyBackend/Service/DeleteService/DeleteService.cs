@@ -43,6 +43,14 @@ namespace PharmacyBackend.Service.DeleteService
                 return false;
             return true;
         }
+
+        public async Task<bool> DeleteSalesItemAsync(int id)
+        {
+            var deletedSalesItem = await _deleteRepo.DeleteSalesItemAsync(id);
+            if (!deletedSalesItem)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Discount

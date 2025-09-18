@@ -13,6 +13,7 @@ using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using PharmacyBackend.Models.CashierViewModel;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 {
@@ -31,7 +32,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         #endregion
 
         #region Sales
-        public Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto request);
+        public Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto);
+        public Task<SalesItemDto> CreateSalesItemAsync(CreateSalesItemDto dto);
         #endregion
 
         #region Discount

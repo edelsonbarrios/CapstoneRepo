@@ -1,5 +1,6 @@
 ﻿using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -20,8 +21,12 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         public Task<bool> CreateAccountAsync(Account request);
         #endregion
 
-        #region --Sales
-        public Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction transaction);
+        #region Sales
+
+        public Task<SalesTransaction> CreateSalesTransactionAsync(SalesTransaction salesTransaction);
+        public Task<SalesItem> CreateSalesItemAsync(SalesItem salesItem);
+      
+
         #endregion
 
         #region Discount
