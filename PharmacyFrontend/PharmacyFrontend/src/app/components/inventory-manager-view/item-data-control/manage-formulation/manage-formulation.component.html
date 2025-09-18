@@ -5,7 +5,7 @@
     <div class="formulation-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-formulation">&#43; Add Formulation</button>
+      <button class="btn-formulation" (click)="openAddFormulationForm()">&#43; Add Formulation</button>
     </div>
 
     <!-- FORMULATION TABLE -->
@@ -32,7 +32,7 @@
           <td>10 + 2 + 500</td>
           <td>mg (per tablet)</td>
           <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditFormulationForm()">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -92,4 +92,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addFormulation">
+  <app-add-formulation *ngIf="addFormulation"></app-add-formulation>
+</div>
+
+<div class="modal-overlay" *ngIf="editFormulation">
+  <app-edit-formulation *ngIf="editFormulation"></app-edit-formulation>
 </div>

@@ -5,7 +5,7 @@
     <div class="type-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-type">&#43; Add Type</button>
+      <button class="btn-type" (click)="openAddTypeForm()">&#43; Add Type</button>
     </div>
 
     <!-- TYPE TABLE -->
@@ -22,7 +22,7 @@
           <td>TYPE001</td>
           <td>Tablet</td>
           <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditTypeForm()">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -62,4 +62,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addType">
+  <app-add-type *ngIf="addType"></app-add-type>
+</div>
+
+<div class="modal-overlay" *ngIf="editType">
+  <app-edit-type *ngIf="editType"></app-edit-type>
 </div>

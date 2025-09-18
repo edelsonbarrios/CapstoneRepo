@@ -5,7 +5,7 @@
     <div class="generic-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-generic">&#43; Add Generic</button>
+      <button class="btn-generic" (click)="openAddGenericForm()">&#43; Add Generic</button>
     </div>
 
     <!-- GENERIC NAME TABLE -->
@@ -22,7 +22,7 @@
           <td>PCM</td>
           <td>Paracetamol</td>
           <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditGenericForm()">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -62,4 +62,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addGeneric">
+  <app-add-generic *ngIf="addGeneric"></app-add-generic>
+</div>
+
+<div class="modal-overlay" *ngIf="editGeneric">
+  <app-edit-generic *ngIf="editGeneric"></app-edit-generic>
 </div>

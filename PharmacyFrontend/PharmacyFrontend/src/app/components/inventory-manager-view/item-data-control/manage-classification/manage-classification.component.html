@@ -5,7 +5,7 @@
     <div class="class-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-class">&#43; Add Clasification</button>
+      <button class="btn-class" (click)="openAddClassificationForm()">&#43; Add Clasification</button>
     </div>
 
     <!-- CLASSIFICATION TABLE -->
@@ -24,7 +24,7 @@
           <td>Antibiotics</td>
           <td>Used to treat bacterial infections</td>
           <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditClassificationForm()">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -67,4 +67,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addClassification">
+  <app-add-classification *ngIf="addClassification"></app-add-classification>
+</div>
+
+<div class="modal-overlay" *ngIf="editClassification">
+  <app-edit-classification *ngIf="editClassification"></app-edit-classification>
 </div>

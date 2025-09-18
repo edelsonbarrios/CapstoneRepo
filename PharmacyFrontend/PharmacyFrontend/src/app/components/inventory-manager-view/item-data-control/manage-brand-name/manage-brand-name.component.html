@@ -5,7 +5,7 @@
     <div class="brand-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-brand">&#43; Add Brand</button>
+      <button class="btn-brand" (click)="openAddBrandForm()">&#43; Add Brand</button>
     </div>
 
     <!-- BRAND NAME TABLE -->
@@ -22,7 +22,7 @@
           <td>PAR&ndash;500</td>
           <td>Biogesic</td>
           <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditBrandForm()">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -62,4 +62,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addBrand">
+  <app-add-brand *ngIf="addBrand"></app-add-brand>
+</div>
+
+<div class="modal-overlay" *ngIf="editBrand">
+  <app-edit-brand *ngIf="editBrand"></app-edit-brand>
 </div>
