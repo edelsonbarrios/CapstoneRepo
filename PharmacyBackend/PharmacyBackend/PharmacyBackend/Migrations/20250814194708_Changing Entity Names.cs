@@ -35,8 +35,8 @@ namespace PharmacyBackend.Migrations
                 table: "Products");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_SalesItems_Products_ProductId",
-                table: "SalesItems");
+                name: "FK_SalesItem_Products_ProductId",
+                table: "SalesItem");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_TypeModels",
@@ -208,8 +208,8 @@ namespace PharmacyBackend.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_SalesItems_Product_ProductId",
-                table: "SalesItems",
+                name: "FK_SalesItem_Product_ProductId",
+                table: "SalesItem",
                 column: "ProductId",
                 principalTable: "Product",
                 principalColumn: "ProductID",
@@ -244,8 +244,8 @@ namespace PharmacyBackend.Migrations
                 table: "Product");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_SalesItems_Product_ProductId",
-                table: "SalesItems");
+                name: "FK_SalesItem_Product_ProductId",
+                table: "SalesItem");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_TypeModel",
@@ -417,8 +417,8 @@ namespace PharmacyBackend.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_SalesItems_Products_ProductId",
-                table: "SalesItems",
+                name: "FK_SalesItem_Products_ProductId",
+                table: "SalesItem",
                 column: "ProductId",
                 principalTable: "Products",
                 principalColumn: "ProductID",

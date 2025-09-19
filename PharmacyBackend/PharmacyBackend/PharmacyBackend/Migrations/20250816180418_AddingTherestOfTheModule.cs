@@ -17,36 +17,36 @@ namespace PharmacyBackend.Migrations
                 table: "Employees");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_SalesItems_Product_ProductId",
-                table: "SalesItems");
+                name: "FK_SalesItem_Product_ProductId",
+                table: "SalesItem");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_SalesItems_SalesTransaction_SalesTransactionId",
-                table: "SalesItems");
+                name: "FK_SalesItem_SalesTransaction_SalesTransactionId",
+                table: "SalesItem");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_SalesTransaction_Discounts_DiscountId",
                 table: "SalesTransaction");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_SalesItems",
-                table: "SalesItems");
+                name: "PK_SalesItem",
+                table: "SalesItem");
 
             migrationBuilder.DropColumn(
                 name: "Stock",
                 table: "Product");
 
             migrationBuilder.RenameTable(
-                name: "SalesItems",
+                name: "SalesItem",
                 newName: "SalesItem");
 
             migrationBuilder.RenameIndex(
-                name: "IX_SalesItems_SalesTransactionId",
+                name: "IX_SalesItem_SalesTransactionId",
                 table: "SalesItem",
                 newName: "IX_SalesItem_SalesTransactionId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_SalesItems_ProductId",
+                name: "IX_SalesItem_ProductId",
                 table: "SalesItem",
                 newName: "IX_SalesItem_ProductId");
 
@@ -543,17 +543,17 @@ namespace PharmacyBackend.Migrations
 
             migrationBuilder.RenameTable(
                 name: "SalesItem",
-                newName: "SalesItems");
+                newName: "SalesItem");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SalesItem_SalesTransactionId",
-                table: "SalesItems",
-                newName: "IX_SalesItems_SalesTransactionId");
+                table: "SalesItem",
+                newName: "IX_SalesItem_SalesTransactionId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SalesItem_ProductId",
-                table: "SalesItems",
-                newName: "IX_SalesItems_ProductId");
+                table: "SalesItem",
+                newName: "IX_SalesItem_ProductId");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "TransactionDate",
@@ -613,7 +613,7 @@ namespace PharmacyBackend.Migrations
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "UnitPrice",
-                table: "SalesItems",
+                table: "SalesItem",
                 type: "numeric",
                 nullable: false,
                 oldClrType: typeof(decimal),
@@ -623,7 +623,7 @@ namespace PharmacyBackend.Migrations
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "Subtotal",
-                table: "SalesItems",
+                table: "SalesItem",
                 type: "numeric",
                 nullable: false,
                 oldClrType: typeof(decimal),
@@ -632,8 +632,8 @@ namespace PharmacyBackend.Migrations
                 oldScale: 2);
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_SalesItems",
-                table: "SalesItems",
+                name: "PK_SalesItem",
+                table: "SalesItem",
                 column: "Id");
 
             migrationBuilder.AddForeignKey(
@@ -644,16 +644,16 @@ namespace PharmacyBackend.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_SalesItems_Product_ProductId",
-                table: "SalesItems",
+                name: "FK_SalesItem_Product_ProductId",
+                table: "SalesItem",
                 column: "ProductId",
                 principalTable: "Product",
                 principalColumn: "ProductID",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_SalesItems_SalesTransaction_SalesTransactionId",
-                table: "SalesItems",
+                name: "FK_SalesItem_SalesTransaction_SalesTransactionId",
+                table: "SalesItem",
                 column: "SalesTransactionId",
                 principalTable: "SalesTransaction",
                 principalColumn: "Id",

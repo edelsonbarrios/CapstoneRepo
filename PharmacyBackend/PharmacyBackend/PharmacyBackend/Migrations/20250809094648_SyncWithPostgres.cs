@@ -94,7 +94,7 @@ namespace PharmacyBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SalesItems",
+                name: "SalesItem",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -107,15 +107,15 @@ namespace PharmacyBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SalesItems", x => x.Id);
+                    table.PrimaryKey("PK_SalesItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SalesItems_Product_ProductId",
+                        name: "FK_SalesItem_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "ProductID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SalesItems_SalesTransaction_SalesTransactionId",
+                        name: "FK_SalesItem_SalesTransaction_SalesTransactionId",
                         column: x => x.SalesTransactionId,
                         principalTable: "SalesTransaction",
                         principalColumn: "Id",
@@ -128,13 +128,13 @@ namespace PharmacyBackend.Migrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalesItems_ProductId",
-                table: "SalesItems",
+                name: "IX_SalesItem_ProductId",
+                table: "SalesItem",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalesItems_SalesTransactionId",
-                table: "SalesItems",
+                name: "IX_SalesItem_SalesTransactionId",
+                table: "SalesItem",
                 column: "SalesTransactionId");
 
             migrationBuilder.CreateIndex(
@@ -147,7 +147,7 @@ namespace PharmacyBackend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SalesItems");
+                name: "SalesItem");
 
             migrationBuilder.DropTable(
                 name: "Product");
