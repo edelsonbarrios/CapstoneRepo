@@ -14,6 +14,7 @@ import { CreateProductRequest } from '../../models/product-models/create-product
 import { Supplier } from '../../models/supplier-models/supplier';
 import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order';
 import { CreatePurchaseOrder } from '../../models/purchase-order-models/create-purchase-order';
+import { Brand } from '../../models/brand-models/brand';
 
 @Injectable({
   providedIn: 'root'
@@ -71,4 +72,10 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/PurchaseOrder`, purchaseOrder);
   }
   //Purchase Order Service End
+
+  // Brand Service
+  createBrandAsync(brand: Brand) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Brand`, brand);
+  }
+  //Brand Service End
 }
