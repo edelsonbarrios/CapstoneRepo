@@ -27,6 +27,7 @@
           <td>{{v.vatRate}}%</td>
           <td>{{v.dateCreated | date: 'dd-MM-yyyy'}}</td>
           <td>
+            <button class="btn-edit" (click)="openEditVatForm()">Edit</button>
             <button class="btn-archive" (click)="archiveVat(v)">Archive</button>
           </td>
         </tr>
@@ -34,3 +35,7 @@
     </table>
   </div>
 </main>
+
+<div class="modal-overlay" *ngIf="editVat">
+  <app-edit-vat *ngIf="editVat"></app-edit-vat>
+</div>

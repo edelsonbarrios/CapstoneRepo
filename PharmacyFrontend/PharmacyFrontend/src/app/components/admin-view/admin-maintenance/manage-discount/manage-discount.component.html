@@ -30,6 +30,7 @@
           <td>{{d.discountRate}}%</td>
           <td>Active</td>
           <td>
+            <button class="btn-edit" (click)="openEditDiscountForm()">Edit</button>
             <button class="btn-archive" (click)="archiveDiscount(d)">Archive</button>
           </td>
         </tr>
@@ -37,3 +38,7 @@
     </table>
   </div>
 </main>
+
+<div class="modal-overlay" *ngIf="editDiscount">
+  <app-edit-discount *ngIf="editDiscount"></app-edit-discount>
+</div>
