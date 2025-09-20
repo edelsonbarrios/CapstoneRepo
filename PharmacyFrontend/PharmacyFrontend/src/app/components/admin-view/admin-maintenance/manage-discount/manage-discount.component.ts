@@ -6,11 +6,13 @@ import { CreateDiscountRequest } from '../../../../models/discount-models/create
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { Product } from '../../../../models/product-models/product';
+import { EditDiscountComponent } from '../edit-discount/edit-discount.component';
 
 @Component({
   selector: 'app-manage-discount',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf],
+  imports: [FormsModule, NgFor, NgIf, EditDiscountComponent],
   templateUrl: './manage-discount.component.html',
   styleUrl: './manage-discount.component.scss',
 })
@@ -18,12 +20,13 @@ export class ManageDiscountComponent implements OnInit {
   discounts: Discount[] = [];
   newDiscount: Discount = new Discount();
   errorMessage: string = '';
+  editDiscount?: Product | null;
 
   constructor(
     private getService: GetService,
     private postService: PostService,
-    private updateService : UpdateService
-  ) {}
+    private updateService: UpdateService
+  ) { }
 
   ngOnInit(): void {
     this.getAllDiscount();
@@ -69,7 +72,7 @@ export class ManageDiscountComponent implements OnInit {
   }
 
   archiveDiscount(discount: Discount) {
-    if(!discount) return;
+    if (!discount) return;
     this.updateService.archiveDiscountAsync(discount.id).subscribe({
       next: mes => {
         alert(`${mes.message}`);
@@ -78,5 +81,9 @@ export class ManageDiscountComponent implements OnInit {
         alert(`${err.error.message}`);
       }
     });
+  }
+
+  openEditDiscountForm() {
+    this.editDiscount = new Product();
   }
 }

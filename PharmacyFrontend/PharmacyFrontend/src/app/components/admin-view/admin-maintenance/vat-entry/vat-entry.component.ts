@@ -7,11 +7,13 @@ import { CreateVatRequest } from '../../../../models/vat-models/createVatRequest
 import { PostService } from '../../../../services/PostService/post.service';
 import { Discount } from '../../../../models/discount-models/discount';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { Product } from '../../../../models/product-models/product';
+import { EditVatComponent } from '../edit-vat/edit-vat.component';
 
 @Component({
   selector: 'app-vat-entry',
   standalone: true,
-  imports: [FormsModule, NgForOf, DatePipe, NgIf],
+  imports: [FormsModule, NgForOf, DatePipe, NgIf, EditVatComponent],
   templateUrl: './vat-entry.component.html',
   styleUrl: './vat-entry.component.scss'
 })
@@ -19,6 +21,7 @@ export class VatEntryComponent implements OnInit{
   vats : VAT[] = [];
   createdVat : VAT = new VAT();
   vatError: string = '';
+  editVat ?: Product | null;
 
   constructor(
     private getService: GetService,
@@ -81,5 +84,9 @@ export class VatEntryComponent implements OnInit{
         alert(`${err.error.message}`);
       }
     });
+  }
+
+   openEditVatForm() {
+    this.editVat = new Product();
   }
 }
