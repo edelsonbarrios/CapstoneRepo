@@ -8,16 +8,13 @@
 
     <!-- EDIT GENERIC FILL UP -->
     <div class="fillup">
-        <label>Item Code</label>
-        <input type="text" placeholder="(e.g. PCM)">
-
         <label>Generic Name</label>
-        <input type="text" placeholder="(e.g. Paracetamol)">
+        <input type="text" placeholder="(e.g. Paracetamol)" [(ngModel)]="editGeneric.genericName">
     </div>
 
     <!-- EDIT GENERIC FOOTER -->
     <div class="modal-footer">
-        <button class="btn-save">Update</button>
-        <button class="btn-cancel">Cancel</button>
+        <button class="btn-save" (click)="updateGeneric()">Update</button>
+        <button class="btn-cancel" (click)="closeEditGenericForm()">Cancel</button>
     </div>
 </div>

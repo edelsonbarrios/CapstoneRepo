@@ -20,7 +20,7 @@
         <tr *ngFor="let f of formulations">
           <td>{{f.formulationName}}</td>
           <td>
-            <button class="btn-edit" (click)="openEditFormulationForm()">Edit</button>
+            <button class="btn-edit" (click)="openEditFormulationForm(f)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -46,5 +46,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="editFormulation">
-  <app-edit-formulation *ngIf="editFormulation"></app-edit-formulation>
+  <app-edit-formulation 
+  *ngIf="editFormulation"
+  [editFormulation]="editFormulation"
+  (closeForm)="closeEditFormulationForm()"
+  ></app-edit-formulation>
 </div>

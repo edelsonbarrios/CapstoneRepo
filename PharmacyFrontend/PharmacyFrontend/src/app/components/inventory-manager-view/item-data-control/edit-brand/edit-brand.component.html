@@ -8,16 +8,13 @@
 
   <!-- EDIT BRAND FILL UP -->
   <div class="fillup">
-    <label>Item Code</label>
-    <input type="text" placeholder="(e.g. BIO-500)">
-
     <label>Generic Name</label>
-    <input type="text" placeholder="(e.g. Biogesic)">
+    <input type="text" placeholder="(e.g. Biogesic)" [(ngModel)]="editBrand.brandName">
   </div>
 
   <!-- EDIT BRAND FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save">Update</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-save" (click)="updateBrand()">Update</button>
+    <button class="btn-cancel" (click)="closeEditBrandForm()">Cancel</button>
   </div>
 </div>

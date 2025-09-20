@@ -20,7 +20,7 @@
         <tr *ngFor="let t of types">
           <td>{{t.typeName}}</td>
           <td>
-            <button class="btn-edit" (click)="openEditTypeForm()">Edit</button>
+            <button class="btn-edit" (click)="openEditTypeForm(t)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -46,5 +46,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="editType">
-  <app-edit-type *ngIf="editType"></app-edit-type>
+  <app-edit-type 
+  *ngIf="editType"
+  [editType]="editType"
+  (closeForm)="closeEditTypeForm()"
+  ></app-edit-type>
 </div>

@@ -15,7 +15,7 @@ import { Brand } from '../../../../models/brand-models/brand';
 })
 export class ManageBrandNameComponent implements OnInit{
   addBrand?: Brand | null;
-  editBrand?: Product | null;
+  editBrand?: Brand | null;
   brands: Brand[] = [];
 
   constructor(private getService: GetService) {}
@@ -44,7 +44,11 @@ export class ManageBrandNameComponent implements OnInit{
     this.getAllBrands();
   }
 
-  openEditBrandForm() {
-    this.editBrand = new Product();
+  openEditBrandForm(brandToEdit: Brand) {
+    this.editBrand = brandToEdit;
+  }
+
+  closeEditBrandForm() {
+    this.editBrand = null;
   }
 }

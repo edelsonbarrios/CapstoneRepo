@@ -46,7 +46,11 @@ export class ManageTypeComponent implements OnInit{
     this.getAllTypes();
   }
 
-  openEditTypeForm() {
-    this.editType = new TypeModel();
+  openEditTypeForm(type : TypeModel) {
+    this.editType = type;
+  }
+
+  closeEditTypeForm() {
+    this.editType = null;
   }
 }

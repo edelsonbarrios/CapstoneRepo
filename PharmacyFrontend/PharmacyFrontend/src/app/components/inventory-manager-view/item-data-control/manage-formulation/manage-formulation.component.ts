@@ -46,7 +46,11 @@ export class ManageFormulationComponent implements OnInit{
     this.getAllFormulation();
   }
 
-  openEditFormulationForm() {
-    this.editFormulation = new Formulation();
+  openEditFormulationForm(formulation : Formulation) {
+    this.editFormulation = formulation;
+  }
+
+  closeEditFormulationForm() {
+    this.editFormulation = null;
   }
 }

@@ -20,7 +20,7 @@
         <tr *ngFor="let g of generics">
           <td>{{g.genericName}}</td>
           <td>
-            <button class="btn-edit" (click)="openEditGenericForm()">Edit</button>
+            <button class="btn-edit" (click)="openEditGenericForm(g)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -46,5 +46,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="editGeneric">
-  <app-edit-generic *ngIf="editGeneric"></app-edit-generic>
+  <app-edit-generic 
+  *ngIf="editGeneric"
+  [editGeneric]="editGeneric"
+  (closeForm)="closeEditGenericForm()"
+  ></app-edit-generic>
 </div>

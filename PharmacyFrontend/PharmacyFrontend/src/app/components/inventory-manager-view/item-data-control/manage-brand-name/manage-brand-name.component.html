@@ -20,7 +20,7 @@
         <tr *ngFor="let b of brands">
           <td>{{b.brandName}}</td>
           <td>
-            <button class="btn-edit" (click)="openEditBrandForm()">Edit</button>
+            <button class="btn-edit" (click)="openEditBrandForm(b)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -48,5 +48,7 @@
 <div class="modal-overlay" *ngIf="editBrand">
   <app-edit-brand 
   *ngIf="editBrand"
+  [editBrand]="editBrand"
+  (closeForm)="closeEditBrandForm()"
   ></app-edit-brand>
 </div>

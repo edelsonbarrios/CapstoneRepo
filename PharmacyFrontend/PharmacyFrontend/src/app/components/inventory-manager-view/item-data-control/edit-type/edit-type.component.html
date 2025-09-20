@@ -8,16 +8,13 @@
 
   <!-- EDIT TYPE FILL UP -->
   <div class="fillup">
-    <label>Item Code</label>
-    <input type="text" placeholder="(e.,g TYPE001...)">
-
     <label>Type</label>
-    <input type="text" placeholder="(e.,g Tablet...)">
+    <input type="text" placeholder="(e.,g Tablet...)" [(ngModel)]="editType.typeName">
   </div>
 
   <!-- EDIT TYPE FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save">Update</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-save" (click)="updateType()">Update</button>
+    <button class="btn-cancel" (click)="closeEditTypeForm()">Cancel</button>
   </div>
 </div>

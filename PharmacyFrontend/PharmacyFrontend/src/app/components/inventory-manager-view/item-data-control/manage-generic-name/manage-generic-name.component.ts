@@ -43,7 +43,7 @@ export class ManageGenericNameComponent implements OnInit {
   }
 
   openAddGenericForm() {
-    this.addGeneric = new Product();
+    this.addGeneric = new Generic();
   }
 
   closeAddGenericForm() {
@@ -51,7 +51,11 @@ export class ManageGenericNameComponent implements OnInit {
     this.getAllGenerics();
   }
 
-  openEditGenericForm() {
-    this.editGeneric = new Product();
+  openEditGenericForm(generic: Generic) {
+    this.editGeneric =  generic;
+  }
+
+  closeEditGenericForm() {
+    this.editGeneric = null;
   }
 }

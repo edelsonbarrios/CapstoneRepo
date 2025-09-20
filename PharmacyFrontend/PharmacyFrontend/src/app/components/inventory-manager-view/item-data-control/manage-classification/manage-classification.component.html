@@ -20,7 +20,7 @@
         <tr *ngFor="let c of classifications">
           <td>{{c.classificationName}}</td>
           <td>
-            <button class="btn-edit" (click)="openEditClassificationForm()">Edit</button>
+            <button class="btn-edit" (click)="openEditClassificationForm(c)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -46,5 +46,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="editClassification">
-  <app-edit-classification *ngIf="editClassification"></app-edit-classification>
+  <app-edit-classification 
+  *ngIf="editClassification"
+  [editClassification]="editClassification"
+  (closeForm)="closeEditClassificationForm()"
+  ></app-edit-classification>
 </div>

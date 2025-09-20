@@ -8,21 +8,13 @@
 
     <!-- EDIT CLASSIFICATION FILL UP -->
     <div class="fillup">
-        <label>Item Code</label>
-        <input type="text" placeholder="(eg., CLASS001...)">
-
         <label>Classification</label>
-        <input type="text" placeholder="(eg., Pain Reliever...)">
-
-        <label>Description</label>
-        <form>
-            <textarea>(eg., Used to treat bacterial infections...)</textarea>
-        </form>
+        <input type="text" placeholder="(eg., Pain Reliever...)" [(ngModel)]="editClassification.classificationName">
     </div>
 
     <!-- EDIT CLASSIFICATION FOOTER -->
     <div class="modal-footer">
-        <button class="btn-save">Update</button>
-        <button class="btn-cancel">Cancel</button>
+        <button class="btn-save" (click)="updateClassification()">Update</button>
+        <button class="btn-cancel" (click)="closeEditClassificationForm()">Cancel</button>
     </div>
 </div>

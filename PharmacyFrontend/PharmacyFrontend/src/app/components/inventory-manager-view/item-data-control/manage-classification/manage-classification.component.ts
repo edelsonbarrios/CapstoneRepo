@@ -46,7 +46,11 @@ export class ManageClassificationComponent implements OnInit{
     this.getAllClassifications();
   }
 
-  openEditClassificationForm() {
-    this.editClassification = new Classification();
+  openEditClassificationForm(classification : Classification) {
+    this.editClassification = classification;
+  }
+
+  closeEditClassificationForm() {
+    this.editClassification = null;
   }
 }
