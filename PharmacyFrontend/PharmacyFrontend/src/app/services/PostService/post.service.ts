@@ -17,6 +17,8 @@ import { CreatePurchaseOrder } from '../../models/purchase-order-models/create-p
 import { Brand } from '../../models/brand-models/brand';
 import { Generic } from '../../models/generic-models/generic';
 import { Formulation } from '../../models/formulation-models/formulation';
+import { Classification } from '../../models/classification-models/classification';
+import { TypeModel } from '../../models/type-models/type';
 
 @Injectable({
   providedIn: 'root'
@@ -92,4 +94,16 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Formulation`, formulation);
   }
   //Formulation Service End
+
+  //Classification Service
+  createNewClassificationAsync(classification : Classification) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Classification`, classification);
+  }
+  //Classification Service End
+
+  //Type Service
+  createNewTypeAsync(type : TypeModel) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Type`, type);
+  }
+  //Type Service End  
 }

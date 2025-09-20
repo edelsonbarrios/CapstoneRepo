@@ -12,46 +12,15 @@
     <table class="classification-table">
       <thead>
         <tr>
-          <th>Item Code</th>
           <th>Classification</th>
-          <th>Description</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>CLASS001</td>
-          <td>Antibiotics</td>
-          <td>Used to treat bacterial infections</td>
+        <tr *ngFor="let c of classifications">
+          <td>{{c.classificationName}}</td>
           <td>
             <button class="btn-edit" (click)="openEditClassificationForm()">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>CLASS002</td>
-          <td>Pain Relievers</td>
-          <td>Used to relieve mild to moderate pain</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>CLASS003</td>
-          <td>Antihistamines</td>
-          <td>Used for colds, nasal congestion, and allergy symptoms</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-         <tr>
-          <td>CLASS004</td>
-          <td>Cardiovascular Drugs</td>
-          <td>Used for treating heart or blood pressure conditions</td>
-          <td>
-            <button class="btn-edit">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -70,7 +39,10 @@
 </div>
 
 <div class="modal-overlay" *ngIf="addClassification">
-  <app-add-classification *ngIf="addClassification"></app-add-classification>
+  <app-add-classification 
+  *ngIf="addClassification"
+  (closeForm)="closeAddClassificationForm()"
+  ></app-add-classification>
 </div>
 
 <div class="modal-overlay" *ngIf="editClassification">

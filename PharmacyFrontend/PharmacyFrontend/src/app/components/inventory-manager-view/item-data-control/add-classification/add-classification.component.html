@@ -8,21 +8,13 @@
 
     <!-- ADD CLASSIFICATION FILL UP -->
     <div class="fillup">
-        <label>Item Code</label>
-        <input type="text" placeholder="(eg., CLASS001...)">
-
         <label>Classification</label>
-        <input type="text" placeholder="(eg., Pain Reliever...)">
-
-        <label>Description</label>
-        <form>
-            <textarea>(eg., Used to treat bacterial infections...)</textarea>
-        </form>
+        <input type="text" placeholder="(eg., Pain Reliever...)" [(ngModel)]="addClassification.classificationName">
     </div>
 
     <!-- ADD CLASSIFICATION FOOTER -->
     <div class="modal-footer">
-        <button class="btn-save">Save</button>
-        <button class="btn-cancel">Cancel</button>
+        <button class="btn-save" (click)="createNewClassification()">Save</button>
+        <button class="btn-cancel" (click)="closeAddClassificationForm()">Cancel</button>
     </div>
 </div>

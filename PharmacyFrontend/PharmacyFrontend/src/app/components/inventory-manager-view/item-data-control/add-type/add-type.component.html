@@ -2,22 +2,19 @@
 
   <!-- ADD TYPE HEADER -->
   <div class="modal-header">
-    <h2>Add Brand Name</h2>
+    <h2>Add Type Name</h2>
     <a>X</a>
   </div>
 
   <!-- ADD TYPE FILL UP -->
   <div class="fillup">
-    <label>Item Code</label>
-    <input type="text" placeholder="(e.,g TYPE001...)">
-
     <label>Type</label>
-    <input type="text" placeholder="(e.,g Tablet...)">
+    <input type="text" placeholder="(e.,g Tablet...)" [(ngModel)]="addType.typeName">
   </div>
 
   <!-- ADD TYPE FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save">Save</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-save" (click)="createNewType()">Save</button>
+    <button class="btn-cancel" (click)="closeAddTypeForm()">Cancel</button>
   </div>
 </div>
