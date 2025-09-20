@@ -1,1 +1,113 @@
-<p>cashier-dashboard works!</p>
+<main class="wrapper">
+  <div class="containers">
+
+    <div class="grid-items product-display">
+      <div class="prod-control">
+        <input type="text" placeholder="Search product by name or item code">
+        <select name="prod" id="prod">
+          <option>OPTION 1</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-items product-compute">
+      <div class="compute-header">
+        <input type="number" placeholder="Type the number then hit enter">
+      </div>
+
+      <table class="compute-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Paracetamol (500mg)</td>
+            <td>
+              <input type="number" placeholder="0">
+            </td>
+            <td>
+              <input type="number" placeholder="&#8369;0">
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Ibuprofen (200mg)</td>
+            <td>
+              <input type="number" placeholder="0">
+            </td>
+            <td>
+              <input type="number" placeholder="&#8369;0">
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Vitamin C (500mg)</td>
+            <td>
+              <input type="number" placeholder="0">
+            </td>
+            <td>
+              <input type="number" placeholder="&#8369;0">
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Cetirizine (10mg)</td>
+            <td>
+              <input type="number" placeholder="0">
+            </td>
+            <td>
+              <input type="number" placeholder="&#8369;0">
+            </td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Alcohol (70% sol.)</td>
+            <td>
+              <input type="number" placeholder="0">
+            </td>
+            <td>
+              <input type="number" placeholder="&#8369;0">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="bottom-compute">
+        <div class="bot-grid">
+          <div class="total-items">
+            <p>Total Item (s):<span>5</span></p>
+          </div>
+          <div class="gross-items">
+            <div class="gross">
+              <p>Price:</p>
+              <p>: &#8369;2,000</p>
+            </div>
+            <div class="gross">
+              <p>Gross Price (inc 12% Tax)</p>
+              <p class="amount">&#8369;2,000</p>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-btn">
+          <button class="btn-print" (click)="openPrintReceiptForm()">Print</button>
+          <button class="btn-cancel">Cancel</button>
+          <button class="btn-settle" (click)="openViewSettleForm()">Settle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" *ngIf="viewSettle">
+  <app-view-settle *ngIf="viewSettle"></app-view-settle>
+</div>
+
+<div class="modal-overlay" *ngIf="printReceipt">
+  <app-print-receipt *ngIf="printReceipt"></app-print-receipt>
+</div>

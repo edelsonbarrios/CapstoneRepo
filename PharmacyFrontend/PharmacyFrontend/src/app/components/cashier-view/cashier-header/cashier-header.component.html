@@ -1,25 +1,22 @@
 <div class="wrapper">
-  <div class="profile">
-    <div class="logo">logo</div>
-    <div class="user-info">
-      <div class="avatar"></div>
-      <div>
-        <div class="name"></div>
-        <div class="email"></div>
-      </div>
-    </div>
-  </div>
-
-  <nav class="nav">
-    <a routerLink="/admin-main/admin-dashboard">📊 Dashboard</a>
-    <a routerLink="/admin-main/admin-reports-main">📈 Reports</a>
-    <a routerLink="/admin-main/admin-maintenance-main">🛠️ Maintenance</a>
-    <a>📦Supplier</a>
-    <a routerLink="/admin-main/employee-accounts-main">👤 Employee Accounts</a>
+  
+  <nav class="left-nav">
+    <a (click)="openViewCashierProductForm()">📊 Product</a>
+    <a routerLink="/cashier-main/cashier-transaction">📈 Transaction</a>
+    <a routerLink="/cashier-main/cashier-dashboard">📇 POS</a>
   </nav>
 
-  <div class="bottom-nav">
+  <nav class="right-nav">
     <a>⚙️ Settings</a>
+    <a>👤 Users</a>
+    <a>👥 Administrator</a>
     <a>↩️ Logout</a>
-  </div>
+  </nav>
+</div>
+
+<div class="modal-overlay" *ngIf="viewCashierProduct">
+  <app-view-cashier-products 
+  *ngIf="viewCashierProduct"
+  (closeForm)="closeCashierProductForm()"
+  ></app-view-cashier-products>
 </div>

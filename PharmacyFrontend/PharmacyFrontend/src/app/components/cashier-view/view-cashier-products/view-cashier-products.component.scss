@@ -1,0 +1,42 @@
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 1500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+
+    h2 {
+      font-size: 1.3rem;
+    }
+    a {
+      cursor: pointer;
+    }
+  }
+
+  input {
+    margin-top: 10px;
+    width: 300px;
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 109, 186, 1);
+    margin-bottom: 1rem;
+  }
+
+  .product-table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+      text-align: left;
+      padding: 1rem;
+      border: 1px solid rgba(0, 109, 186, 1);
+    }
+  }
+}
