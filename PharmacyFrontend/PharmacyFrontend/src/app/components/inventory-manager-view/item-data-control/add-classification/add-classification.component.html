@@ -1,0 +1,20 @@
+<div class="modal">
+
+    <!-- ADD CLASSIFICATION HEADER -->
+    <div class="modal-header">
+        <h2>Add Classification</h2>
+        <a>X</a>
+    </div>
+
+    <!-- ADD CLASSIFICATION FILL UP -->
+    <div class="fillup">
+        <label>Classification</label>
+        <input type="text" placeholder="(eg., Pain Reliever...)" [(ngModel)]="addClassification.classificationName">
+    </div>
+
+    <!-- ADD CLASSIFICATION FOOTER -->
+    <div class="modal-footer">
+        <button class="btn-save" (click)="createNewClassification()">Save</button>
+        <button class="btn-cancel" (click)="closeAddClassificationForm()">Cancel</button>
+    </div>
+</div>

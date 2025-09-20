@@ -5,48 +5,22 @@
     <div class="type-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-type">&#43; Add Type</button>
+      <button class="btn-type" (click)="openAddTypeForm()">&#43; Add Type</button>
     </div>
 
     <!-- TYPE TABLE -->
     <table class="type-table">
       <thead>
         <tr>
-          <th>Item Code</th>
           <th>Type</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>TYPE001</td>
-          <td>Tablet</td>
+        <tr *ngFor="let t of types">
+          <td>{{t.typeName}}</td>
           <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>TYPE002</td>
-          <td>Syrup</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>TYPE003</td>
-          <td>Capsule</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-         <tr>
-          <td>TYPE004</td>
-          <td>Injection Drugs</td>
-          <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditTypeForm(t)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -62,4 +36,19 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addType">
+  <app-add-type 
+  *ngIf="addType"
+  (closeForm)="closeAddTypeForm()"
+  ></app-add-type>
+</div>
+
+<div class="modal-overlay" *ngIf="editType">
+  <app-edit-type 
+  *ngIf="editType"
+  [editType]="editType"
+  (closeForm)="closeEditTypeForm()"
+  ></app-edit-type>
 </div>

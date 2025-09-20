@@ -1,0 +1,20 @@
+<div class="modal">
+
+  <!-- ADD TYPE HEADER -->
+  <div class="modal-header">
+    <h2>Add Type Name</h2>
+    <a>X</a>
+  </div>
+
+  <!-- ADD TYPE FILL UP -->
+  <div class="fillup">
+    <label>Type</label>
+    <input type="text" placeholder="(e.,g Tablet...)" [(ngModel)]="addType.typeName">
+  </div>
+
+  <!-- ADD TYPE FOOTER -->
+  <div class="modal-footer">
+    <button class="btn-save" (click)="createNewType()">Save</button>
+    <button class="btn-cancel" (click)="closeAddTypeForm()">Cancel</button>
+  </div>
+</div>

@@ -5,48 +5,22 @@
     <div class="generic-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-generic">&#43; Add Generic</button>
+      <button class="btn-generic" (click)="openAddGenericForm()">&#43; Add Generic</button>
     </div>
 
     <!-- GENERIC NAME TABLE -->
     <table class="generic-table">
       <thead>
         <tr>
-          <th>Item Code</th>
           <th>Generic Name</th>
-          <th>Action</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>PCM</td>
-          <td>Paracetamol</td>
+        <tr *ngFor="let g of generics">
+          <td>{{g.genericName}}</td>
           <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>PNF</td>
-          <td>Phenylephrine HCl + Chlorphenamine Maleate + Paracetamol</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>CARB</td>
-          <td>Carbocisteine</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-         <tr>
-          <td>ANT</td>
-          <td>Aluminum Hydroxide + Magnesium Hydroxide + Simethicone</td>
-          <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditGenericForm(g)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -62,4 +36,19 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addGeneric">
+  <app-add-generic 
+  *ngIf="addGeneric"
+  (closeForm)="closeAddGenericForm()"
+  ></app-add-generic>
+</div>
+
+<div class="modal-overlay" *ngIf="editGeneric">
+  <app-edit-generic 
+  *ngIf="editGeneric"
+  [editGeneric]="editGeneric"
+  (closeForm)="closeEditGenericForm()"
+  ></app-edit-generic>
 </div>

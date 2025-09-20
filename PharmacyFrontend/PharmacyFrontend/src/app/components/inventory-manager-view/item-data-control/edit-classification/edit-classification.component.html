@@ -1,0 +1,20 @@
+<div class="modal">
+
+    <!-- EDIT CLASSIFICATION HEADER -->
+    <div class="modal-header">
+        <h2>Edit Classification</h2>
+        <a>X</a>
+    </div>
+
+    <!-- EDIT CLASSIFICATION FILL UP -->
+    <div class="fillup">
+        <label>Classification</label>
+        <input type="text" placeholder="(eg., Pain Reliever...)" [(ngModel)]="editClassification.classificationName">
+    </div>
+
+    <!-- EDIT CLASSIFICATION FOOTER -->
+    <div class="modal-footer">
+        <button class="btn-save" (click)="updateClassification()">Update</button>
+        <button class="btn-cancel" (click)="closeEditClassificationForm()">Cancel</button>
+    </div>
+</div>

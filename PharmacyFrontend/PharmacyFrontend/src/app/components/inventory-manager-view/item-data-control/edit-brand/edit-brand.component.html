@@ -1,0 +1,20 @@
+<div class="modal">
+
+  <!-- EDIT BRAND HEADER -->
+  <div class="modal-header">
+    <h2>Edit Brand Name</h2>
+    <a>X</a>
+  </div>
+
+  <!-- EDIT BRAND FILL UP -->
+  <div class="fillup">
+    <label>Generic Name</label>
+    <input type="text" placeholder="(e.g. Biogesic)" [(ngModel)]="editBrand.brandName">
+  </div>
+
+  <!-- EDIT BRAND FOOTER -->
+  <div class="modal-footer">
+    <button class="btn-save" (click)="updateBrand()">Update</button>
+    <button class="btn-cancel" (click)="closeEditBrandForm()">Cancel</button>
+  </div>
+</div>

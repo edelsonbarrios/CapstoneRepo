@@ -1,0 +1,20 @@
+<div class="modal">
+
+  <!-- EDIT FORMULATION HEADER -->
+  <div class="modal-header">
+    <h2>Add Formulation</h2>
+    <a>X</a>
+  </div>
+
+  <!-- EDIT FORMULATION FILL UP -->
+  <div class="fillup">
+    <label>Formulation</label>
+    <input type="text" placeholder="(e.g.Biogesic 500mg Tablet..)" [(ngModel)]="editFormulation.formulationName">
+  </div>
+
+  <!-- EDIT FORMULATION FOOTER -->
+  <div class="modal-footer">
+    <button class="btn-save" (click)="updateFormulation()">Update</button>
+    <button class="btn-cancel" (click)="closeEditFormulationForm()">Cancel</button>
+  </div>
+</div>

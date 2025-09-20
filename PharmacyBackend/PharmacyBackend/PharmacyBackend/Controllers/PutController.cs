@@ -126,7 +126,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Brand
-        [HttpPut("Update/Brand")]
+        [HttpPut("Brand")]
         public async Task<IActionResult> UpdateBrandAsync(int id, [FromBody] UpdateBrandDto dto)
         {
             var success = await _updateService.UpdateBrandAsync(id, dto);
@@ -137,18 +137,18 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Generic
-        [HttpPut("Update/Generic")]
-        public async Task<IActionResult> UpdateGenericAsync(int id, [FromBody] UpdateGenericDto dto)
+        [HttpPut("Generic")]
+        public async Task<IActionResult> UpdateGenericAsync(int id,  [FromBody]UpdateGenericDto dto)
         {
             var success = await _updateService.UpdateGenericAsync(id, dto);
             if (!success)
                 return NotFound();
-            return NoContent();
+            return Ok();
         }
         #endregion
 
         #region Formulation
-        [HttpPut("Update/Formulation")]
+        [HttpPut("Formulation")]
         public async Task<IActionResult> UpdateFormulationAsync(int id, [FromBody] UpdateFormulationDto dto)
         {
             var success = await _updateService.UpdateFormulationAsync(id, dto);
@@ -159,7 +159,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Classification
-        [HttpPut("Update/Classification")]
+        [HttpPut("Classification")]
         public async Task<IActionResult> UpdateClassificationAsync(int id, [FromBody] UpdateClassificationDto dto)
         {
             var success = await _updateService.UpdateClassificationAsync(id, dto);
@@ -170,7 +170,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Type
-        [HttpPut("Update/Type")]
+        [HttpPut("Type")]
         public async Task<IActionResult> UpdateTypeModelAsync(int id, [FromBody] UpdateTypeModelDto dto)
         {
             var success = await _updateService.UpdateTypeModelAsync(id, dto);

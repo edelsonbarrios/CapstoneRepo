@@ -1,0 +1,20 @@
+<div class="modal">
+
+  <!-- ADD GENERIC HEADER -->
+  <div class="modal-header">
+    <h2>Add Generic Name</h2>
+    <a>X</a>
+  </div>
+
+  <!-- ADD GENERIC FILL UP -->
+  <div class="fillup">
+    <label>Generic Name</label>
+    <input type="text" placeholder="(e.g. Paracetamol)" [(ngModel)]="addGeneric.genericName">
+  </div>
+
+  <!-- ADD GENERIC FOOTER -->
+  <div class="modal-footer">
+    <button class="btn-save" (click)="createNewGeneric()">Save</button>
+    <button class="btn-cancel" (click)="closeAddGenericForm()">Cancel</button>
+  </div>
+</div>

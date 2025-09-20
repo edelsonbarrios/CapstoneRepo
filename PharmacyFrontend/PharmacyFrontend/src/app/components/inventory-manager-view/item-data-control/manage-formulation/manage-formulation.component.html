@@ -5,78 +5,22 @@
     <div class="formulation-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand...">
-      <button class="btn-formulation">&#43; Add Formulation</button>
+      <button class="btn-formulation" (click)="openAddFormulationForm()">&#43; Add Formulation</button>
     </div>
 
     <!-- FORMULATION TABLE -->
     <table class="formulation-table">
       <thead>
         <tr>
-          <th>Item Code</th>
           <th>Formulation</th>
-          <th>Ingredient</th>
-          <th>Amount</th>
-          <th>Unit</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>NEOZ500T</td>
-          <td>Neozep Tablet</td>
+        <tr *ngFor="let f of formulations">
+          <td>{{f.formulationName}}</td>
           <td>
-            <p>Phenylephrine HCl +</p>
-            <p>Chlorphenamine Maleate +</p>
-            <p>Paracetamol</p>
-          </td>
-          <td>10 + 2 + 500</td>
-          <td>mg (per tablet)</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>BIOG500T</td>
-          <td>Biogesic 500mg Tablet</td>
-          <td>Paracetamol</td>
-          <td>500</td>
-          <td>mg</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>ALVD500T</td>
-          <td>Alvedon 500mg Tablet</td>
-          <td>Paracetamol</td>
-          <td>500</td>
-          <td>mg</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-         <tr>
-          <td>ALVD120S</td>
-          <td>Alvedon Syrup</td>
-          <td>Paracetamol</td>
-          <td>120</td>
-          <td>mg per 5 ml</td>
-          <td>
-            <button class="btn-edit">Edit</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-         <tr>
-          <td>SOLMX100S</td>
-          <td>Solmux Syrup</td>
-          <td>Carbocisteine</td>
-          <td>100</td>
-          <td>mg per 5 ml</td>
-          <td>
-            <button class="btn-edit">Edit</button>
+            <button class="btn-edit" (click)="openEditFormulationForm(f)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
         </tr>
@@ -92,4 +36,19 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="addFormulation">
+  <app-add-formulation 
+  *ngIf="addFormulation"
+  (closeForm)="closeAddFormulationForm()"
+  ></app-add-formulation>
+</div>
+
+<div class="modal-overlay" *ngIf="editFormulation">
+  <app-edit-formulation 
+  *ngIf="editFormulation"
+  [editFormulation]="editFormulation"
+  (closeForm)="closeEditFormulationForm()"
+  ></app-edit-formulation>
 </div>
