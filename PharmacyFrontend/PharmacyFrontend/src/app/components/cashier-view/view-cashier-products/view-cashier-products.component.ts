@@ -1,4 +1,4 @@
-import { Component,Input } from '@angular/core';
+import { Component,EventEmitter,Input, Output } from '@angular/core';
 import { Product } from '../../../models/product-models/product';
 
 @Component({
@@ -10,4 +10,9 @@ import { Product } from '../../../models/product-models/product';
 })
 export class ViewCashierProductsComponent {
   @Input() viewSettle: Product = new Product;
+  @Output() closeForm = new EventEmitter<void>();
+
+  closeCashierProductForm() {
+    this.closeForm.emit();
+  }
 }

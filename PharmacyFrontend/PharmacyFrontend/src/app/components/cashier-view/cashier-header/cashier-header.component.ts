@@ -13,8 +13,13 @@ import { ViewCashierProductsComponent } from '../view-cashier-products/view-cash
 })
 export class CashierHeaderComponent {
   viewCashierProduct ?: Product | null;
+  
 
   openViewCashierProductForm() {
     this.viewCashierProduct = new Product();
+  }
+
+  closeCashierProductForm() {
+    this.viewCashierProduct = null;
   }
 }

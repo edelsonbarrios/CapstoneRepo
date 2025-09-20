@@ -15,5 +15,8 @@
 </div>
 
 <div class="modal-overlay" *ngIf="viewCashierProduct">
-  <app-view-cashier-products *ngIf="viewCashierProduct"></app-view-cashier-products>
+  <app-view-cashier-products 
+  *ngIf="viewCashierProduct"
+  (closeForm)="closeCashierProductForm()"
+  ></app-view-cashier-products>
 </div>
