@@ -1,136 +1,123 @@
 <main class="wrapper">
-    <div class="header">
-      <h1>Dashboard Overview</h1>
-      <input class="searchbar" id="search" type="text" placeholder="Search..">
-      <div class="notification">🔔<span class="dot"></span></div>
-    </div>
-    <div class="containers">
-      <div class="grid-items sales-status">
-        <div class="content sales">
-          <p class="title sales-title">Today's Sales</p>
-          <div class="sales-amount">&#8369;32,580</div>
-          <div class="sales-change">
-            <span class="percentages">&#43;8&#37; vs. yesterday</span>
+
+  <!-- DASHBOARD HEADER -->
+  <div class="header">
+    <h1>Dashboard Overview</h1>
+    <input class="searchbar" id="search" type="text" placeholder="Search..">
+    <div class="notification">🔔<span class="dot"></span></div>
+  </div>
+
+  <div class="containers">
+
+    <!-- SALES AND INVENTORY CONTAINER-->
+    <div class="grid-items sales-report">
+
+      <!-- TODAY SALES SUB CONTAINER -->
+      <div class="grid-sales">
+        <p class="title">Today's Sales</p>
+
+        <div class="sales-amount">&#8369;32,580</div>
+        <div class="sales-change">
+          <span class="percentages">&#43;8&#37; vs. yesterday</span>
+        </div>
+
+        <a class="interact view-report" routerLink="/admin-main/admin-reports-main">View Report &gt;</a>
+      </div>
+
+      <!-- INVENTORY SUB CONTAINER -->
+      <div class="grid-inventory">
+        <p class="title">Inventory Status</p>
+
+        <div class="inventory-container">
+          <div class="sub-items">
+            <div class="stock-value">12</div>
+            <div class="stock-name">Low Stock</div>
           </div>
-          <a class="interact view-report" routerLink="/admin-main/admin-reports-main">View Report &gt;</a>
-        </div>
-      </div>
 
-      <div class="grid-items inventory">
-        <div class="content inv-status">
-          <p class="title inventory-title">Inventory Status</p>
-          <div class="sub-container">
-            <div class="sub-items low-stock">
-              <div class="stock-value">12</div>
-              <div class="stock-name">Low Stock</div>
-            </div>
-            <div class="sub-items out-of-stock">
-              <div class="stock-value">15</div>
-              <div class="stock-name">Out of Stock</div>
-            </div>
+          <div class="sub-items">
+            <div class="stock-value">15</div>
+            <div class="stock-name">Out of Stock</div>
           </div>
-          <a class="interact reorder">Reorder &gt;</a>
         </div>
-      </div>
 
-      <div class="grid-items top-selling-meds">
-        <div class="content top-meds">
-          <p class="title inventory-title">Top Selling Medicines (This month)</p>
-          <table class="top-meds-table">
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Biogesic 500mg</td>
-                <td>320 sold</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Cecon 500mg</td>
-                <td>280 sold</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Bioflu 500mg</td>
-                <td>250 sold</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Amoxicillin 500mg</td>
-                <td>200 sold</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>Cetirizine 10mg</td>
-                <td>180 sold</td>
-              </tr>
-            </tbody>
-          </table>
-          <a class="interact view-report" routerLink="/admin-main/admin-reports-main">See more &gt;</a>
-        </div>
-      </div>
-
-      <div class="grid-items sales-trends">
-        <div class="content trend-sales">
-          <p class="title trend-title">Sales and Inventory trends</p>
-        </div>
-      </div>
-
-      <div class="grid-items expiry">
-        <div class="content expiring-soon">
-          <p class="title expiry-title">Expiring Soon (Next 60 days)</p>
-          <table class="expiry-table">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Expiry</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                  <td>
-                    <div class="product-name">Amoxicillin 500mg</div>
-                    <div class="capsule-count">45 capsules</div>
-                  </td>
-                  <td>
-                    <div class="expiry-dates">September 28, 2025</div>
-                    <div class="total-sum">&#8369;3,180</div>
-                  </td>
-              </tr>
-              <tr>
-                <td>
-                    <div class="product-name">Bioflu 500mg</div>
-                    <div class="capsule-count">30 tablets</div>
-                  </td>
-                  <td>
-                    <div class="expiry-dates">October 10, 2025</div>
-                    <div class="total-sum">&#8369;3,180</div>
-                  </td>
-              </tr>
-              <tr>
-                <td>
-                    <div class="product-name">Biogesic 500mg</div>
-                    <div class="capsule-count">60 tablets</div>
-                  </td>
-                  <td>
-                    <div class="expiry-dates">October 15, 2025</div>
-                    <div class="total-sum">&#8369;3,180</div>
-                  </td>
-              </tr>
-              <tr>
-                <td>
-                    <div class="product-name">Cetirizine 10mg</div>
-                    <div class="capsule-count">25 tablets</div>
-                  </td>
-                  <td>
-                    <div class="expiry-dates">October 25, 2025</div>
-                    <div class="total-sum">&#8369;3,180</div>
-                  </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <a class="interact reorder">Reorder &gt;</a>
       </div>
     </div>
+
+    <!-- TOP SELLING MEDICINE CONTAINERS-->
+    <div class="grid-items top-selling-meds">
+      <p class="title">Top Selling Medicines (This month)</p>
+
+      <!-- TSM TABLE-->
+      <table class="top-meds-table">
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Biogesic 500mg</td>
+            <td>320 sold</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Cecon 500mg</td>
+            <td>280 sold</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Bioflu 500mg</td>
+            <td>250 sold</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Amoxicillin 500mg</td>
+            <td>200 sold</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Cetirizine 10mg</td>
+            <td>180 sold</td>
+          </tr>
+        </tbody>
+      </table>
+      <a class="interact view-report" routerLink="/admin-main/admin-reports-main">See more &gt;</a>
+    </div>
+
+    <!-- EXPIRING SOON CONTAINER -->
+    <div class="grid-items expiring-soon">
+      <p class="title">Expiring Soon (Next 60 days)</p>
+
+      <table class="expiry-table">
+        <thead>
+          <tr>
+            <th>Batch No.</th>
+            <th>Product</th>
+            <th>Expiry</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AMOX&ndash;091523&ndash;A</td>
+            <td>Amoxicillin 500mg</td>
+            <td>Sep 28, 2025</td>
+          </tr>
+          <tr>
+            <td>BFL-100823-B</td>
+            <td>Bioflu 500mg</td>
+            <td>Oct 10, 2025</td>
+          </tr>
+          <tr>
+            <td>BIO-101323-01</td>
+            <td>Biogesic 500mg</td>
+            <td>Oct 15, 2025</td>
+          </tr>
+          <tr>
+            <td>CET-102223-03</td>
+            <td>Cetirizine 10mg</td>
+            <td>Oct 25, 2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </main>
 
 <!--ADMIN DASHBOARD HTML-->
