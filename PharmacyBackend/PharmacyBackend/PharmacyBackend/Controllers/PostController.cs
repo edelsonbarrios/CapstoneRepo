@@ -89,7 +89,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Sales
-        [HttpPost("sale")]
+        [HttpPost("Transaction")]
         public async Task<IActionResult> CreateSalesTransactionAsync([FromBody] CreateSalesTransactionDto dto)
         {
             if (!ModelState.IsValid)
@@ -104,17 +104,37 @@ namespace PharmacyBackend.Controllers
                 if (result == null)
                     return BadRequest("Sales transaction could not be created.");
 
-                return Ok(new { Message = "Sales transaction successfully created." });
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error creating sales transaction: {ex.Message}");
             }
         }
+
+        [HttpPost("Item")]
+        public async Task<IActionResult> CreateSalesItemAsync([FromBody] CreateSalesItemDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid sales item data.");
+
+            try
+            {
+                var result = await _postService.CreateSalesItemAsync(dto);
+                if (result == null)
+                    return BadRequest("Sales item could not be created.");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating sales item: {ex.Message}");
+            }
+        }
         #endregion
 
         #region Discount
-        [HttpPost("Discount")]
+        /*[HttpPost("Discount")]
         public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
         {
             if (!ModelState.IsValid)
@@ -135,7 +155,15 @@ namespace PharmacyBackend.Controllers
             {
                 return BadRequest($"Error creating discount: {ex.Message}");
             }
+        }*/
+
+        [HttpPost("Discount")]
+        public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
+        {
+            var result = await _postService.CreateDiscountAsync(dto);
+            return Ok(result);
         }
+
         #endregion
 
         #region Product

@@ -6,5 +6,6 @@ namespace PharmacyBackend.DTOs.DiscountDTOs
         public int Id { get; set; }
         public string DiscountName { get; set; }
         public decimal DiscountRate { get; set; }
+        public bool IsActive { get; set; }
     }
 }

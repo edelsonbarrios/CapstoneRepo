@@ -132,26 +132,52 @@ namespace PharmacyBackend.Service.UpdateService
         #region Sales
         public async Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto)
         {
-            var existing = await _getRepo.GetSalesTransactionByIdAsync(id);
-            if (existing == null) return false;
-
-            existing.DiscountAmount = dto.DiscountAmount;
-
-            foreach (var updatedItem in dto.Items)
+            try
             {
-                var item = existing.Items.FirstOrDefault(i => i.Id == updatedItem.Id);
-                if (item != null)
+                var existing = await _getRepo.GetSalesTransactionByIdAsync(id);
+                if (existing == null)
+                    return false;
+
+                // Update properties
+                if (dto.DiscountAmount.HasValue)
+                    existing.DiscountAmount = dto.DiscountAmount.Value;
+
+                if (!string.IsNullOrEmpty(dto.PaymentMethod))
+                    existing.PaymentMethod = dto.PaymentMethod;
+
+                if (dto.AmountPaid.HasValue)
+                    existing.AmountPaid = dto.AmountPaid.Value;
+
+                if (dto.ChangeAmount.HasValue)
+                    existing.ChangeAmount = dto.ChangeAmount.Value;
+
+                // Update items if provided
+                if (dto.Items != null && dto.Items.Any())
                 {
-                    item.Quantity = updatedItem.Quantity;
-                    item.UnitPrice = updatedItem.UnitPrice;
-                    item.Subtotal = updatedItem.Quantity * updatedItem.UnitPrice;
+                    foreach (var updatedItem in dto.Items)
+                    {
+                        var item = existing.Items.FirstOrDefault(i => i.Id == updatedItem.Id);
+                        if (item != null)
+                        {
+                            item.Quantity = updatedItem.Quantity;
+                            item.UnitPrice = updatedItem.UnitPrice;
+                            item.Subtotal = updatedItem.Quantity * updatedItem.UnitPrice;
+                        }
+                    }
                 }
+
+                // Recalculate totals
+                existing.TotalAmount = existing.Items.Sum(i => i.Subtotal);
+                existing.NetAmount = existing.TotalAmount - existing.DiscountAmount + existing.VATAmount;
+
+                // Update via repository
+                var updated = await _updateRepo.UpdateSalesTransactionAsync(existing);
+                return updated != null;
             }
-
-            existing.TotalAmount = existing.Items.Sum(i => i.Subtotal);
-            existing.NetAmount = existing.TotalAmount - existing.DiscountAmount;
-
-            return await _updateRepo.UpdateSalesTransactionAsync(existing);
+            catch (Exception)
+            {
+                return false;
+            }
         }
         #endregion
 
@@ -163,6 +189,7 @@ namespace PharmacyBackend.Service.UpdateService
 
             existing.DiscountName = dto.DiscountName;
             existing.DiscountRate = dto.DiscountRate;
+            existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateDiscountAsync(existing);
             return true;

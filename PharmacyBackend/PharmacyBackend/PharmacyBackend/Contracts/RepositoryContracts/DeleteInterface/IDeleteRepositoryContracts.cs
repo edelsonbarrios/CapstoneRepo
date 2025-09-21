@@ -11,6 +11,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface
 
         #region Sales
         public Task<bool> DeleteSalesTransactionByIdAsync(int id);
+        public Task<bool> DeleteSalesItemAsync(int id);
         #endregion
 
 

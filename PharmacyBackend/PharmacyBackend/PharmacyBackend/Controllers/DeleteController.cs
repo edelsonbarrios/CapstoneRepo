@@ -42,14 +42,24 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Sales
-        [HttpDelete("delete/sale")]
+        [HttpDelete("Transaction/{id}")]
         public async Task<IActionResult> DeleteSalesTransactionByIdAsync(int id)
         {
-            var deleteSale = await _deleteService.DeleteSalesTransactionByIdAsync(id);
-            if (!deleteSale)
+            var success = await _deleteService.DeleteSalesTransactionByIdAsync(id);
+            if (!success)
                 return NotFound($"No sales transaction found with ID {id}");
 
             return Ok("Sales transaction deleted successfully.");
+        }
+
+        [HttpDelete("Item/{id}")]
+        public async Task<IActionResult> DeleteSalesItemAsync(int id)
+        {
+            var success = await _deleteService.DeleteSalesItemAsync(id);
+            if (!success)
+                return NotFound($"No sales item found with ID {id}");
+
+            return Ok("Sales item deleted successfully.");
         }
         #endregion
 

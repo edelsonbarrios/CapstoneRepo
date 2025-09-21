@@ -1,4 +1,4 @@
-﻿ using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
@@ -113,25 +113,77 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Sales
-        [HttpGet("SaleAll")]
-        public async Task<ActionResult<IEnumerable<SalesTransactionDto>>> GetAllSalesTransactionsAsync()
+        [HttpGet("TransactionId")]
+        public async Task<IActionResult> GetSalesTransactionByIdAsync(int id)
         {
-            var sales = await _getService.GetAllSalesTransactionsAsync();
-            if (sales == null || !sales.Any())
-                return NotFound(new { Message = "No sales transactions found." });
+            var transaction = await _getService.GetSalesTransactionByIdAsync(id);
+            if (transaction == null)
+                return NotFound($"Sales transaction with ID {id} not found.");
 
-            return Ok(sales);
+            return Ok(transaction);
         }
 
-        [HttpGet("Sale")]
-        public async Task<ActionResult<SalesTransactionDto>> GetSalesTransactionByIdAsync(int id)
+        [HttpGet("TransactionAll")]
+        public async Task<IActionResult> GetAllSalesTransactionsAsync()
         {
-            var sale = await _getService.GetSalesTransactionByIdAsync(id);
-            if (sale == null)
-                return NotFound(new { Message = "Sales transaction not found." });
+            var transactions = await _getService.GetAllSalesTransactionsAsync();
+            if (!transactions.Any())
+                return NotFound("No sales transactions found.");
 
-            return Ok(sale);
+            return Ok(transactions);
         }
+
+        [HttpGet("TransactionByEmployeeId")]
+        public async Task<IActionResult> GetSalesTransactionsByEmployeeIdAsync(int employeeId)
+        {
+            var transactions = await _getService.GetSalesTransactionsByEmployeeIdAsync(employeeId);
+            if (!transactions.Any())
+                return NotFound("No sales transactions found for this employee.");
+
+            return Ok(transactions);
+        }
+
+        [HttpGet("TransactionByDateRange")]
+        public async Task<IActionResult> GetSalesTransactionsByDateRangeAsync(DateTime startDate, DateTime endDate)
+        {
+            var transactions = await _getService.GetSalesTransactionsByDateRangeAsync(startDate, endDate);
+            if (!transactions.Any())
+                return NotFound("No sales transactions found in the given date range.");
+
+            return Ok(transactions);
+        }
+
+        [HttpGet("TransactionByInvoice")]
+        public async Task<IActionResult> GetSalesTransactionsByInvoiceNumberAsync(string invoiceNumber)
+        {
+            var transactions = await _getService.GetSalesTransactionsByInvoiceNumberAsync(invoiceNumber);
+            if (!transactions.Any())
+                return NotFound($"No sales transactions found for invoice number {invoiceNumber}.");
+
+            return Ok(transactions);
+        }
+
+        [HttpGet("Item")]
+        public async Task<IActionResult> GetSalesItemByIdAsync(int id)
+        {
+            var item = await _getService.GetSalesItemByIdAsync(id);
+            if (item == null)
+                return NotFound($"Sales item with ID {id} not found.");
+
+            return Ok(item);
+        }
+
+        [HttpGet("ItemsByTransaction")]
+        public async Task<IActionResult> GetSalesItemsByTransactionIdAsync(int transactionId)
+        {
+            var items = await _getService.GetSalesItemsByTransactionIdAsync(transactionId);
+            if (!items.Any())
+                return NotFound("No sales items found for this transaction.");
+
+            return Ok(items);
+        }
+
+
         #endregion
 
         #region Discount 

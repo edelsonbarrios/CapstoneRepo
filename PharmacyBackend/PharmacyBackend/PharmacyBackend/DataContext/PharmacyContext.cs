@@ -219,10 +219,6 @@ namespace PharmacyBackend.DataContext
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<SalesItem>()
-                .Property(si => si.Price)
-                .HasPrecision(18, 2);
-
-            modelBuilder.Entity<SalesItem>()
                 .Property(si => si.Subtotal)
                 .HasPrecision(18, 2);
 
@@ -283,6 +279,8 @@ namespace PharmacyBackend.DataContext
 
             modelBuilder.Entity<SalesTransaction>()
                 .HasIndex(st => st.TransactionDate);
+
+            modelBuilder.Entity<SalesItem>().ToTable("SalesItem");
 
             modelBuilder.Entity<Supplier>().HasData(
                 new Supplier

@@ -9,6 +9,7 @@
 
         #region Sales
         public Task<bool> DeleteSalesTransactionByIdAsync(int id);
+        public Task<bool> DeleteSalesItemAsync(int id);
         #endregion
 
         #region Discount

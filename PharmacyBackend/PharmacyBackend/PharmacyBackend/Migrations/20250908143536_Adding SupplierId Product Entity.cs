@@ -11,14 +11,13 @@ namespace PharmacyBackend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "SupplierID",
-                table: "Product",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "integer",
-                oldNullable: true);
+               name: "SupplierID",
+               table: "Product",
+               type: "integer",
+               nullable: true, // Keep nullable
+               oldClrType: typeof(int),
+               oldType: "integer",
+               oldNullable: true);
         }
 
         /// <inheritdoc />
