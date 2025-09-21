@@ -47,5 +47,6 @@ export class ManageReplenishmentComponent implements OnInit{
 
   closeViewPurchaseOrderForm() {
     this.purchaseOrder = null;
+    this.getAllPendingPurchaseOrders();
   }
 }
