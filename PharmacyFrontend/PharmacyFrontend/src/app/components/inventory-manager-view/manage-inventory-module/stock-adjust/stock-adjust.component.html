@@ -12,16 +12,38 @@
       </div>
 
       <div class="form-group">
-        <label>Product Name</label>
-        <input type="text"/>
+        <label>Movement Type</label>
+        <select id="movement-type">
+          <option>Stock In</option>
+          <option>Stock Out</option>
+          <option>Ajdustment</option>
+          <option>Return</option>
+          <option>Damaged</option>
+          <option>Expired</option>
+        </select>
       </div>
 
       <div class="form-group">
-        <input type="number" placeholder="0"/>
-        <p>Enter the current stock quantity (default is 0).</p>
+        <label>Quantity Changed</label>
+        <input type="number"/>
+      </div>
+
+      <div class="form-group">
+        <label>Reference Number</label>
+        <input type="number"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Employee ID</label>
+        <input type="number"/>
       </div>
 
     </div>
+  </div>
+
+  <div class="note-desc">
+    <p>Notes</p>
+    <textarea></textarea>
   </div>
 
   <div class="modal-footer">

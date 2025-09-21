@@ -17,9 +17,8 @@
   }
 
   .form-grid {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 0.9rem;
 
     .form-group {
@@ -33,7 +32,8 @@
         color: rgb(77, 77, 77);
       }
 
-      input {
+      input,
+      select {
         padding: 8px 10px;
         border: 1px solid #ccc;
         border-radius: 6px;
@@ -48,6 +48,32 @@
       p {
         font-size: 0.8rem;
         color: rgb(77, 77, 77);
+      }
+    }
+  }
+
+  .note-desc {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: rgb(77, 77, 77);
+    }
+
+    textarea {
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      flex: 1;
+
+      &:focus {
+        outline: none;
+        border-color: #007bff;
       }
     }
   }
