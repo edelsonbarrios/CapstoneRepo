@@ -1,51 +1,72 @@
-<div class="modal">
+<div class="modal-overlay">
+  <div class="modal">
+    <h2>Settle Payment</h2>
 
-  <!-- SETTLE HEADER -->
-  <div class="settle-header">
-    <h2>Payment</h2>
-    <a>X</a>
-  </div>
+    <!-- CART SUMMARY -->
+    <table class="cart-table" *ngIf="cartItems && cartItems.length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of cartItems; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.productName }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price | currency:'PHP':'symbol':'1.2-2' }}</td>
+          <td>{{ item.quantity * item.price | currency:'PHP':'symbol':'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
 
-  <!-- SETTLE COMPUTE -->
-  <div class="settle-container">
-
-    <div class="cash">
-      <div class="cash-label">
-        <p>Cash</p>
+    <!-- TOTAL SUMMARY -->
+    <div class="summary">
+      <div class="summary-row">
+        <span>Subtotal:</span>
+        <span>{{ subtotal | currency:'PHP':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="summary-row">
+        <span>VAT ({{ vat }}%):</span>
+        <span>{{ subtotal * (vat / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Discount ({{ discount }}%):</span>
+        <span>- {{ subtotal * (discount / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="summary-row total">
+        <strong>Total:</strong>
+        <strong>{{ calculateTotals() | currency:'PHP':'symbol':'1.2-2' }}</strong>
       </div>
     </div>
 
-    <div class="price-section">
-      <div class="price-row">
-        <div class="label">PRICE PHP</div>
-        <div class="value">0.0</div>
-      </div>
-      <div class="payment-row">
-        <div class="label">PAYMENT PHP</div>
-        <input type="number" placeholder="&#8369; 0.0" class="value">
+    <!-- PAYMENT SECTION -->
+    <div class="payment-section">
+      <label for="payment">Payment Amount</label>
+      <input
+        id="payment"
+        type="number"
+        [(ngModel)]="payment"
+        (input)="onPaymentChange()"
+        placeholder="Enter payment"
+      />
+
+      <div class="summary-row change" *ngIf="payment > 0">
+        <span>Change:</span>
+        <span [class.negative]="change < 0">{{ change | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
     </div>
-  </div>
 
-  <!-- SETTLE KEYPAD -->
-  <div class="keypad">
-    <button class="key-button number">1</button>
-    <button class="key-button number">2</button>
-    <button class="key-button number">3</button>
-    <button class="key-button number">4</button>
-    <button class="key-button number">5</button>
-    <button class="key-button number">6</button>
-    <button class="key-button number">7</button>
-    <button class="key-button number">8</button>
-    <button class="key-button number">9</button>
-    <button class="key-button clear">AC</button>
-    <button class="key-button number">0</button>
-    <button class="key-button empty">.</button>
-  </div>
-
-  <!-- SETTLE FOOTER BUTTONS -->
-  <div class="footer">
-    <button class="btn change">Change <span>&#8369; 0.0</span></button>
-    <button class="btn confirm">Confirm Payment</button>
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button (click)="closeModal()" class="cancel">Cancel</button>
+      <button (click)="confirmPayment()" [disabled]="change < 0" class="confirm">
+        Confirm Payment
+      </button>
+    </div>
   </div>
 </div>

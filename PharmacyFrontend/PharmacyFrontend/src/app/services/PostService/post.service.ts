@@ -106,4 +106,10 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Type`, type);
   }
   //Type Service End  
+
+  //Sales Service
+  createSalesTransactionAsync(transaction: any) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Transaction`, transaction);
+  }
+  //Sales Service End
 }

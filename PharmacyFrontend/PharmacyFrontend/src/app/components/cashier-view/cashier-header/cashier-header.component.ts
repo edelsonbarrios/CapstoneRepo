@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../../models/product-models/product';
 import { NgIf } from '@angular/common';
 import { ViewCashierProductsComponent } from '../view-cashier-products/view-cashier-products.component';
+import { LogInToken } from '../../shared/token';
 
 @Component({
   selector: 'app-cashier-header',
@@ -13,6 +14,10 @@ import { ViewCashierProductsComponent } from '../view-cashier-products/view-cash
 })
 export class CashierHeaderComponent {
   viewCashierProduct ?: Product | null;
+
+  constructor(
+    private router : Router
+  ) {}
   
 
   openViewCashierProductForm() {
@@ -21,5 +26,10 @@ export class CashierHeaderComponent {
 
   closeCashierProductForm() {
     this.viewCashierProduct = null;
+  }
+
+  logOut() {
+    localStorage.removeItem(LogInToken);
+    this.router.navigateByUrl('/log-in');
   }
 }

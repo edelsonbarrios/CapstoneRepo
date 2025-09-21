@@ -1,18 +1,46 @@
 <main class="wrapper">
   <div class="containers">
-
+    <!-- LEFT SIDE: Product Display -->
     <div class="grid-items product-display">
       <div class="prod-control">
-        <input type="text" placeholder="Search product by name or item code">
-        <select name="prod" id="prod">
-          <option>OPTION 1</option>
+        <input
+          type="text"
+          placeholder="Search product by name or item code"
+          [(ngModel)]="searchTerm"
+        />
+
+        <select name="prod" id="prod" [(ngModel)]="selectedCategory">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
         </select>
       </div>
+
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th style="width: 60px">Select</th>
+            <th>Item</th>
+            <th style="width: 140px">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts; let i = index">
+            <td>
+              <input type="checkbox" [(ngModel)]="product.selected" />
+            </td>
+            <td>{{ product.productName }}</td>
+            <td>{{ product.price | currency:'PHP':'symbol':'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button class="btn-add" (click)="addSelectedProducts()">Add</button>
     </div>
 
+    <!-- RIGHT SIDE: Compute Panel -->
     <div class="grid-items product-compute">
       <div class="compute-header">
-        <input type="number" placeholder="Type the number then hit enter">
+        <input type="number" placeholder="Type the number then hit enter" />
       </div>
 
       <table class="compute-table">
@@ -20,59 +48,39 @@
           <tr>
             <th>#</th>
             <th>Item</th>
-            <th>Qty</th>
-            <th>Price</th>
+            <th style="width: 110px">Qty</th>
+            <th style="width: 140px">Unit Price</th>
+            <th style="width: 160px">Subtotal</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Paracetamol (500mg)</td>
+          <tr *ngFor="let item of selectedProducts; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.productName }}</td>
             <td>
-              <input type="number" placeholder="0">
+              <input
+                type="number"
+                min="1"
+                [(ngModel)]="item.quantity"
+                (ngModelChange)="onItemChange()"
+              />
             </td>
             <td>
-              <input type="number" placeholder="&#8369;0">
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Ibuprofen (200mg)</td>
-            <td>
-              <input type="number" placeholder="0">
-            </td>
-            <td>
-              <input type="number" placeholder="&#8369;0">
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Vitamin C (500mg)</td>
-            <td>
-              <input type="number" placeholder="0">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                [(ngModel)]="item.price"
+                (ngModelChange)="onItemChange()"
+              />
             </td>
             <td>
-              <input type="number" placeholder="&#8369;0">
+              {{ (item.quantity * item.price) | currency:'PHP':'symbol':'1.2-2' }}
             </td>
           </tr>
-          <tr>
-            <td>4</td>
-            <td>Cetirizine (10mg)</td>
-            <td>
-              <input type="number" placeholder="0">
-            </td>
-            <td>
-              <input type="number" placeholder="&#8369;0">
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Alcohol (70% sol.)</td>
-            <td>
-              <input type="number" placeholder="0">
-            </td>
-            <td>
-              <input type="number" placeholder="&#8369;0">
+          <tr *ngIf="selectedProducts.length === 0">
+            <td colspan="5" style="text-align:center; padding: 12px;">
+              No items in cart
             </td>
           </tr>
         </tbody>
@@ -81,22 +89,23 @@
       <div class="bottom-compute">
         <div class="bot-grid">
           <div class="total-items">
-            <p>Total Item (s):<span>5</span></p>
+            <p>Total Item(s): <span>{{ getTotalItems() }}</span></p>
           </div>
           <div class="gross-items">
             <div class="gross">
               <p>Price:</p>
-              <p>: &#8369;2,000</p>
+              <p>: {{ getTotalPrice() | currency:'PHP':'symbol':'1.2-2' }}</p>
             </div>
             <div class="gross">
               <p>Gross Price (inc 12% Tax)</p>
-              <p class="amount">&#8369;2,000</p>
+              <p class="amount">{{ getGrossPrice() | currency:'PHP':'symbol':'1.2-2' }}</p>
             </div>
           </div>
         </div>
+
         <div class="bottom-btn">
           <button class="btn-print" (click)="openPrintReceiptForm()">Print</button>
-          <button class="btn-cancel">Cancel</button>
+          <button class="btn-cancel" (click)="clearSelection()">Cancel</button>
           <button class="btn-settle" (click)="openViewSettleForm()">Settle</button>
         </div>
       </div>
@@ -104,10 +113,21 @@
   </div>
 </main>
 
+<!-- Modals -->
 <div class="modal-overlay" *ngIf="viewSettle">
-  <app-view-settle *ngIf="viewSettle"></app-view-settle>
+  <app-view-settle
+    *ngIf="viewSettle"
+    [cartItems]="selectedProducts"
+    [subtotal]="getTotalPrice()"
+    [vat]="12"
+    [discount]="0"
+    (paymentConfirmed)="handlePayment($event)"
+    (modalClosed)="closeViewSettle()"
+  ></app-view-settle>
 </div>
 
 <div class="modal-overlay" *ngIf="printReceipt">
-  <app-print-receipt *ngIf="printReceipt"></app-print-receipt>
+  <app-print-receipt
+    *ngIf="printReceipt"
+  ></app-print-receipt>
 </div>

@@ -5,84 +5,89 @@
     height: 100%;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
-    grid-template-rows: 1fr;
     gap: 10px;
     padding: 1rem;
 
     .grid-items {
-      height: 100%;
       background: white;
       border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      
+      padding: 1.2rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 
       .prod-control {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 10px;
+        margin-bottom: 1rem;
 
-        input {
-          flex: 1;
-          padding: 1rem;
-          border: 1px solid rgba(0, 109, 186, 1);
-          border-radius: 10px;
-        }
-
+        input,
         select {
-          padding: 1rem;
+          padding: 0.7rem;
           border: 1px solid rgba(0, 109, 186, 1);
-          border-radius: 10px;
+          border-radius: 8px;
+          font-size: 0.95rem;
         }
-      }
-
-      .compute-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
 
         input {
           flex: 1;
-          padding: 1rem;
-          border: 1px solid rgba(0, 109, 186, 1);
-          border-radius: 10px;
         }
       }
 
+      .product-table,
       .compute-table {
         width: 100%;
         border-collapse: collapse;
-        border: 1px solid rgb(199, 199, 199);
-        margin-bottom: 0.6rem;
-
-        input {
-          padding: 0.8rem;
-          border: 1px solid rgba(0, 109, 186, 1);
-          border-radius: 10px;
-        }
+        margin-bottom: 1rem;
 
         th,
         td {
-          padding: 0.5rem;
+          padding: 0.6rem;
+          border: 1px solid #e6e6e6;
           text-align: left;
         }
 
         th {
-          font-weight: 500;
-          font-size: medium;
+          background: #fafafa;
+          font-weight: 600;
         }
 
-        td {
-          font-size: medium;
-          font-weight: 300;
+        tbody tr:hover {
+          background: #fbfbfb;
+        }
+
+        input[type='number'] {
+          width: 90px;
+          padding: 0.35rem;
+          border: 1px solid rgba(0, 109, 186, 1);
+          border-radius: 6px;
+        }
+
+        input[type='checkbox'] {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .btn-add {
+        margin-top: 0.5rem;
+        padding: 0.6rem 1rem;
+        background-color: rgba(0, 109, 186, 1);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+
+        &:hover {
+          background-color: rgb(1, 98, 167);
         }
       }
 
       .bot-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
 
         .gross {
           display: flex;
@@ -90,7 +95,9 @@
           align-items: center;
 
           .amount {
-            font-size: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2a7a2a;
           }
         }
       }
@@ -104,10 +111,10 @@
         .btn-cancel,
         .btn-settle {
           padding: 0.7rem;
-          font-size: 0.9rem;
-          font-weight: 550;
+          font-size: 0.95rem;
+          font-weight: 600;
           border: none;
-          border-radius: 4px;
+          border-radius: 6px;
           color: white;
           width: 100px;
           cursor: pointer;
@@ -115,7 +122,6 @@
 
         .btn-print {
           background-color: rgba(0, 109, 186, 1);
-          
           &:hover {
             background-color: rgb(1, 98, 167);
           }
@@ -123,7 +129,6 @@
 
         .btn-cancel {
           background-color: rgba(161, 0, 3, 1);
-
           &:hover {
             background-color: rgb(145, 1, 4);
           }
@@ -131,8 +136,7 @@
 
         .btn-settle {
           background-color: rgba(0, 161, 19, 1);
-
-           &:hover {
+          &:hover {
             background-color: rgb(1, 139, 17);
           }
         }

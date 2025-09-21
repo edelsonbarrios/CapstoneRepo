@@ -29,4 +29,5 @@ export class Product {
   supplierName: string = '';
 
   selected?: boolean;
+  quantity: number = 0;
 }
