@@ -7,9 +7,10 @@
   </div>
 
   <!-- ADD TYPE FILL UP -->
-  <div class="fillup">
+  <div class="fillup" [class.error]="typeNameError">
     <label>Type</label>
     <input type="text" placeholder="(e.,g Tablet...)" [(ngModel)]="addType.typeName">
+    <p class="error-message" *ngIf="typeNameError">{{ typeNameError }}</p>
   </div>
 
   <!-- ADD TYPE FOOTER -->
