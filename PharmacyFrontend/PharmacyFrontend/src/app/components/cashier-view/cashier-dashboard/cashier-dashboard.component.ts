@@ -11,6 +11,7 @@ import { GetService } from '../../../services/GetService/get.service';
 import { PostService } from '../../../services/PostService/post.service';
 import { ViewSettleComponent } from '../view-settle/view-settle.component';
 import { PrintReceiptComponent } from '../print-receipt/print-receipt.component';
+import { Category } from '../../../models/category-models/category';
 
 @Component({
   selector: 'app-cashier-dashboard',
@@ -38,7 +39,7 @@ export class CashierDashboardComponent implements OnInit {
     quantity: number;
   }[] = [];
   searchTerm: string = '';
-  categories: string[] = ['Medicine', 'Supplements', 'Others'];
+  categories: Category[] = [];
   selectedCategory: string = '';
 
   constructor(
@@ -49,6 +50,18 @@ export class CashierDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.getLoggedInUser();
     this.getAllProducts();
+    this.getAllCategories();
+  }
+
+  getAllCategories() {
+    this.getService.getAllCategoriesAsync().subscribe({
+      next: res => {
+        this.categories = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 
   get filteredProducts() {

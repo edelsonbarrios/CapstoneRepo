@@ -11,7 +11,7 @@
 
         <select name="prod" id="prod" [(ngModel)]="selectedCategory">
           <option value="">All Categories</option>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat.categoryName }}</option>
         </select>
       </div>
 
@@ -119,8 +119,6 @@
     *ngIf="viewSettle"
     [cartItems]="selectedProducts"
     [subtotal]="getTotalPrice()"
-    [vat]="12"
-    [discount]="0"
     (paymentConfirmed)="handlePayment($event)"
     (modalClosed)="closeViewSettle()"
   ></app-view-settle>

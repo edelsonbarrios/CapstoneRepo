@@ -6,6 +6,8 @@ import { LogInToken } from '../../shared/token';
 import { jwtDecode } from 'jwt-decode';
 import { Employee } from '../../../models/employee-models/employee';
 import { GetService } from '../../../services/GetService/get.service';
+import { VAT } from '../../../models/vat-models/vat';
+import { Discount } from '../../../models/discount-models/discount';
 
 @Component({
   selector: 'app-view-settle',
@@ -14,12 +16,14 @@ import { GetService } from '../../../services/GetService/get.service';
   templateUrl: './view-settle.component.html',
   styleUrls: ['./view-settle.component.scss'],
 })
-export class ViewSettleComponent implements OnInit{
+export class ViewSettleComponent implements OnInit {
   @Input() cartItems: CartItem[] = [];
   @Input() subtotal: number = 0;
-  @Input() vat: number = 12;
-  @Input() discount: number = 0;
+  vats: VAT[] = [];
+  discounts: Discount[] = [];
   loggedInEmployee: Employee = new Employee();
+  selectedVat: VAT | null = null;
+  selectedDiscount: Discount | null = null;
 
   @Output() paymentConfirmed = new EventEmitter<any>();
   @Output() modalClosed = new EventEmitter<void>();
@@ -27,17 +31,39 @@ export class ViewSettleComponent implements OnInit{
   payment: number = 0;
   change: number = 0;
 
-  constructor(
-    private getService : GetService
-  ) {}
+  constructor(private getService: GetService) {}
 
   ngOnInit(): void {
     this.getLoggedInUser();
+    this.getAllDiscounts();
+    this.getAllVAT();
+  }
+
+  getAllDiscounts() {
+    this.getService.getAllDiscountAsync().subscribe({
+      next: (res) => {
+        this.discounts = res;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
+  }
+
+  getAllVAT() {
+    this.getService.getAllVatAsync().subscribe({
+      next: (res) => {
+        this.vats = res;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
   }
 
   calculateTotals() {
-    const vatAmount = this.subtotal * (this.vat / 100);
-    const discountAmount = this.subtotal * (this.discount / 100);
+    const vatAmount = this.subtotal * ((this.selectedVat?.vatRate || 0) / 100);
+    const discountAmount = this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100);
     return this.subtotal + vatAmount - discountAmount;
   }
 
@@ -52,8 +78,8 @@ export class ViewSettleComponent implements OnInit{
       paymentMethod: 'Cash', // or user selection
       amountPaid: this.payment,
       changeAmount: this.change,
-      discountAmount: this.subtotal * (this.discount / 100),
-      vatAmount: this.subtotal * (this.vat / 100),
+      discountAmount: this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
+      vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
       discountId: 1, // use actual discount ID from DB if available
       employeeID: this.loggedInEmployee.id, // pass logged-in user ID
       vatId: null, // optional if you don’t track by table
@@ -70,22 +96,22 @@ export class ViewSettleComponent implements OnInit{
   }
 
   getLoggedInUser() {
-      const token = localStorage.getItem(LogInToken);
-      if (!token) return;
-  
-      try {
-        const employee: any = jwtDecode(token);
-        const employeeId = parseInt(employee.EmployeeId);
-        if (!employeeId) console.log(`Employee Id does not exist.`);
-  
-        this.getService.GetEmployeeById(employeeId).subscribe({
-          next: (res) => (this.loggedInEmployee = res),
-          error: () => console.log(`Logged-in user does not exist.`),
-        });
-      } catch (err) {
-        console.warn('Failed to decode token', err);
-      }
+    const token = localStorage.getItem(LogInToken);
+    if (!token) return;
+
+    try {
+      const employee: any = jwtDecode(token);
+      const employeeId = parseInt(employee.EmployeeId);
+      if (!employeeId) console.log(`Employee Id does not exist.`);
+
+      this.getService.GetEmployeeById(employeeId).subscribe({
+        next: (res) => (this.loggedInEmployee = res),
+        error: () => console.log(`Logged-in user does not exist.`),
+      });
+    } catch (err) {
+      console.warn('Failed to decode token', err);
     }
+  }
 
   closeModal() {
     this.modalClosed.emit();

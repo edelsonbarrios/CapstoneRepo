@@ -30,14 +30,23 @@
         <span>Subtotal:</span>
         <span>{{ subtotal | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
+
       <div class="summary-row">
-        <span>VAT ({{ vat }}%):</span>
-        <span>{{ subtotal * (vat / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
+        <label for="vat">VAT:</label>
+        <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
+          <option *ngFor="let v of vats" [ngValue]="v">{{ v.vatRate }}%</option>
+        </select>
+        <span>{{ subtotal * ((selectedVat?.vatRate || 0) / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
+
       <div class="summary-row">
-        <span>Discount ({{ discount }}%):</span>
-        <span>- {{ subtotal * (discount / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
+        <label for="discount">Discount:</label>
+        <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">
+          <option *ngFor="let d of discounts" [ngValue]="d">{{ d.discountRate }}%</option>
+        </select>
+        <span>- {{ subtotal * ((selectedDiscount?.discountRate || 0) / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
+
       <div class="summary-row total">
         <strong>Total:</strong>
         <strong>{{ calculateTotals() | currency:'PHP':'symbol':'1.2-2' }}</strong>

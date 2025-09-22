@@ -60,8 +60,29 @@
   .summary-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 0.4rem 0;
     font-size: 0.9rem;
+
+    label {
+      margin-right: 0.4rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    select {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-right: auto;
+      margin-left: 0.5rem;
+
+      &:focus {
+        border-color: #4a90e2;
+        outline: none;
+      }
+    }
 
     span {
       color: #444;
