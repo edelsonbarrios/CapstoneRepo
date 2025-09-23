@@ -128,4 +128,10 @@ export class GetService {
     return this.httpClient.get<PurchaseOrder[]>(`${this.apiUrl}/Get/PurchaseOrderPendings`);
   }
   //Purchase Order Service End
+
+  //Inventory Service
+  getAllInventoriesAsync() : Observable<any>{ 
+    return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryAll`);
+  }
+  //Inventory Service End
 }
