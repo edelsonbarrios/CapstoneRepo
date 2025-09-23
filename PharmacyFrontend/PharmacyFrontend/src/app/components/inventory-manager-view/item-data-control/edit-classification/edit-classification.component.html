@@ -7,9 +7,10 @@
     </div>
 
     <!-- EDIT CLASSIFICATION FILL UP -->
-    <div class="fillup">
+    <div class="fillup" [class.error]="classificationNameError">
         <label>Classification</label>
         <input type="text" placeholder="(eg., Pain Reliever...)" [(ngModel)]="editClassification.classificationName">
+        <p class="error-message" *ngIf="classificationNameError">{{ classificationNameError }}</p>
     </div>
 
     <!-- EDIT CLASSIFICATION FOOTER -->

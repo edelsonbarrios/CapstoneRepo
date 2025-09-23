@@ -7,9 +7,10 @@
   </div>
 
   <!-- ADD GENERIC FILL UP -->
-  <div class="fillup">
+  <div class="fillup" [class.error]="genericNameError">
     <label>Generic Name</label>
     <input type="text" placeholder="(e.g. Paracetamol)" [(ngModel)]="addGeneric.genericName">
+    <p class="error-message" *ngIf="genericNameError">{{ genericNameError }}</p>
   </div>
 
   <!-- ADD GENERIC FOOTER -->

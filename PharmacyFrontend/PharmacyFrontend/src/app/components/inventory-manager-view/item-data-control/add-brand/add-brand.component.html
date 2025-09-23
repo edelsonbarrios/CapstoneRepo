@@ -7,9 +7,10 @@
   </div>
 
   <!-- ADD BRAND FILL UP -->
-  <div class="fillup">
+  <div class="fillup" [class.error]="brandNameError">
     <label>Brand Name</label>
     <input type="text" placeholder="(e.g. Biogesic)" [(ngModel)]="addBrand.brandName">
+    <p class="error-message" *ngIf="brandNameError">{{ brandNameError }}</p>
   </div>
 
   <!-- ADD BRAND FOOTER -->

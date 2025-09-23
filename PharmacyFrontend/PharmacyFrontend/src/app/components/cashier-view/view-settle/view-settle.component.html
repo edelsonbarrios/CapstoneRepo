@@ -68,6 +68,12 @@
         <span>Change:</span>
         <span [class.negative]="change < 0">{{ change | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
+      <div class="vat-discount">
+        <div class="label">DISCOUNT</div>
+        <select id="discount" class="value">
+          <option>Senior Citizen (20%)</option>
+        </select>
+      </div>
     </div>
 
     <!-- ACTIONS -->

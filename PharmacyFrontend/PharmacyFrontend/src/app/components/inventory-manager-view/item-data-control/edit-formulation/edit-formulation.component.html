@@ -7,9 +7,10 @@
   </div>
 
   <!-- EDIT FORMULATION FILL UP -->
-  <div class="fillup">
+  <div class="fillup" [class.error]="formulationNameError">
     <label>Formulation</label>
     <input type="text" placeholder="(e.g.Biogesic 500mg Tablet..)" [(ngModel)]="editFormulation.formulationName">
+    <p class="error-message" *ngIf="formulationNameError">{{ formulationNameError }}</p>
   </div>
 
   <!-- EDIT FORMULATION FOOTER -->
