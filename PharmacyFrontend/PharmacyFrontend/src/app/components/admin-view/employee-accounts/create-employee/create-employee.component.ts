@@ -28,6 +28,20 @@ export class CreateEmployeeComponent implements OnInit{
   loggedInEmployeeId : number = 0;
   isUserLoading: boolean = true;
 
+  // Error properties
+  employeeCodeError: string = '';
+  lastNameError: string = '';
+  firstNameError: string = '';
+  middleNameError: string = '';
+  genderError: string = '';
+  ageError: string = '';
+  birthDateError: string = '';
+  phoneNumberError: string = '';
+  civilStatusError: string = '';
+  rolePositionError: string = '';
+  emailError: string = '';
+  addressError: string = '';
+
   constructor(
     private postService: PostService,
     private getService: GetService
@@ -38,43 +52,94 @@ export class CreateEmployeeComponent implements OnInit{
   }
 
   createNewEmployee() {
-  if (!this.newEmployee) return;
+    if (!this.newEmployee) return;
 
-  // Create the DTO object to send to the server
-  const requestPayload: CreateEmployeeRequest = {
-    employeeCode: this.newEmployee.employeeCode,
-    lastName: this.newEmployee.lastName,
-    firstName: this.newEmployee.firstName,
-    middleName: this.newEmployee.middleName,
-    age: this.newEmployee.age,
-    birthDate: new Date(this.newEmployee.birthDate).toISOString(),
-    civilStatus: this.newEmployee.civilStatus,
-    gender: this.newEmployee.gender,
-    email: this.newEmployee.email,
-    phoneNumber: this.newEmployee.phoneNumber,
-    address: this.newEmployee.address,
-    rolePosition: this.newEmployee.rolePosition,
-    createdBy: this.loggedInEmployeeId,
-    createdAt: new Date(),
-    isActive: true,
-    archivedBy: this.newEmployee.archivedBy,
-    archivedAt: this.newEmployee.archivedAt,
-    updatedBy: this.newEmployee.updatedBy,
-    updatedAt: this.newEmployee.updatedAt,
-  };
+    // Clear previous errors
+    this.employeeCodeError = '';
+    this.lastNameError = '';
+    this.firstNameError = '';
+    this.middleNameError = '';
+    this.genderError = '';
+    this.ageError = '';
+    this.birthDateError = '';
+    this.phoneNumberError = '';
+    this.civilStatusError = '';
+    this.rolePositionError = '';
+    this.emailError = '';
+    this.addressError = '';
 
-  
-  this.postService.createEmployee(requestPayload).subscribe({
-    next: res => {
-      console.log(`${res.message}`);
-      this.newEmployeeId = res.employeeId;
-      this.clearFields();
-    },
-    error: err => {
-      console.log(`${err.error}`);
+    let hasErrors = false;
+
+    // Validate required fields
+    if (!this.newEmployee.employeeCode || this.newEmployee.employeeCode.trim() === '') {
+      this.employeeCodeError = 'Employee code is required';
+      hasErrors = true;
     }
-  });
-}
+
+    if (!this.newEmployee.lastName || this.newEmployee.lastName.trim() === '') {
+      this.lastNameError = 'Last name is required';
+      hasErrors = true;
+    }
+
+    if (!this.newEmployee.firstName || this.newEmployee.firstName.trim() === '') {
+      this.firstNameError = 'First name is required';
+      hasErrors = true;
+    }
+
+    if (!this.newEmployee.middleName || this.newEmployee.middleName.trim() === '') {
+      this.middleNameError = 'Middle name is required';
+      hasErrors = true;
+    }
+
+    if (!this.newEmployee.gender || this.newEmployee.gender.trim() === '') {
+      this.genderError = 'Gender is required';
+      hasErrors = true;
+    }
+
+    if (!this.newEmployee.address || this.newEmployee.address.trim() === '') {
+      this.addressError = 'Address is required';
+      hasErrors = true;
+    }
+
+    // If there are validation errors, don't proceed to create-account
+    if (hasErrors) {
+      return;
+    }
+
+    // Create the DTO object to send to the server
+    const requestPayload: CreateEmployeeRequest = {
+      employeeCode: this.newEmployee.employeeCode,
+      lastName: this.newEmployee.lastName,
+      firstName: this.newEmployee.firstName,
+      middleName: this.newEmployee.middleName,
+      age: this.newEmployee.age,
+      birthDate: new Date(this.newEmployee.birthDate).toISOString(),
+      civilStatus: this.newEmployee.civilStatus,
+      gender: this.newEmployee.gender,
+      email: this.newEmployee.email,
+      phoneNumber: this.newEmployee.phoneNumber,
+      address: this.newEmployee.address,
+      rolePosition: this.newEmployee.rolePosition,
+      createdBy: this.loggedInEmployeeId,
+      createdAt: new Date(),
+      isActive: true,
+      archivedBy: this.newEmployee.archivedBy,
+      archivedAt: this.newEmployee.archivedAt,
+      updatedBy: this.newEmployee.updatedBy,
+      updatedAt: this.newEmployee.updatedAt,
+    };
+
+    this.postService.createEmployee(requestPayload).subscribe({
+      next: res => {
+        console.log(`${res.message}`);
+        this.newEmployeeId = res.employeeId;
+        this.clearFields();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
 
   clearFields() {
     if (!this.newEmployee) {
@@ -91,6 +156,19 @@ export class CreateEmployeeComponent implements OnInit{
   }
 
   closeCreateEmployeeForm() {
+    // Clear all errors when closing form
+    this.employeeCodeError = '';
+    this.lastNameError = '';
+    this.firstNameError = '';
+    this.middleNameError = '';
+    this.genderError = '';
+    this.ageError = '';
+    this.birthDateError = '';
+    this.phoneNumberError = '';
+    this.civilStatusError = '';
+    this.rolePositionError = '';
+    this.emailError = '';
+    this.addressError = '';
     this.closeForm.emit();
   }
 

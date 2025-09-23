@@ -12,14 +12,16 @@
 
       <div class="form-grid">
 
-        <div class="form-group">
+        <div class="form-group" [class.error]="usernameError">
           <label>User Name <span>*</span></label>
           <input type="text" placeholder="Enter UserName" [(ngModel)]="newAccount.username">
+          <p class="error-message" *ngIf="usernameError">{{ usernameError }}</p>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" [class.error]="passwordError">
           <label>Password<span>*</span></label>
           <input type="text" placeholder="Enter Password" [(ngModel)]="newAccount.password">
+          <p class="error-message" *ngIf="passwordError">{{ passwordError }}</p>
         </div>
       </div>
     </fieldset>
