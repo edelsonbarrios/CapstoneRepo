@@ -19,8 +19,6 @@
             <th>Stock</th>
             <th>Expiration</th>
             <th>Cost Price</th>
-            <th>Unit Price</th>
-            <th></th>
             <th>Status</th>
           </tr>
         </thead>
@@ -29,9 +27,8 @@
             <td>{{i.batchNumber}}</td>
             <td>{{i.productName}}</td>
             <td>{{i.quantityOnHand}}</td>
-            <td>{{i.expirationDate}}</td>
+            <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
             <td>{{i.costPrice}}</td>
-            <td>{{i.unitCost}}</td>
             <td>
               <div class="in-stock">In Stock</div>
             </td>
@@ -52,5 +49,8 @@
 </div>
 
 <div class="modal-overlay" *ngIf="createStock">
-  <app-create-stock *ngIf="createStock"></app-create-stock >
+  <app-create-stock 
+  *ngIf="createStock"
+  (closeForm)="closeCreateStockForm()"
+  ></app-create-stock >
 </div>

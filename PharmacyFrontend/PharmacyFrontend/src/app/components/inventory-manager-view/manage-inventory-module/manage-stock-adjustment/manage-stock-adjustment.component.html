@@ -13,47 +13,25 @@
       <table class="adjust-table">
         <thead>
           <tr>
-            <th>Item Code</th>
             <th>Product Name</th>
             <th>Stock On Hand</th>
+            <th>Manufacturing Date</th>
+            <th>Expiration Date</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>RX&ndash;001</td>
-            <td>Biogesic</td>
-            <td>120</td>
+          <tr *ngFor="let i of inventories">
+            <td>{{i.productName}}</td>
+            <td>{{i.quantityOnHand}}</td>
+            <td>{{i.manufacturingDate | date: 'dd-MM-yyy'}}</td>
+            <td>{{i.expirationDate | date : 'dd-MM-yyyy'}}</td>
             <td>
               <div class="in-stock">In Stock</div>
             </td>
             <td>
-              <button class="btn-adjust" (click)="openStockAdjustmentForm()">Adjust</button>
-              <button class="btn-archive">Archive</button>
-            </td>
-          </tr>
-          <tr>
-            <td>RX&ndash;002</td>
-            <td>Decolgen</td>
-            <td>15</td>
-            <td>
-              <div class="low-stock">Low Stock</div>
-            </td>
-            <td>
-              <button class="btn-adjust" (click)="openStockAdjustmentForm()">Adjust</button>
-              <button class="btn-archive">Archive</button>
-            </td>
-          </tr>
-          <tr>
-            <td>RX&ndash;003</td>
-            <td>Neozep</td>
-            <td>0</td>
-            <td>
-              <div class="out-stock">Out of Stock</div>
-            </td>
-            <td>
-              <button class="btn-adjust" (click)="openStockAdjustmentForm()">Adjust</button>
+              <button class="btn-adjust" (click)="openStockAdjustmentForm(i)">Adjust</button>
               <button class="btn-archive">Archive</button>
             </td>
           </tr>
@@ -73,5 +51,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="stockAdjust">
-  <app-stock-adjust *ngIf="stockAdjust"></app-stock-adjust>
+  <app-stock-adjust 
+  *ngIf="stockAdjust"
+  [stockAdjust]="stockAdjust"
+  (closeForm)="closeStockAdjustmentForm()"
+  ></app-stock-adjust>
 </div>

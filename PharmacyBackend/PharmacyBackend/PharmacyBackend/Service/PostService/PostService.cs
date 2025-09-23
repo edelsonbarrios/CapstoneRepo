@@ -528,11 +528,15 @@ namespace PharmacyBackend.Service.PostService
         #endregion
 
         #region Inventory
-        public async Task<InventoryDto> CreateInventoryAsync(CreateInventoryDto dto)
+        public async Task<bool> CreateInventoryAsync(CreateInventoryDto dto)
         {
+            var product = await _context.Product
+                .FirstOrDefaultAsync(p => p.ProductName.Equals(dto.ProductName));
+            if (product is null)
+                return false;
             var inventory = new Inventory
             {
-                ProductID = dto.ProductID,
+                ProductID = product.ProductID,
                 BatchNumber = dto.BatchNumber,
                 ManufacturingDate = dto.ManufacturingDate,
                 ExpirationDate = dto.ExpirationDate,
@@ -545,23 +549,7 @@ namespace PharmacyBackend.Service.PostService
 
             var created = await _postRepo.CreateInventoryAsync(inventory);
 
-            return new InventoryDto
-            {
-                InventoryID = created.InventoryID,
-                ProductID = created.ProductID,
-                BatchNumber = created.BatchNumber,
-                ManufacturingDate = created.ManufacturingDate,
-                ExpirationDate = created.ExpirationDate,
-                QuantityOnHand = created.QuantityOnHand,
-                ReorderLevel = created.ReorderLevel,
-                CostPrice = created.CostPrice,
-                SellingPrice = created.SellingPrice,
-                DateAdded = created.DateAdded,
-                IsActive = created.IsActive,
-                IsExpired = created.IsExpired,
-                IsNearExpiry = created.IsNearExpiry,
-                IsCriticalStock = created.IsCriticalStock
-            };
+            return created;
         }
         #endregion
 

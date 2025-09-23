@@ -317,11 +317,11 @@ namespace PharmacyBackend.Repository.POST
         #endregion
 
         #region Inventory
-        public async Task<Inventory> CreateInventoryAsync(Inventory inventory)
+        public async Task<bool> CreateInventoryAsync(Inventory inventory)
         {
             await _context.Inventory.AddAsync(inventory);
             await _context.SaveChangesAsync();
-            return inventory;
+            return true;
         }
         #endregion
 

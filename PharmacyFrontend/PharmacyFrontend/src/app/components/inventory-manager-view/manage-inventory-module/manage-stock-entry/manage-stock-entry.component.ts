@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CreateInventory } from '../../../../models/inventory-module-models/createInventory';
-import { NgFor, NgIf, CommonModule } from '@angular/common';
+import { NgFor, NgIf, CommonModule, DatePipe } from '@angular/common';
 import { CreateStockComponent } from '../create-stock/create-stock.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-manage-stock-entry',
   standalone: true,
-  imports: [CreateStockComponent, NgIf, FormsModule, CommonModule],
+  imports: [CreateStockComponent, NgIf, FormsModule, CommonModule, DatePipe],
   templateUrl: './manage-stock-entry.component.html',
   styleUrl: './manage-stock-entry.component.scss'
 })
@@ -38,5 +38,9 @@ export class ManageStockEntryComponent implements OnInit{
 
   openCreateStockForm() {
     this.createStock = new CreateInventory;
+  }
+
+  closeCreateStockForm() {
+    this.createStock = null;
   }
 }

@@ -19,6 +19,8 @@ import { Generic } from '../../models/generic-models/generic';
 import { Formulation } from '../../models/formulation-models/formulation';
 import { Classification } from '../../models/classification-models/classification';
 import { TypeModel } from '../../models/type-models/type';
+import { CreateInventory } from '../../models/inventory-module-models/createInventory';
+import { CreateStockMovement } from '../../models/inventory-module-models/createStockMovement';
 
 @Injectable({
   providedIn: 'root'
@@ -112,4 +114,16 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Transaction`, transaction);
   }
   //Sales Service End
+
+  //Inventory Service 
+  createNewInventoryAsync(request: CreateInventory) : Observable<boolean> {
+    return this.httpClient.post<boolean>(`${this.apiUrl}/Post/Inventory`, request);
+  }
+  //Inventory Service End
+
+  //Stock Movement Service
+  createNewStockMovementAsync(request : CreateStockMovement) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/StockMovement`, request);
+  }
+  //Stock Movement Service End 
 }

@@ -1,8 +1,8 @@
 export class CreateInventory {
-    productID: number = 0;
+    productName: string = '';
     batchNumber: string = '';
-    manufacturingDate: Date = new Date();
-    expirationDate: Date = new Date();
+    manufacturingDate: string = '';
+    expirationDate: string = '';
     quantityOnHand: number = 0;
     reorderLevel: number = 0;
     costPrice: number = 0;

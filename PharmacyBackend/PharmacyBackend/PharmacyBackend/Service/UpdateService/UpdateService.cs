@@ -443,7 +443,6 @@ namespace PharmacyBackend.Service.UpdateService
             var existing = await _getRepo.GetInventoryByIdAsync(id);
             if (existing == null) return false;
 
-            existing.ProductID = dto.ProductID;
             existing.BatchNumber = dto.BatchNumber;
             existing.ManufacturingDate = dto.ManufacturingDate;
             existing.ExpirationDate = dto.ExpirationDate;

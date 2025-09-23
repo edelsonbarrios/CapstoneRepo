@@ -1,13 +1,83 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CreateStockMovement } from '../../../../models/inventory-module-models/createStockMovement';
+import { PostService } from '../../../../services/PostService/post.service';
+import { Inventory } from '../../../../models/inventory-module-models/inventory';
+import { GetService } from '../../../../services/GetService/get.service';
+import { Employee } from '../../../../models/employee-models/employee';
+import { jwtDecode } from 'jwt-decode';
+import { LogInToken } from '../../../shared/token';
+import { FormsModule } from '@angular/forms';
+import { NgClass, CommonModule } from "../../../../../../node_modules/@angular/common";
 
 @Component({
   selector: 'app-stock-adjust',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './stock-adjust.component.html',
-  styleUrl: './stock-adjust.component.scss'
+  styleUrl: './stock-adjust.component.scss',
 })
-export class StockAdjustComponent {
-  @Input() stockAdjust: CreateStockMovement = new CreateStockMovement;
+export class StockAdjustComponent implements OnInit {
+  @Input() stockAdjust: Inventory = new Inventory();
+  @Output() closeForm = new EventEmitter<void>();
+  employee: Employee = new Employee();
+  quantityChanged: number = 0;
+  notes : string = '';
+  refNumber: string = '';
+  movementType: string = '';
+  movementTypes : string[] = ['Stock In', 'Stock Out', 'Adjustment', 'Return', 'Damaged', 'Expired'];
+
+  constructor(
+    private postService: PostService,
+    private getService: GetService
+  ) {}
+
+  ngOnInit(): void {
+    this.getLoggedInUser();
+  }
+
+  createNewStockMovement() {
+    if(!this.stockAdjust) return;
+    const requestPayload : CreateStockMovement = {
+      inventoryID : this.stockAdjust.inventoryID,
+      movementType : this.movementType,
+      quantityChanged : this.quantityChanged,
+      referenceNumber : this.refNumber,
+      notes: this.notes,
+      employeeID : this.employee.id
+    }
+    this.postService.createNewStockMovementAsync(requestPayload).subscribe({
+      next: res => {
+        alert(`Stock Adjusted successfully.`);
+        this.closeStockAdjustmentForm();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getLoggedInUser() {
+    var token = localStorage.getItem(LogInToken);
+    if (!token) return;
+
+    var employee: any = jwtDecode(token);
+
+    const employeeId = parseInt(employee.EmployeeId);
+    if (!employeeId) console.log(`Employee Id does not exist.`);
+
+    this.getService.GetEmployeeById(employeeId).subscribe({
+      next: (res) => {
+        this.employee = res;
+      },
+      error: (err) => {
+        console.log(`Logged-in user does not exist.`);
+      },
+    });
+  }
+
+  closeStockAdjustmentForm() {
+    this.closeForm.emit();
+    console.log(this.stockAdjust);
+  }
+
 }

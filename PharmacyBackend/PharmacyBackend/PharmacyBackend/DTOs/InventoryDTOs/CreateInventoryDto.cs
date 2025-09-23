@@ -2,7 +2,7 @@
 {
     public class CreateInventoryDto
     {
-        public int ProductID { get; set; }
+        public string ProductName { get; set; }
         public string BatchNumber { get; set; } = string.Empty;
         public DateTime ManufacturingDate { get; set; }
         public DateTime ExpirationDate { get; set; }

@@ -8,48 +8,51 @@
     <div class="form-grid">
 
       <div class="form-group">
-        <label>Item Code</label>
-        <input type="text" placeholder="(e.g. PO-1004)" />
-      </div>
-
-      <div class="form-group">
         <label>Product Name</label>
-        <input type="text" />
+        <select name="" [(ngModel)]="createStock.productName">
+          <option value="">Select Product</option>
+          <option *ngFor="let p of products" value="{{p.productName}}">{{p.productName}}</option>
+        </select>
       </div>
 
       <div class="form-group">
         <label>Batch Number</label>
-        <input type="number" placeholder="0" />
+        <input type="text" placeholder="Batch Number" [(ngModel)]="createStock.batchNumber">
       </div>
 
       <div class="form-group">
         <label>Stock on Hand</label>
-        <input type="number" />
+        <input type="number" [(ngModel)]="createStock.quantityOnHand">
       </div>
 
       <div class="form-group">
         <label>Reorder Level</label>
-        <input type="number" />
+        <input type="number" [(ngModel)]="createStock.reorderLevel">
       </div>
 
       <div class="form-group">
         <label>Manufacturing Date</label>
-        <input type="date" />
+        <input type="date" [(ngModel)]="createStock.manufacturingDate">
       </div>
 
       <div class="form-group">
         <label>Expiry Date</label>
-        <input type="date" />
+        <input type="date" [(ngModel)]="createStock.expirationDate">
       </div>
 
       <div class="form-group">
         <label>Costing Price*</label>
-        <input type="number"/>
+        <input type="number" [(ngModel)]="createStock.costPrice">
       </div>
 
       <div class="form-group">
         <label>Selling Price*</label>
-        <input type="number"/>
+        <input type="number" [(ngModel)]="createStock.sellingPrice">
+      </div>
+
+      <div class="form-group">
+        <label>Unit Cost</label>
+        <input type="number" [(ngModel)]="createStock.unitCost">
       </div>
 
       <div class="form-group">
@@ -65,7 +68,7 @@
   </div>
 
   <div class="modal-footer">
-    <button class="btn-save">Save</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-save" (click)="createInventory()">Save</button>
+    <button class="btn-cancel" (click)="closeCreateInventoryForm()">Cancel</button>
   </div>
 </div>

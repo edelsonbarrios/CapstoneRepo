@@ -368,7 +368,7 @@ namespace PharmacyBackend.Controllers
 
         #region Inventory
         [HttpPost("Inventory")]
-        public async Task<IActionResult> CreateInventoryAsync([FromBody] CreateInventoryDto dto)
+        public async Task<ActionResult<bool>> CreateInventoryAsync(CreateInventoryDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid inventory data.");
@@ -379,7 +379,7 @@ namespace PharmacyBackend.Controllers
             try
             {
                 var result = await _postService.CreateInventoryAsync(dto);
-                if (result == null)
+                if (!result)
                     return BadRequest("Inventory could not be created.");
 
                 return Ok(new { Message = "Inventory successfully created." });
@@ -443,7 +443,7 @@ namespace PharmacyBackend.Controllers
 
         #region StockMovement
         [HttpPost("StockMovement")]
-        public async Task<IActionResult> CreateStockMovementAsync([FromBody] CreateStockMovementDto dto)
+        public async Task<IActionResult> CreateStockMovementAsync(CreateStockMovementDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid stock movement data.");

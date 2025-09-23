@@ -7,35 +7,30 @@
     <div class="form-grid">
 
       <div class="form-group">
-        <label>Item Code</label>
-        <input type="text" placeholder="(e.g. PO-1004)"/>
+        <label>Quantity On Hand</label>
+        <p>{{stockAdjust.quantityOnHand}}</p>
       </div>
 
       <div class="form-group">
         <label>Movement Type</label>
-        <select id="movement-type">
-          <option>Stock In</option>
-          <option>Stock Out</option>
-          <option>Ajdustment</option>
-          <option>Return</option>
-          <option>Damaged</option>
-          <option>Expired</option>
+        <select id="movement-type" [(ngModel)]="movementType">
+          <option *ngFor="let mt of movementTypes" [value]="mt">{{mt}}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Quantity Changed</label>
-        <input type="number"/>
+        <input type="number" [(ngModel)]="quantityChanged">
       </div>
 
       <div class="form-group">
         <label>Reference Number</label>
-        <input type="number"/>
+        <input type="text" [(ngModel)]="refNumber">
       </div>
       
       <div class="form-group">
-        <label>Employee ID</label>
-        <input type="number"/>
+        <label>Employee Name</label>
+        <p>{{employee.fullName}}</p>
       </div>
 
     </div>
@@ -43,11 +38,11 @@
 
   <div class="note-desc">
     <p>Notes</p>
-    <textarea></textarea>
+    <textarea [(ngModel)]="notes"></textarea>
   </div>
 
   <div class="modal-footer">
-    <button class="btn-save">Save</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-save" (click)="createNewStockMovement()">Save</button>
+    <button class="btn-cancel" (click)="closeStockAdjustmentForm()">Cancel</button>
   </div>
 </div>
