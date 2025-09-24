@@ -21,6 +21,7 @@ import { Classification } from '../../models/classification-models/classificatio
 import { TypeModel } from '../../models/type-models/type';
 import { CreateInventory } from '../../models/inventory-module-models/createInventory';
 import { CreateStockMovement } from '../../models/inventory-module-models/createStockMovement';
+import { CreateCategory } from '../../models/product-models/createCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -126,4 +127,11 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/StockMovement`, request);
   }
   //Stock Movement Service End 
+
+
+  //Category Service
+  createNewCategoryAsync(request : CreateCategory) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/Category`, request);
+  }
+  //Category Service End
 }

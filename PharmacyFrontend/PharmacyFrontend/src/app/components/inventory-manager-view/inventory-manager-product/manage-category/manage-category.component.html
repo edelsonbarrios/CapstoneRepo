@@ -12,35 +12,13 @@
     <table class="category-table">
       <thead>
         <tr>
-          <th>Item Code</th>
-          <th>Name</th>
-          <th>Description</th>
+          <th>Category Name</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>RX&ndash;001</td>
-          <td>Biogesic</td>
-          <td>Pain reliever and fever reducer</td>
-          <td>
-            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>RX&ndash;002</td>
-          <td>Decolgen</td>
-          <td>For cold, runny nose, and mild fever</td>
-          <td>
-            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
-            <button class="btn-archive">Archive</button>
-          </td>
-        </tr>
-        <tr>
-          <td>RX&ndash;003</td>
-          <td>Neozep</td>
-          <td>Relieves clogged nose, and mild fever</td>
+        <tr *ngFor="let c of categories">
+          <td>{{c.categoryName}}</td>
           <td>
             <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
             <button class="btn-archive">Archive</button>
@@ -61,7 +39,10 @@
 </div>
 
 <div class="modal-overlay" *ngIf="newCategory">
-  <app-create-category *ngIf="newCategory"></app-create-category>
+  <app-create-category 
+  *ngIf="newCategory"
+  (closeForm)="closeCreateCategoryForm()"
+  ></app-create-category>
 </div>
 
 <div class="modal-overlay" *ngIf="viewCategory">
