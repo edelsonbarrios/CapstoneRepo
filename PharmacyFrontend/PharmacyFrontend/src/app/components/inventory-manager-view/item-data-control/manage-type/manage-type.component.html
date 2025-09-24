@@ -13,13 +13,13 @@
       <thead>
         <tr>
           <th>Type</th>
-          <th>Action</th>
+          <th style="text-align: center;">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let t of types">
           <td>{{t.typeName}}</td>
-          <td>
+          <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditTypeForm(t)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>

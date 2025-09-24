@@ -13,13 +13,13 @@
       <thead>
         <tr>
           <th>Classification</th>
-          <th>Action</th>
+          <th style="text-align: center;">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let c of classifications">
           <td>{{c.classificationName}}</td>
-          <td>
+          <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditClassificationForm(c)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>

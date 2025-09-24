@@ -13,13 +13,13 @@
       <thead>
         <tr>
           <th>Formulation</th>
-          <th>Action</th>
+          <th style="text-align: center;">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let f of formulations">
           <td>{{f.formulationName}}</td>
-          <td>
+          <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditFormulationForm(f)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>

@@ -13,13 +13,13 @@
       <thead>
         <tr>
           <th>Generic Name</th>
-          <th>Actions</th>
+          <th style="text-align: center;">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let g of generics">
           <td>{{g.genericName}}</td>
-          <td>
+          <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditGenericForm(g)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>

@@ -13,13 +13,13 @@
       <thead>
         <tr>
           <th>Brand</th>
-          <th>Action</th>
+          <th style="text-align: center">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let b of brands">
           <td>{{b.brandName}}</td>
-          <td>
+          <td style="text-align: center">
             <button class="btn-edit" (click)="openEditBrandForm(b)">Edit</button>
             <button class="btn-archive">Archive</button>
           </td>
