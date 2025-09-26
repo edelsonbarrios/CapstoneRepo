@@ -25,7 +25,7 @@ export class ManageDiscountComponent implements OnInit {
 
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 5;
   totalPages: number = 0;
 
   constructor(
