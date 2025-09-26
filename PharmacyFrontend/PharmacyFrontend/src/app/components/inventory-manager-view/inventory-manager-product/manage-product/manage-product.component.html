@@ -26,9 +26,9 @@
           <td>{{p.brandName}}</td>
           <td>{{p.price}}</td>
           <td>
-            <button class="btn-view" (click)="openViewProductForm()">See Detais</button>
+            <button class="btn-view" (click)="openViewProductForm(p)">See Detais</button>
             <button class="btn-update">Update</button>
-            <button class="btn-archive">Archive</button>
+            <button class="btn-archive" (click)="archiveProduct(p.productID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -53,5 +53,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="viewProduct">
-  <app-view-product *ngIf="viewProduct"></app-view-product>
+  <app-view-product 
+  *ngIf="viewProduct"
+  [viewProduct]="viewProduct"
+  (closeForm)="closeViewProductForm()"
+  ></app-view-product>
 </div>

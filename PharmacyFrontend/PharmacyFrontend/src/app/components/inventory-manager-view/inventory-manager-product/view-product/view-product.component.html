@@ -14,43 +14,33 @@
 
     <div class="form-grid">
       <div class="form-group">
-        <label>Geric Name</label>
-        <p>Paracetamol</p>
+        <label>Generic Name</label>
+        <p>{{viewProduct.genericName}}</p>
       </div>
 
       <div class="form-group">
         <label>Classification</label>
-        <p>Analgesic/Antipyrectic</p>
+        <p>{{viewProduct.classificationName}}</p>
       </div>
 
       <div class="form-group">
         <label>Type</label>
-        <p>Tablet</p>
+        <p>{{viewProduct.typeName}}</p>
       </div>
 
       <div class="form-group">
         <label>Formulation</label>
-        <p>500 mg</p>
+        <p>{{viewProduct.formulationName}}</p>
       </div>
 
       <div class="form-group">
-        <label>Re-order Level</label>
-        <p>200</p>
+        <label>Price (&#8369;)</label>
+        <p>{{viewProduct.price}}</p>
       </div>
 
       <div class="form-group">
-        <label>Stock on Hand</label>
-        <p>500</p>
-      </div>
-
-      <div class="form-group">
-        <label>Unit Price (&#8369;)</label>
-        <p>&#8369;6.50</p>
-      </div>
-
-      <div class="form-group">
-        <label>Expiry</label>
-        <p>2026&ndash;05&ndash; 12</p>
+        <label>Category</label>
+        <p>{{viewProduct.categoryName}}</p>
       </div>
 
     </div>
@@ -60,6 +50,6 @@
   <!-- VIEW PRODUCT FOOTER -->
   <div class="modal-footer">
     <button class="btn-update">Update</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-cancel" (click)="closeViewProductForm()">Cancel</button>
   </div>
 </div>

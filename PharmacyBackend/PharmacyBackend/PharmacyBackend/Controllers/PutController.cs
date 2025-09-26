@@ -112,6 +112,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        [HttpPut("ArchiveProduct")]
+        public async Task<ActionResult<ArchiveProductResponse>> ArchiveProductByIdAsync(int productId)
+        {
+            if (productId == 0)
+                return BadRequest(new ArchiveProductResponse { Message = "Product does not exist." });
+            var archiveProduct = await _updateService.ArchiveProductByIdAsync(productId);
+            if (!archiveProduct)
+                return BadRequest(new ArchiveDiscountResponse { Message = "Product cannot be deleted." });
+            return Ok(new ArchiveProductResponse { Message = "Product deleted successfully." });
+        }
         #endregion
 
         #region Category

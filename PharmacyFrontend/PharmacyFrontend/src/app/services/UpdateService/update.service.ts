@@ -84,4 +84,10 @@ export class UpdateService {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Type?id=${id}`, type);
   }
  //Type Service End 
+
+ //Product Service
+  archiveProductByIdAsync(productId : number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveProduct?productId=${productId}`, {});
+  }
+ //Product Service End
 }

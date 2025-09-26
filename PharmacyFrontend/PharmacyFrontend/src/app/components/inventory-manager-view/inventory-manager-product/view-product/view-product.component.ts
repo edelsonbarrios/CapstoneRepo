@@ -1,13 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../../../models/product-models/product';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-view-product',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './view-product.component.html',
   styleUrl: './view-product.component.scss'
 })
-export class ViewProductComponent {
-  @Input() viewProduct: Product = new Product;  
+export class ViewProductComponent  implements OnInit{
+  @Input() viewProduct: Product = new Product();  
+  @Output() closeForm = new EventEmitter<void>();
+
+  ngOnInit(): void {
+    console.log(this.viewProduct);    
+  }
+
+
+  closeViewProductForm() {
+    this.closeForm.emit();
+  }
 }

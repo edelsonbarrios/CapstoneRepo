@@ -4,6 +4,7 @@ import { Product } from '../../../../models/product-models/product';
 import { NgFor, NgIf } from '@angular/common';
 import { ViewProductComponent } from '../view-product/view-product.component';
 import { GetService } from '../../../../services/GetService/get.service';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-product',
@@ -18,7 +19,8 @@ export class ManageProductComponent implements OnInit{
   products : Product[] = [];
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService : UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -37,12 +39,29 @@ export class ManageProductComponent implements OnInit{
       
   }
 
+  archiveProduct(id : number) {
+    if(id == null) return;
+    this.updateService.archiveProductByIdAsync(id).subscribe({
+      next: res => {
+        alert(`${res.message}`);
+        this.getAllProducts();
+      },
+      error: err => {
+        console.log(`${err.error.message}`);
+      }
+    });
+  }
+
   openCreateProductForm(){
     this.newProduct= new Product();
   }
 
-  openViewProductForm() {
-    this.viewProduct= new Product();
+  openViewProductForm(product : Product) {
+    this.viewProduct = product;
+  }
+
+  closeViewProductForm() {
+    this.viewProduct = null;
   }
 
   closeCreateProductForm() {

@@ -330,6 +330,20 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateProductAsync(existing);
             return true;
         }
+        public async Task<bool> ArchiveProductByIdAsync(int productId)
+        {
+            var product = await _context.Product
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProductID == productId);
+            if (product is null)
+                return false;
+            product.IsActive = false;
+            var archiveProduct = await _updateRepo.UpdateProductAsync(product);
+            if (!archiveProduct)
+                return false;
+            return archiveProduct;
+
+        }
         #endregion
 
         #region Category

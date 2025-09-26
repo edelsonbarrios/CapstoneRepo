@@ -269,8 +269,7 @@ namespace PharmacyBackend.Repository.GET
                .Include(p => p.Formulation)
                .Include(p => p.Classification)
                .Include(p => p.TypeModel)
-               .Include(p => p.Supplier)
-               .Include(p => p.Inventory.Where(i => i.IsActive))
+               .Where(p => p.IsActive == true)
                .ToListAsync();
         }
 
