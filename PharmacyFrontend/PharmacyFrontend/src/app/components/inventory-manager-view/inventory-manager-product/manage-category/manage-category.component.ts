@@ -8,7 +8,6 @@ import { Category } from '../../../../models/product-models/category';
 import { GetService } from '../../../../services/GetService/get.service';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-manage-category',
   standalone: true,
@@ -20,6 +19,12 @@ export class ManageCategoryComponent implements OnInit{
   newCategory ?: CreateCategory | null;
   viewCategory ?: Category | null;
   categories : Category[] = [];
+  paginatedCategories: Category[] = [];
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(
     private getService : GetService
@@ -33,11 +38,27 @@ export class ManageCategoryComponent implements OnInit{
     this.getService.getAllCategoriesAsync().subscribe({
       next: res => {
         this.categories = res;
+        this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.categories.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedCategories = this.categories.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openCreateCategoryForm() {
