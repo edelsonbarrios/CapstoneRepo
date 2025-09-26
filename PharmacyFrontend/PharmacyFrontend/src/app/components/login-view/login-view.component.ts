@@ -27,8 +27,6 @@ export class LoginViewComponent {
     this.postService.Authentication(this.userName, this.password).subscribe({
       next: res => {
         this.loginError = '';
-        console.log(`${res.message}`);
-        console.log(`${res.token}`);
         localStorage.setItem(LogInToken, res.token);
         var token = localStorage.getItem(LogInToken);
         if(!token) {
