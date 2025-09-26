@@ -13,7 +13,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class ManageAccountsComponent implements OnInit{
   accounts: Account[] = [];
+  paginatedAccounts: Account[] = [];
   searchUsername: string = '';
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(
     private getService : GetService
@@ -27,6 +33,7 @@ export class ManageAccountsComponent implements OnInit{
     this.getService.GetAllAccounts().subscribe({
       next: accounts => {
         this.accounts = accounts;
+        this.updatePagination();
         console.log(accounts);
       },
       error: err => {
@@ -39,6 +46,7 @@ export class ManageAccountsComponent implements OnInit{
     this.getService.SearchAccountByUserName(this.searchUsername).subscribe({
       next: acc => {
         this.accounts = acc ? [acc] : [];
+        this.updatePagination();
         console.log(this.accounts);
         this.searchUsername = '';
       },
@@ -49,4 +57,18 @@ export class ManageAccountsComponent implements OnInit{
     });
   }
 
+  updatePagination() {
+    this.totalPages = Math.ceil(this.accounts.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedAccounts = this.accounts.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
 }

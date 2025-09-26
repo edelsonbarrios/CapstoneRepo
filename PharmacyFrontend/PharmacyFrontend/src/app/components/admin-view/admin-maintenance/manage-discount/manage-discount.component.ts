@@ -18,9 +18,15 @@ import { EditDiscountComponent } from '../edit-discount/edit-discount.component'
 })
 export class ManageDiscountComponent implements OnInit {
   discounts: Discount[] = [];
+  paginatedDiscounts: Discount[] = [];
   newDiscount: Discount = new Discount();
   errorMessage: string = '';
   editDiscount?: Product | null;
+
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   constructor(
     private getService: GetService,
@@ -36,11 +42,27 @@ export class ManageDiscountComponent implements OnInit {
     this.getService.getAllDiscountAsync().subscribe({
       next: (discounts) => {
         this.discounts = discounts;
+        this.updatePagination();
       },
       error: (err) => {
         console.log(`${err.error}`);
       },
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.discounts.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedDiscounts = this.discounts.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   createNewDiscount() {
@@ -76,6 +98,8 @@ export class ManageDiscountComponent implements OnInit {
     this.updateService.archiveDiscountAsync(discount.id).subscribe({
       next: mes => {
         alert(`${mes.message}`);
+        this.currentPage = 1;
+        this.getAllDiscount();
       },
       error: err => {
         alert(`${err.error.message}`);

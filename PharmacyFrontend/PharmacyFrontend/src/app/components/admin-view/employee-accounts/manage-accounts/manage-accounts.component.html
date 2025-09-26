@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let a of accounts">
+        <tr *ngFor="let a of paginatedAccounts">
           <td>{{a.employeeId}}</td>
           <td>{{a.username}}</td>
           <td>{{a.password}}</td>
@@ -29,5 +29,12 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </div>
 </div>

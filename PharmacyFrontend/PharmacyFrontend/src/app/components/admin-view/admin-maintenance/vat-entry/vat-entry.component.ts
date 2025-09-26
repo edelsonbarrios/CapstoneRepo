@@ -19,9 +19,15 @@ import { EditVatComponent } from '../edit-vat/edit-vat.component';
 })
 export class VatEntryComponent implements OnInit{
   vats : VAT[] = [];
+  paginatedVats: VAT[] = [];
   createdVat : VAT = new VAT();
   vatError: string = '';
   editVat ?: Product | null;
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   constructor(
     private getService: GetService,
@@ -36,12 +42,28 @@ export class VatEntryComponent implements OnInit{
   getAllVat(){
     this.getService.getAllVatAsync().subscribe({
       next: vats => {
-        this.vats = vats
+        this.vats = vats;
+        this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.vats.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedVats = this.vats.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   createNewVat() {
@@ -78,6 +100,7 @@ export class VatEntryComponent implements OnInit{
     this.updateService.archiveVatAsync(vat.vatid).subscribe({
       next: mes => {
         alert(`${mes.message}`);
+        this.currentPage = 1;
         this.getAllVat();
       },
       error: err => {
@@ -86,7 +109,7 @@ export class VatEntryComponent implements OnInit{
     });
   }
 
-   openEditVatForm() {
+  openEditVatForm() {
     this.editVat = new Product();
   }
 }
