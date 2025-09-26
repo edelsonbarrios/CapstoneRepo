@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let s of suppliers">
+        <tr *ngFor="let s of paginatedSuppliers">
           <td>{{s.supplierName}}</td>
           <td>{{s.contactNumber}}</td>
           <td>{{s.email}}</td>
@@ -36,10 +36,11 @@
       </tbody>
     </table>
 
-    <div class="pagination">
-      <button>&lt;</button>
-      <span>Page 1 of 1</span>
-      <button>&gt;</button>
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
 </div>

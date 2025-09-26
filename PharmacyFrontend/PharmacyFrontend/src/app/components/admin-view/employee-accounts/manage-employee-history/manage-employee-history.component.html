@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let eh of employeeHistories">
+        <tr *ngFor="let eh of paginatedEmployeeHistories">
           <td>{{eh.employeeChanged}}</td>
           <td>{{eh.actionPerformed}}</td>
           <td>{{eh.performedBy}}</td>
@@ -27,5 +27,12 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </div>
 </div>

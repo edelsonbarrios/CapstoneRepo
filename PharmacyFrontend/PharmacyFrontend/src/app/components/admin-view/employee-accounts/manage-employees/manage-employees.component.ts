@@ -19,10 +19,16 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class ManageEmployeesComponent implements OnInit{
   employees: Employee[] = []
+  paginatedEmployees: Employee[] = [];
   viewEmployee ?: Employee | null;
   newEmployee : any;
   lastNameSearch : string = '';
   loggedInEmployeeId: number = 0;
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   constructor(
     private getService : GetService,
@@ -38,6 +44,7 @@ export class ManageEmployeesComponent implements OnInit{
     this.getService.GetDisplayEmployees().subscribe({
       next: employees => {
         this.employees = employees;
+        this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
@@ -49,6 +56,7 @@ export class ManageEmployeesComponent implements OnInit{
     this.getService.GetEmployeesByLastName(this.lastNameSearch).subscribe({
       next: employees => {
         this.employees = employees;
+        this.updatePagination();
         this.lastNameSearch = '';
       },
       error: err => {
@@ -56,6 +64,21 @@ export class ManageEmployeesComponent implements OnInit{
         this.getAllEmployees();
       }
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedEmployees = this.employees.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   archiveEmployee(employee: Employee) {
@@ -70,15 +93,16 @@ export class ManageEmployeesComponent implements OnInit{
     this.updateService.ArchiveEmployeeAsync(requestPayload).subscribe({
       next: mes => {
         alert(`${mes.message}`);
+        this.currentPage = 1;
         this.getAllEmployees();
       },
       error: err => {
         alert(`${err.error}`);
+        this.currentPage = 1;
         this.getAllEmployees();
       }
     });
   }
-
 
   openViewEmployeeForm(employee : Employee) {
     this.viewEmployee = employee;
