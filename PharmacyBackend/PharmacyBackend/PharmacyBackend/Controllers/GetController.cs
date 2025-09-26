@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
@@ -25,6 +26,7 @@ namespace PharmacyBackend.Controllers
         }
 
         #region Employee
+        [Authorize(Roles = "Administrator")]
         [HttpGet("EmployeeAll")]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAsync()
         {
