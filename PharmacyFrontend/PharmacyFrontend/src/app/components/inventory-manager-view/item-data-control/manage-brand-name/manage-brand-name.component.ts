@@ -17,6 +17,12 @@ export class ManageBrandNameComponent implements OnInit{
   addBrand?: Brand | null;
   editBrand?: Brand | null;
   brands: Brand[] = [];
+  paginatedBrands: Brand[] = [];
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(private getService: GetService) {}
 
@@ -28,11 +34,27 @@ export class ManageBrandNameComponent implements OnInit{
     this.getService.getAllBrandsAsync().subscribe({
       next: (res) => {
         this.brands = res;
+        this.updatePagination();
       },
       error: (err) => {
         console.log(`${err.error}`);
       },
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.brands.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedBrands = this.brands.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openAddBrandForm() {
