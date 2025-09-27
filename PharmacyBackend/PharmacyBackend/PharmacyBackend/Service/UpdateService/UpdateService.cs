@@ -449,6 +449,29 @@ namespace PharmacyBackend.Service.UpdateService
 
             return await _updateRepo.UpdateSupplierAsync(supplier);
         }
+        public async Task<bool> AddProductsToSupplierAsync(AssignSupplierProductRequest request)
+        {
+            var supplier = await _getRepo.GetSupplierByIdAsync(request.SupplierId);
+            if (supplier is null)
+                return false;
+
+
+            var productIds = request.ProductsToBeAdded.Select(p => p.ProductID).ToList();
+            var products = await _context.Product
+                .Where(p => productIds.Contains(p.ProductID))
+                .ToListAsync();
+
+            foreach (var product in products)
+            {
+                if (!supplier.Products.Any(sp => sp.ProductID == product.ProductID))
+                {
+                    supplier.Products.Add(product);
+                }
+            }
+            _context.Supplier.Update(supplier);
+            await _context.SaveChangesAsync();
+            return true;
+        }
         #endregion
 
         #region Inventory

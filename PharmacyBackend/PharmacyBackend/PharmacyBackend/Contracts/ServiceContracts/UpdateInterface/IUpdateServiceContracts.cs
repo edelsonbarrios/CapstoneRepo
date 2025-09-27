@@ -64,6 +64,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         #region Supplier
         public Task<bool> UpdateSupplierAsync(int id, UpdateSupplierDto dto);
         public Task<bool> ArchiveSupplierByIdAsync(int supplierId);
+        public Task<bool> AddProductsToSupplierAsync(AssignSupplierProductRequest request);
         #endregion
 
         #region Inventory

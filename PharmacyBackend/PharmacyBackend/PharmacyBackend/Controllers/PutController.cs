@@ -209,6 +209,16 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new ArchiveSupplierResponse { Message = "Supplier cannot be archived." });
             return Ok(new ArchiveSupplierResponse { Message = "Supplier is now inactive" });
         }
+        [HttpPut("AssignProducts")]
+        public async Task<ActionResult<AssignSupplierProductResponse>> AddProductsToSupplierAsync(AssignSupplierProductRequest request)
+        {
+            if (request.SupplierId == 0)
+                return BadRequest(new AssignSupplierProductResponse { Message = "Supplier does not exist." });
+            var assignProducts = await _updateService.AddProductsToSupplierAsync(request);
+            if (!assignProducts)
+                return BadRequest(new AssignSupplierProductResponse { Message = "Products cannot be added." });
+            return Ok(new AssignSupplierProductResponse { Message = "Products added successfully." });
+        }
         #endregion
 
         #region Inventory

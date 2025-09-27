@@ -27,7 +27,7 @@
           </td>
           <td>
             <div class="action-btns">
-              <button class="btn add">+ Assign Product</button>
+              <button class="btn add" (click)="openAssignProductSupplierForm(s)">+ Assign Product</button>
               <button class="btn edit">Edit</button>
               <button class="btn archive" (click)="archiveSupplier(s)">Archive</button>
             </div>
@@ -51,4 +51,12 @@
   [newSupplier]="newSupplier"
   (closeForm)="closeCreateSupplierForm()"
   ></app-create-supplier>
+</div>
+
+<div class="modal-overlay" *ngIf="assignSupplier">
+  <app-assign-products-supplier 
+  *ngIf="assignSupplier"
+  (close)="closeAssignProductSupplierForm()"
+  [supplier]="assignSupplier"
+  ></app-assign-products-supplier>
 </div>

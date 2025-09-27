@@ -4,11 +4,12 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { NgFor, NgIf } from '@angular/common';
 import { CreateSupplierComponent } from '../create-supplier/create-supplier.component';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { AssignProductsSupplierComponent } from "../assign-products-supplier/assign-products-supplier.component";
 
 @Component({
   selector: 'app-admin-supplier',
   standalone: true,
-  imports: [NgFor, CreateSupplierComponent, NgIf],
+  imports: [NgFor, CreateSupplierComponent, NgIf, AssignProductsSupplierComponent],
   templateUrl: './admin-supplier.component.html',
   styleUrl: './admin-supplier.component.scss'
 })
@@ -16,6 +17,7 @@ export class AdminSupplierComponent implements OnInit{
   suppliers: Supplier[] = [];
   paginatedSuppliers: Supplier[] = [];
   newSupplier ?: Supplier | null;
+  assignSupplier?: Supplier | null;
   
   // Pagination properties
   currentPage: number = 1;
@@ -66,6 +68,14 @@ export class AdminSupplierComponent implements OnInit{
   closeCreateSupplierForm() {
     this.newSupplier = null;
     this.getAllSuppliers();
+  }
+
+  openAssignProductSupplierForm(supplier: Supplier) {
+    this.assignSupplier = supplier;
+  }
+  
+  closeAssignProductSupplierForm() {
+    this.assignSupplier = null;
   }
 
   archiveSupplier(supplier : Supplier) {
