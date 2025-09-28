@@ -1,3 +1,5 @@
+import { Product } from "../product-models/product";
+
 export class Supplier {
   id : number = 0;
   supplierName : string = '';
@@ -5,4 +7,5 @@ export class Supplier {
   email : string = '';
   address : string = '';
   isActive : boolean = true;
+  products : Product[] = [];
 }

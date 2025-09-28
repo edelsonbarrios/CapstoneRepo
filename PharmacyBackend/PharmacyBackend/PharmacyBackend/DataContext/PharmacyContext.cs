@@ -108,10 +108,8 @@ namespace PharmacyBackend.DataContext
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Product>()
-                .HasOne(p => p.Supplier)
-                .WithMany(s => s.Products)
-                .HasForeignKey(p => p.SupplierID)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasMany(p => p.Suppliers)
+                .WithMany(s => s.Products);
 
             // Inventory relationships
             modelBuilder.Entity<Inventory>()

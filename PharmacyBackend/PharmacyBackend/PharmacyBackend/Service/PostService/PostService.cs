@@ -361,7 +361,6 @@ namespace PharmacyBackend.Service.PostService
                 FormulationID = formulationId.Value,
                 ClassificationID = classificationId.Value,
                 TypeID = typeId.Value,
-                SupplierID = (int)supplierId,
                 Price = dto.Price,
                 IsActive = true,
                 DateCreated = DateTime.UtcNow
@@ -381,7 +380,6 @@ namespace PharmacyBackend.Service.PostService
                 FormulationID = fullProduct.FormulationID,
                 ClassificationID = fullProduct.ClassificationID,
                 TypeID = fullProduct.TypeID,
-                SupplierID = fullProduct.SupplierID,
                 Price = fullProduct.Price,
                 IsActive = fullProduct.IsActive,
                 DateCreated = fullProduct.DateCreated,
@@ -400,7 +398,6 @@ namespace PharmacyBackend.Service.PostService
                 FormulationName = fullProduct.Formulation?.FormulationName ?? string.Empty,
                 ClassificationName = fullProduct.Classification?.ClassificationName ?? string.Empty,
                 TypeName = fullProduct.TypeModel?.TypeName ?? string.Empty,
-                SupplierName = fullProduct.Supplier?.SupplierName ?? string.Empty
             };
         }
 

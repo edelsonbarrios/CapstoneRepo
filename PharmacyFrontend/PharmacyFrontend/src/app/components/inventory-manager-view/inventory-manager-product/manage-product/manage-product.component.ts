@@ -87,5 +87,6 @@ export class ManageProductComponent implements OnInit{
 
   closeCreateProductForm() {
     this.newProduct = null;
+    this.getAllProducts();
   }
 }

@@ -197,7 +197,7 @@ namespace PharmacyBackend.Controllers
             var success = await _updateService.UpdateSupplierAsync(id, dto);
             if (!success)
                 return NotFound("Supplier not found or update failed.");
-            return Ok("Supplier updated successfully.");
+            return Ok(new {Message = "Supplier updated sucessfully."});
         }
         [HttpPut("ArchiveSupplier")]
         public async Task<ActionResult<ArchiveSupplierResponse>> ArchiveSupplierByIdAsync(int supplierId)

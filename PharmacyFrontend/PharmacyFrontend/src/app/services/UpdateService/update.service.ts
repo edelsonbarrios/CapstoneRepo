@@ -12,6 +12,7 @@ import { Formulation } from '../../models/formulation-models/formulation';
 import { Classification } from '../../models/classification-models/classification';
 import { TypeModel } from '../../models/type-models/type';
 import { AssignProductSupplierRequest } from '../../models/supplier-models/assign-product-supplier';
+import { Supplier } from '../../models/supplier-models/supplier';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,9 @@ export class UpdateService {
   }
   assignProductsToSupplierAsync(request : AssignProductSupplierRequest) : Observable<{message : string}> {
     return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/AssignProducts`, request);
+  }
+  updateSupplierAsync(id: number, supplier: Supplier) : Observable<any> {
+    return this.httpClient.put<any>(`${this.apiUrl}/Put/Supplier?id=${id}`, supplier)
   }
  //Supplier Service End
 

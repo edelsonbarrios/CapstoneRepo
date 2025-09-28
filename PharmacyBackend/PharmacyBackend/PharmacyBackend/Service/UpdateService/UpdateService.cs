@@ -323,7 +323,6 @@ namespace PharmacyBackend.Service.UpdateService
             existing.FormulationID = formulationId.Value;
             existing.ClassificationID = classificationId.Value;
             existing.TypeID = typeId.Value;
-            existing.SupplierID = (int)supplierId;
             existing.Price = dto.Price;
             existing.IsActive = dto.IsActive;
 

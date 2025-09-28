@@ -1,0 +1,96 @@
+<div class="wrapper" *ngIf="viewSupplier as supplier">
+  <!-- Header -->
+  <header>
+    <h2 *ngIf="!isEditMode">Supplier Details</h2>
+    <h2 *ngIf="isEditMode">Edit Supplier</h2>
+  </header>
+  <hr />
+
+  <!-- Supplier Profile -->
+  <section class="profile-section">
+    <div class="profile-info">
+      <div>
+        <h3>{{ supplier.supplierName }}</h3>
+        <p class="small-text">{{ supplier.email }}</p>
+      </div>
+    </div>
+  </section>
+  <hr />
+
+  <!-- Supplier Details -->
+  <main class="supplier-info">
+    <div class="supplier-property">
+      <label>Supplier Name:</label>
+      <div>
+        <span *ngIf="!isEditMode">{{ supplier.supplierName }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.supplierName" placeholder="Supplier Name">
+      </div>
+    </div>
+
+    <div class="supplier-property">
+      <label>Contact:</label>
+      <div>
+        <span *ngIf="!isEditMode">{{ supplier.contactNumber }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.contactNumber" placeholder="Contact Number">
+      </div>
+    </div>
+
+    <div class="supplier-property">
+      <label>Email:</label>
+      <div>
+        <span *ngIf="!isEditMode">{{ supplier.email }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.email" placeholder="Email">
+      </div>
+    </div>
+
+    <div class="supplier-property">
+      <label>Address:</label>
+      <div>
+        <span *ngIf="!isEditMode">{{ supplier.address }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.address" placeholder="Address">
+      </div>
+    </div>
+  </main>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <h3>Products</h3>
+    <table class="product-table" *ngIf="pagedProducts.length > 0; else noProducts">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Price</th>
+          <th>Total Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of pagedProducts">
+          <td>{{ product.productName }}</td>
+          <td>{{ product.categoryName }}</td>
+          <td>{{ product.brandName }}</td>
+          <td>{{ product.price | currency:'PHP' }}</td>
+          <td>{{ product.totalStock }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noProducts>
+      <span>No products assigned.</span>
+    </ng-template>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="supplier.products.length > pageSize">
+      <button [disabled]="currentPage === 1" (click)="prevPage()">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+    </div>
+  </section>
+
+  <!-- Buttons -->
+  <div class="button-wrapper">
+    <button *ngIf="!isEditMode" (click)="toggleViewMode()">Edit</button>
+    <button *ngIf="isEditMode" (click)="saveChanges()">Save</button>
+    <button (click)="closeViewForm()">Close</button>
+  </div>
+</div>

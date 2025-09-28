@@ -484,7 +484,6 @@ namespace PharmacyBackend.Service.GetService
                 FormulationID = p.FormulationID,
                 ClassificationID = p.ClassificationID,
                 TypeID = p.TypeID,
-                SupplierID = p.SupplierID,
                 Price = p.Price,
                 IsActive = p.IsActive,
                 DateCreated = p.DateCreated,
@@ -503,7 +502,6 @@ namespace PharmacyBackend.Service.GetService
                 FormulationName = p.Formulation?.FormulationName ?? string.Empty,
                 ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
                 TypeName = p.TypeModel?.TypeName ?? string.Empty,
-                SupplierName = p.Supplier?.SupplierName ?? string.Empty
             });
         }
 
@@ -523,7 +521,6 @@ namespace PharmacyBackend.Service.GetService
                 FormulationID = p.FormulationID,
                 ClassificationID = p.ClassificationID,
                 TypeID = p.TypeID,
-                SupplierID = p.SupplierID,
                 Price = p.Price,
                 IsActive = p.IsActive,
                 DateCreated = p.DateCreated,
@@ -542,7 +539,6 @@ namespace PharmacyBackend.Service.GetService
                 FormulationName = p.Formulation?.FormulationName ?? string.Empty,
                 ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
                 TypeName = p.TypeModel?.TypeName ?? string.Empty,
-                SupplierName = p.Supplier?.SupplierName ?? string.Empty
             };
         }
         #endregion
@@ -702,7 +698,36 @@ namespace PharmacyBackend.Service.GetService
                 ContactNumber = s.ContactNumber,
                 Email = s.Email,
                 Address = s.Address,
-                IsActive = s.IsActive
+                IsActive = s.IsActive,
+                Products = s.Products.Select(p => new ProductDto
+                {
+                    ProductID = p.ProductID,
+                    ProductName = p.ProductName,
+                    CategoryID = p.CategoryID,
+                    BrandID = p.BrandID,
+                    GenericID = p.GenericID,
+                    FormulationID = p.FormulationID,
+                    ClassificationID = p.ClassificationID,
+                    TypeID = p.TypeID,
+                    Price = p.Price,
+                    IsActive = p.IsActive,
+                    DateCreated = p.DateCreated,
+
+                    // Inventory calculations
+                    TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                    ExpiredStock = p.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                    NearExpiryStock = p.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
+                    IsCriticalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) <= p.Inventory?.FirstOrDefault()?.ReorderLevel,
+                    HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
+
+                    // Related entity names
+                    CategoryName = p.Category?.CategoryName ?? string.Empty,
+                    BrandName = p.Brand?.BrandName ?? string.Empty,
+                    GenericName = p.Generic?.GenericName ?? string.Empty,
+                    FormulationName = p.Formulation?.FormulationName ?? string.Empty,
+                    ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
+                    TypeName = p.TypeModel?.TypeName ?? string.Empty,
+                }).ToList()
             });
         }
 

@@ -437,9 +437,6 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
 
-                    b.Property<int>("SupplierID")
-                        .HasColumnType("integer");
-
                     b.Property<int>("TypeID")
                         .HasColumnType("integer");
 
@@ -456,8 +453,6 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("GenericID");
 
                     b.HasIndex("ProductName");
-
-                    b.HasIndex("SupplierID");
 
                     b.HasIndex("TypeID");
 
@@ -712,6 +707,21 @@ namespace PharmacyBackend.Migrations
                     b.ToTable("VAT");
                 });
 
+            modelBuilder.Entity("ProductSupplier", b =>
+                {
+                    b.Property<int>("ProductsProductID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SuppliersId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProductsProductID", "SuppliersId");
+
+                    b.HasIndex("SuppliersId");
+
+                    b.ToTable("ProductSupplier");
+                });
+
             modelBuilder.Entity("PharmacyBackend.Models.Account", b =>
                 {
                     b.HasOne("PharmacyBackend.Models.Employee", "Employee")
@@ -840,12 +850,6 @@ namespace PharmacyBackend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PharmacyBackend.Models.Supplier", "Supplier")
-                        .WithMany("Products")
-                        .HasForeignKey("SupplierID")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
-
                     b.HasOne("PharmacyBackend.Models.TypeModel", "TypeModel")
                         .WithMany("Products")
                         .HasForeignKey("TypeID")
@@ -861,8 +865,6 @@ namespace PharmacyBackend.Migrations
                     b.Navigation("Formulation");
 
                     b.Navigation("Generic");
-
-                    b.Navigation("Supplier");
 
                     b.Navigation("TypeModel");
                 });
@@ -925,6 +927,21 @@ namespace PharmacyBackend.Migrations
                     b.Navigation("Employee");
 
                     b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("ProductSupplier", b =>
+                {
+                    b.HasOne("PharmacyBackend.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PharmacyBackend.Models.Supplier", null)
+                        .WithMany()
+                        .HasForeignKey("SuppliersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Brand", b =>
@@ -996,8 +1013,6 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
                 {
-                    b.Navigation("Products");
-
                     b.Navigation("PurchaseOrders");
                 });
 
