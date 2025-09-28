@@ -101,6 +101,23 @@ export class CreateEmployeeComponent implements OnInit{
       hasErrors = true;
     }
 
+    // Validate birthdate age range (21-60 years old)
+    if (this.newEmployee.birthDate) {
+      const birthDate = new Date(this.newEmployee.birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 21 || age > 60) {
+        this.birthDateError = 'Employee must be between 21 and 60 years old';
+        hasErrors = true;
+      }
+    }
+
     // If there are validation errors, don't proceed to create-account
     if (hasErrors) {
       return;
