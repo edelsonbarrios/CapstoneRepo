@@ -249,6 +249,15 @@ namespace PharmacyBackend.Service.PostService
         #endregion
 
         #region product helper
+        private async Task<Product?> GetProductByNameAsync(string productName)
+        {
+            if (string.IsNullOrEmpty(productName))
+                return null;
+
+            return await _context.Product
+                .FirstOrDefaultAsync(p => p.ProductName.ToLower() == productName.ToLower());
+        }
+
         private async Task<int?> GetCategoryIdByNameAsync(string categoryName)
         {
             if (string.IsNullOrEmpty(categoryName))
@@ -530,26 +539,141 @@ namespace PharmacyBackend.Service.PostService
         #region Inventory
         public async Task<bool> CreateInventoryAsync(CreateInventoryDto dto)
         {
-            var product = await _context.Product
-                .FirstOrDefaultAsync(p => p.ProductName.Equals(dto.ProductName));
-            if (product is null)
-                return false;
-            var inventory = new Inventory
+            try
             {
-                ProductID = product.ProductID,
-                BatchNumber = dto.BatchNumber,
-                ManufacturingDate = dto.ManufacturingDate,
-                ExpirationDate = dto.ExpirationDate,
-                QuantityOnHand = dto.QuantityOnHand,
-                ReorderLevel = dto.ReorderLevel,
-                CostPrice = dto.CostPrice,
-                SellingPrice = dto.SellingPrice,
-                IsActive = true
-            };
+                // Find product by name (reusing your existing helper pattern)
+                var product = await GetProductByNameAsync(dto.ProductName);
+                if (product == null)
+                    throw new ArgumentException($"Product '{dto.ProductName}' not found");
 
-            var created = await _postRepo.CreateInventoryAsync(inventory);
+                // Check for existing batch (following your requirements)
+                var existingInventory = await _context.Inventory
+                    .FirstOrDefaultAsync(i => i.ProductID == product.ProductID &&
+                                             i.BatchNumber == dto.BatchNumber &&
+                                             i.IsActive);
 
-            return created;
+                if (existingInventory != null)
+                {
+                    // Update existing batch (same batch number = update)
+                    var beforeBox = existingInventory.BoxQuantity;
+                    var beforeSheet = existingInventory.SheetQuantity;
+                    var beforePiece = existingInventory.PieceQuantity;
+
+                    existingInventory.BoxQuantity += dto.BoxQuantity;
+                    existingInventory.SheetQuantity += dto.SheetQuantity;
+                    existingInventory.PieceQuantity += dto.PieceQuantity;
+
+                    // Update dates and prices (as per your requirements)
+                    existingInventory.ExpirationDate = dto.ExpirationDate;
+                    existingInventory.ManufacturingDate = dto.ManufacturingDate;
+                    existingInventory.BoxPrice = dto.BoxPrice;
+                    existingInventory.SheetPrice = dto.SheetPrice;
+                    existingInventory.PiecePrice = dto.PiecePrice;
+                    existingInventory.CostPrice = dto.CostPrice;
+
+                    await _updateRepo.UpdateInventoryAsync(existingInventory);
+
+                    // Create stock movement for addition to existing batch
+                    var additionMovement = new CreateStockMovementDto
+                    {
+                        InventoryID = existingInventory.InventoryID,
+                        MovementType = "Stock In",
+                        BoxQuantityChanged = dto.BoxQuantity,
+                        SheetQuantityChanged = dto.SheetQuantity,
+                        PieceQuantityChanged = dto.PieceQuantity,
+                        ReferenceNumber = dto.ReferenceNumber,
+                        Notes = dto.Notes ?? $"Stock addition to batch {dto.BatchNumber}"
+                    };
+
+                    await CreateStockMovementAsync(additionMovement);
+                    return true;
+                }
+                else
+                {
+                    // Create new inventory (separate batches)
+                    var inventory = new Inventory
+                    {
+                        ProductID = product.ProductID,
+                        BatchNumber = dto.BatchNumber,
+                        ManufacturingDate = dto.ManufacturingDate,
+                        ExpirationDate = dto.ExpirationDate,
+                        BoxQuantity = dto.BoxQuantity,
+                        SheetQuantity = dto.SheetQuantity,
+                        PieceQuantity = dto.PieceQuantity,
+                        SheetsPerBox = dto.SheetsPerBox,
+                        PiecesPerSheet = dto.PiecesPerSheet,
+                        ReorderLevel = dto.ReorderLevel,
+                        BoxPrice = dto.BoxPrice,
+                        SheetPrice = dto.SheetPrice,
+                        PiecePrice = dto.PiecePrice,
+                        CostPrice = dto.CostPrice,
+                        IsActive = true,
+                        DateAdded = DateTime.UtcNow
+                    };
+
+                    // This will auto-create stock movement (modified repository above)
+                    return await _postRepo.CreateInventoryAsync(inventory);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating inventory: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<bool> AdjustInventoryStockAsync(StockAdjustmentDto dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Get current inventory
+                var inventory = await _getRepo.GetInventoryByIdAsync(dto.InventoryID);
+                if (inventory == null)
+                    throw new ArgumentException($"Inventory with ID {dto.InventoryID} not found");
+
+                // Validate movement type
+                var validTypes = new[] { "Damaged", "Expired", "Loss", "Found", "Count Correction", "Transfer", "Return" };
+                if (!validTypes.Contains(dto.MovementType, StringComparer.OrdinalIgnoreCase))
+                    throw new ArgumentException($"Invalid movement type. Valid types: {string.Join(", ", validTypes)}");
+
+                // Calculate new quantities
+                var newBoxQty = inventory.BoxQuantity + dto.BoxQuantityAdjustment;
+                var newSheetQty = inventory.SheetQuantity + dto.SheetQuantityAdjustment;
+                var newPieceQty = inventory.PieceQuantity + dto.PieceQuantityAdjustment;
+
+                // Strict validation - no negatives
+                if (newBoxQty < 0 || newSheetQty < 0 || newPieceQty < 0)
+                    throw new ArgumentException("Adjustment would result in negative quantities");
+
+                // Create stock movement first (using your existing CreateStockMovementDto)
+                var stockMovement = new CreateStockMovementDto
+                {
+                    InventoryID = dto.InventoryID,
+                    MovementType = dto.MovementType,
+                    BoxQuantityChanged = dto.BoxQuantityAdjustment,
+                    SheetQuantityChanged = dto.SheetQuantityAdjustment,
+                    PieceQuantityChanged = dto.PieceQuantityAdjustment,
+                    ReferenceNumber = dto.ReferenceNumber,
+                    Notes = dto.Notes,
+                };
+
+                await CreateStockMovementAsync(stockMovement);
+
+                // Update inventory quantities
+                inventory.BoxQuantity = newBoxQty;
+                inventory.SheetQuantity = newSheetQty;
+                inventory.PieceQuantity = newPieceQty;
+
+                await _updateRepo.UpdateInventoryAsync(inventory);
+                await transaction.CommitAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"Error adjusting stock: {ex.Message}", ex);
+            }
         }
         #endregion
 
@@ -629,9 +753,15 @@ namespace PharmacyBackend.Service.PostService
             {
                 InventoryID = dto.InventoryID,
                 MovementType = dto.MovementType,
-                QuantityChanged = dto.QuantityChanged,
-                QuantityBefore = inventory.QuantityOnHand,
-                QuantityAfter = inventory.QuantityOnHand + dto.QuantityChanged,
+                BoxQuantityChanged = dto.BoxQuantityChanged,
+                SheetQuantityChanged = dto.SheetQuantityChanged,
+                PieceQuantityChanged = dto.PieceQuantityChanged,
+                BoxQuantityBefore = inventory.BoxQuantity,
+                SheetQuantityBefore = inventory.SheetQuantity,
+                PieceQuantityBefore = inventory.PieceQuantity,
+                BoxQuantityAfter = inventory.BoxQuantity + dto.BoxQuantityChanged,
+                SheetQuantityAfter = inventory.SheetQuantity + dto.SheetQuantityChanged,
+                PieceQuantityAfter = inventory.PieceQuantity + dto.PieceQuantityChanged,
                 ReferenceNumber = dto.ReferenceNumber,
                 Notes = dto.Notes,
                 EmployeeID = dto.EmployeeID
@@ -639,18 +769,28 @@ namespace PharmacyBackend.Service.PostService
 
             var created = await _postRepo.CreateStockMovementAsync(stockMovement);
 
-            // Update the inventory quantity
-            inventory.QuantityOnHand = stockMovement.QuantityAfter;
+            // Update the inventory quantities
+            inventory.BoxQuantity = stockMovement.BoxQuantityAfter;
+            inventory.SheetQuantity = stockMovement.SheetQuantityAfter;
+            inventory.PieceQuantity = stockMovement.PieceQuantityAfter;
             await _updateRepo.UpdateInventoryAsync(inventory);
 
             return new StockMovementDto
             {
                 StockMovementID = created.StockMovementID,
                 InventoryID = created.InventoryID,
+                ProductName = inventory.Product?.ProductName ?? string.Empty,
+                BatchNumber = inventory.BatchNumber,
                 MovementType = created.MovementType,
-                QuantityChanged = created.QuantityChanged,
-                QuantityBefore = created.QuantityBefore,
-                QuantityAfter = created.QuantityAfter,
+                BoxQuantityChanged = created.BoxQuantityChanged,
+                SheetQuantityChanged = created.SheetQuantityChanged,
+                PieceQuantityChanged = created.PieceQuantityChanged,
+                BoxQuantityBefore = created.BoxQuantityBefore,
+                SheetQuantityBefore = created.SheetQuantityBefore,
+                PieceQuantityBefore = created.PieceQuantityBefore,
+                BoxQuantityAfter = created.BoxQuantityAfter,
+                SheetQuantityAfter = created.SheetQuantityAfter,
+                PieceQuantityAfter = created.PieceQuantityAfter,
                 ReferenceNumber = created.ReferenceNumber,
                 Notes = created.Notes,
                 MovementDate = created.MovementDate,

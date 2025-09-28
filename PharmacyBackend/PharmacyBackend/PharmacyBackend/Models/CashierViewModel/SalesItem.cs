@@ -16,10 +16,10 @@ namespace PharmacyBackend.Models.CashierViewModel
         public int ProductId { get; set; }
         public Product Product { get; set; }
 
+        public string UnitType { get; set; } = "Piece"; // "Box", "Sheet", "Piece"
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
 
-        // Removed duplicate Price property, kept UnitPrice as primary
         [Column(TypeName = "decimal(18,2)")]
         public decimal Subtotal { get; set; }
     }

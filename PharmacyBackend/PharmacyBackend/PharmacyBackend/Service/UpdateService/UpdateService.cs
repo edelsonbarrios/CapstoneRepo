@@ -443,16 +443,32 @@ namespace PharmacyBackend.Service.UpdateService
             var existing = await _getRepo.GetInventoryByIdAsync(id);
             if (existing == null) return false;
 
+            // Store before values for stock movement tracking
+            var beforeBox = existing.BoxQuantity;
+            var beforeSheet = existing.SheetQuantity;
+            var beforePiece = existing.PieceQuantity;
+
+            // Update basic properties
             existing.BatchNumber = dto.BatchNumber;
             existing.ManufacturingDate = dto.ManufacturingDate;
             existing.ExpirationDate = dto.ExpirationDate;
-            existing.QuantityOnHand = dto.QuantityOnHand;
             existing.ReorderLevel = dto.ReorderLevel;
             existing.CostPrice = dto.CostPrice;
-            existing.SellingPrice = dto.SellingPrice;
             existing.IsActive = dto.IsActive;
 
-            await _updateRepo.UpdateInventoryAsync(existing);
+            // Update multi-unit quantities
+            existing.BoxQuantity = dto.BoxQuantity;
+            existing.SheetQuantity = dto.SheetQuantity;
+            existing.PieceQuantity = dto.PieceQuantity;
+            existing.SheetsPerBox = dto.SheetsPerBox;
+            existing.PiecesPerSheet = dto.PiecesPerSheet;
+
+            // Update multi-unit pricing
+            existing.BoxPrice = dto.BoxPrice;
+            existing.SheetPrice = dto.SheetPrice;
+            existing.PiecePrice = dto.PiecePrice;
+
+            var updated = await _updateRepo.UpdateInventoryAsync(existing);
             return true;
         }
         #endregion
@@ -538,7 +554,7 @@ namespace PharmacyBackend.Service.UpdateService
                     var newInventory = new Inventory()
                     {
                         ProductID = item.ProductID,
-                        QuantityOnHand = item.QuantityReceived,
+                        BoxQuantity = item.QuantityReceived,
                         BatchNumber = item.BatchNumber,
                         ManufacturingDate = item.ManufacturingDate,
                         ExpirationDate = item.ExpirationDate,
@@ -546,7 +562,7 @@ namespace PharmacyBackend.Service.UpdateService
                     await _postRepo.CreateInventoryAsync(newInventory);
                 }else if(inventory is not null)
                 {
-                    inventory.QuantityOnHand += item.QuantityReceived;
+                    inventory.BoxQuantity+= item.QuantityReceived;
                 } 
             }
             purchaseOrder.Status = "Received";

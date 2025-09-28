@@ -8,14 +8,30 @@
         public string BatchNumber { get; set; } = string.Empty;
         public DateTime ManufacturingDate { get; set; }
         public DateTime ExpirationDate { get; set; }
-        public int QuantityOnHand { get; set; }
+
+        // Multi-unit quantities
+        public int BoxQuantity { get; set; }
+        public int SheetQuantity { get; set; }
+        public int PieceQuantity { get; set; }
+
+        // Unit specifications
+        public int? SheetsPerBox { get; set; }
+        public int? PiecesPerSheet { get; set; }
+
         public int ReorderLevel { get; set; }
         public decimal CostPrice { get; set; }
-        public decimal SellingPrice { get; set; }
+
+        // Multi-level pricing
+        public decimal BoxPrice { get; set; }
+        public decimal SheetPrice { get; set; }
+        public decimal PiecePrice { get; set; }
+
         public DateTime DateAdded { get; set; }
         public bool IsActive { get; set; }
         public bool IsExpired { get; set; }
         public bool IsNearExpiry { get; set; }
         public bool IsCriticalStock { get; set; }
+        public bool IsMultiUnit { get; set; }
+        public int TotalPiecesAvailable { get; set; }
     }
 }

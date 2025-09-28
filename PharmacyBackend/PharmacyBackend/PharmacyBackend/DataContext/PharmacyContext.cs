@@ -199,7 +199,7 @@ namespace PharmacyBackend.DataContext
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<Inventory>()
-                .Property(i => i.SellingPrice)
+                .Property(i => i.BoxPrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<PurchaseOrder>()

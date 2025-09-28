@@ -415,7 +415,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Inventory
                 .Include(i => i.Product)
-                .Where(i => i.QuantityOnHand <= i.ReorderLevel)
+                .Where(i => i.BoxQuantity <= i.ReorderLevel)
                 .ToListAsync();
         }
         #endregion
