@@ -5,17 +5,19 @@ import { NgFor, NgIf } from '@angular/common';
 import { ViewProductComponent } from '../view-product/view-product.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { UpdateProductComponent } from '../update-product/update-product.component';
 
 @Component({
   selector: 'app-manage-product',
   standalone: true,
-  imports: [CreateProductComponent, NgIf, ViewProductComponent, NgFor],
+  imports: [CreateProductComponent, NgIf, ViewProductComponent, NgFor, UpdateProductComponent],
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss'
 })
 export class ManageProductComponent implements OnInit{
   newProduct ?: Product | null;
   viewProduct ?: Product | null;
+  updateProduct ?: Product | null;
   products : Product[] = [];
   paginatedProducts: Product[] = [];
   
@@ -79,6 +81,10 @@ export class ManageProductComponent implements OnInit{
 
   openViewProductForm(product : Product) {
     this.viewProduct = product;
+  }
+
+  openUpdateProductForm() {
+    this.updateProduct = new Product();
   }
 
   closeViewProductForm() {
