@@ -16,9 +16,9 @@
     <div class="form-row">
       <div class="form-group">
         <label for="supplier">Supplier Name</label>
-        <select id="supplier" [(ngModel)]="purchaseOrders.supplierName">
+        <select id="supplier" [(ngModel)]="purchaseOrders.supplierName" [(ngModel)]="selectedSupplier">
           <option value="">-- Select Supplier --</option>
-          <option *ngFor="let s of suppliers" [value]="s.supplierName">{{s.supplierName}}</option>
+          <option *ngFor="let s of suppliers" [ngValue]="s">{{s.supplierName}}</option>
         </select>
       </div>
     </div>
@@ -71,6 +71,9 @@
 </div>
 
 <div class="modal-overlay" *ngIf="openProductForm">
-  <app-purchase-order-products *ngIf="openProductForm" (close)="closeProductsForm()"
-    (productsSelected)="onProductsSelected($event)"></app-purchase-order-products>
+  <app-purchase-order-products 
+  *ngIf="openProductForm" 
+  (close)="closeProductsForm()"
+  [supplierProudcts]="selectedSupplier.products"
+  (productsSelected)="onProductsSelected($event)"></app-purchase-order-products>
 </div>

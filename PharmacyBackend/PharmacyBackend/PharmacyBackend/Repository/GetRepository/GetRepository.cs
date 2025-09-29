@@ -358,6 +358,18 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Supplier
                 .Include(s => s.Products)
+                .ThenInclude(p => p.Category)
+                .Include(s => s.Products)
+                .ThenInclude(p => p.Brand)
+                .Include(s => s.Products)
+                .ThenInclude(p => p.Generic)
+                .Include(s => s.Products)
+                .ThenInclude(p => p.Formulation)
+                .Include(s => s.Products)
+                .ThenInclude(p => p.Classification)
+                .Include(s => s.Products)
+                .ThenInclude(p => p.TypeModel)
+                .Include(s => s.Products)
                 .Where(s => s.IsActive == true)
                 .ToListAsync();
         }

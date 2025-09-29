@@ -31,6 +31,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   openProductForm: boolean = false;
   suppliers: Supplier[] = [];
   employee: Employee = new Employee();
+  selectedSupplier: Supplier = new Supplier();
 
   constructor(
     private getService: GetService,
@@ -43,7 +44,12 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   openProductsForm() {
+    if (!this.selectedSupplier) {
+      alert('Please select a supplier first');
+      return;
+    }
     this.openProductForm = true;
+    console.log(this.selectedSupplier);
   }
 
   closeProductsForm() {
@@ -65,7 +71,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       expirationDate: new Date(),
       category: p.categoryName,
       classification: p.classificationName,
-      type: p.typeName
+      type: p.typeName,
     }));
 
     this.purchaseOrders.purchaseOrderItems.push(...items);
@@ -97,7 +103,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       orderDate: new Date(this.purchaseOrders.orderDate).toISOString(),
       deliveryDate: new Date(this.purchaseOrders.deliveryDate).toISOString(),
       employeeLastName: this.employee.lastName,
-      supplierName: this.purchaseOrders.supplierName,
+      supplierName: this.selectedSupplier.supplierName,
       notes: this.purchaseOrders.notes,
       purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
         (item) => ({
@@ -118,7 +124,6 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       },
       error: (err) => {
         console.log(`${err.error}`);
-        console.log(this.purchaseOrders);
         console.log(requestPayload);
       },
     });
@@ -135,7 +140,6 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         this.suppliers = res;
       },
       error: (err) => {
-        console.log('Has an error getting all the suppliers.');
         console.log(`${err.error}`);
       },
     });

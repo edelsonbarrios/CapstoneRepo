@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { Product } from '../../../../models/product-models/product';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe, NgFor } from '@angular/common';
@@ -12,6 +12,7 @@ import { GetService } from '../../../../services/GetService/get.service';
   styleUrl: './purchase-order-products.component.scss'
 })
 export class PurchaseOrderProductsComponent implements OnInit{
+  @Input() supplierProudcts : Product[] = [];
   @Output() productsSelected = new EventEmitter<Product[]>();
   @Output() close = new EventEmitter<void>();
 
@@ -38,11 +39,12 @@ export class PurchaseOrderProductsComponent implements OnInit{
 
   toggleAll(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    this.products.forEach(p => (p.selected = checked));
+    this.supplierProudcts.forEach(p => (p.selected = checked));
   }
 
   addSelected() {
-    const selected = this.products.filter(p => p.selected);
+    const selected = this.supplierProudcts.filter(p => p.selected);
+    console.log(selected);
     this.productsSelected.emit(selected);
     this.close.emit(); // auto-close after adding
   }
