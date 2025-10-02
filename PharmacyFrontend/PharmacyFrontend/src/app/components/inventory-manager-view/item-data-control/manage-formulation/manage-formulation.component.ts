@@ -17,6 +17,12 @@ export class ManageFormulationComponent implements OnInit{
   addFormulation ?: Formulation | null;
   editFormulation ?: Formulation | null;
   formulations: Formulation[] = [];
+  paginatedFormulations: Formulation[] = [];
+
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(
     private getService : GetService
@@ -30,11 +36,27 @@ export class ManageFormulationComponent implements OnInit{
     this.getService.getAllFormulationsAsync().subscribe({
       next: res => {
         this.formulations = res;
+        this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.formulations.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedFormulations = this.formulations.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openAddFormulationForm() {

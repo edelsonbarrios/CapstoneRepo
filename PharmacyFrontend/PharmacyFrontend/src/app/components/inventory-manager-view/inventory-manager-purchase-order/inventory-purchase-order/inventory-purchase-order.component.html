@@ -43,7 +43,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of purchaseOrders.purchaseOrderItems; let i = index">
+        <tr *ngFor="let item of paginatedItems; let i = index">
           <td>{{ item.productName }}</td>
           <td>{{item.category}}</td>
           <td>{{item.type}}</td>
@@ -53,10 +53,18 @@
               (input)="item.totalCost = item.quantityOrdered * item.unitCost" (ngModelChange)="updateItemTotal(item)" />
           </td>
           <td>{{item.totalCost}}</td>
-          <td><button class="remove-btn" (click)="purchaseOrders.purchaseOrderItems.splice(i,1)">✕</button></td>
+          <td><button class="remove-btn" (click)="removeItemPaginated(item)">✕</button></td>
         </tr>
       </tbody>
     </table>
+    
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
+    
     <button class="add-item-btn" (click)="openProductsForm()">+ Add Item</button>
 
     <div class="footer">

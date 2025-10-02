@@ -24,6 +24,12 @@ export class ManageGenericNameComponent implements OnInit {
   addGeneric?: Generic | null;
   editGeneric?: Generic | null;
   generics: Generic[] = [];
+  paginatedGenerics: Generic[] = [];
+
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(private getService: GetService) {}
 
@@ -35,11 +41,27 @@ export class ManageGenericNameComponent implements OnInit {
     this.getService.getAllGenericsAsync().subscribe({
       next: (res) => {
         this.generics = res;
+        this.updatePagination();
       },
       error: (err) => {
         console.log(`${err.error}`);
       },
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.generics.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedGenerics = this.generics.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openAddGenericForm() {
@@ -52,7 +74,7 @@ export class ManageGenericNameComponent implements OnInit {
   }
 
   openEditGenericForm(generic: Generic) {
-    this.editGeneric =  generic;
+    this.editGeneric = generic;
   }
 
   closeEditGenericForm() {

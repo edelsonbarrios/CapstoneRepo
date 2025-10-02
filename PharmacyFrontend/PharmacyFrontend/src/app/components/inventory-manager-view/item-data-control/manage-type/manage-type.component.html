@@ -17,23 +17,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let t of types">
+        <tr *ngFor="let t of paginatedTypes">
           <td>{{t.typeName}}</td>
           <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditTypeForm(t)">Edit</button>
-            <button class="btn-archive">Archive</button>
+            <button class="btn-archive" (click)="goToPage(1)">Archive</button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- FOOTER/PAGINATION -->
-    <div class="footer">
-      <p>Page 1 of 1</p>
-      <div class="page-buttons">
-        <button>&lt;</button>
-        <button>&gt;</button>
-      </div>
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
 </div>

@@ -13,6 +13,7 @@ import { CreatePurchaseOrder } from '../../../../models/purchase-order-models/cr
 import { Employee } from '../../../../models/employee-models/employee';
 import { LogInToken } from '../../../shared/token';
 import { jwtDecode } from 'jwt-decode';
+
 @Component({
   selector: 'app-inventory-purchase-order',
   standalone: true,
@@ -33,6 +34,12 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   employee: Employee = new Employee();
   selectedSupplier: Supplier = new Supplier();
 
+  // Pagination properties
+  paginatedItems: PurchaseOrderItem[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 3;
+  totalPages: number = 0;
+
   constructor(
     private getService: GetService,
     private postService: PostService
@@ -41,6 +48,22 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   ngOnInit(): void {
     this.getAllSuppliers();
     this.getLoggedInUser();
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openProductsForm() {
@@ -75,6 +98,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     }));
 
     this.purchaseOrders.purchaseOrderItems.push(...items);
+    this.updatePagination();
     this.computeTotalAmount();
     this.openProductForm = false;
   }
@@ -94,7 +118,24 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   removeItem(index: number) {
     this.purchaseOrders.purchaseOrderItems.splice(index, 1);
+    this.updatePagination();
     this.computeTotalAmount();
+  }
+
+  // New method for removing items with pagination
+  removeItemPaginated(item: PurchaseOrderItem) {
+    const index = this.purchaseOrders.purchaseOrderItems.findIndex(i => i === item);
+    if (index !== -1) {
+      this.purchaseOrders.purchaseOrderItems.splice(index, 1);
+      
+      // Adjust current page if necessary
+      if (this.paginatedItems.length === 1 && this.currentPage > 1) {
+        this.currentPage--;
+      }
+      
+      this.updatePagination();
+      this.computeTotalAmount();
+    }
   }
 
   createPurchaseOrder() {
@@ -132,6 +173,8 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   clearFields() {
     this.purchaseOrders = new PurchaseOrder(); // resets everything
     this.purchaseOrders.purchaseOrderItems = []; // ensure items array cleared
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   getAllSuppliers() {
