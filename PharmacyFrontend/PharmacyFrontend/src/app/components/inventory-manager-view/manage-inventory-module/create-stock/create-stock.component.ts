@@ -5,6 +5,9 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { Product } from '../../../../models/product-models/product';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Employee } from '../../../../models/employee-models/employee';
+import { jwtDecode } from 'jwt-decode';
+import { LogInToken } from '../../../shared/token';
 
 @Component({
   selector: 'app-create-stock',
@@ -17,6 +20,7 @@ export class CreateStockComponent implements OnInit{
   @Input() createStock: CreateInventory = new CreateInventory;
   @Output() closeForm = new EventEmitter<void>();
   products : Product[] = [];
+  employee: Employee = new Employee();
 
   constructor(
     private postService : PostService,
@@ -25,6 +29,7 @@ export class CreateStockComponent implements OnInit{
 
   ngOnInit(): void {
     this.getAllProducts();
+    this.getLoggedInEmployee();
   }
 
   createInventory() {
@@ -34,11 +39,19 @@ export class CreateStockComponent implements OnInit{
       batchNumber: this.createStock.batchNumber,
       manufacturingDate : new Date(this.createStock.manufacturingDate).toISOString(),
       expirationDate : new Date(this.createStock.expirationDate).toISOString(),
-      quantityOnHand : this.createStock.quantityOnHand,
+      boxQuantity : this.createStock.boxQuantity,
+      sheetQuantity : this.createStock.sheetQuantity,
+      pieceQuantity : this.createStock.pieceQuantity,
+      sheetsPerBox : this.createStock.sheetsPerBox,
+      piecesPerSheet: this.createStock.piecesPerSheet,
       reorderLevel : this.createStock.reorderLevel,
       costPrice : this.createStock.costPrice,
-      sellingPrice : this.createStock.sellingPrice,
-      unitCost : this.createStock.unitCost
+      boxPrice : this.createStock.boxPrice,
+      sheetPrice : this.createStock.sheetPrice,
+      piecePrice : this.createStock.piecePrice,
+      referenceNumber : '',
+      notes: '',
+      employeeID: this.employee.id
     }
     this.postService.createNewInventoryAsync(requestPayload).subscribe({
       next: res => {
@@ -65,4 +78,24 @@ export class CreateStockComponent implements OnInit{
       }
     });
   }
+
+  getLoggedInEmployee() {
+      const token = localStorage.getItem(LogInToken);
+      if (!token) {
+        console.log(`Token does not exist.`);
+        return;
+      }
+  
+      const employee: any = jwtDecode(token);
+      const employeeId = parseInt(employee.EmployeeId);
+  
+      this.getService.GetEmployeeById(employeeId).subscribe({
+        next: (employee) => {
+          this.employee = employee;
+        },
+        error: (err) => {
+          console.log(`${err.error}`);
+        },
+      });
+    }
 }

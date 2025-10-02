@@ -24,7 +24,6 @@
         <tbody>
           <tr *ngFor="let i of inventories">
             <td>{{i.productName}}</td>
-            <td>{{i.quantityOnHand}}</td>
             <td>{{i.manufacturingDate | date: 'dd-MM-yyy'}}</td>
             <td>{{i.expirationDate | date : 'dd-MM-yyyy'}}</td>
             <td>

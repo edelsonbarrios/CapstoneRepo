@@ -5,14 +5,21 @@ export class Inventory {
     batchNumber: string = '';
     manufacturingDate: Date = new Date();
     expirationDate: Date = new Date();
-    quantityOnHand: number = 0;
+    boxQuantity: number = 0;
+    sheetQuantity: number = 0;
+    pieceQuantity: number = 0;
+    sheetsPerBox: number = 0;
+    piecesPerSheet: number = 0;
     reorderLevel: number = 0;
     costPrice: number = 0;
-    unitCost: number = 0;
-    sellingPrice: number = 0;
+    boxPrice: number = 0;
+    sheetPrice: number = 0;
+    piecePrice: number = 0;
     dateAdded: Date = new Date();
     isActive: boolean = false;
     isExpired: boolean = false;
     isNearExpiry: boolean = false;
     isCriticalStock: boolean = false;
+    isMultiUnit : boolean = false;
+    totalPiecesAvailable:  number = 0;
 }

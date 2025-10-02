@@ -16,9 +16,10 @@
           <tr>
             <th>Batch No.</th>
             <th>Product Name</th>
-            <th>Stock</th>
-            <th>Expiration</th>
-            <th>Cost Price</th>
+            <th>Box Quantity</th>
+            <th>Sheet Quantity</th>
+            <th>Piece Quantity</th>
+            <th>Expiration Date</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -26,9 +27,10 @@
           <tr *ngFor="let i of inventories">
             <td>{{i.batchNumber}}</td>
             <td>{{i.productName}}</td>
-            <td>{{i.quantityOnHand}}</td>
+            <td>{{i.boxQuantity}}</td>
+            <td>{{i.sheetQuantity}}</td>
+            <td>{{i.pieceQuantity}}</td>
             <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
-            <td>{{i.costPrice}}</td>
             <td>
               <div class="in-stock">In Stock</div>
             </td>

@@ -714,10 +714,6 @@ namespace PharmacyBackend.Service.GetService
                     DateCreated = p.DateCreated,
 
                     // Inventory calculations
-                    TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
-                    ExpiredStock = p.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
-                    NearExpiryStock = p.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0,
-                    IsCriticalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) <= p.Inventory?.FirstOrDefault()?.ReorderLevel,
                     HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
 
                     // Related entity names
