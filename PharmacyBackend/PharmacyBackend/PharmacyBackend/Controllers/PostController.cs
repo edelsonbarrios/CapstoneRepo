@@ -370,7 +370,7 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Inventory")]
         public async Task<ActionResult<bool>> CreateInventoryAsync(CreateInventoryDto dto)
         {
-            /* if (!ModelState.IsValid)
+             if (!ModelState.IsValid)
                  return BadRequest("Invalid inventory data.");
 
              if (dto == null)
@@ -387,10 +387,7 @@ namespace PharmacyBackend.Controllers
              catch (Exception ex)
              {
                  return BadRequest($"Error creating inventory: {ex.Message}");
-             }*/
-
-            var result = await _postService.CreateInventoryAsync(dto);
-            return Ok(result);
+             }
         }
 
         [HttpPost("StockAdjustment")]

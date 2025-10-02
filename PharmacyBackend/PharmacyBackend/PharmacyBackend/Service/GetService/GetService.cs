@@ -269,6 +269,7 @@ namespace PharmacyBackend.Service.GetService
                     SalesTransactionId = i.SalesTransactionId,
                     ProductId = i.ProductId,
                     ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.Subtotal
@@ -302,6 +303,7 @@ namespace PharmacyBackend.Service.GetService
                     Id = i.Id,
                     ProductId = i.ProductId,
                     ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.Subtotal
@@ -309,7 +311,6 @@ namespace PharmacyBackend.Service.GetService
             });
         }
 
-        // Add missing methods
         public async Task<IEnumerable<SalesTransactionDto>> GetSalesTransactionsByEmployeeIdAsync(int employeeId)
         {
             var transactions = await _getRepo.GetSalesTransactionsByEmployeeIdAsync(employeeId);
@@ -336,6 +337,7 @@ namespace PharmacyBackend.Service.GetService
                     Id = i.Id,
                     ProductId = i.ProductId,
                     ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.Subtotal
@@ -369,6 +371,7 @@ namespace PharmacyBackend.Service.GetService
                     Id = i.Id,
                     ProductId = i.ProductId,
                     ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.Subtotal
@@ -402,6 +405,7 @@ namespace PharmacyBackend.Service.GetService
                     Id = i.Id,
                     ProductId = i.ProductId,
                     ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
                     Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice,
                     Subtotal = i.Subtotal
@@ -420,6 +424,7 @@ namespace PharmacyBackend.Service.GetService
                 Id = item.Id,
                 ProductId = item.ProductId,
                 ProductName = item.Product?.ProductName ?? string.Empty,
+                UnitType = item.UnitType,
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 Subtotal = item.Subtotal
@@ -434,6 +439,7 @@ namespace PharmacyBackend.Service.GetService
                 Id = i.Id,
                 ProductId = i.ProductId,
                 ProductName = i.Product?.ProductName ?? string.Empty,
+                UnitType = i.UnitType,
                 Quantity = i.Quantity,
                 UnitPrice = i.UnitPrice,
                 Subtotal = i.Subtotal
