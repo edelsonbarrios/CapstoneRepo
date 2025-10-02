@@ -50,6 +50,26 @@
       width: 100%;
       border-collapse: collapse;
 
+      .btn-view {
+        padding: 0.4rem;
+        border-radius: 0.4rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        background-color: #3498ff;
+        color: white;
+        border: 1px solid #3498ff;
+        margin-right: 0.2rem;
+
+        &:hover {
+          background-color: #2c7ccc;
+          border: 1px solid #3498ff;
+        }
+
+         &:active {
+          opacity: 0.8;
+        }
+      }
+
       .in-stock,
       .low-stock,
       .out-stock {
