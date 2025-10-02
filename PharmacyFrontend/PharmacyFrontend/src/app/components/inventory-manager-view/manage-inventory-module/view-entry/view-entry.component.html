@@ -1,7 +1,7 @@
 <div class="modal">
   <div class="modal-header">
     <h2>Stock Entry</h2>
-    <h2>X</h2>
+    <a (click)="closeViewStockEntry()">X</a>
   </div>
 
   <div class="modal-body">
@@ -9,77 +9,72 @@
 
       <div class="form-group">
         <label>Batch No.</label>
-        <p>1</p>
+        <p>{{viewEntry.batchNumber}}</p>
       </div>
 
       <div class="form-group">
         <label>Product Name</label>
-        <p>name</p>
+        <p>{{viewEntry.productName}}</p>
       </div>
 
       <div class="form-group">
         <label>Box Qty</label>
-        <p>1</p>
+        <p>{{viewEntry.boxQuantity}}</p>
       </div>
 
       <div class="form-group">
         <label>Sheet Qty</label>
-        <p>1</p>
+        <p>{{viewEntry.sheetQuantity}}</p>
       </div>
 
       <div class="form-group">
         <label>Piece Qty</label>
-        <p>1</p>
+        <p>{{viewEntry.pieceQuantity}}</p>
       </div>
 
       <div class="form-group">
         <label>Sheet-per-Box</label>
-        <p>1</p>
-      </div>
-
-      <div class="form-group">
-        <label>Pieces-per-Box</label>
-        <p>1</p>
+        <p>{{viewEntry.sheetsPerBox}}</p>
       </div>
 
       <div class="form-group">
         <label>Reorder Level</label>
-        <p>1</p>
+        <p>{{viewEntry.reorderLevel}}</p>
       </div>
 
       <div class="form-group">
         <label>Manufacturing Date</label>
-        <p>date</p>
+        <p>{{viewEntry.manufacturingDate}}</p>
       </div>
 
       <div class="form-group">
         <label>Expiration</label>
-        <p>date</p>
+        <p>{{viewEntry.expirationDate}}</p>
       </div>
 
       <div class="form-group">
         <label>Cost Price</label>
-        <p>1</p>
+        <p>{{viewEntry.costPrice}}</p>
       </div>
 
       <div class="form-group">
         <label>Box Price</label>
-        <p>1</p>
+        <p>{{viewEntry.boxPrice}}</p>
       </div>
 
       <div class="form-group">
         <label>Sheet Price</label>
-        <p>1</p>
+        <p>{{viewEntry.sheetPrice}}</p>
       </div>
 
       <div class="form-group">
         <label>Piece Price</label>
-        <p>1</p>
+        <p>{{viewEntry.piecePrice}}</p>
       </div>
 
       <div class="form-group">
         <label>Status</label>
-        <p>stats</p>
+        <p>Available</p>
       </div>
 
     </div>

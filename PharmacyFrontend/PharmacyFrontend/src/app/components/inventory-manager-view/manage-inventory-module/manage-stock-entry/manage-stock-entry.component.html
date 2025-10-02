@@ -19,10 +19,7 @@
             <th>Box Qty</th>
             <th>Sheet Qty</th>
             <th>Piece Qty</th>
-            <th>Reorder Level</th>
-            <th>Manufacturing Date</th>
             <th>Expiration</th>
-            <th>Cost Price</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -31,17 +28,15 @@
           <tr *ngFor="let i of inventories">
             <td>{{i.batchNumber}}</td>
             <td>{{i.productName}}</td>
-            <td></td>
-            <td></td>
-            <td>{{i.quantityOnHand}}</td>
-            <td></td>
-            <td></td>
+            <td>{{i.boxQuantity}}</td>
+            <td>{{i.sheetQuantity}}</td>
+            <td>{{i.pieceQuantity}}</td>
             <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
             <td>
               <div class="in-stock">In Stock</div>
             </td>
             <td>
-              <button class="btn-view" (click)="openViewEntryForm()">View details</button>
+              <button class="btn-view" (click)="openViewEntryForm(i)">View details</button>
             </td>
           </tr>
         </tbody>
@@ -69,6 +64,7 @@
 <div class="modal-overlay" *ngIf="viewEntry">
   <app-view-entry 
   *ngIf="viewEntry"
-  (closeForm)="closeCreateStockForm()"
+  [viewEntry]="viewEntry"
+  (closeForm)="closeViewStockForm()"
   ></app-view-entry >
 </div>

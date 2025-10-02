@@ -5,6 +5,7 @@ import { CommonModule, DatePipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
+import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
 
 @Component({
   selector: 'app-manage-stock-adjustment',
@@ -13,27 +14,26 @@ import { Inventory } from '../../../../models/inventory-module-models/inventory'
     NgIf, 
     CommonModule, 
     FormsModule,
-    DatePipe
   ],
   templateUrl: './manage-stock-adjustment.component.html',
   styleUrl: './manage-stock-adjustment.component.scss'
 })
 export class ManageStockAdjustmentComponent implements OnInit{
-  stockAdjust ?: Inventory | null;
-  inventories: Inventory[] = [];
+  stockAdjust ?: StockMovement | null;
+  stockMovements: StockMovement[] = [];
 
   constructor(
     private getService : GetService
   ) {}
 
   ngOnInit(): void {
-    this.getAllInventories();
+    this.getAllStockMovements();
   }
 
-  getAllInventories() {
-    this.getService.getAllInventoriesAsync().subscribe({
+  getAllStockMovements() {
+    this.getService.getAllStockMovementsAsync().subscribe({
       next: res => {
-        this.inventories = res;
+        this.stockMovements = res;
       },
       error: err => {
         console.log(`${err.error}`);
@@ -41,8 +41,8 @@ export class ManageStockAdjustmentComponent implements OnInit{
     });
   }
 
-  openStockAdjustmentForm(inventory : Inventory) {
-    this.stockAdjust = inventory
+  openStockAdjustmentForm(stockMovement : StockMovement) {
+    this.stockAdjust = stockMovement;
   }
 
   closeStockAdjustmentForm() {

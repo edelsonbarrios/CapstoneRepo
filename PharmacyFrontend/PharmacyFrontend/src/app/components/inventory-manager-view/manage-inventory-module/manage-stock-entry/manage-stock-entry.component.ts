@@ -17,7 +17,7 @@ import { ViewEntryComponent } from '../view-entry/view-entry.component';
 })
 export class ManageStockEntryComponent implements OnInit{
   createStock ?: CreateInventory | null;
-  viewEntry ?: Product | null;
+  viewEntry ?: Inventory | null;
   inventories : Inventory[] = [];
 
   constructor(
@@ -43,11 +43,15 @@ export class ManageStockEntryComponent implements OnInit{
     this.createStock = new CreateInventory;
   }
 
-  openViewEntryForm() {
-    this.viewEntry = new Product;
+  openViewEntryForm(inv : Inventory) {
+    this.viewEntry = inv;
   }
 
   closeCreateStockForm() {
     this.createStock = null;
+  }
+
+  closeViewStockForm() {
+    this.viewEntry = null;
   }
 }

@@ -15,31 +15,21 @@
           <tr>
             <th>Product Name</th>
             <th>Movement Type</th>
-            <th>Box Qty</th>
-            <th>Sheet Qty</th>
-            <th>Piece Qty</th>
-            <th>Manufacturing Date</th>
-            <th>Expiration Date</th>
             <th>Ref. Number</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let i of inventories">
-            <td>{{i.productName}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>{{i.quantityOnHand}}</td>
-            <td>{{i.manufacturingDate | date: 'dd-MM-yyy'}}</td>
-            <td>{{i.expirationDate | date : 'dd-MM-yyyy'}}</td>
-            <td></td>
+          <tr *ngFor="let sm of stockMovements">
+            <td>{{sm.productName}}</td>
+            <td>{{sm.movementType}}</td>
+            <td>{{sm.referenceNumber}}</td>
             <td>
               <div class="in-stock">In Stock</div>
             </td>
             <td>
-              <button class="btn-adjust" (click)="openStockAdjustmentForm(i)">Adjust</button>
+              <button class="btn-adjust" (click)="openStockAdjustmentForm(sm)">Adjust</button>
               <button class="btn-archive">Archive</button>
             </td>
           </tr>

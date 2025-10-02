@@ -8,6 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 import { LogInToken } from '../../../shared/token';
 import { FormsModule } from '@angular/forms';
 import { NgClass, CommonModule } from "../../../../../../node_modules/@angular/common";
+import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
 
 @Component({
   selector: 'app-stock-adjust',
@@ -17,7 +18,7 @@ import { NgClass, CommonModule } from "../../../../../../node_modules/@angular/c
   styleUrl: './stock-adjust.component.scss',
 })
 export class StockAdjustComponent implements OnInit {
-  @Input() stockAdjust: Inventory = new Inventory();
+  @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
   quantityChanged: number = 0;

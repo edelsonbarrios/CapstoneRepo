@@ -134,4 +134,10 @@ export class GetService {
     return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryAll`);
   }
   //Inventory Service End
+
+  //Stock Movement Service
+  getAllStockMovementsAsync() : Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}/Get/StockMovementAll`);
+  }
+  //Stock Movement Service End
 }
