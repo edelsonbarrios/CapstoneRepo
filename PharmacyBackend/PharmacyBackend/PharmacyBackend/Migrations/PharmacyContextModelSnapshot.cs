@@ -88,6 +88,9 @@ namespace PharmacyBackend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
+                    b.Property<string>("UnitType")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
@@ -363,6 +366,13 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("BatchNumber")
                         .HasColumnType("text");
 
+                    b.Property<decimal>("BoxPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BoxQuantity")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("CostPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -379,18 +389,29 @@ namespace PharmacyBackend.Migrations
                     b.Property<DateTime>("ManufacturingDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ProductID")
+                    b.Property<decimal>("PiecePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PieceQuantity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("QuantityOnHand")
+                    b.Property<int?>("PiecesPerSheet")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductID")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReorderLevel")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("SellingPrice")
-                        .HasPrecision(18, 2)
+                    b.Property<decimal>("SheetPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SheetQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SheetsPerBox")
+                        .HasColumnType("integer");
 
                     b.HasKey("InventoryID");
 
@@ -575,6 +596,15 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StockMovementID"));
 
+                    b.Property<int>("BoxQuantityAfter")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BoxQuantityBefore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BoxQuantityChanged")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("EmployeeID")
                         .HasColumnType("integer");
 
@@ -592,20 +622,29 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 
+                    b.Property<int>("PieceQuantityAfter")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PieceQuantityBefore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PieceQuantityChanged")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("ProductID")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("QuantityAfter")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("QuantityBefore")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("QuantityChanged")
                         .HasColumnType("integer");
 
                     b.Property<string>("ReferenceNumber")
                         .HasColumnType("text");
+
+                    b.Property<int>("SheetQuantityAfter")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SheetQuantityBefore")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SheetQuantityChanged")
+                        .HasColumnType("integer");
 
                     b.HasKey("StockMovementID");
 

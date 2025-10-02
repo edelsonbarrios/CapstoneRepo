@@ -199,38 +199,164 @@ namespace PharmacyBackend.Repository.POST
             if (product == null)
                 throw new ArgumentException($"Product with ID {salesItem.ProductId} not found");
 
-            // Get available inventory using FIFO
+            // Validate unit type
+            var validUnitTypes = new[] { "Box", "Sheet", "Piece" };
+            if (string.IsNullOrEmpty(salesItem.UnitType) ||
+                !validUnitTypes.Contains(salesItem.UnitType, StringComparer.OrdinalIgnoreCase))
+            {
+                salesItem.UnitType = "Piece"; // Default to piece for backward compatibility
+            }
+
+            // Get available inventory using FIFO and FEFO
             var availableInventories = await _context.Inventory
                 .Where(i => i.ProductID == salesItem.ProductId &&
                            i.IsActive &&
-                           i.QuantityOnHand > 0 &&
                            i.ExpirationDate > DateTime.UtcNow)
-                .OrderBy(i => i.ExpirationDate)
-                .ThenBy(i => i.DateAdded)
+                .OrderBy(i => i.ExpirationDate) // First Expiry First Out
+                .ThenBy(i => i.DateAdded) // Then First In First Out
                 .ToListAsync();
 
             if (!availableInventories.Any())
                 throw new InvalidOperationException($"No available inventory found for product {product.ProductName}");
 
-            var totalAvailable = availableInventories.Sum(i => i.QuantityOnHand);
-            if (totalAvailable < salesItem.Quantity)
-                throw new InvalidOperationException($"Insufficient stock for {product.ProductName}. Available: {totalAvailable}, Requested: {salesItem.Quantity}");
+            // Calculate pieces needed based on unit type
+            var totalPiecesNeeded = CalculatePiecesNeeded(salesItem.UnitType, salesItem.Quantity, availableInventories.First());
+
+            // Check total availability
+            var totalAvailablePieces = availableInventories.Sum(i => i.TotalPiecesAvailable);
+            if (totalAvailablePieces < totalPiecesNeeded)
+                throw new InvalidOperationException($"Insufficient stock for {product.ProductName}. Available: {totalAvailablePieces} pieces, Required: {totalPiecesNeeded} pieces");
+
+            // Set unit price if not provided
+            if (salesItem.UnitPrice <= 0)
+            {
+                var sampleInventory = availableInventories.First();
+                salesItem.UnitPrice = salesItem.UnitType.ToLower() switch
+                {
+                    "box" => sampleInventory.BoxPrice,
+                    "sheet" => sampleInventory.SheetPrice,
+                    "piece" => sampleInventory.PiecePrice,
+                    _ => sampleInventory.PiecePrice
+                };
+            }
 
             // Calculate subtotal
             salesItem.Subtotal = salesItem.Quantity * salesItem.UnitPrice;
 
-            // Deduct from inventories using FIFO
-            var remainingQuantity = salesItem.Quantity;
+            // Deduct from inventories using FIFO/FEFO with multi-unit logic
+            var remainingPieces = totalPiecesNeeded;
             foreach (var inventory in availableInventories)
             {
-                if (remainingQuantity <= 0) break;
+                if (remainingPieces <= 0) break;
 
-                var quantityToDeduct = Math.Min(remainingQuantity, inventory.QuantityOnHand);
-                inventory.QuantityOnHand -= quantityToDeduct;
-                remainingQuantity -= quantityToDeduct;
-
-                _context.Inventory.Update(inventory);
+                var deductedPieces = await DeductFromSingleInventory(inventory, remainingPieces, invoiceNumber, employeeId);
+                remainingPieces -= deductedPieces;
             }
+        }
+
+        private int CalculatePiecesNeeded(string unitType, int quantity, Inventory sampleInventory)
+        {
+            return unitType.ToLower() switch
+            {
+                "box" => quantity * (sampleInventory.SheetsPerBox ?? 1) * (sampleInventory.PiecesPerSheet ?? 1),
+                "sheet" => quantity * (sampleInventory.PiecesPerSheet ?? 1),
+                "piece" => quantity,
+                _ => quantity
+            };
+        }
+
+        private async Task<int> DeductFromSingleInventory(Inventory inventory, int piecesNeeded, string referenceNumber, int? employeeId)
+        {
+            var beforeBox = inventory.BoxQuantity;
+            var beforeSheet = inventory.SheetQuantity;
+            var beforePiece = inventory.PieceQuantity;
+
+            var availablePieces = inventory.TotalPiecesAvailable;
+            var piecesToDeduct = Math.Min(piecesNeeded, availablePieces);
+            var remainingToDeduct = piecesToDeduct;
+
+            // Deduct hierarchy: pieces -> sheets -> boxes
+            // Deduct from loose pieces first
+            if (remainingToDeduct > 0 && inventory.PieceQuantity > 0)
+            {
+                var piecesFromLoose = Math.Min(remainingToDeduct, inventory.PieceQuantity);
+                inventory.PieceQuantity -= piecesFromLoose;
+                remainingToDeduct -= piecesFromLoose;
+            }
+
+            // Then deduct from loose sheets
+            if (remainingToDeduct > 0 && inventory.SheetQuantity > 0 && inventory.PiecesPerSheet.HasValue)
+            {
+                var sheetsNeeded = (int)Math.Ceiling((double)remainingToDeduct / inventory.PiecesPerSheet.Value);
+                var sheetsToUse = Math.Min(sheetsNeeded, inventory.SheetQuantity);
+                var piecesFromSheets = sheetsToUse * inventory.PiecesPerSheet.Value;
+
+                inventory.SheetQuantity -= sheetsToUse;
+                var excessPieces = piecesFromSheets - remainingToDeduct;
+
+                if (excessPieces > 0)
+                {
+                    inventory.PieceQuantity += excessPieces;
+                    remainingToDeduct = 0;
+                }
+                else
+                {
+                    remainingToDeduct -= piecesFromSheets;
+                }
+            }
+
+            // Finally deduct from boxes
+            if (remainingToDeduct > 0 && inventory.BoxQuantity > 0 &&
+                inventory.SheetsPerBox.HasValue && inventory.PiecesPerSheet.HasValue)
+            {
+                var piecesPerBox = inventory.SheetsPerBox.Value * inventory.PiecesPerSheet.Value;
+                var boxesNeeded = (int)Math.Ceiling((double)remainingToDeduct / piecesPerBox);
+                var boxesToUse = Math.Min(boxesNeeded, inventory.BoxQuantity);
+                var piecesFromBoxes = boxesToUse * piecesPerBox;
+
+                inventory.BoxQuantity -= boxesToUse;
+                var excessPieces = piecesFromBoxes - remainingToDeduct;
+
+                if (excessPieces > 0)
+                {
+                    var excessSheets = excessPieces / inventory.PiecesPerSheet.Value;
+                    var leftoverPieces = excessPieces % inventory.PiecesPerSheet.Value;
+                    inventory.SheetQuantity += excessSheets;
+                    inventory.PieceQuantity += leftoverPieces;
+                    remainingToDeduct = 0;
+                }
+                else
+                {
+                    remainingToDeduct -= piecesFromBoxes;
+                }
+            }
+
+            // Update inventory
+            _context.Inventory.Update(inventory);
+
+            // Create stock movement record
+            var stockMovement = new StockMovement
+            {
+                InventoryID = inventory.InventoryID,
+                MovementType = "Sale",
+                BoxQuantityBefore = beforeBox,
+                SheetQuantityBefore = beforeSheet,
+                PieceQuantityBefore = beforePiece,
+                BoxQuantityChanged = -(beforeBox - inventory.BoxQuantity),
+                SheetQuantityChanged = -(beforeSheet - inventory.SheetQuantity),
+                PieceQuantityChanged = -(beforePiece - inventory.PieceQuantity),
+                BoxQuantityAfter = inventory.BoxQuantity,
+                SheetQuantityAfter = inventory.SheetQuantity,
+                PieceQuantityAfter = inventory.PieceQuantity,
+                ReferenceNumber = referenceNumber,
+                Notes = $"Sale deduction: {piecesToDeduct} pieces equivalent",
+                EmployeeID = employeeId
+            };
+
+            await _context.StockMovement.AddAsync(stockMovement);
+            await _context.SaveChangesAsync();
+
+            return piecesToDeduct;
         }
 
         #endregion
@@ -319,9 +445,43 @@ namespace PharmacyBackend.Repository.POST
         #region Inventory
         public async Task<bool> CreateInventoryAsync(Inventory inventory)
         {
-            await _context.Inventory.AddAsync(inventory);
-            await _context.SaveChangesAsync();
-            return true;
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Create inventory (your existing logic)
+                await _context.Inventory.AddAsync(inventory);
+                await _context.SaveChangesAsync();
+
+                // AUTO-CREATE stock movement for stock in
+                var stockMovement = new StockMovement
+                {
+                    InventoryID = inventory.InventoryID,
+                    MovementType = "Stock In",
+                    BoxQuantityChanged = inventory.BoxQuantity,
+                    SheetQuantityChanged = inventory.SheetQuantity,
+                    PieceQuantityChanged = inventory.PieceQuantity,
+                    BoxQuantityBefore = 0,
+                    SheetQuantityBefore = 0,
+                    PieceQuantityBefore = 0,
+                    BoxQuantityAfter = inventory.BoxQuantity,
+                    SheetQuantityAfter = inventory.SheetQuantity,
+                    PieceQuantityAfter = inventory.PieceQuantity,
+                    ReferenceNumber = $"SI-{DateTime.Now:yyyyMMdd}-{inventory.InventoryID}",
+                    Notes = $"Initial stock entry for batch {inventory.BatchNumber}",
+                    MovementDate = DateTime.UtcNow
+                };
+
+                await _context.StockMovement.AddAsync(stockMovement);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"Error creating inventory with stock movement: {ex.Message}", ex);
+            }
         }
         #endregion
 

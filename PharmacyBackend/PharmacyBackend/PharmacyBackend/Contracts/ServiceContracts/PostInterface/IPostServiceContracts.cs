@@ -74,6 +74,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         #region Inventory
         public Task<bool> CreateInventoryAsync(CreateInventoryDto dto);
+
+        public Task<bool> AdjustInventoryStockAsync(StockAdjustmentDto dto);
         #endregion
 
         #region VAT

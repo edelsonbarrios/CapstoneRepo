@@ -43,8 +43,5 @@ namespace PharmacyBackend.Models
         public ICollection<SalesItem> SalesItem { get; set; } = new List<SalesItem>();
         public ICollection<StockMovement> StockMovement { get; set; } = new List<StockMovement>();
 
-
-        // Helper property to get total stock from all inventory items
-        public int TotalStock => Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.QuantityOnHand) ?? 0;
     }
 }

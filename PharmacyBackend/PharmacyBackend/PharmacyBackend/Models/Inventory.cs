@@ -15,14 +15,28 @@ namespace PharmacyBackend.Models
         public DateTime ManufacturingDate { get; set; }
         public DateTime ExpirationDate { get; set; }
 
-        public int QuantityOnHand { get; set; }
-        public int ReorderLevel { get; set; }
+        // Multi-unit quantities - maintain separate counts
+        public int BoxQuantity { get; set; } = 0;
+        public int SheetQuantity { get; set; } = 0; // Loose sheets
+        public int PieceQuantity { get; set; } = 0; // Loose pieces
+
+        // Unit specifications (optional - null if not applicable)
+        public int? SheetsPerBox { get; set; }
+        public int? PiecesPerSheet { get; set; }
+
+        public int ReorderLevel { get; set; } // Still at box level
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal CostPrice { get; set; }
+        public decimal BoxPrice { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal SellingPrice { get; set; }
+        public decimal SheetPrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PiecePrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal CostPrice { get; set; } // Cost per box
 
         public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
@@ -32,6 +46,24 @@ namespace PharmacyBackend.Models
         // Helper properties
         public bool IsExpired => DateTime.UtcNow > ExpirationDate;
         public bool IsNearExpiry => DateTime.UtcNow.AddDays(30) > ExpirationDate;
-        public bool IsCriticalStock => QuantityOnHand <= ReorderLevel;
+        public bool IsCriticalStock => BoxQuantity <= ReorderLevel;
+
+        // Calculate total pieces available
+        public int TotalPiecesAvailable
+        {
+            get
+            {
+                var pieces = PieceQuantity;
+                if (PiecesPerSheet.HasValue)
+                    pieces += SheetQuantity * PiecesPerSheet.Value;
+                if (SheetsPerBox.HasValue && PiecesPerSheet.HasValue)
+                    pieces += BoxQuantity * SheetsPerBox.Value * PiecesPerSheet.Value;
+                return pieces;
+            }
+        }
+
+        // Check if product uses multi-unit system
+        public bool IsMultiUnit => SheetsPerBox.HasValue && PiecesPerSheet.HasValue;
     }
 }
+
