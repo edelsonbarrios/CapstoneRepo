@@ -16,23 +16,32 @@
           <tr>
             <th>Batch No.</th>
             <th>Product Name</th>
-            <th>Box Quantity</th>
-            <th>Sheet Quantity</th>
-            <th>Piece Quantity</th>
-            <th>Expiration Date</th>
+            <th>Box Qty</th>
+            <th>Sheet Qty</th>
+            <th>Piece Qty</th>
+            <th>Reorder Level</th>
+            <th>Manufacturing Date</th>
+            <th>Expiration</th>
+            <th>Cost Price</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let i of inventories">
             <td>{{i.batchNumber}}</td>
             <td>{{i.productName}}</td>
-            <td>{{i.boxQuantity}}</td>
-            <td>{{i.sheetQuantity}}</td>
-            <td>{{i.pieceQuantity}}</td>
+            <td></td>
+            <td></td>
+            <td>{{i.quantityOnHand}}</td>
+            <td></td>
+            <td></td>
             <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
             <td>
               <div class="in-stock">In Stock</div>
+            </td>
+            <td>
+              <button class="btn-view" (click)="openViewEntryForm()">View details</button>
             </td>
           </tr>
         </tbody>
@@ -55,4 +64,11 @@
   *ngIf="createStock"
   (closeForm)="closeCreateStockForm()"
   ></app-create-stock >
+</div>
+
+<div class="modal-overlay" *ngIf="viewEntry">
+  <app-view-entry 
+  *ngIf="viewEntry"
+  (closeForm)="closeCreateStockForm()"
+  ></app-view-entry >
 </div>

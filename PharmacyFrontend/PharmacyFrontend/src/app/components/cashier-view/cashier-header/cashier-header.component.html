@@ -1,15 +1,12 @@
 <div class="wrapper">
   
   <nav class="left-nav">
-    <a (click)="openViewCashierProductForm()">📊 Product</a>
-    <a routerLink="/cashier-main/cashier-transaction">📈 Transaction</a>
     <a routerLink="/cashier-main/cashier-dashboard">📇 POS</a>
+    <a (click)="openViewCashierProductForm()">📊 Product Inquiry</a>
+    <a routerLink="/cashier-main/cashier-transaction">📈 Daily Sales</a>
   </nav>
 
   <nav class="right-nav">
-    <a>⚙️ Settings</a>
-    <a>👤 Users</a>
-    <a>👥 Administrator</a>
     <a (click)="logOut()">↩️ Logout</a>
   </nav>
 </div>

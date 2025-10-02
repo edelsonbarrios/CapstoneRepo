@@ -14,6 +14,7 @@
     h2 {
       font-size: 1.3rem;
     }
+
     a {
       cursor: pointer;
     }
@@ -28,9 +29,28 @@
     margin-bottom: 1rem;
   }
 
+
   .product-table {
     border-collapse: collapse;
     width: 100%;
+
+    .add-btn {
+      border: none;
+      padding: .0.4rem 2rem 0.4rem 2rem;
+      color: white;
+      background-color: rgb(10, 185, 10);
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgb(9, 158, 9);
+      }
+
+      &:active {
+        opacity: 0.9;
+      }
+    }
 
     th,
     td {

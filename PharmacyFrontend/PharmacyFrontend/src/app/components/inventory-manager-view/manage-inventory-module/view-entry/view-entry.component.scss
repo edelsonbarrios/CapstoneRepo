@@ -1,0 +1,44 @@
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 800px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #b4b4b4;
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #020c16;
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: rgb(77, 77, 77);
+      }
+
+      p {
+        font-size: 0.8rem;
+        color: rgb(77, 77, 77);
+      }
+    }
+  }
+}
