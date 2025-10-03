@@ -9,6 +9,7 @@ import { LogInToken } from '../../../shared/token';
 import { FormsModule } from '@angular/forms';
 import { NgClass, CommonModule } from "../../../../../../node_modules/@angular/common";
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
+import { StockAdjustment } from '../../../../models/inventory-module-models/stock-adjustment';
 
 @Component({
   selector: 'app-stock-adjust',
@@ -21,11 +22,13 @@ export class StockAdjustComponent implements OnInit {
   @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
-  quantityChanged: number = 0;
+  boxQuantityChanged: number = 0;
+  sheetQuantityChanged: number = 0;
+  pieceQuantityChanged: number = 0;
   notes : string = '';
   refNumber: string = '';
   movementType: string = '';
-  movementTypes : string[] = ['Stock In', 'Stock Out', 'Adjustment', 'Return', 'Damaged', 'Expired'];
+  movementTypes : string[] = ['Stock In', 'Stock Out', 'Adjustment', 'Return', 'Damaged', 'Expired', 'Count Correction'];
 
   constructor(
     private postService: PostService,
@@ -38,15 +41,17 @@ export class StockAdjustComponent implements OnInit {
 
   createNewStockMovement() {
     if(!this.stockAdjust) return;
-    const requestPayload : CreateStockMovement = {
+    const requestPayload : StockAdjustment = {
       inventoryID : this.stockAdjust.inventoryID,
       movementType : this.movementType,
-      quantityChanged : this.quantityChanged,
+      boxQuantityAdjustment: this.boxQuantityChanged,
+      sheetQuantityAdjustment: this.sheetQuantityChanged,
+      pieceQuantityAdjustment: this.pieceQuantityChanged,
       referenceNumber : this.refNumber,
       notes: this.notes,
       employeeID : this.employee.id
     }
-    this.postService.createNewStockMovementAsync(requestPayload).subscribe({
+    this.postService.adjustInventoryStockAsync(requestPayload).subscribe({
       next: res => {
         alert(`Stock Adjusted successfully.`);
         this.closeStockAdjustmentForm();

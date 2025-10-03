@@ -22,6 +22,7 @@ import { TypeModel } from '../../models/type-models/type';
 import { CreateInventory } from '../../models/inventory-module-models/createInventory';
 import { CreateStockMovement } from '../../models/inventory-module-models/createStockMovement';
 import { CreateCategory } from '../../models/product-models/createCategory';
+import { StockAdjustment } from '../../models/inventory-module-models/stock-adjustment';
 
 @Injectable({
   providedIn: 'root'
@@ -134,4 +135,10 @@ export class PostService {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Category`, request);
   }
   //Category Service End
+
+  //Stock Movement Service
+  //Stock Movement Service End
+  adjustInventoryStockAsync(request: StockAdjustment) : Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/StockAdjustment`, request);
+  }
 }
