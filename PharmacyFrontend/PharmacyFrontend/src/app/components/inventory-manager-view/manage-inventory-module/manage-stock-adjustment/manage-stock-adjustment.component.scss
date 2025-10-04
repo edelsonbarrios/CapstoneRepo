@@ -125,24 +125,40 @@
       }
     }
 
-    .footer {
+    .pagination-controls {
       display: flex;
-      justify-content: space-between;
+      justify-content: right;
       align-items: center;
-      margin-top: 0.5rem;
+      gap: 1rem;
+      margin-top: 1rem;
 
-      p {
-        color: rgb(134, 131, 131);
-        font-size: 1rem;
+      .btn-page {
+        padding: 0.5rem 1rem;
+        border-radius: 0.4rem;
+        border: 1px solid #3498ff;
+        background-color: white;
+        color: #3498ff;
+        cursor: pointer;
+        transition: opacity 0.15s, background-color 0.15s;
+
+        &:hover:not(:disabled) {
+          background-color: #3498ff;
+          color: white;
+        }
+
+        &:active:not(:disabled) {
+          opacity: 0.8;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
       }
 
-      button {
-        font-weight: 700;
-        padding: 0.5rem 2rem 0.5rem 2rem;
-        color: rgb(88, 83, 83);
-        border-radius: 10px;
-        border: none;
-        margin-left: 0.3rem;
+      .page-info {
+        font-weight: 600;
+        color: #1e2f47;
       }
     }
   }
