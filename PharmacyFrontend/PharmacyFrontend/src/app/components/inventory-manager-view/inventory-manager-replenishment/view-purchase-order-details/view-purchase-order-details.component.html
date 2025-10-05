@@ -63,17 +63,7 @@
                 <input type="number" [(ngModel)]="item.boxQuantityReceived"
                   [max]="item.boxQuantityOrdered" (input)="updateItemTotal(item)" />
               </td>
-              <td>{{ item.sheetQuantityOrdered }}</td>
-              <td>
-                <input type="number" [(ngModel)]="item.sheetQuantityReceived"
-                  [max]="item.sheetQuantityOrdered" (input)="updateItemTotal(item)" />
-              </td>
-              <td>{{ item.pieceQuantityOrdered }}</td>
-              <td>
-                <input type="number" [(ngModel)]="item.pieceQuantityReceived"
-                  [max]="item.pieceQuantityOrdered" (input)="updateItemTotal(item)" />
-              </td>
-              <td>{{ item.boxPrice | currency }}</td>
+              <td>{{ item.boxPrice | currency : 'PHP'}}</td>
               <td>{{ item.totalCost | currency }}</td>
             </tr>
           </tbody>

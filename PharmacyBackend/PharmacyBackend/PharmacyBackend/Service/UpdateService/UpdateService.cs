@@ -577,17 +577,23 @@ namespace PharmacyBackend.Service.UpdateService
                 var poItem = purchaseOrder.PurchaseOrderItems
                     .FirstOrDefault(po => po.Id == item.Id);
                 if (poItem is null)
-                    continue;
-
-                poItem.BoxQuantityReceived = item.BoxQuantityReceived;
-                poItem.SheetQuantityReceived = item.SheetQuantityReceived;
-                poItem.PieceQuantityReceived = item.PieceQuantityReceived;
+                    continue;;
 
                 var inventory = await _context.Inventory
                     .Include(i => i.Product)
                     .FirstOrDefaultAsync(i => i.ProductID == poItem.ProductID && i.BatchNumber == poItem.BatchNumber);
 
-                if(inventory is null)
+                var product = inventory.Product ?? await _getRepo.GetProductByIdAsync(inventory.Product.ProductID);
+                if (product is null) continue;
+
+                var computedSheetQty = item.BoxQuantityReceived * product.SheetsPerBox;
+                var computedPieceQty = computedSheetQty * product.PiecesPerSheet;
+
+                poItem.BoxQuantityReceived = item.BoxQuantityReceived;
+                poItem.SheetQuantityReceived = computedSheetQty;
+                poItem.PieceQuantityReceived = computedPieceQty;
+
+                if (inventory is null)
                 {
                     var newInventory = new Inventory()
                     {
@@ -598,19 +604,40 @@ namespace PharmacyBackend.Service.UpdateService
                         BatchNumber = item.BatchNumber,
                         ManufacturingDate = item.ManufacturingDate,
                         ExpirationDate = item.ExpirationDate,
-                        ReorderLevel = inventory.Product.ReorderLevel,
-                        SheetsPerBox = inventory.Product.SheetsPerBox,
-                        PiecesPerSheet = inventory.Product.PiecesPerSheet,
-                        BoxPrice = inventory.Product.BoxPrice,
-                        SheetPrice = inventory.Product.SheetPrice,
-                        PiecePrice = inventory.Product.PiecePrice
+                        ReorderLevel = product.ReorderLevel,
+                        SheetsPerBox = product.SheetsPerBox,
+                        PiecesPerSheet = product.PiecesPerSheet,
+                        BoxPrice = product.BoxPrice,
+                        SheetPrice = product.SheetPrice,
+                        PiecePrice = product.PiecePrice,
+                        DateAdded = DateTime.UtcNow,
+                        IsActive = true
                     };
                     await _postRepo.CreateInventoryAsync(newInventory);
-                }else if(inventory is not null)
+
+                    var stockMovement = new StockMovement
+                    {
+                        InventoryID = newInventory.InventoryID,
+                        MovementType = "Received PO",
+                        BoxQuantityBefore = 0,
+                        SheetQuantityBefore = 0,
+                        PieceQuantityBefore = 0,
+                        BoxQuantityChanged = item.BoxQuantityReceived,
+                        SheetQuantityChanged = computedSheetQty,
+                        PieceQuantityChanged = computedPieceQty,
+                        BoxQuantityAfter = newInventory.BoxQuantity,
+                        SheetQuantityAfter = newInventory.SheetQuantity,
+                        PieceQuantityAfter = newInventory.PieceQuantity,
+                        ReferenceNumber = purchaseOrder.PurchaseOrderNumber ?? $"PO-{purchaseOrder.PurchaseOrderNumber}",
+                        Notes = $"New stock received for product {product.ProductName}.",
+                        EmployeeID = request.EmployeeId,
+                    };
+                }
+                else if(inventory is not null)
                 {
                     inventory.BoxQuantity += item.BoxQuantityReceived;
-                    inventory.SheetQuantity += item.SheetQuantityReceived;
-                    inventory.PieceQuantity += item.PieceQuantityReceived;
+                    inventory.SheetQuantity += computedSheetQty;
+                    inventory.PieceQuantity += computedPieceQty;
                 } 
             }
             purchaseOrder.Status = "Received";

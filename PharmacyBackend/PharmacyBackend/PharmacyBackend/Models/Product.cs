@@ -30,8 +30,8 @@ namespace PharmacyBackend.Models
         public TypeModel TypeModel { get; set; }  // Navigation
 
         public List<Supplier> Suppliers { get; set; }
-        public int? SheetsPerBox { get; set; }
-        public int? PiecesPerSheet { get; set; }
+        public int SheetsPerBox { get; set; }
+        public int PiecesPerSheet { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal BoxPrice { get; set; }

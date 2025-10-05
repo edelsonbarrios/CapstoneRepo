@@ -10,8 +10,8 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public string FormulationName { get; set; } = string.Empty;
         public string ClassificationName { get; set; } = string.Empty;
         public string TypeName { get; set; } = string.Empty;
-        public int? SheetsPerBox { get; set; }
-        public int? PiecesPerSheet { get; set; }
+        public int SheetsPerBox { get; set; }
+        public int PiecesPerSheet { get; set; }
         public decimal BoxPrice { get; set; }
         public decimal SheetPrice { get; set; }
         public decimal PiecePrice { get; set; }
