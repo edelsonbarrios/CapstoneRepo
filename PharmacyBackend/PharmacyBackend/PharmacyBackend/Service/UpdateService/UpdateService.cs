@@ -323,7 +323,6 @@ namespace PharmacyBackend.Service.UpdateService
             existing.FormulationID = formulationId.Value;
             existing.ClassificationID = classificationId.Value;
             existing.TypeID = typeId.Value;
-            existing.Price = dto.Price;
             existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateProductAsync(existing);
@@ -554,9 +553,9 @@ namespace PharmacyBackend.Service.UpdateService
                 var item = existing.PurchaseOrderItems.FirstOrDefault(poi => poi.Id == updatedItem.PurchaseOrderItemID);
                 if (item != null)
                 {
-                    item.QuantityReceived = updatedItem.QuantityReceived;
-                    item.UnitCost = updatedItem.UnitCost;
-                    item.TotalCost = item.QuantityOrdered * updatedItem.UnitCost;
+                    item.BoxQuantityOrdered = updatedItem.QuantityReceived;
+                    item.BoxPrice = updatedItem.UnitCost;
+                    item.TotalCost = item.BoxQuantityReceived * updatedItem.UnitCost;
                 }
             }
 
@@ -580,25 +579,38 @@ namespace PharmacyBackend.Service.UpdateService
                 if (poItem is null)
                     continue;
 
-                poItem.QuantityReceived = item.QuantityReceived;
+                poItem.BoxQuantityReceived = item.BoxQuantityReceived;
+                poItem.SheetQuantityReceived = item.SheetQuantityReceived;
+                poItem.PieceQuantityReceived = item.PieceQuantityReceived;
 
                 var inventory = await _context.Inventory
-                    .FirstOrDefaultAsync(i => i.ProductID == poItem.ProductID);
+                    .Include(i => i.Product)
+                    .FirstOrDefaultAsync(i => i.ProductID == poItem.ProductID && i.BatchNumber == poItem.BatchNumber);
 
                 if(inventory is null)
                 {
                     var newInventory = new Inventory()
                     {
                         ProductID = item.ProductID,
-                        BoxQuantity = item.QuantityReceived,
+                        BoxQuantity = item.BoxQuantityReceived,
+                        SheetQuantity = item.SheetQuantityReceived,
+                        PieceQuantity = item.PieceQuantityReceived,
                         BatchNumber = item.BatchNumber,
                         ManufacturingDate = item.ManufacturingDate,
                         ExpirationDate = item.ExpirationDate,
+                        ReorderLevel = inventory.Product.ReorderLevel,
+                        SheetsPerBox = inventory.Product.SheetsPerBox,
+                        PiecesPerSheet = inventory.Product.PiecesPerSheet,
+                        BoxPrice = inventory.Product.BoxPrice,
+                        SheetPrice = inventory.Product.SheetPrice,
+                        PiecePrice = inventory.Product.PiecePrice
                     };
                     await _postRepo.CreateInventoryAsync(newInventory);
                 }else if(inventory is not null)
                 {
-                    inventory.BoxQuantity+= item.QuantityReceived;
+                    inventory.BoxQuantity += item.BoxQuantityReceived;
+                    inventory.SheetQuantity += item.SheetQuantityReceived;
+                    inventory.PieceQuantity += item.PieceQuantityReceived;
                 } 
             }
             purchaseOrder.Status = "Received";

@@ -185,7 +185,15 @@ namespace PharmacyBackend.DataContext
 
             // Configure decimal precision for monetary values
             modelBuilder.Entity<Product>()
-                .Property(p => p.Price)
+                .Property(p => p.BoxPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.SheetPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.PiecePrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<VAT>()
@@ -205,7 +213,7 @@ namespace PharmacyBackend.DataContext
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<PurchaseOrderItem>()
-                .Property(poi => poi.UnitCost)
+                .Property(poi => poi.BoxPrice)
                 .HasPrecision(18, 2);
 
             modelBuilder.Entity<PurchaseOrderItem>()
@@ -291,7 +299,6 @@ namespace PharmacyBackend.DataContext
                     IsActive = true
                 }
             );
-
         }
     }
 }

@@ -10,10 +10,10 @@
         <th>Category</th>
         <th>Brand</th>
         <th>Generic</th>
-        <th>Formualation</th>
+        <th>Formulation</th>
         <th>Classification</th>
         <th>Type</th>
-        <th>Price</th>
+        <th>Box Price</th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
         <td>{{product.formulationName}}</td>
         <td>{{product.classificationName}}</td>
         <td>{{product.typeName}}</td>
-        <td>{{ product.price | currency:'PHP' }}</td>
+        <td>{{ product.boxPrice | currency:'PHP' }}</td>
       </tr>
     </tbody>
   </table>

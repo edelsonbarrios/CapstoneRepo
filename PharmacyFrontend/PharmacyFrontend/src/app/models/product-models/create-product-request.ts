@@ -6,6 +6,10 @@ export class CreateProductRequest {
   formulationName: string = '';
   classificationName: string = '';
   typeName: string = '';
-  supplierName: string = '';
-  price: number = 0;
+  sheetsPerBox: number = 0;
+  piecesPerSheet: number = 0;
+  boxPrice: number = 0;
+  sheetPrice: number = 0;
+  piecePrice: number = 0;
+  reorderLevel: number = 0;
 }

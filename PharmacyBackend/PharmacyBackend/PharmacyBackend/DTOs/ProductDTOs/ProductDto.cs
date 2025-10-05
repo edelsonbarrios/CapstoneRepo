@@ -12,9 +12,14 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public int ClassificationID { get; set; }
         public int TypeID { get; set; }
         public int? SupplierID { get; set; }
-        public decimal Price { get; set; }
         public bool IsActive { get; set; }
         public DateTime DateCreated { get; set; }
+        public int? SheetsPerBox { get; set; }
+        public int? PiecesPerSheet { get; set; }
+        public decimal BoxPrice { get; set; }
+        public decimal SheetPrice { get; set; }
+        public decimal PiecePrice { get; set; }
+        public int ReorderLevel { get; set; }
 
         // Calculated fields from Inventory
         public int TotalStock { get; set; } // Calculated from active, non-expired inventory

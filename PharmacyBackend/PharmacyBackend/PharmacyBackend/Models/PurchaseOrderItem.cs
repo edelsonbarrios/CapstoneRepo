@@ -9,10 +9,20 @@ namespace PharmacyBackend.Models
         public int Id { get; set; }
         public int PurchaseOrderID { get; set; }
         public int ProductID { get; set; }
-        public int QuantityOrdered { get; set; }
-        public int QuantityReceived { get; set; } = 0;
+        public int BoxQuantityOrdered { get; set; }
+        public int BoxQuantityReceived { get; set; } = 0;
+        public int SheetQuantityOrdered { get; set; }
+        public int SheetQuantityReceived { get; set; }
+        public int PieceQuantityOrdered { get; set; }
+        public int PieceQuantityReceived { get; set; }
         [Column(TypeName = "decimal(18,2)")]
-        public decimal UnitCost { get; set; }
+        public decimal BoxPrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal SheetPrice { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PiecePrice { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalCost { get; set; }
         public string BatchNumber { get; set; }

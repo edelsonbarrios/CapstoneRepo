@@ -30,9 +30,16 @@ namespace PharmacyBackend.Models
         public TypeModel TypeModel { get; set; }  // Navigation
 
         public List<Supplier> Suppliers { get; set; }
+        public int? SheetsPerBox { get; set; }
+        public int? PiecesPerSheet { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
+        public decimal BoxPrice { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal SheetPrice { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PiecePrice { get; set; }
+        public int ReorderLevel { get; set; }
 
         public bool IsActive { get; set; } = true;
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;

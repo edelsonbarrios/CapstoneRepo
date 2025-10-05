@@ -484,9 +484,15 @@ namespace PharmacyBackend.Service.GetService
                 FormulationID = p.FormulationID,
                 ClassificationID = p.ClassificationID,
                 TypeID = p.TypeID,
-                Price = p.Price,
                 IsActive = p.IsActive,
                 DateCreated = p.DateCreated,
+                SheetsPerBox = p.SheetsPerBox,
+                PiecesPerSheet = p.PiecesPerSheet,
+                BoxPrice = p.BoxPrice,
+                SheetPrice = p.SheetPrice,
+                PiecePrice = p.PiecePrice,
+                ReorderLevel = p.ReorderLevel,
+
 
                 // Inventory calculations
                 //TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,
@@ -521,9 +527,14 @@ namespace PharmacyBackend.Service.GetService
                 FormulationID = p.FormulationID,
                 ClassificationID = p.ClassificationID,
                 TypeID = p.TypeID,
-                Price = p.Price,
                 IsActive = p.IsActive,
                 DateCreated = p.DateCreated,
+                SheetsPerBox = p.SheetsPerBox,
+                PiecesPerSheet = p.PiecesPerSheet,
+                BoxPrice = p.BoxPrice,
+                SheetPrice = p.SheetPrice,
+                PiecePrice = p.PiecePrice,
+                ReorderLevel = p.ReorderLevel,
 
                 // Inventory calculations
                 //TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,
@@ -709,9 +720,14 @@ namespace PharmacyBackend.Service.GetService
                     FormulationID = p.FormulationID,
                     ClassificationID = p.ClassificationID,
                     TypeID = p.TypeID,
-                    Price = p.Price,
                     IsActive = p.IsActive,
                     DateCreated = p.DateCreated,
+                    SheetsPerBox = p.SheetsPerBox,
+                    PiecesPerSheet = p.PiecesPerSheet,
+                    BoxPrice = p.BoxPrice,
+                    SheetPrice = p.SheetPrice,
+                    PiecePrice = p.PiecePrice,
+                    ReorderLevel = p.ReorderLevel,
 
                     // Inventory calculations
                     HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
@@ -984,10 +1000,16 @@ namespace PharmacyBackend.Service.GetService
                     Id = poi.Id,
                     ProductId = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    QuantityReceived = poi.QuantityReceived,
+                    BoxQuantityOrdered = poi.BoxQuantityOrdered,
+                    BoxQuantityReceived = poi.BoxQuantityReceived,
+                    SheetQuantityOrdered = poi.SheetQuantityOrdered,
+                    SheetQuantityReceived = poi.SheetQuantityReceived,
+                    PieceQuantityOrdered = poi.PieceQuantityOrdered,
+                    PieceQuantityReceived = poi.PieceQuantityReceived,
                     BatchNumber = poi.BatchNumber,
-                    UnitCost = poi.UnitCost,
+                    BoxPrice  = poi.BoxPrice,
+                    SheetPrice = poi.SheetPrice,
+                    PiecePrice = poi.PiecePrice,
                     TotalCost = poi.TotalCost
                 }).ToList()
             });
@@ -1013,10 +1035,16 @@ namespace PharmacyBackend.Service.GetService
                     Id = poi.Id,
                     ProductId = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    QuantityReceived = poi.QuantityReceived,
+                    BoxQuantityOrdered = poi.BoxQuantityOrdered,
+                    BoxQuantityReceived = poi.BoxQuantityReceived,
+                    SheetQuantityOrdered = poi.SheetQuantityOrdered,
+                    SheetQuantityReceived = poi.SheetQuantityReceived,
+                    PieceQuantityOrdered = poi.PieceQuantityOrdered,
+                    PieceQuantityReceived = poi.PieceQuantityReceived,
                     BatchNumber = poi.BatchNumber,
-                    UnitCost = poi.UnitCost,
+                    BoxPrice = poi.BoxPrice,
+                    SheetPrice = poi.SheetPrice,
+                    PiecePrice = poi.PiecePrice,
                     TotalCost = poi.TotalCost
                 }).ToList()
             };
@@ -1040,10 +1068,16 @@ namespace PharmacyBackend.Service.GetService
                     Id = poi.Id,
                     ProductId = poi.ProductID,
                     ProductName = poi.Product?.ProductName ?? string.Empty,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    QuantityReceived = poi.QuantityReceived,
+                    BoxQuantityOrdered = poi.BoxQuantityOrdered,
+                    BoxQuantityReceived = poi.BoxQuantityReceived,
+                    SheetQuantityOrdered = poi.SheetQuantityOrdered,
+                    SheetQuantityReceived = poi.SheetQuantityReceived,
+                    PieceQuantityOrdered = poi.PieceQuantityOrdered,
+                    PieceQuantityReceived = poi.PieceQuantityReceived,
                     BatchNumber = poi.BatchNumber,
-                    UnitCost = poi.UnitCost,
+                    BoxPrice = poi.BoxPrice,
+                    SheetPrice = poi.SheetPrice,
+                    PiecePrice = poi.PiecePrice,
                     TotalCost = poi.TotalCost
                 }).ToList()
             });
@@ -1066,11 +1100,17 @@ namespace PharmacyBackend.Service.GetService
                 {
                     Id = poi.Id,
                     ProductId = poi.ProductID,
-                    ProductName = poi.Product.ProductName,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    QuantityReceived = poi.QuantityReceived,
+                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    BoxQuantityOrdered = poi.BoxQuantityOrdered,
+                    BoxQuantityReceived = poi.BoxQuantityReceived,
+                    SheetQuantityOrdered = poi.SheetQuantityOrdered,
+                    SheetQuantityReceived = poi.SheetQuantityReceived,
+                    PieceQuantityOrdered = poi.PieceQuantityOrdered,
+                    PieceQuantityReceived = poi.PieceQuantityReceived,
                     BatchNumber = poi.BatchNumber,
-                    UnitCost = poi.UnitCost,
+                    BoxPrice = poi.BoxPrice,
+                    SheetPrice = poi.SheetPrice,
+                    PiecePrice = poi.PiecePrice,
                     TotalCost = poi.TotalCost
                 }).ToList()
             });
@@ -1095,11 +1135,17 @@ namespace PharmacyBackend.Service.GetService
                 {
                     Id = poi.Id,
                     ProductId = poi.ProductID,
-                    ProductName = poi.Product.ProductName,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    QuantityReceived = poi.QuantityReceived,
+                    ProductName = poi.Product?.ProductName ?? string.Empty,
+                    BoxQuantityOrdered = poi.BoxQuantityOrdered,
+                    BoxQuantityReceived = poi.BoxQuantityReceived,
+                    SheetQuantityOrdered = poi.SheetQuantityOrdered,
+                    SheetQuantityReceived = poi.SheetQuantityReceived,
+                    PieceQuantityOrdered = poi.PieceQuantityOrdered,
+                    PieceQuantityReceived = poi.PieceQuantityReceived,
                     BatchNumber = poi.BatchNumber,
-                    UnitCost = poi.UnitCost,
+                    BoxPrice = poi.BoxPrice,
+                    SheetPrice = poi.SheetPrice,
+                    PiecePrice = poi.PiecePrice,
                     TotalCost = poi.TotalCost
                 }).ToList()
             }).ToList();

@@ -52,11 +52,16 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(
+      this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage
+    );
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(startIndex, endIndex);
+    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(
+      startIndex,
+      endIndex
+    );
   }
 
   goToPage(page: number) {
@@ -85,10 +90,16 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       id: 0,
       productId: p.productID,
       productName: p.productName,
-      quantityOrdered: 1, // default, user can edit later
-      quantityReceived: 0,
-      unitCost: p.price,
-      totalCost: p.price, // qty(1) * price
+      boxQuantityOrdered: 1, // default, user can edit later
+      boxQuantityReceived: 0,
+      sheetQuantityOrdered: 1,
+      sheetQuantityReceived: 0,
+      pieceQuantityOrdered: 1,
+      pieceQuantityReceived: 0,
+      boxPrice: p.boxPrice,
+      sheetPrice: p.sheetPrice,
+      piecePrice: p.piecePrice,
+      totalCost: p.boxPrice, // qty(1) * price
       batchNumber: '',
       manufacturingDate: new Date(),
       expirationDate: new Date(),
@@ -112,7 +123,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   updateItemTotal(item: PurchaseOrderItem) {
-    item.totalCost = item.quantityOrdered * item.unitCost;
+    item.totalCost = item.boxQuantityOrdered * item.boxPrice;
     this.computeTotalAmount();
   }
 
@@ -124,15 +135,17 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   // New method for removing items with pagination
   removeItemPaginated(item: PurchaseOrderItem) {
-    const index = this.purchaseOrders.purchaseOrderItems.findIndex(i => i === item);
+    const index = this.purchaseOrders.purchaseOrderItems.findIndex(
+      (i) => i === item
+    );
     if (index !== -1) {
       this.purchaseOrders.purchaseOrderItems.splice(index, 1);
-      
+
       // Adjust current page if necessary
       if (this.paginatedItems.length === 1 && this.currentPage > 1) {
         this.currentPage--;
       }
-      
+
       this.updatePagination();
       this.computeTotalAmount();
     }
@@ -149,8 +162,15 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
         (item) => ({
           productId: item.productId,
-          quantityOrdered: item.quantityOrdered,
-          unitCost: item.unitCost,
+          boxQuantityOrdered: item.boxQuantityOrdered,
+          boxQuantityReceived: item.boxQuantityReceived,
+          sheetQuantityOrdered: item.sheetQuantityOrdered,
+          sheetQuantityReceived: item.sheetQuantityReceived,
+          pieceQuantityOrdered: item.pieceQuantityOrdered,
+          pieceQuantityReceived: item.pieceQuantityReceived,
+          boxPrice: item.boxPrice,
+          sheetPrice: item.sheetPrice,
+          piecePrice: item.piecePrice,
           batchNumber: item.batchNumber,
           manufacturingDate: new Date(item.manufacturingDate).toISOString(),
           expirationDate: new Date(item.expirationDate).toISOString(),
@@ -168,6 +188,29 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         console.log(requestPayload);
       },
     });
+  }
+
+  recalculateQuantitiesAndTotals(item: PurchaseOrderItem) {
+    // Find product details using productId
+    const product = this.selectedSupplier.products.find(
+      (p) => p.productID === item.productId
+    );
+    if (!product) return;
+
+    // Auto compute sheet and piece quantities
+    item.sheetQuantityOrdered = item.boxQuantityOrdered * product.sheetsPerBox;
+    item.pieceQuantityOrdered =
+      item.sheetQuantityOrdered * product.piecesPerSheet;
+
+    // Auto compute sheet and piece prices (derived)
+    item.sheetPrice = product.boxPrice / product.sheetsPerBox;
+    item.piecePrice = item.sheetPrice / product.piecesPerSheet;
+
+    // Total cost based on box quantity (primary purchase unit)
+    item.totalCost = item.boxQuantityOrdered * item.boxPrice;
+
+    // Update grand total
+    this.computeTotalAmount();
   }
 
   clearFields() {

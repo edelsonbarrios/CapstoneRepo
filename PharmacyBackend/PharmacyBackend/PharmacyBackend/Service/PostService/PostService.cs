@@ -341,9 +341,6 @@ namespace PharmacyBackend.Service.PostService
             var formulationId = await GetFormulationIdByNameAsync(dto.FormulationName);
             var classificationId = await GetClassificationIdByNameAsync(dto.ClassificationName);
             var typeId = await GetTypeIdByNameAsync(dto.TypeName);
-            var supplierId = !string.IsNullOrEmpty(dto.SupplierName)
-                ? await GetSupplierIdByNameAsync(dto.SupplierName)
-                : null;
 
             // Validate that all required entities exist
             if (categoryId == null)
@@ -358,8 +355,6 @@ namespace PharmacyBackend.Service.PostService
                 throw new ArgumentException($"Classification '{dto.ClassificationName}' not found.");
             if (typeId == null)
                 throw new ArgumentException($"Type '{dto.TypeName}' not found.");
-            if (!string.IsNullOrEmpty(dto.SupplierName) && supplierId == null)
-                throw new ArgumentException($"Supplier '{dto.SupplierName}' not found.");
 
             var product = new Product
             {
@@ -370,8 +365,13 @@ namespace PharmacyBackend.Service.PostService
                 FormulationID = formulationId.Value,
                 ClassificationID = classificationId.Value,
                 TypeID = typeId.Value,
-                Price = dto.Price,
                 IsActive = true,
+                SheetsPerBox = dto.SheetsPerBox,
+                PiecesPerSheet = dto.PiecesPerSheet,
+                BoxPrice = dto.BoxPrice,
+                SheetPrice = dto.SheetPrice,
+                PiecePrice = dto.PiecePrice,
+                ReorderLevel = dto.ReorderLevel,
                 DateCreated = DateTime.UtcNow
             };
 
@@ -389,7 +389,6 @@ namespace PharmacyBackend.Service.PostService
                 FormulationID = fullProduct.FormulationID,
                 ClassificationID = fullProduct.ClassificationID,
                 TypeID = fullProduct.TypeID,
-                Price = fullProduct.Price,
                 IsActive = fullProduct.IsActive,
                 DateCreated = fullProduct.DateCreated,
 
@@ -718,16 +717,20 @@ namespace PharmacyBackend.Service.PostService
                 PurchaseOrderItems = dto.PurchaseOrderItems.Select(poi => new PurchaseOrderItem
                 {
                     ProductID = poi.ProductID,
-                    QuantityOrdered = poi.QuantityOrdered,
-                    UnitCost = poi.UnitCost,
-                    TotalCost = poi.QuantityOrdered * poi.UnitCost,
+                    BoxQuantityOrdered = poi.BoxQuantityOrdered,
+                    SheetQuantityOrdered = poi.SheetQuantityOrdered,
+                    PieceQuantityOrdered = poi.PieceQuantityOrdered,
+                    BoxPrice = poi.BoxPrice,
+                    SheetPrice = poi.SheetPrice,
+                    PiecePrice = poi.PiecePrice,
+                    TotalCost = poi.BoxQuantityOrdered * poi.BoxPrice,
                     BatchNumber = poi.BatchNumber,
                     ManufacturingDate = poi.ManufacturingDate,
                     ExpirationDate = poi.ExpirationDate
                 }).ToList()
             };
 
-            // Compute total amount after items are added
+            
             purchaseOrder.TotalAmount = purchaseOrder.PurchaseOrderItems.Sum(poi => poi.TotalCost);
 
             await _context.PurchaseOrder.AddAsync(purchaseOrder);

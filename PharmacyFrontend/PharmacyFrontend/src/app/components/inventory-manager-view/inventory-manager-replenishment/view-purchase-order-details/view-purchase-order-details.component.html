@@ -36,8 +36,12 @@
               <th>Batch No.</th>
               <th>Manufacturing Date</th>
               <th>Expiration Date</th>
-              <th>Qty Ordered</th>
-              <th>Qty Received</th>
+              <th>Box Qty Ordered</th>
+              <th>Box Qty Received</th>
+              <th>Sheet Qty Ordered</th>
+              <th>Sheet Qty Received</th>
+              <th>Piece Qty Ordered</th>
+              <th>Piece Qty Received</th>
               <th>Unit Price</th>
               <th>Total</th>
             </tr>
@@ -54,12 +58,22 @@
               <td>
                 <input type="date" [(ngModel)]="item.expirationDate" />
               </td>
-              <td>{{ item.quantityOrdered }}</td>
+              <td>{{ item.boxQuantityOrdered }}</td>
               <td>
-                <input type="number" [(ngModel)]="item.quantityReceived"
-                  [max]="item.quantityOrdered" (input)="updateItemTotal(item)" />
+                <input type="number" [(ngModel)]="item.boxQuantityReceived"
+                  [max]="item.boxQuantityOrdered" (input)="updateItemTotal(item)" />
               </td>
-              <td>{{ item.unitCost | currency }}</td>
+              <td>{{ item.sheetQuantityOrdered }}</td>
+              <td>
+                <input type="number" [(ngModel)]="item.sheetQuantityReceived"
+                  [max]="item.sheetQuantityOrdered" (input)="updateItemTotal(item)" />
+              </td>
+              <td>{{ item.pieceQuantityOrdered }}</td>
+              <td>
+                <input type="number" [(ngModel)]="item.pieceQuantityReceived"
+                  [max]="item.pieceQuantityOrdered" (input)="updateItemTotal(item)" />
+              </td>
+              <td>{{ item.boxPrice | currency }}</td>
               <td>{{ item.totalCost | currency }}</td>
             </tr>
           </tbody>

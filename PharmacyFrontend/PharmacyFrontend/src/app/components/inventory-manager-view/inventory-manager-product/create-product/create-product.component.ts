@@ -133,8 +133,12 @@ export class CreateProductComponent implements OnInit{
       formulationName : this.newProduct.formulationName,
       classificationName : this.newProduct.classificationName,
       typeName : this.newProduct.typeName,
-      supplierName : this.newProduct.supplierName,
-      price: this.newProduct.price
+      sheetsPerBox: this.newProduct.sheetsPerBox,
+      piecesPerSheet: this.newProduct.piecesPerSheet,
+      boxPrice: this.newProduct.boxPrice,
+      sheetPrice: this.newProduct.sheetPrice,
+      piecePrice: this.newProduct.piecePrice,
+      reorderLevel: this.newProduct.reorderLevel
     };
     this.postService.createProductAsync(requestPayload).subscribe({
       next: res => {

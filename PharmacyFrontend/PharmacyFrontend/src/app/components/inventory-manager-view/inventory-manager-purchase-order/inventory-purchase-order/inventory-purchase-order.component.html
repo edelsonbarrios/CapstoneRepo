@@ -33,38 +33,49 @@
       <thead>
         <tr>
           <th>Product</th>
-          <th>Category</th>
-          <th>Type</th>
-          <th>Classification</th>
           <th>Unit Cost</th>
-          <th>Qty</th>
+          <th>Box Qty</th>
+          <th>Sheet Qty</th>
+          <th>Piece Quantity</th>
           <th>Total</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of paginatedItems; let i = index">
+        <tr *ngFor="let item of paginatedItems; let i = index">
           <td>{{ item.productName }}</td>
-          <td>{{item.category}}</td>
-          <td>{{item.type}}</td>
-          <td>{{item.classification}}</td>
-          <td>{{item.unitCost}}</td>
-          <td><input type="number" [(ngModel)]="item.quantityOrdered"
-              (input)="item.totalCost = item.quantityOrdered * item.unitCost" (ngModelChange)="updateItemTotal(item)" />
+          <td>{{ item.boxPrice | currency:'PHP' }}</td>
+
+          <!-- BOX QUANTITY -->
+          <td>
+            <input type="number" min="0" [(ngModel)]="item.boxQuantityOrdered"
+              (input)="recalculateQuantitiesAndTotals(item)" />
           </td>
-          <td>{{item.totalCost}}</td>
+
+          <!-- SHEET QUANTITY (auto-calculated) -->
+          <td>
+            <input type="number" [value]="item.sheetQuantityOrdered" readonly />
+          </td>
+
+          <!-- PIECE QUANTITY (auto-calculated) -->
+          <td>
+            <input type="number" [value]="item.pieceQuantityOrdered" readonly />
+          </td>
+
+          <td>{{ item.totalCost | currency:'PHP' }}</td>
           <td><button class="remove-btn" (click)="removeItemPaginated(item)">✕</button></td>
         </tr>
       </tbody>
     </table>
-    
+
     <!-- PAGINATION CONTROLS -->
     <div class="pagination-controls">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
-    
+
     <button class="add-item-btn" (click)="openProductsForm()">+ Add Item</button>
 
     <div class="footer">
@@ -79,9 +90,7 @@
 </div>
 
 <div class="modal-overlay" *ngIf="openProductForm">
-  <app-purchase-order-products 
-  *ngIf="openProductForm" 
-  (close)="closeProductsForm()"
-  [supplierProudcts]="selectedSupplier.products"
-  (productsSelected)="onProductsSelected($event)"></app-purchase-order-products>
+  <app-purchase-order-products *ngIf="openProductForm" (close)="closeProductsForm()"
+    [supplierProudcts]="selectedSupplier.products"
+    (productsSelected)="onProductsSelected($event)"></app-purchase-order-products>
 </div>

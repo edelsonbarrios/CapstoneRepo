@@ -430,6 +430,10 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProductID"));
 
+                    b.Property<decimal>("BoxPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("BrandID")
                         .HasColumnType("integer");
 
@@ -451,12 +455,25 @@ namespace PharmacyBackend.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("PiecePrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("PiecesPerSheet")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
+
+                    b.Property<int>("ReorderLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("SheetPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("SheetsPerBox")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TypeID")
                         .HasColumnType("integer");
@@ -537,11 +554,30 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("BatchNumber")
                         .HasColumnType("text");
 
+                    b.Property<decimal>("BoxPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BoxQuantityOrdered")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BoxQuantityReceived")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("ManufacturingDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("PiecePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("PieceQuantityOrdered")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PieceQuantityReceived")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");
@@ -549,17 +585,16 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("PurchaseOrderID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("QuantityOrdered")
+                    b.Property<decimal>("SheetPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SheetQuantityOrdered")
                         .HasColumnType("integer");
 
-                    b.Property<int>("QuantityReceived")
+                    b.Property<int>("SheetQuantityReceived")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("TotalCost")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitCost")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 

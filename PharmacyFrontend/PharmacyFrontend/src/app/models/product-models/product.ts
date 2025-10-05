@@ -8,9 +8,14 @@ export class Product {
   classificationId: number = 0;
   typeId: number = 0;
   supplierId: number = 0;
-  price: number = 0;
   isActive: boolean = true;
   dateCreated: Date = new Date();
+  sheetsPerBox: number = 0;
+  piecesPerSheet: number = 0;
+  boxPrice: number = 0;
+  sheetPrice: number = 0;
+  piecePrice: number = 0;
+  reorderLevel: number = 0;
 
 
   totalStock: number = 0;

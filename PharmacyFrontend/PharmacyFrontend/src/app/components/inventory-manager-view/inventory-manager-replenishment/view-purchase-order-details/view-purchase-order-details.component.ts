@@ -23,9 +23,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
 
   constructor(private updateService: UpdateService) {}
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   updateItemTotal(item: any) {
     const qty = item.quantityReceived || 0;
@@ -52,7 +50,12 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
       purchaseOrderItems: this.purchaseOrder.purchaseOrderItems.map((item) => ({
         id: item.id,
         productId: item.productId,
-        quantityReceived: item.quantityReceived,
+        boxQuantityOrdered: item.boxQuantityOrdered,
+        boxQuantityReceived: item.boxQuantityReceived,
+        sheetQuantityOrdered: item.sheetQuantityOrdered,
+        sheetQuantityReceived: item.sheetQuantityReceived,
+        pieceQuantityOrdered: item.pieceQuantityOrdered,
+        pieceQuantityReceived: item.pieceQuantityReceived,
         batchNumber: item.batchNumber,
         manufacturingDate: new Date(item.manufacturingDate).toISOString(),
         expirationDate: new Date(item.expirationDate).toISOString(),

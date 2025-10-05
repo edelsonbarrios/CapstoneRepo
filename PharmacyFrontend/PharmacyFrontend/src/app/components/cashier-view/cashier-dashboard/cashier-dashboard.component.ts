@@ -88,7 +88,7 @@ export class CashierDashboardComponent implements OnInit {
         this.selectedProducts.push({
           productID: p.productID,
           productName: p.productName,
-          price: p.price,
+          price: p.boxPrice,
           quantity: p.quantity ? p.quantity : 1,
         });
       } else {
