@@ -104,7 +104,7 @@ namespace PharmacyBackend.Controllers
                 if (result == null)
                     return BadRequest("Sales transaction could not be created.");
 
-                return Ok(result);
+                return Ok(new { Message = "Transaction successfully created." });
             }
             catch (Exception ex)
             {
@@ -124,7 +124,7 @@ namespace PharmacyBackend.Controllers
                 if (result == null)
                     return BadRequest("Sales item could not be created.");
 
-                return Ok(result);
+                return Ok(new { Message = "Sales item successfully created." });
             }
             catch (Exception ex)
             {
@@ -134,7 +134,7 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Discount
-        /*[HttpPost("Discount")]
+        [HttpPost("Discount")]
         public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
         {
             if (!ModelState.IsValid)
@@ -155,14 +155,9 @@ namespace PharmacyBackend.Controllers
             {
                 return BadRequest($"Error creating discount: {ex.Message}");
             }
-        }*/
-
-        [HttpPost("Discount")]
-        public async Task<IActionResult> CreateDiscountAsync([FromBody] CreateDiscountDto dto)
-        {
-            var result = await _postService.CreateDiscountAsync(dto);
-            return Ok(result);
         }
+
+       
 
         #endregion
 
@@ -370,7 +365,7 @@ namespace PharmacyBackend.Controllers
         [HttpPost("Inventory")]
         public async Task<ActionResult<bool>> CreateInventoryAsync(CreateInventoryDto dto)
         {
-            /* if (!ModelState.IsValid)
+             if (!ModelState.IsValid)
                  return BadRequest("Invalid inventory data.");
 
              if (dto == null)
@@ -387,10 +382,7 @@ namespace PharmacyBackend.Controllers
              catch (Exception ex)
              {
                  return BadRequest($"Error creating inventory: {ex.Message}");
-             }*/
-
-            var result = await _postService.CreateInventoryAsync(dto);
-            return Ok(result);
+             }
         }
 
         [HttpPost("StockAdjustment")]

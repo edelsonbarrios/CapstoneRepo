@@ -151,6 +151,7 @@ namespace PharmacyBackend.Service.PostService
                     Items = dto.Items.Select(i => new SalesItem
                     {
                         ProductId = i.ProductId,
+                        UnitType = i.UnitType,
                         Quantity = i.Quantity,
                         UnitPrice = i.UnitPrice,
                         Subtotal = i.Quantity * i.UnitPrice
@@ -183,6 +184,7 @@ namespace PharmacyBackend.Service.PostService
                     {
                         Id = i.Id,
                         ProductId = i.ProductId,
+                        UnitType = i.UnitType,
                         ProductName = i.Product?.ProductName ?? string.Empty,
                         Quantity = i.Quantity,
                         UnitPrice = i.UnitPrice,
@@ -204,6 +206,7 @@ namespace PharmacyBackend.Service.PostService
                 {
                     SalesTransactionId = dto.SalesTransactionId,
                     ProductId = dto.ProductId,
+                    UnitType = dto.UnitType,
                     Quantity = dto.Quantity,
                     UnitPrice = dto.UnitPrice,
                     Subtotal = dto.Quantity * dto.UnitPrice
@@ -216,6 +219,7 @@ namespace PharmacyBackend.Service.PostService
                     Id = created.Id,
                     ProductId = created.ProductId,
                     ProductName = created.Product?.ProductName ?? string.Empty,
+                    UnitType = created.UnitType,
                     Quantity = created.Quantity,
                     UnitPrice = created.UnitPrice,
                     Subtotal = created.Subtotal
