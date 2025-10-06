@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
+import { ViewAdjustmentComponent } from '../view-adjustment/view-adjustment.component';
 
 @Component({
   selector: 'app-manage-stock-adjustment',
@@ -14,12 +15,14 @@ import { StockMovement } from '../../../../models/inventory-module-models/stock-
     NgIf, 
     CommonModule, 
     FormsModule,
+    ViewAdjustmentComponent,
   ],
   templateUrl: './manage-stock-adjustment.component.html',
   styleUrl: './manage-stock-adjustment.component.scss'
 })
 export class ManageStockAdjustmentComponent implements OnInit{
   stockAdjust ?: StockMovement | null;
+  viewAdjust ?: StockMovement | null;
   stockMovements: StockMovement[] = [];
 
   constructor(
@@ -43,6 +46,10 @@ export class ManageStockAdjustmentComponent implements OnInit{
 
   openStockAdjustmentForm(stockMovement : StockMovement) {
     this.stockAdjust = stockMovement;
+  }
+
+  openViewAdjustmentForm(){
+    this.viewAdjust = new StockMovement;
   }
 
   closeStockAdjustmentForm() {
