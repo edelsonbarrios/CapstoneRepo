@@ -64,7 +64,13 @@
 
         <div class="form-group small" [class.error]="civilStatusError">
           <label>Civil Status</label>
-          <input type="text" placeholder="Enter Civil Status" [(ngModel)]="newEmployee.civilStatus"/>
+          <select id="civilStatus"[(ngModel)]="newEmployee.civilStatus">
+            <option value="">Select Status</option>
+            <option value="single">Single</option>
+            <option value="married">Married</option>
+            <option value="widowed">Widowed</option>
+            <option value="divorced">Divorced</option>
+          </select>
           <p class="error-message" *ngIf="civilStatusError">{{ civilStatusError }}</p>
         </div>
 
