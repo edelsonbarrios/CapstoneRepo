@@ -32,7 +32,6 @@ export class CreateEmployeeComponent implements OnInit{
   employeeCodeError: string = '';
   lastNameError: string = '';
   firstNameError: string = '';
-  middleNameError: string = '';
   genderError: string = '';
   ageError: string = '';
   birthDateError: string = '';
@@ -58,7 +57,6 @@ export class CreateEmployeeComponent implements OnInit{
     this.employeeCodeError = '';
     this.lastNameError = '';
     this.firstNameError = '';
-    this.middleNameError = '';
     this.genderError = '';
     this.ageError = '';
     this.birthDateError = '';
@@ -83,11 +81,6 @@ export class CreateEmployeeComponent implements OnInit{
 
     if (!this.newEmployee.firstName || this.newEmployee.firstName.trim() === '') {
       this.firstNameError = 'First name is required';
-      hasErrors = true;
-    }
-
-    if (!this.newEmployee.middleName || this.newEmployee.middleName.trim() === '') {
-      this.middleNameError = 'Middle name is required';
       hasErrors = true;
     }
 
@@ -177,7 +170,6 @@ export class CreateEmployeeComponent implements OnInit{
     this.employeeCodeError = '';
     this.lastNameError = '';
     this.firstNameError = '';
-    this.middleNameError = '';
     this.genderError = '';
     this.ageError = '';
     this.birthDateError = '';
