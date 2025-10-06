@@ -11,7 +11,7 @@
 
         <select name="prod" id="prod" [(ngModel)]="selectedCategory">
           <option value="">All Categories</option>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat.categoryName }}</option>
+          <option *ngFor="let cat of categories" [value]="cat.categoryName">{{ cat.categoryName }}</option>
         </select>
       </div>
 
@@ -31,13 +31,17 @@
             </td>
             <td>{{ product.productName }}</td>
             <td>
-              <select id="unit-type">
-                <option>Box</option>
-                <option>Sheet</option>
-                <option>Pieces</option>
+              <!-- NOTE: Use singular "Piece" to match backend "Piece" -->
+              <select id="unit-type-{{i}}" [(ngModel)]="product.tempUnitType">
+                <option value="Box">Box</option>
+                <option value="Sheet">Sheet</option>
+                <option value="Piece">Piece</option>
               </select>
             </td>
-            <td>{{ product.boxPrice | currency:'PHP':'symbol':'1.2-2' }}</td>
+            <td>
+              <!-- show computed price for the currently selected unit type -->
+              {{ getProductUnitPriceDisplay(product) | currency:'PHP':'symbol':'1.2-2' }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -66,13 +70,19 @@
           <tr *ngFor="let item of selectedProducts; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ item.productName }}</td>
-            <td></td>
+            <td>
+              <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemChange(item)">
+                <option value="Box">Box</option>
+                <option value="Sheet">Sheet</option>
+                <option value="Piece">Piece</option>
+              </select>
+            </td>
             <td>
               <input
                 type="number"
                 min="1"
                 [(ngModel)]="item.quantity"
-                (ngModelChange)="onItemChange()"
+                (ngModelChange)="onCartItemChange(item)"
               />
             </td>
             <td>
@@ -80,12 +90,12 @@
                 type="number"
                 min="0"
                 step="0.01"
-                [(ngModel)]="item.price"
-                (ngModelChange)="onItemChange()"
+                [(ngModel)]="item.unitPrice"
+                (ngModelChange)="onCartItemChange(item)"
               />
             </td>
             <td>
-              {{ (item.quantity * item.price) | currency:'PHP':'symbol':'1.2-2' }}
+              {{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}
             </td>
           </tr>
           <tr *ngIf="selectedProducts.length === 0">
