@@ -38,10 +38,6 @@
               <th>Expiration Date</th>
               <th>Box Qty Ordered</th>
               <th>Box Qty Received</th>
-              <th>Sheet Qty Ordered</th>
-              <th>Sheet Qty Received</th>
-              <th>Piece Qty Ordered</th>
-              <th>Piece Qty Received</th>
               <th>Unit Price</th>
               <th>Total</th>
             </tr>
@@ -64,7 +60,7 @@
                   [max]="item.boxQuantityOrdered" (input)="updateItemTotal(item)" />
               </td>
               <td>{{ item.boxPrice | currency : 'PHP'}}</td>
-              <td>{{ item.totalCost | currency }}</td>
+              <td>{{ item.totalCost | currency: 'PHP' }}</td>
             </tr>
           </tbody>
         </table>

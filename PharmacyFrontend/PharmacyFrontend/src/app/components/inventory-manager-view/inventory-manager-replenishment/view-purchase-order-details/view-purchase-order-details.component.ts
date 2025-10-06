@@ -9,6 +9,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { PurchaseOrderReceivedRequest } from '../../../../models/purchase-order-models/purchase-order-received-request';
+import { Employee } from '../../../../models/employee-models/employee';
+import { jwtDecode } from 'jwt-decode';
+import { LogInToken } from '../../../shared/token';
+import { GetService } from '../../../../services/GetService/get.service';
 
 @Component({
   selector: 'app-view-purchase-order-details',
@@ -20,14 +24,25 @@ import { PurchaseOrderReceivedRequest } from '../../../../models/purchase-order-
 export class ViewPurchaseOrderDetailsComponent implements OnInit {
   @Input() purchaseOrder: PurchaseOrder = new PurchaseOrder();
   @Output() closeForm = new EventEmitter<void>();
+  employee: Employee = new Employee();
 
-  constructor(private updateService: UpdateService) {}
+  constructor(
+    private updateService: UpdateService,
+    private getService : GetService 
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getLoggedInEmployee();
+  }
 
   updateItemTotal(item: any) {
-    const qty = item.quantityReceived || 0;
-    item.totalCost = qty * item.unitCost;
+    const boxTotal = (item.boxQuantityReceived || 0) * (item.boxPrice || 0);
+    const sheetTotal =
+      (item.sheetQuantityReceived || 0) * (item.sheetPrice || 0);
+    const pieceTotal =
+      (item.pieceQuantityReceived || 0) * (item.piecePrice || 0);
+
+    item.totalCost = boxTotal + sheetTotal + pieceTotal;
     this.computeTotalAmount();
   }
 
@@ -47,9 +62,10 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
     const requestPayload: PurchaseOrderReceivedRequest = {
       purchaseOrderId: this.purchaseOrder.id,
       totalAmount: this.purchaseOrder.totalAmount,
+      employeeId: this.employee.id,
       purchaseOrderItems: this.purchaseOrder.purchaseOrderItems.map((item) => ({
         id: item.id,
-        productId: item.productId,
+        productID: item.productId,
         boxQuantityOrdered: item.boxQuantityOrdered,
         boxQuantityReceived: item.boxQuantityReceived,
         sheetQuantityOrdered: item.sheetQuantityOrdered,
@@ -70,7 +86,28 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
         },
         error: (err) => {
           console.log(`${err.error}`);
+          console.log(requestPayload);
         },
       });
   }
+
+  getLoggedInEmployee() {
+      const token = localStorage.getItem(LogInToken);
+      if (!token) {
+        console.log(`Token does not exist.`);
+        return;
+      }
+  
+      const employee: any = jwtDecode(token);
+      const employeeId = parseInt(employee.EmployeeId);
+  
+      this.getService.GetEmployeeById(employeeId).subscribe({
+        next: (employee) => {
+          this.employee = employee;
+        },
+        error: (err) => {
+          console.log(`${err.error}`);
+        },
+      });
+    }
 }

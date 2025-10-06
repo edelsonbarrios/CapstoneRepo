@@ -583,7 +583,7 @@ namespace PharmacyBackend.Service.UpdateService
                     .Include(i => i.Product)
                     .FirstOrDefaultAsync(i => i.ProductID == poItem.ProductID && i.BatchNumber == poItem.BatchNumber);
 
-                var product = inventory.Product ?? await _getRepo.GetProductByIdAsync(inventory.Product.ProductID);
+                var product = inventory?.Product ?? await _getRepo.GetProductByIdAsync(poItem.ProductID);
                 if (product is null) continue;
 
                 var computedSheetQty = item.BoxQuantityReceived * product.SheetsPerBox;
@@ -632,6 +632,7 @@ namespace PharmacyBackend.Service.UpdateService
                         Notes = $"New stock received for product {product.ProductName}.",
                         EmployeeID = request.EmployeeId,
                     };
+                    await _context.StockMovement.AddAsync(stockMovement);
                 }
                 else if(inventory is not null)
                 {

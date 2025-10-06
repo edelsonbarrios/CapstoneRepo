@@ -3,5 +3,6 @@ import { PurchaseOrderReceivedItem } from "../purchase-order-item-models/purchas
 export class PurchaseOrderReceivedRequest {
   purchaseOrderId : number = 0;
   totalAmount : number = 0;
+  employeeId: number = 0;
   purchaseOrderItems : PurchaseOrderReceivedItem[] = [];
 }
