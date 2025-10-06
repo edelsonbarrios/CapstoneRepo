@@ -1,0 +1,131 @@
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 600px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  a {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgb(46, 154, 255);
+    cursor: pointer;
+
+    &:hover {
+      color: rgb(22, 119, 209);
+    }
+
+    &:active {
+      opacity: 0.8;
+    }
+  }
+
+
+  .modal-header {
+    background-color: rgb(243, 243, 243);
+    border: 1px solid rgb(201, 201, 201);
+    border-radius: 4px;
+    padding: 0.7rem;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    .header-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      p {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #838383;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .modal-body {
+    margin-bottom: 8px;
+
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+
+      p {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #838383;
+      }
+
+      input {
+        padding: 0.2rem;
+      }
+    }
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #424242;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      input {
+        padding: 0.4rem;
+        border-radius: 4px;
+        border: 1px solid black;
+      }
+
+      .grid-items {
+
+        p {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #838383;
+        }
+      }
+    }
+  }
+
+  .reference-num {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #838383;
+    }
+
+    input {
+      padding: 0.2rem;
+    }
+  }
+
+  .notes {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #838383;
+    }
+
+    textarea {
+      padding: 0.2rem;
+      resize: none;
+    }
+  }
+}
