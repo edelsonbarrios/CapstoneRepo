@@ -21,6 +21,12 @@ import { StockMovement } from '../../../../models/inventory-module-models/stock-
 export class ManageStockAdjustmentComponent implements OnInit{
   stockAdjust ?: StockMovement | null;
   stockMovements: StockMovement[] = [];
+  paginatedStockMovements: StockMovement[] = [];
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(
     private getService : GetService
@@ -34,11 +40,27 @@ export class ManageStockAdjustmentComponent implements OnInit{
     this.getService.getAllStockMovementsAsync().subscribe({
       next: res => {
         this.stockMovements = res;
+        this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.stockMovements.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedStockMovements = this.stockMovements.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openStockAdjustmentForm(stockMovement : StockMovement) {

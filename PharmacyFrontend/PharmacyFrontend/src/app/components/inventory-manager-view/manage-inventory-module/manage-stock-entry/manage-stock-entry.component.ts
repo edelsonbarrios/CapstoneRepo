@@ -19,6 +19,12 @@ export class ManageStockEntryComponent implements OnInit{
   createStock ?: CreateInventory | null;
   viewEntry ?: Inventory | null;
   inventories : Inventory[] = [];
+  paginatedInventories: Inventory[] = [];
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 6;
+  totalPages: number = 0;
 
   constructor(
     private getService : GetService
@@ -32,11 +38,27 @@ export class ManageStockEntryComponent implements OnInit{
     this.getService.getAllInventoriesAsync().subscribe({
       next: res => {
         this.inventories = res;
+        this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.inventories.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedInventories = this.inventories.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   openCreateStockForm() {
