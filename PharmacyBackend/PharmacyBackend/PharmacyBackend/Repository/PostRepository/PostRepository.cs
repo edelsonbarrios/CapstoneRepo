@@ -334,7 +334,7 @@ namespace PharmacyBackend.Repository.POST
             // Update inventory
             _context.Inventory.Update(inventory);
 
-            // Create stock movement record
+            /*// Create stock movement record
             var stockMovement = new StockMovement
             {
                 InventoryID = inventory.InventoryID,
@@ -353,7 +353,7 @@ namespace PharmacyBackend.Repository.POST
                 EmployeeID = employeeId
             };
 
-            await _context.StockMovement.AddAsync(stockMovement);
+            await _context.StockMovement.AddAsync(stockMovement);*/
             await _context.SaveChangesAsync();
 
             return piecesToDeduct;

@@ -459,7 +459,7 @@ namespace PharmacyBackend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("PiecesPerSheet")
+                    b.Property<int>("PiecesPerSheet")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProductName")
@@ -472,7 +472,7 @@ namespace PharmacyBackend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("SheetsPerBox")
+                    b.Property<int>("SheetsPerBox")
                         .HasColumnType("integer");
 
                     b.Property<int>("TypeID")
