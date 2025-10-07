@@ -14,10 +14,17 @@ using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.Models.CashierViewModel;
+using PharmacyBackend.DTOs.DashboardDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
     {
+        #region DashBoardInventoryMan
+        public Task<InventoryDashboardDto> GetInventoryDashboardAsync();
+
+        #endregion
+
+
         #region Employee
         public Task<List<EmployeeDTO>> GetAllEmployeesAsync();
         public Task<EmployeeDTO> GetEmployeeByIdAsync(int id);

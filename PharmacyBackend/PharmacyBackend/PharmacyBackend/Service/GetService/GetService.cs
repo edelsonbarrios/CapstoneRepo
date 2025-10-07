@@ -16,6 +16,7 @@ using PharmacyBackend.DTOs.StockMovementDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using PharmacyBackend.DTOs.DashboardDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -27,6 +28,34 @@ namespace PharmacyBackend.Service.GetService
         {
             _getRepo = getRepo;
         }
+
+        #region DashBoardInventoryMan
+
+        public async Task<InventoryDashboardDto> GetInventoryDashboardAsync()
+        {
+            var dashboard = new InventoryDashboardDto();
+
+            var allProducts = await GetAllProductAsync();
+            var allInventory = await GetAllInventoryAsync();
+            var criticalStock = await GetCriticalStockInventoryAsync();
+            var nearExpiry = await GetNearExpiryInventoryAsync();
+            var expiredStock = await GetExpiredInventoryAsync();
+
+            // Calculate summary metrics
+            dashboard.TotalActiveProducts = allProducts.Count(p => p.IsActive);
+            dashboard.TotalInventoryItems = allInventory.Count(i => i.IsActive);
+            dashboard.CriticalStockCount = criticalStock.Count();
+            dashboard.NearExpiryCount = nearExpiry.Count();
+            dashboard.ExpiredStockCount = expiredStock.Count();
+
+            // Populate detailed lists (limited to first 10 for performance)
+            dashboard.CriticalStockItems = criticalStock.Take(5).ToList();
+            dashboard.NearExpiryItems = nearExpiry.Take(5).ToList();
+            dashboard.ExpiredStockItems = expiredStock.Take(5).ToList();
+
+            return dashboard;
+        }
+        #endregion
 
         #region Employees
         public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()

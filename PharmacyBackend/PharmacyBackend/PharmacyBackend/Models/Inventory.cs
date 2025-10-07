@@ -12,8 +12,8 @@ namespace PharmacyBackend.Models
         public Product Product { get; set; } // Navigation
 
         public string BatchNumber { get; set; } = string.Empty;
-        public DateTime ManufacturingDate { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public DateTime ManufacturingDate { get; set; } = DateTime.UtcNow;
+        public DateTime ExpirationDate { get; set; } = DateTime.UtcNow;
 
         // Multi-unit quantities - maintain separate counts
         public int BoxQuantity { get; set; } = 0;

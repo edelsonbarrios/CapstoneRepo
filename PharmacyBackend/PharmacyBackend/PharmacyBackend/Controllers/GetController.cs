@@ -25,6 +25,24 @@ namespace PharmacyBackend.Controllers
             _getService = getService;
         }
 
+        #region DashBoardInventoryMan
+
+        [HttpGet("dashboard/inventory")]
+        public async Task<IActionResult> GetInventoryDashboard()
+        {
+            try
+            {
+                var dashboard = await _getService.GetInventoryDashboardAsync();
+                return Ok(dashboard);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error retrieving inventory dashboard", error = ex.Message });
+            }
+        }
+
+        #endregion
+
         #region Employee
         [Authorize(Roles = "Administrator")]
         [HttpGet("EmployeeAll")]

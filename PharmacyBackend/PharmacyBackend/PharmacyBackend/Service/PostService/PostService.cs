@@ -397,7 +397,6 @@ namespace PharmacyBackend.Service.PostService
                 DateCreated = fullProduct.DateCreated,
 
                 // Initialize stock values (will be 0 for new products)
-                TotalStock = 0,
                 ExpiredStock = 0,
                 NearExpiryStock = 0,
                 IsCriticalStock = false,
