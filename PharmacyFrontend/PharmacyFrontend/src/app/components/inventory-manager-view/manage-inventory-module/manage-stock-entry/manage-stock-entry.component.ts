@@ -35,7 +35,7 @@ export class ManageStockEntryComponent implements OnInit{
   }
 
   getAllInventories() {
-    this.getService.getAllInventoriesAsync().subscribe({
+    this.getService.getAllAvailableInventoriesAsync().subscribe({
       next: res => {
         this.inventories = res;
         this.updatePagination();

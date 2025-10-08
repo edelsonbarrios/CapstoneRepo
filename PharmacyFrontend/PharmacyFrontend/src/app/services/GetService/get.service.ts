@@ -16,6 +16,7 @@ import { Classification } from '../../models/classification-models/classificatio
 import { Supplier } from '../../models/supplier-models/supplier';
 import { Product } from '../../models/product-models/product';
 import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order';
+import { Inventory } from '../../models/inventory-module-models/inventory';
 @Injectable({
   providedIn: 'root'
 })
@@ -132,6 +133,9 @@ export class GetService {
   //Inventory Service
   getAllInventoriesAsync() : Observable<any>{ 
     return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryAll`);
+  }
+  getAllAvailableInventoriesAsync() : Observable<Inventory[]> {
+    return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoryAvailable`);
   }
   //Inventory Service End
 

@@ -6,6 +6,7 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
@@ -409,6 +410,14 @@ namespace PharmacyBackend.Controllers
             var inventories = await _getService.GetAllInventoryAsync();
             if (!inventories.Any())
                 return NotFound("No inventory found.");
+            return Ok(inventories);
+        }
+        [HttpGet("InventoryAvailable")]
+        public async Task<ActionResult<List<InventoryDto>>> GetAllAvailableInventoryAsync()
+        {
+            var inventories = await _getService.GetAllAvailableInventoryAsync();
+            if (inventories.Count() == 0)
+                return NotFound("No products registered in the inventory.");
             return Ok(inventories);
         }
 

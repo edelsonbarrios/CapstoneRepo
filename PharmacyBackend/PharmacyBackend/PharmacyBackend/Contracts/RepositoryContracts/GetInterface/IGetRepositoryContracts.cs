@@ -94,6 +94,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #region Inventory
         public Task<IEnumerable<Inventory>> GetAllInventoryAsync();
         public Task<Inventory> GetInventoryByIdAsync(int id);
+        public Task<List<Inventory>> GetAllAvailableInventoryAsync();
         public Task<IEnumerable<Inventory>> GetInventoryByProductIdAsync(int productId);
         public Task<IEnumerable<Inventory>> GetExpiredInventoryAsync();
         public Task<IEnumerable<Inventory>> GetNearExpiryInventoryAsync();

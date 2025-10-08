@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.DataContext;
+using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -386,8 +387,24 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Inventory>> GetAllInventoryAsync()
         {
             return await _context.Inventory
+                .Include(p => p.Product)
+                .ToListAsync();
+        }
+        public async Task<List<Inventory>> GetAllAvailableInventoryAsync()
+        {
+            var inventories = await _context.Inventory
                 .Include(i => i.Product)
                 .ToListAsync();
+
+            return inventories
+                .GroupBy(i => new { i.ProductID })
+                .Select(g =>
+                    g.Where(i => i.TotalPiecesAvailable > 0 && i.IsActive)
+                    .OrderBy(i => i.ExpirationDate)
+                    .FirstOrDefault()
+                )
+                .Where(i => i != null)
+                .ToList();
         }
 
         public async Task<Inventory> GetInventoryByIdAsync(int id)

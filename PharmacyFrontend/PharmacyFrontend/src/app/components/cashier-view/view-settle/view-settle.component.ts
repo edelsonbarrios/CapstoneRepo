@@ -86,6 +86,7 @@ export class ViewSettleComponent implements OnInit {
       items: this.cartItems.map((i) => ({
         productId: i.productID,
         quantity: i.quantity,
+        unitType: i.unitType,
         unitPrice: i.price,
         salesTransactionId: 0, // backend should ignore or set this
       })),
@@ -93,6 +94,7 @@ export class ViewSettleComponent implements OnInit {
 
     this.paymentConfirmed.emit(eventPayload);
     console.log(eventPayload);
+    console.log(this.loggedInEmployee.id);
   }
 
   getLoggedInUser() {

@@ -17,16 +17,19 @@ using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.DashboardDTOs;
+using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 
 namespace PharmacyBackend.Service.GetService
 {
     public class GetService : IGetServiceContracts
     {
         private readonly IGetRepositoryContracts _getRepo;
+        private readonly IUpdateRepositoryContracts _updateRepo;
 
-        public GetService(IGetRepositoryContracts getRepo)
+        public GetService(IGetRepositoryContracts getRepo, IUpdateRepositoryContracts updateRepo)
         {
             _getRepo = getRepo;
+            _updateRepo = updateRepo;
         }
 
         #region DashBoardInventoryMan
@@ -799,6 +802,16 @@ namespace PharmacyBackend.Service.GetService
         public async Task<IEnumerable<InventoryDto>> GetAllInventoryAsync()
         {
             var inventories = await _getRepo.GetAllInventoryAsync();
+
+            foreach(var inv in inventories)
+            {
+                if(inv.TotalPiecesAvailable < 0)
+                {
+                    inv.IsActive = false;
+                    await _updateRepo.UpdateInventoryAsync(inv);
+                }
+            }
+
             return inventories.Select(i => new InventoryDto
             {
                 InventoryID = i.InventoryID,
@@ -825,6 +838,38 @@ namespace PharmacyBackend.Service.GetService
                 IsMultiUnit = i.IsMultiUnit,
                 TotalPiecesAvailable = i.TotalPiecesAvailable
             });
+        }
+        public async Task<List<InventoryDto>> GetAllAvailableInventoryAsync()
+        {
+            var inventories = await _getRepo.GetAllAvailableInventoryAsync();
+            if (inventories.Count() == 0)
+                return new List<InventoryDto>();
+            return inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                BoxQuantity = i.BoxQuantity,
+                SheetQuantity = i.SheetQuantity,
+                PieceQuantity = i.PieceQuantity,
+                SheetsPerBox = i.SheetsPerBox,
+                PiecesPerSheet = i.PiecesPerSheet,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                BoxPrice = i.BoxPrice,
+                SheetPrice = i.SheetPrice,
+                PiecePrice = i.PiecePrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock,
+                IsMultiUnit = i.IsMultiUnit,
+                TotalPiecesAvailable = i.TotalPiecesAvailable
+            }).ToList();
         }
 
         public async Task<InventoryDto?> GetInventoryByIdAsync(int id)

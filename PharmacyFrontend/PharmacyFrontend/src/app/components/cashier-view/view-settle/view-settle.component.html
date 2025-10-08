@@ -19,7 +19,7 @@
           <td>{{ item.productName }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.price | currency:'PHP':'symbol':'1.2-2' }}</td>
-          <td>{{ item.quantity * item.price | currency:'PHP':'symbol':'1.2-2' }}</td>
+          <td>{{ item.quantity * (item.unitPrice || 0) | currency:'PHP':'symbol':'1.2-2' }}</td>
         </tr>
       </tbody>
     </table>
