@@ -5,12 +5,13 @@ import { PostService } from '../../../services/PostService/post.service';
 import { Product } from '../../../models/product-models/product';
 import { CreateSalesItemDto } from '../../../models/sales-transaction-models/create-sales-item';
 import { FormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { ViewSalesComponent } from '../view-sales/view-sales.component';
 
 @Component({
   selector: 'app-cashier-transaction',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf, ViewSalesComponent],
   templateUrl: './cashier-transaction.component.html',
   styleUrl: './cashier-transaction.component.scss',
 })
@@ -18,6 +19,7 @@ export class CashierTransactionComponent implements OnInit {
   loggedInEmployee: Employee = new Employee();
   products : Product[] = [];
   selectedItems : CreateSalesItemDto[] = [];
+  viewSales ?: Product | null;
 
   constructor(
     private getService: GetService,
@@ -25,6 +27,10 @@ export class CashierTransactionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+  }
+
+  openViewSalesForm(){
+    this.viewSales = new Product();
   }
 
 }

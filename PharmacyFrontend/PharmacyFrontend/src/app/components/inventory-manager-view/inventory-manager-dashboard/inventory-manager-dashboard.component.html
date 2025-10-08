@@ -6,96 +6,151 @@
     <div class="notification">🔔<span class="dot"></span></div>
   </div>
 
-  <!-- GRID CONTAINERS -->
-  <div class="container">
+  <!-- DASHBOARD BODY -->
 
-    <!-- FIRST ROW CONTAINERS -->
-    <div class="grid-items total-products">
-      <div class="content">
-        <h1>Total Products</h1>
-        <div class="total-num">128</div>
-      </div>
-    </div>
-    <div class="grid-items critical-stock">
-      <div class="content">
-        <h1>Critical Stock</h1>
-        <div class="critical-num">5</div>
-      </div>
-    </div>
-    <div class="grid-items expiring-soon">
-      <div class="content">
-        <h1>Expiring Soon</h1>
-        <div class="expire-num">8</div>
-      </div>
+  <!-- FIRST ROW -->
+  <div class="first-container">
+    <div class="grid-items">
+      <h3>Total Active Products</h3>
+      <h2 style="color: rgb(68, 189, 44);">Sample Number</h2>
     </div>
 
-    <!-- SECOND ROW CONTAINER -->
-    <div class="grid-items critical-items">
-      <h1>Critical Stock Items</h1>
+    <div class="grid-items">
+      <h3>Total Inventoy Items</h3>
+      <h2 style="color: rgb(49, 156, 255);">Sample Number</h2>
+    </div>
 
-      <!-- CRITICAL ITEMS TABLE -->
-      <table class="crit-table">
+    <div class="grid-items">
+      <h3>Critical Stock</h3>
+      <h2 style="color: #c0392b;">Sample Number</h2>
+    </div>
+
+    <div class="grid-items">
+      <h3>Expiring Soon</h3>
+      <h2 style="color: #d19618;">Sample Number</h2>
+    </div>
+
+    <div class="grid-items">
+      <h3>Expired Stock</h3>
+      <h2 style="color: #c0392b;">Sample Number</h2>
+    </div>
+  </div>
+
+  <!-- SECOND ROW -->
+
+  <div class="second-container">
+    <div class="grid-items">
+      <h3>Critical Stock Items</h3>
+      
+      <table class="crit-stock">
         <thead>
           <tr>
-            <th>Item Code</th>
-            <th>Name</th>
+            <th>Product</th>
+            <th>Batch</th>
             <th>Stock</th>
+            <th>Reorder</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>RX&ndash;001</td>
-            <td>Biogesic</td>
-            <td>
-              <div class="num">4</div>
-            </td>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="stock-box">Sample Stock</span></td>
+            <td>Sample Reorder</td>
           </tr>
           <tr>
-            <td>RX&ndash;002</td>
-            <td>Decolgen</td>
-            <td>
-              <div class="num">4</div>
-            </td>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="stock-box">Sample Stock</span></td>
+            <td>Sample Reorder</td>
           </tr>
           <tr>
-            <td>RX&ndash;003</td>
-            <td>Amoxicillin</td>
-            <td>
-              <div class="num">4</div>
-            </td>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="stock-box">Sample Stock</span></td>
+            <td>Sample Reorder</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- THIRD ROW CONTAINER -->
-    <div class="grid-items soon-expire">
-      <h1>Soon-to-Expire Products</h1>
-      <table class="soon-table">
+    <div class="grid-items">
+      <h3>Near Expiry Items</h3>
+      
+      <table class="near-expiry">
         <thead>
           <tr>
-            <th>Item Code</th>
-            <th>Name</th>
+            <th>Product</th>
+            <th>Batch</th>
             <th>Expiry Date</th>
+            <th>Stock</th>  
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>RX&ndash;201</td>
-            <td>Vitamin C</td>
-            <td>
-              <div class="date-color">2025&ndash;09&ndash;15</div>
-            </td>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="expiry-date">Sample Date</span></td>
+            <td>Sample Reorder</td>
           </tr>
           <tr>
-            <td>RX&ndash;202</td>
-            <td>Neozep</td>
-            <td>
-              <div class="date-color">2025&ndash;09&ndash;16</div>
-            </td>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="expiry-date">Sample Date</span></td>
+            <td>Sample Reorder</td>
+          </tr>
+          <tr>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="expiry-date">Sample Date</span></td>
+            <td>Sample Reorder</td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="third-container">
+    <h3>Expired Stock Items</h3>
+
+
+    <table class="expired-items">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Batch</th>
+            <th>Expiry Date</th>
+            <th>Box Qty</th>
+            <th>Sheet Qty</th>
+            <th>Piece Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="expiry-date">Sample Date</span></td>
+            <td>Sample Box</td>
+            <td>Sample Sheet</td>
+            <td>Sample Piece</td>
+          </tr>
+          <tr>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="expiry-date">Sample Date</span></td>
+            <td>Sample Box</td>
+            <td>Sample Sheet</td>
+            <td>Sample Piece</td>
+          </tr>
+          <tr>
+            <td>Sample Product</td>
+            <td>Sample Batch</td>
+            <td><span class="expiry-date">Sample Date</span></td>
+            <td>Sample Box</td>
+            <td>Sample Sheet</td>
+            <td>Sample Piece</td>
+          </tr>
+        </tbody>
+      </table>
   </div>
 </div>
