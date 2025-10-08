@@ -43,7 +43,6 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of paginatedItems; let i = index">
-        <tr *ngFor="let item of paginatedItems; let i = index">
           <td>{{ item.productName }}</td>
           <td>{{ item.boxPrice | currency:'PHP' }}</td>
 
@@ -63,7 +62,7 @@
             <input type="number" [value]="item.pieceQuantityOrdered" readonly />
           </td>
 
-          <td>{{ item.totalCost | currency:'PHP' }}</td>
+          <td style="color: green;">{{ item.totalCost | currency:'PHP' }}</td>
           <td><button class="remove-btn" (click)="removeItemPaginated(item)">✕</button></td>
         </tr>
       </tbody>

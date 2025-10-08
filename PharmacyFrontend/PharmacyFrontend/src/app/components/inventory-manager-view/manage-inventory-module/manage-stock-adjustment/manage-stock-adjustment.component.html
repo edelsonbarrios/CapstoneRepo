@@ -29,6 +29,7 @@
               <div class="in-stock">In Stock</div>
             </td>
             <td>
+              <button class="btn-view" (click)="openViewAdjustmentForm()">View</button>
               <button class="btn-adjust" (click)="openStockAdjustmentForm(sm)">Adjust</button>
               <button class="btn-archive">Archive</button>
             </td>
@@ -52,4 +53,10 @@
   [stockAdjust]="stockAdjust"
   (closeForm)="closeStockAdjustmentForm()"
   ></app-stock-adjust>
+</div>
+
+<div class="modal-overlay" *ngIf="viewAdjust">
+  <app-view-adjustment
+  *ngIf="viewAdjust"
+  ></app-view-adjustment>
 </div>
