@@ -57,6 +57,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         #region Inventory
         public Task<bool> UpdateInventoryAsync(Inventory inventory);
+        public Task<bool> ValidateInventoryStocksAsync();
         #endregion
 
         #region VAT

@@ -162,6 +162,22 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> ValidateInventoryStocksAsync()
+        {
+            var inventories = await _context.Inventory.ToListAsync();
+
+            foreach(var inv in inventories)
+            {
+                if(inv.TotalPiecesAvailable == 0)
+                {
+                    inv.IsActive = false;
+                    _context.Inventory.Update(inv);
+                }
+            }
+            await _context.SaveChangesAsync();
+            return true;
+        }
         #endregion
 
         #region VAT

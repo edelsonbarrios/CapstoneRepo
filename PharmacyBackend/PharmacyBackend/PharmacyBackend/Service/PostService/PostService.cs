@@ -161,6 +161,8 @@ namespace PharmacyBackend.Service.PostService
                 // Repository will handle inventory deduction and stock movements
                 var createdTransaction = await _postRepo.CreateSalesTransactionAsync(transaction);
 
+                var validateInventory = await _updateRepo.ValidateInventoryStocksAsync();
+
                 // Return DTO
                 return new SalesTransactionDto
                 {

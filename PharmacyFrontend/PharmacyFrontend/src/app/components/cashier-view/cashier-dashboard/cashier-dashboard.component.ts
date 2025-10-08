@@ -76,7 +76,7 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   getAllProducts() {
-    this.getService.getAllInventoriesAsync().subscribe({
+    this.getService.getAllAvailableInventoriesAsync().subscribe({
       next: (res) => {
         this.products = res.map((p: any) => ({
           ...p,
