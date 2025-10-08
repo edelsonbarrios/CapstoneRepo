@@ -20,6 +20,7 @@
           <tr>
             <th style="width: 60px">Select</th>
             <th>Item</th>
+            <th>Batch Number</th>
             <th>Unit Type</th>
             <th style="width: 140px">Price</th>
           </tr>
@@ -30,6 +31,7 @@
               <input type="checkbox" [(ngModel)]="product.selected" />
             </td>
             <td>{{ product.productName }}</td>
+            <td>{{product.batchNumber}}</td>
             <td>
               <!-- NOTE: Use singular "Piece" to match backend "Piece" -->
               <select id="unit-type-{{i}}" [(ngModel)]="product.tempUnitType">

@@ -385,9 +385,20 @@ namespace PharmacyBackend.Repository.GET
         #region Inventory
         public async Task<IEnumerable<Inventory>> GetAllInventoryAsync()
         {
-            return await _context.Inventory
+            var inventories = await _context.Inventory
                 .Include(i => i.Product)
                 .ToListAsync();
+
+
+            return inventories
+                .GroupBy(i => new { i.ProductID })
+                .Select(g =>
+                    g.Where(i => i.BoxQuantity > 0)
+                    .OrderBy(i => i.ExpirationDate)
+                    .FirstOrDefault()
+                )
+                .Where(i => i != null)
+                .ToList();
         }
 
         public async Task<Inventory> GetInventoryByIdAsync(int id)
