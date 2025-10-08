@@ -36,8 +36,13 @@
         <h2>TRANSACTION</h2>
 
         <div class="tab-container">
-          <div class="text-item">Till</div>
-          <div class="text-item">All</div>
+          <div class="text-item">Payment Method</div>
+          <select id="cashier-option" class="text-item">
+            <option value="">Payment</option>
+            <option value="all">All</option>
+            <option value="cash">Cash</option>
+            <option value="online">Online</option>
+          </select>
         </div>
 
         <div class="tab-container">
@@ -54,7 +59,13 @@
 
         <div class="tab-container">
           <div class="text-item">Date</div>
-          <div class="text-item">September 1,2025 &ndash; September 30, 2025 </div>
+          <input type="date" class="text-item"/>  
+        </div>
+
+        <p>&ndash; &ndash;</p>
+
+        <div class="last-container">
+          <input type="date" class="text-item"/>  
         </div>
       </div>
     </div>
@@ -117,7 +128,6 @@
             <th>Paid</th>
             <th>Change</th>
             <th>Method</th>
-            <th>Till</th>
             <th>Cashier</th>
             <th>View</th>
           </tr>
@@ -130,9 +140,10 @@
             <td>&#8369;489.00</td>
             <td>&#8369;29.30</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Kristine</td>
-            <td></td>
+            <td>
+              <button class="btn-view" (click)="openViewSalesForm()">View</button>
+            </td>
           </tr>
           <tr>
             <td>1702905367</td>
@@ -141,9 +152,10 @@
             <td>&#8369;815.00</td>
             <td>&#8369;290.13</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Edelson</td>
-            <td></td>
+            <td>
+              <button class="btn-view">View</button>
+            </td>
           </tr>
           <tr>
             <td>1702905406</td>
@@ -152,9 +164,10 @@
             <td>&#8369;97.80</td>
             <td>&#8369;5.63</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Harvey</td>
-            <td></td>
+            <td>
+              <button class="btn-view">View</button>
+            </td>
           </tr>
           <tr>
             <td>1702905521</td>
@@ -163,9 +176,10 @@
             <td>&#8369;652.00</td>
             <td>&#8369;103.29</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Harvey</td>
-            <td></td>
+            <td>
+              <button class="btn-view">View</button>
+            </td>
           </tr>
           <tr>
             <td>1702980773</td>
@@ -174,9 +188,10 @@
             <td>&#8369;407.50</td>
             <td>&#8369;334.37</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Axl</td>
-            <td></td>
+            <td>
+              <button class="btn-view">View</button>
+            </td>
           </tr>
           <tr>
             <td>1702981262</td>
@@ -185,9 +200,10 @@
             <td>&#8369;4,075.00</td>
             <td>&#8369;3,521.16</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Edelson</td>
-            <td></td>
+            <td>
+              <button class="btn-view">View</button>
+            </td>
           </tr>
           <tr>
             <td>1702983381</td>
@@ -196,9 +212,10 @@
             <td>&#8369;407.50</td>
             <td>&#8369;211.31</td>
             <td>Cash</td>
-            <td>1</td>
             <td>Harvey</td>
-            <td></td>
+            <td>
+              <button class="btn-view">View</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -206,3 +223,9 @@
 
   </div>
 </main>
+
+<div class="modal-overlay" *ngIf="viewSales">
+  <app-view-sales
+    *ngIf="viewSales"
+  ></app-view-sales>
+</div>
