@@ -1,15 +1,15 @@
 <div class="wrapper" *ngIf="viewSupplier as supplier">
-  <!-- Header -->
+  <!-- HEADER -->
   <header>
-    <h2 *ngIf="!isEditMode">Supplier Details</h2>
-    <h2 *ngIf="isEditMode">Edit Supplier</h2>
+    <h2>{{ isEditMode ? 'Edit Supplier' : 'Supplier Details' }}</h2>
   </header>
   <hr />
 
-  <!-- Supplier Profile -->
+  <!-- PROFILE -->
   <section class="profile-section">
     <div class="profile-info">
-      <div>
+      <div class="avatar">{{ supplier.supplierName[0] || '?' }}</div>
+      <div class="details">
         <h3>{{ supplier.supplierName }}</h3>
         <p class="small-text">{{ supplier.email }}</p>
       </div>
@@ -17,42 +17,42 @@
   </section>
   <hr />
 
-  <!-- Supplier Details -->
+  <!-- SUPPLIER DETAILS -->
   <main class="supplier-info">
     <div class="supplier-property">
-      <label>Supplier Name:</label>
+      <label>Supplier Name</label>
       <div>
         <span *ngIf="!isEditMode">{{ supplier.supplierName }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.supplierName" placeholder="Supplier Name">
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.supplierName" placeholder="Enter supplier name" />
       </div>
     </div>
 
     <div class="supplier-property">
-      <label>Contact:</label>
+      <label>Contact</label>
       <div>
         <span *ngIf="!isEditMode">{{ supplier.contactNumber }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.contactNumber" placeholder="Contact Number">
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.contactNumber" placeholder="Enter contact number" />
       </div>
     </div>
 
     <div class="supplier-property">
-      <label>Email:</label>
+      <label>Email</label>
       <div>
         <span *ngIf="!isEditMode">{{ supplier.email }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.email" placeholder="Email">
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.email" placeholder="Enter email" />
       </div>
     </div>
 
     <div class="supplier-property">
-      <label>Address:</label>
+      <label>Address</label>
       <div>
         <span *ngIf="!isEditMode">{{ supplier.address }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.address" placeholder="Address">
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.address" placeholder="Enter address" />
       </div>
     </div>
   </main>
 
-  <!-- Products Section -->
+  <!-- PRODUCTS -->
   <section class="products-section">
     <h3>Products</h3>
     <table class="product-table" *ngIf="pagedProducts.length > 0; else noProducts">
@@ -70,16 +70,17 @@
           <td>{{ product.productName }}</td>
           <td>{{ product.categoryName }}</td>
           <td>{{ product.brandName }}</td>
-          <td>{{ product.price | currency:'PHP' }}</td>
+          <td>{{ product.price | currency: 'PHP' }}</td>
           <td>{{ product.totalStock }}</td>
         </tr>
       </tbody>
     </table>
+
     <ng-template #noProducts>
-      <span>No products assigned.</span>
+      <p class="no-products">No products assigned.</p>
     </ng-template>
 
-    <!-- Pagination -->
+    <!-- PAGINATION -->
     <div class="pagination" *ngIf="supplier.products.length > pageSize">
       <button [disabled]="currentPage === 1" (click)="prevPage()">Previous</button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
@@ -87,10 +88,10 @@
     </div>
   </section>
 
-  <!-- Buttons -->
+  <!-- ACTION BUTTONS -->
   <div class="button-wrapper">
-    <button *ngIf="!isEditMode" (click)="toggleViewMode()">Edit</button>
-    <button *ngIf="isEditMode" (click)="saveChanges()">Save</button>
-    <button (click)="closeViewForm()">Close</button>
+    <button *ngIf="!isEditMode" (click)="toggleViewMode()" class="edit-btn">Edit</button>
+    <button *ngIf="isEditMode" (click)="saveChanges()" class="save-btn">Save</button>
+    <button (click)="closeViewForm()" class="close-btn">Close</button>
   </div>
 </div>
