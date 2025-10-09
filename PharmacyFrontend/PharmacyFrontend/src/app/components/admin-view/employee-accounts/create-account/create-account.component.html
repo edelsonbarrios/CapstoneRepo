@@ -1,4 +1,4 @@
-<div class="modal" *ngIf="employeeId">
+<div class="modal" *ngIf="employeeId && !showSuccessAlert">
   <div class="modal-header">
     <h2>👤 Add Employee</h2>
     <p>Quickly add employee by filling the form</p>
@@ -30,5 +30,14 @@
   <div class="modal-footer">
     <button class="cancel-btn" (click)="closeCreateAccountForm()">Cancel</button>
     <button class="add-btn" (click)="createNewAccount()">Submit</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Account has been successfully created</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>
