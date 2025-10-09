@@ -1,31 +1,32 @@
-.wrapper {
+.wrapper.modern {
   height: 100%;
+  padding: 1rem;
+  background: #f6f8fa;
 
   .containers {
-    height: 100%;
     display: grid;
     grid-template-columns: 1.5fr 1fr;
-    gap: 10px;
-    padding: 1rem;
+    gap: 1.2rem;
+    height: 100%;
 
     .grid-items {
       background: white;
       border-radius: 12px;
-      padding: 1.2rem;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
 
       .prod-control {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
+        gap: 0.8rem;
         margin-bottom: 1rem;
 
         input,
         select {
-          padding: 0.7rem;
-          border: 1px solid rgba(0, 109, 186, 1);
+          padding: 0.75rem;
           border-radius: 8px;
+          border: 1px solid #cbd5e1;
           font-size: 0.95rem;
         }
 
@@ -34,131 +35,100 @@
         }
       }
 
-      .product-table,
-      .compute-table {
+      .table-wrapper {
+        overflow-y: auto;
+        max-height: 400px;
+      }
+
+      table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 1rem;
-
-        select {
-          padding: 0.5rem 1rem 0.5rem 0rem;
-          border: none;
-
-        }
-
-        th,
-        td {
-          padding: 0.6rem;
-          border: 1px solid #e6e6e6;
-          text-align: left;
-        }
+        font-size: 0.9rem;
 
         th {
-          background: #fafafa;
+          background: #eff6ff;
+          color: #1e3a8a;
           font-weight: 600;
+          text-align: left;
+          padding: 0.7rem;
         }
 
-        tbody tr:hover {
-          background: #fbfbfb;
+        td {
+          padding: 0.6rem;
+          border-bottom: 1px solid #e5e7eb;
         }
 
+        tr:hover {
+          background: #f9fafb;
+        }
+
+        select,
         input[type='number'] {
-          width: 90px;
-          padding: 0.35rem;
-          border: 1px solid rgba(0, 109, 186, 1);
+          border: 1px solid #cbd5e1;
           border-radius: 6px;
-        }
-
-        input[type='checkbox'] {
-          width: 16px;
-          height: 16px;
+          padding: 0.4rem;
         }
       }
 
-      .btn-add {
-        margin-top: 0.5rem;
-        padding: 0.6rem 1rem;
-        background-color: rgba(0, 109, 186, 1);
+      .btn-primary {
+        align-self: flex-start;
+        background: #0077cc;
         color: white;
         border: none;
-        border-radius: 6px;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
         cursor: pointer;
         font-weight: 600;
+        margin-top: 0.5rem;
 
         &:hover {
-          background-color: rgb(1, 98, 167);
+          background: #0060a8;
         }
       }
 
-      .bot-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        margin-bottom: 8px;
+      .bottom-compute {
+        margin-top: auto;
 
-        .gross {
+        .totals {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-
-          .amount {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2a7a2a;
-          }
-        }
-      }
-
-      .bottom-btn {
-        display: flex;
-        justify-content: end;
-        gap: 10px;
-
-        .btn-print,
-        .btn-cancel,
-        .btn-settle {
-          padding: 0.7rem;
-          font-size: 0.95rem;
-          font-weight: 600;
-          border: none;
-          border-radius: 6px;
-          color: white;
-          width: 100px;
-          cursor: pointer;
+          margin-bottom: 1rem;
+          background: #f9fafb;
+          padding: 0.8rem 1rem;
+          border-radius: 8px;
         }
 
-        .btn-print {
-          background-color: rgba(0, 109, 186, 1);
-          &:hover {
-            background-color: rgb(1, 98, 167);
-          }
-        }
+        .bottom-btn {
+          display: flex;
+          gap: 0.6rem;
+          justify-content: flex-end;
 
-        .btn-cancel {
-          background-color: rgba(161, 0, 3, 1);
-          &:hover {
-            background-color: rgb(145, 1, 4);
-          }
-        }
+          button {
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
 
-        .btn-settle {
-          background-color: rgba(0, 161, 19, 1);
-          &:hover {
-            background-color: rgb(1, 139, 17);
+            &.btn-print {
+              background: #0077cc;
+            }
+
+            &.btn-cancel {
+              background: #dc2626;
+            }
+
+            &.btn-settle {
+              background: #16a34a;
+            }
+
+            &:hover {
+              opacity: 0.9;
+            }
           }
         }
       }
     }
   }
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

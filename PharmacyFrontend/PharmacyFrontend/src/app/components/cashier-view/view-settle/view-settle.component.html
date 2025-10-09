@@ -1,6 +1,6 @@
 <div class="modal-overlay">
   <div class="modal">
-    <h2>Settle Payment</h2>
+    <h2>🧾 Settle Payment</h2>
 
     <!-- CART SUMMARY -->
     <table class="cart-table" *ngIf="cartItems && cartItems.length > 0">
@@ -25,61 +25,61 @@
     </table>
 
     <!-- TOTAL SUMMARY -->
-    <div class="summary">
+    <section class="summary">
       <div class="summary-row">
         <span>Subtotal:</span>
-        <span>{{ subtotal | currency:'PHP':'symbol':'1.2-2' }}</span>
+        <span class="value">{{ subtotal | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
 
       <div class="summary-row">
-        <label for="vat">VAT:</label>
-        <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
-          <option *ngFor="let v of vats" [ngValue]="v">{{ v.vatRate }}%</option>
-        </select>
-        <span>{{ subtotal * ((selectedVat?.vatRate || 0) / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
+        <label>VAT ({{ selectedVat?.vatRate || 12 }}%)</label>
+        <span class="value">
+          {{ subtotal * ((selectedVat?.vatRate || 12) / 100) | currency:'PHP':'symbol':'1.2-2' }}
+        </span>
       </div>
 
       <div class="summary-row">
         <label for="discount">Discount:</label>
         <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">
-          <option *ngFor="let d of discounts" [ngValue]="d">{{ d.discountRate }}%</option>
+          <option [ngValue]="null">None</option>
+          <option *ngFor="let d of discounts" [ngValue]="d">
+            {{ d.discountRate }}%
+          </option>
         </select>
-        <span>- {{ subtotal * ((selectedDiscount?.discountRate || 0) / 100) | currency:'PHP':'symbol':'1.2-2' }}</span>
+        <span class="value">
+          - {{ subtotal * ((selectedDiscount?.discountRate || 0) / 100) | currency:'PHP':'symbol':'1.2-2' }}
+        </span>
       </div>
 
       <div class="summary-row total">
         <strong>Total:</strong>
-        <strong>{{ calculateTotals() | currency:'PHP':'symbol':'1.2-2' }}</strong>
+        <strong class="value">{{ calculateTotals() | currency:'PHP':'symbol':'1.2-2' }}</strong>
       </div>
-    </div>
+    </section>
 
     <!-- PAYMENT SECTION -->
-    <div class="payment-section">
+    <section class="payment-section">
       <label for="payment">Payment Amount</label>
       <input
         id="payment"
         type="number"
         [(ngModel)]="payment"
         (input)="onPaymentChange()"
-        placeholder="Enter payment"
+        placeholder="Enter payment amount"
       />
 
-      <div class="summary-row change" *ngIf="payment > 0">
+      <div class="summary-row" *ngIf="payment > 0">
         <span>Change:</span>
-        <span [class.negative]="change < 0">{{ change | currency:'PHP':'symbol':'1.2-2' }}</span>
+        <span [class.negative]="change < 0">
+          {{ change | currency:'PHP':'symbol':'1.2-2' }}
+        </span>
       </div>
-      <div class="vat-discount">
-        <div class="label">DISCOUNT</div>
-        <select id="discount" class="value">
-          <option>Senior Citizen (20%)</option>
-        </select>
-      </div>
-    </div>
+    </section>
 
     <!-- ACTIONS -->
     <div class="actions">
-      <button (click)="closeModal()" class="cancel">Cancel</button>
-      <button (click)="confirmPayment()" [disabled]="change < 0" class="confirm">
+      <button class="cancel" (click)="closeModal()">Cancel</button>
+      <button class="confirm" (click)="confirmPayment()" [disabled]="change < 0">
         Confirm Payment
       </button>
     </div>

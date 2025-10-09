@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
@@ -12,6 +12,8 @@ import { PostService } from '../../../services/PostService/post.service';
 
 import { ViewSettleComponent } from '../view-settle/view-settle.component';
 import { PrintReceiptComponent } from '../print-receipt/print-receipt.component';
+import { Subscription } from 'rxjs';
+import { ResetService } from '../../../services/ResetService/reset.service';
 
 @Component({
   selector: 'app-cashier-dashboard',
@@ -20,7 +22,7 @@ import { PrintReceiptComponent } from '../print-receipt/print-receipt.component'
   templateUrl: './cashier-dashboard.component.html',
   styleUrls: ['./cashier-dashboard.component.scss'],
 })
-export class CashierDashboardComponent implements OnInit {
+export class CashierDashboardComponent implements OnInit, OnDestroy {
   // --------------------------
   // UI States
   // --------------------------
@@ -38,6 +40,9 @@ export class CashierDashboardComponent implements OnInit {
     piecePrice?: number;
     sheetsPerBox?: number;
     piecesPerSheet?: number;
+    boxQuantity: number;
+    sheetQuantity: number;
+    pieceQuantity: number;
   })[] = [];
 
   // Cart items (aligned with backend)
@@ -54,7 +59,11 @@ export class CashierDashboardComponent implements OnInit {
   categories: Category[] = [];
   selectedCategory: string = '';
 
-  constructor(private getService: GetService, private postService: PostService) {}
+  private resetSubscription!: Subscription
+  constructor(private getService: GetService, 
+    private postService: PostService,
+    private resetService: ResetService
+  ) {}
 
   // --------------------------
   // Lifecycle
@@ -63,6 +72,17 @@ export class CashierDashboardComponent implements OnInit {
     this.getLoggedInUser();
     this.getAllProducts();
     this.getAllCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.resetSubscription.unsubscribe();
+  }
+
+  resetComponent(): void {
+    this.getService.getAllInventoriesAsync().subscribe(response => {
+      this.products = response.message
+
+    })
   }
 
   // --------------------------
@@ -85,6 +105,9 @@ export class CashierDashboardComponent implements OnInit {
           piecePrice: p.piecePrice,
           sheetsPerBox: p.sheetsPerBox,
           piecesPerSheet: p.piecesPerSheet,
+          boxQuantity: p.boxQuantity,
+          sheetQuantity: p.sheetQuantity,
+          pieceQuantity: p.pieceQuantity
         }));
       },
       error: (err) => console.error(err.error),
@@ -182,10 +205,15 @@ export class CashierDashboardComponent implements OnInit {
       // Reset UI states
       p.selected = false;
       p.quantity = 0;
-      p.tempUnitType = undefined;
+      // reset to Box explicitly (requested behavior)
+      p.tempUnitType = 'Box';
     });
   }
 
+  /**
+   * Called when any cart numeric field changes (qty or unit price).
+   * Keeps values sane and ensures a unit price exists if empty.
+   */
   onCartItemChange(item: any) {
     if (!item.quantity || item.quantity < 1) item.quantity = 1;
     if (!item.unitPrice || item.unitPrice < 0) item.unitPrice = 0;
@@ -193,6 +221,32 @@ export class CashierDashboardComponent implements OnInit {
     const product = this.products.find((p) => p.productID === item.productID);
     if (product && (!item.unitPrice || item.unitPrice === 0)) {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
+    }
+
+    // Ensure quantity doesn't exceed available stock for selected unit
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity > max) {
+      item.quantity = max;
+    }
+  }
+
+  /**
+   * Called specifically when the user changes the unit type for a cart item.
+   * This will update the unit price to the resolved price for the new unit.
+   * (We intentionally overwrite unitPrice here so the price reflects the unit selection.)
+   */
+  onCartItemUnitTypeChange(item: any) {
+    const product = this.products.find((p) => p.productID === item.productID);
+    if (!product) return;
+
+    // set the unit price to the resolved price for the new unit type
+    const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
+    item.unitPrice = resolved;
+
+    // also clamp quantity to max available for the new unit if necessary
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity > max) {
+      item.quantity = max;
     }
   }
 
@@ -216,6 +270,18 @@ export class CashierDashboardComponent implements OnInit {
 
   getGrossPrice(): number {
     return +(this.getTotalPrice() * 1.12);
+  }
+
+  getMaxQuantity(item: any): number {
+    const product = this.products.find(p => p.productID === item.productID);
+    if (!product) return Infinity;
+
+    switch (item.unitType) {
+      case 'Box': return product.boxQuantity || 0;
+      case 'Sheet': return product.sheetQuantity || 0;
+      case 'Piece': return product.pieceQuantity || 0;
+      default: return Infinity;
+    }
   }
 
   // --------------------------
@@ -272,6 +338,7 @@ export class CashierDashboardComponent implements OnInit {
       next: () => {
         alert('Transaction successful.');
         this.openPrintReceiptForm();
+        this.getAllProducts();
       },
       error: (err) => {
         console.error('Error creating transaction:', err);
@@ -292,6 +359,8 @@ export class CashierDashboardComponent implements OnInit {
 
   closeViewSettle() {
     this.viewSettle = null;
+    this.getAllProducts();
+    this.clearSelection();
   }
 
   openPrintReceiptForm() {

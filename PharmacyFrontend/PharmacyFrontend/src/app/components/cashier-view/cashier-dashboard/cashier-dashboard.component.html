@@ -1,141 +1,135 @@
-<main class="wrapper">
+<main class="wrapper modern">
   <div class="containers">
-    <!-- LEFT SIDE: Product Display -->
-    <div class="grid-items product-display">
+    <!-- LEFT: Product Display -->
+    <section class="grid-items product-display">
       <div class="prod-control">
         <input
           type="text"
-          placeholder="Search product by name or item code"
+          placeholder="🔍 Search by name or item code"
           [(ngModel)]="searchTerm"
         />
 
-        <select name="prod" id="prod" [(ngModel)]="selectedCategory">
+        <select [(ngModel)]="selectedCategory">
           <option value="">All Categories</option>
-          <option *ngFor="let cat of categories" [value]="cat.categoryName">{{ cat.categoryName }}</option>
+          <option *ngFor="let cat of categories" [value]="cat.categoryName">
+            {{ cat.categoryName }}
+          </option>
         </select>
       </div>
 
-      <table class="product-table">
-        <thead>
-          <tr>
-            <th style="width: 60px">Select</th>
-            <th>Item</th>
-            <th>Batch Number</th>
-            <th>Unit Type</th>
-            <th style="width: 140px">Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let product of filteredProducts; let i = index">
-            <td>
-              <input type="checkbox" [(ngModel)]="product.selected" />
-            </td>
-            <td>{{ product.productName }}</td>
-            <td>{{product.batchNumber}}</td>
-            <td>
-              <!-- NOTE: Use singular "Piece" to match backend "Piece" -->
-              <select id="unit-type-{{i}}" [(ngModel)]="product.tempUnitType">
-                <option value="Box">Box</option>
-                <option value="Sheet">Sheet</option>
-                <option value="Piece">Piece</option>
-              </select>
-            </td>
-            <td>
-              <!-- show computed price for the currently selected unit type -->
-              {{ getProductUnitPriceDisplay(product) | currency:'PHP':'symbol':'1.2-2' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <button class="btn-add" (click)="addSelectedProducts()">Add</button>
-    </div>
-
-    <!-- RIGHT SIDE: Compute Panel -->
-    <div class="grid-items product-compute">
-      <div class="compute-header">
-        <input type="number" placeholder="Type the number then hit enter" />
+      <div class="table-wrapper">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Item</th>
+              <th>Batch No.</th>
+              <th>Unit Type</th>
+              <th>Price</th>
+              <th>Box</th>
+              <th>Sheet</th>
+              <th>Piece</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filteredProducts; let i = index">
+              <td><input type="checkbox" [(ngModel)]="product.selected" /></td>
+              <td>{{ product.productName }}</td>
+              <td>{{ product.batchNumber }}</td>
+              <td>
+                <select [(ngModel)]="product.tempUnitType">
+                  <option value="Box">Box</option>
+                  <option value="Sheet">Sheet</option>
+                  <option value="Piece">Piece</option>
+                </select>
+              </td>
+              <td>{{ getProductUnitPriceDisplay(product) | currency:'PHP':'symbol':'1.2-2' }}</td>
+              <td>{{ product.boxQuantity }}</td>
+              <td>{{ product.sheetQuantity }}</td>
+              <td>{{ product.pieceQuantity }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <table class="compute-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Item</th>
-            <th>Unit Type</th>
-            <th style="width: 110px">Qty</th>
-            <th style="width: 140px">Unit Price</th>
-            <th style="width: 160px">Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of selectedProducts; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ item.productName }}</td>
-            <td>
-              <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemChange(item)">
-                <option value="Box">Box</option>
-                <option value="Sheet">Sheet</option>
-                <option value="Piece">Piece</option>
-              </select>
-            </td>
-            <td>
-              <input
-                type="number"
-                min="1"
-                [(ngModel)]="item.quantity"
-                (ngModelChange)="onCartItemChange(item)"
-              />
-            </td>
-            <td>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                [(ngModel)]="item.unitPrice"
-                (ngModelChange)="onCartItemChange(item)"
-              />
-            </td>
-            <td>
-              {{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}
-            </td>
-          </tr>
-          <tr *ngIf="selectedProducts.length === 0">
-            <td colspan="6" style="text-align:center; padding: 12px;">
-              No items in cart
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <button class="btn-primary" (click)="addSelectedProducts()">➕ Add Selected</button>
+    </section>
+
+    <!-- RIGHT: Cart Compute Panel -->
+    <section class="grid-items product-compute">
+
+      <div class="table-wrapper">
+        <table class="compute-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Unit</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedProducts; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.productName }}</td>
+              <td>
+                <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemUnitTypeChange(item)">
+                  <option value="Box">Box</option>
+                  <option value="Sheet">Sheet</option>
+                  <option value="Piece">Piece</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  min="1"
+                  [max]="getMaxQuantity(item)"
+                  [(ngModel)]="item.quantity"
+                  (ngModelChange)="onCartItemChange(item)"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  [(ngModel)]="item.unitPrice"
+                  (ngModelChange)="onCartItemChange(item)"
+                />
+              </td>
+              <td>{{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}</td>
+            </tr>
+
+            <tr *ngIf="selectedProducts.length === 0">
+              <td colspan="6" class="no-cart">No items in cart</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="bottom-compute">
-        <div class="bot-grid">
-          <div class="total-items">
-            <p>Total Item(s): <span>{{ getTotalItems() }}</span></p>
+        <div class="totals">
+          <div>
+            <p>Total Items: <span>{{ getTotalItems() }}</span></p>
           </div>
-          <div class="gross-items">
-            <div class="gross">
-              <p>Price:</p>
-              <p>: {{ getTotalPrice() | currency:'PHP':'symbol':'1.2-2' }}</p>
-            </div>
-            <div class="gross">
-              <p>Gross Price (inc 12% Tax)</p>
-              <p class="amount">{{ getGrossPrice() | currency:'PHP':'symbol':'1.2-2' }}</p>
-            </div>
+          <div>
+            <p>Subtotal: {{ getTotalPrice() | currency:'PHP':'symbol':'1.2-2' }}</p>
+            <p>Gross (inc. 12% VAT): <strong>{{ getGrossPrice() | currency:'PHP':'symbol':'1.2-2' }}</strong></p>
           </div>
         </div>
 
         <div class="bottom-btn">
-          <button class="btn-print" (click)="openPrintReceiptForm()">Print</button>
-          <button class="btn-cancel" (click)="clearSelection()">Cancel</button>
-          <button class="btn-settle" (click)="openViewSettleForm()">Settle</button>
+          <button class="btn-print" (click)="openPrintReceiptForm()">🖨️ Print</button>
+          <button class="btn-cancel" (click)="clearSelection()">❌ Cancel</button>
+          <button class="btn-settle" (click)="openViewSettleForm()">💰 Settle</button>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </main>
 
-<!-- Modals -->
 <div class="modal-overlay" *ngIf="viewSettle">
   <app-view-settle
     *ngIf="viewSettle"
