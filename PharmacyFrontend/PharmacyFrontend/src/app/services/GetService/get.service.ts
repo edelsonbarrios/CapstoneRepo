@@ -137,6 +137,9 @@ export class GetService {
   getAllAvailableInventoriesAsync() : Observable<Inventory[]> {
     return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoryAvailable`);
   }
+  getInventoryDashboardValues() : Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryDashboard`);
+  }
   //Inventory Service End
 
   //Stock Movement Service

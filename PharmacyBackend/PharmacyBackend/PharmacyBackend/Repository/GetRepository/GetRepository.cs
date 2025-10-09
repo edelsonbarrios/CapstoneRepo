@@ -560,6 +560,7 @@ namespace PharmacyBackend.Repository.GET
             return await _context.Inventory
                 .Include(i => i.Product)
                 .Where(i => i.ExpirationDate < DateTime.UtcNow)
+                .Take(4)
                 .ToListAsync();
         }
 
@@ -578,7 +579,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Inventory
                 .Include(i => i.Product)
-                .Where(i => i.BoxQuantity <= i.ReorderLevel)
+                .Where(i => i.BoxQuantity <= i.ReorderLevel && i.IsActive == true)
                 .ToListAsync();
         }
         #endregion

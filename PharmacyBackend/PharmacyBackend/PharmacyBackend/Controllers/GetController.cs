@@ -29,7 +29,7 @@ namespace PharmacyBackend.Controllers
 
         #region DashBoardInventoryMan
 
-        [HttpGet("dashboard/inventory")]
+        [HttpGet("InventoryDashboard")]
         public async Task<IActionResult> GetInventoryDashboard()
         {
             try

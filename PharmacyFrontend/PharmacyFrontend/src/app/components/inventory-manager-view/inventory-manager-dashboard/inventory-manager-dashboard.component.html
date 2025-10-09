@@ -12,27 +12,27 @@
   <div class="first-container">
     <div class="grid-items">
       <h3>Total Active Products</h3>
-      <h2 style="color: rgb(68, 189, 44);">Sample Number</h2>
+      <h2 style="color: rgb(68, 189, 44);">{{inventoryDashboard.totalActiveProducts}}</h2>
     </div>
 
     <div class="grid-items">
-      <h3>Total Inventoy Items</h3>
-      <h2 style="color: rgb(49, 156, 255);">Sample Number</h2>
+      <h3>Total Inventory Items</h3>
+      <h2 style="color: rgb(49, 156, 255);">{{inventoryDashboard.totalInventoryItems}}</h2>
     </div>
 
     <div class="grid-items">
       <h3>Critical Stock</h3>
-      <h2 style="color: #c0392b;">Sample Number</h2>
+      <h2 style="color: #c0392b;">{{inventoryDashboard.criticalStockCount}}</h2>
     </div>
 
     <div class="grid-items">
       <h3>Expiring Soon</h3>
-      <h2 style="color: #d19618;">Sample Number</h2>
+      <h2 style="color: #d19618;">{{inventoryDashboard.nearExpiryCount}}</h2>
     </div>
 
     <div class="grid-items">
       <h3>Expired Stock</h3>
-      <h2 style="color: #c0392b;">Sample Number</h2>
+      <h2 style="color: #c0392b;">{{inventoryDashboard.expiredStockCount}}</h2>
     </div>
   </div>
 
@@ -52,23 +52,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="stock-box">Sample Stock</span></td>
-            <td>Sample Reorder</td>
-          </tr>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="stock-box">Sample Stock</span></td>
-            <td>Sample Reorder</td>
-          </tr>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="stock-box">Sample Stock</span></td>
-            <td>Sample Reorder</td>
+          <tr *ngFor="let i of inventoryDashboard.criticalStockItems">
+            <td>{{i.productName}}</td>
+            <td>{{i.batchNumber}}</td>
+            <td><span class="stock-box">{{i.totalPiecesAvailable}}</span></td>
+            <td>{{i.reorderLevel}}</td>
           </tr>
         </tbody>
       </table>
@@ -87,23 +75,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="expiry-date">Sample Date</span></td>
-            <td>Sample Reorder</td>
-          </tr>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="expiry-date">Sample Date</span></td>
-            <td>Sample Reorder</td>
-          </tr>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="expiry-date">Sample Date</span></td>
-            <td>Sample Reorder</td>
+          <tr *ngFor="let i of inventoryDashboard.nearExpiryItems">
+            <td>{{i.productName}}</td>
+            <td>{{i.batchNumber}}</td>
+            <td><span class="expiry-date" >{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
+            <td>{{i.totalPiecesAvailable}}</td>
           </tr>
         </tbody>
       </table>
@@ -126,29 +102,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="expiry-date">Sample Date</span></td>
-            <td>Sample Box</td>
-            <td>Sample Sheet</td>
-            <td>Sample Piece</td>
-          </tr>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="expiry-date">Sample Date</span></td>
-            <td>Sample Box</td>
-            <td>Sample Sheet</td>
-            <td>Sample Piece</td>
-          </tr>
-          <tr>
-            <td>Sample Product</td>
-            <td>Sample Batch</td>
-            <td><span class="expiry-date">Sample Date</span></td>
-            <td>Sample Box</td>
-            <td>Sample Sheet</td>
-            <td>Sample Piece</td>
+          <tr *ngFor="let i of inventoryDashboard.expiredStockItems">
+            <td>{{i.productName}}</td>
+            <td>{{i.batchNumber}}</td>
+            <td><span class="expiry-date">{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
+            <td>{{i.boxQuantity}}</td>
+            <td>{{i.sheetQuantity}}</td>
+            <td>{{i.pieceQuantity}}</td>
           </tr>
         </tbody>
       </table>
