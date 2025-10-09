@@ -1,4 +1,4 @@
-import { CurrencyPipe, NgFor } from '@angular/common';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../../../models/product-models/product';
 import { GetService } from '../../../../services/GetService/get.service';
@@ -10,7 +10,7 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
 @Component({
   selector: 'app-assign-products-supplier',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, NgFor],
+  imports: [CurrencyPipe, FormsModule, NgFor, NgIf],
   templateUrl: './assign-products-supplier.component.html',
   styleUrl: './assign-products-supplier.component.scss'
 })
@@ -18,6 +18,7 @@ export class AssignProductsSupplierComponent implements OnInit{
   @Input() supplier : Supplier = new Supplier();
   @Output() close = new EventEmitter<void>();
   products : Product[] = [];
+  showSuccessAlert: boolean = false;
 
   constructor(
     private getService : GetService,
@@ -56,8 +57,7 @@ export class AssignProductsSupplierComponent implements OnInit{
 
     this.updateService.assignProductsToSupplierAsync(requestPayload).subscribe({
       next: res => {
-        alert(`${res.message}`);
-        this.close.emit();
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error}`);
@@ -65,5 +65,10 @@ export class AssignProductsSupplierComponent implements OnInit{
         console.log(`${err.error.message}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.close.emit();
   }
 }

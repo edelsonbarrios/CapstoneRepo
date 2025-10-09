@@ -70,6 +70,19 @@
             box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
           }
         }
+
+        // Error state styling
+        &.error {
+          input {
+            border: 1px solid red;
+          }
+
+          .error-message {
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+          }
+        }
       }
 
       /* Make email + address span across two columns */
@@ -112,6 +125,58 @@
         &:hover {
           background: #1e40af;
         }
+      }
+    }
+  }
+}
+
+// Success Alert Styling
+.success-alert {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  width: 400px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  
+  .alert-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    background: #28a745;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .alert-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 25px;
+    font-weight: 500;
+  }
+  
+  .alert-footer {
+    display: flex;
+    justify-content: flex-end;
+    
+    .ok-btn {
+      padding: 8px 24px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #0066dd;
       }
     }
   }
