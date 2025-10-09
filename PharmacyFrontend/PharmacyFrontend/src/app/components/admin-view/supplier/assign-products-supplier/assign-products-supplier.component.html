@@ -1,4 +1,4 @@
-<div class="modal-content">
+<div class="modal-content" *ngIf="!showSuccessAlert">
   <span class="close" (click)="close.emit()">&times;</span>
   <h2>Select Products</h2>
 
@@ -36,5 +36,14 @@
   <div class="actions">
     <button class="btn-secondary" (click)="close.emit();">Cancel</button>
     <button class="btn-primary" (click)="assignProducts()">Add Selected</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Product has been successfully Assigned</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

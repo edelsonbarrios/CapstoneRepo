@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
   <div class="modal-header">
     <div class="icon-title">
       <span class="icon">👤</span>
@@ -12,24 +12,28 @@
   <div class="modal-body">
 
     <div class="form-grid">
-      <div class="form-group">
+      <div class="form-group" [class.error]="supplierNameError">
         <label for="supplierName">Supplier Name <span class="required">*</span></label>
         <input type="text" id="supplierName" placeholder="e.g., Dyna Drug" [(ngModel)]="newSupplier.supplierName">
+        <p class="error-message" *ngIf="supplierNameError">{{ supplierNameError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="contactNumberError">
         <label for="contactNumber">Contact Number <span class="required">*</span></label>
         <input type="text" id="contactNumber" placeholder="e.g., 09xx xxx xxxx" [(ngModel)]="newSupplier.contactNumber">
+        <p class="error-message" *ngIf="contactNumberError">{{ contactNumberError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="emailError">
         <label for="email">Email Address</label>
         <input type="email" id="email" placeholder="examplesupplier@gmail.com" [(ngModel)]="newSupplier.email">
+        <p class="error-message" *ngIf="emailError">{{ emailError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="addressError">
         <label for="address">Address</label>
         <input type="text" id="address" placeholder="City, Province" [(ngModel)]="newSupplier.address">
+        <p class="error-message" *ngIf="addressError">{{ addressError }}</p>
       </div>
     </div>
   </div>
@@ -37,5 +41,14 @@
   <div class="modal-footer">
     <button class="btn cancel" (click)="closeCreateSupplierForm()">Cancel</button>
     <button class="btn save" (click)="createNewSupplier()">Save</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Supplier has been Added Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>
