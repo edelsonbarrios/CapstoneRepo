@@ -1,5 +1,4 @@
-<div class="modal">
-
+<div class="modal" *ngIf="!showSuccessAlert">
   <!-- MODAL HEADER -->
   <div class="modal-header">
     <div class="modal-title">
@@ -8,24 +7,27 @@
     </div>
     <div class="desc">Fill in the details to register a new product.</div>
   </div>
-
   <!-- MODAL BODY -->
   <div class="modal-body">
-
    <div class="form">
-
     <div class="form-group">
       <label>Name</label>
       <input type="text" [(ngModel)]="newCategory.categoryName">
     </div>
-
    </div>
-
   </div>
-
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
     <button class="btn-save" (click)="createCategory()">Save</button>
     <button class="btn-cancel" (click)="closeCreateCategoryForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Category has been Added Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

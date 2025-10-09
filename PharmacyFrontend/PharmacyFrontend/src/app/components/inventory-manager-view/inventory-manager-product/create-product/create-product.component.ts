@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CreateProductRequest } from '../../../../models/product-models/create-product-request';
 import { Category } from '../../../../models/category-models/category';
 import { GetService } from '../../../../services/GetService/get.service';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Brand } from '../../../../models/brand-models/brand';
 import { Generic } from '../../../../models/generic-models/generic';
 import { TypeModel } from '../../../../models/type-models/type';
@@ -16,7 +16,7 @@ import { Supplier } from '../../../../models/supplier-models/supplier';
 @Component({
   selector: 'app-create-product',
   standalone: true,
-  imports: [FormsModule, NgFor],
+  imports: [FormsModule, NgFor, NgIf],
   templateUrl: './create-product.component.html',
   styleUrl: './create-product.component.scss'
 })
@@ -30,6 +30,7 @@ export class CreateProductComponent implements OnInit{
   formulations : Formulation[] = [];
   classifications : Classification[] = [];
   suppliers : Supplier[] = [];
+  showSuccessAlert: boolean = false;
 
   constructor(
     private postService : PostService,
@@ -142,8 +143,7 @@ export class CreateProductComponent implements OnInit{
     };
     this.postService.createProductAsync(requestPayload).subscribe({
       next: res => {
-        alert(`Product created successfully.`);
-        this.closeForm.emit();
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error}`);
@@ -153,5 +153,10 @@ export class CreateProductComponent implements OnInit{
 
   closeCreateProductForm() {
     this.closeForm.emit();
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeCreateProductForm();
   }
 }
