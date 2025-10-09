@@ -15,6 +15,7 @@ export class CreateAccountComponent {
   @Input() employeeId : number = 0;
   @Output() closeForm = new EventEmitter<void>();
   newAccount : Account = new Account();
+  showSuccessAlert: boolean = false;
   
   // Error properties
   usernameError: string = '';
@@ -60,7 +61,7 @@ export class CreateAccountComponent {
         console.log(`${res.message}`);
         this.newAccount.username = '';
         this.newAccount.password = '';
-        this.closeCreateAccountForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(err.error.message);
@@ -68,5 +69,10 @@ export class CreateAccountComponent {
         this.newAccount.password = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeCreateAccountForm();
   }
 }
