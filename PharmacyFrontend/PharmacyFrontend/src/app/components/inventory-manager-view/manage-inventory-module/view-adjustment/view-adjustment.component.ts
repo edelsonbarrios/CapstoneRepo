@@ -1,13 +1,20 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
+import { CommonModule, DatePipe } from '@angular/common';
+import { GetService } from '../../../../services/GetService/get.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-view-adjustment',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, DatePipe, FormsModule],
   templateUrl: './view-adjustment.component.html',
   styleUrl: './view-adjustment.component.scss'
 })
 export class ViewAdjustmentComponent {
  @Input() viewAdjust: StockMovement = new StockMovement();
+
+ constructor(
+  private getService: GetService
+ ) {}
 }

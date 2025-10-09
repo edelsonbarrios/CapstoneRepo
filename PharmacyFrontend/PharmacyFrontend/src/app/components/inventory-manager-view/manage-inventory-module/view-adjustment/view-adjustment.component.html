@@ -8,17 +8,17 @@
     <div class="header-grid">
       <div class="batch">
         <p>Batch Number</p>
-        <h2>Sample Batch</h2>
+        <h2>{{viewAdjust.batchNumber}}</h2>
       </div>
 
       <div class="movement">
         <p>Movement Type</p>
-        <h2>Sample Movement Type</h2>
+        <h2>{{viewAdjust.movementType}}</h2>
       </div>
 
       <div class="date">
         <p>Date & Time</p>
-        <h2>Sample Date</h2>
+        <h2>{{viewAdjust.movementDate | date: 'dd-MM-yyyy'}}</h2>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
 
     <div class="product-info">
       <p>Product Name</p>
-      <input type="text" />
+      <input type="text" [(ngModel)]="viewAdjust.productName">
     </div>
 
     <p>Boxes</p>
@@ -37,17 +37,17 @@
     <div class="grid-container">
       <div class="grid-items">
         <p>Before</p>
-        <input type="number">
+        <input type="number" [(ngModel)]="viewAdjust.boxQuantityBefore">
       </div>
 
       <div class="grid-items">
         <p>Changed</p>
-        <input type="number" class="change">
+        <input type="number" class="change" [(ngModel)]="viewAdjust.boxQuantityChanged">
       </div>
 
       <div class="grid-items">
         <p>After</p>
-        <input type="number" class="after">
+        <input type="number" class="after" [(ngModel)]="viewAdjust.boxQuantityAfter">
       </div>
     </div>
 
@@ -56,17 +56,17 @@
     <div class="grid-container">
       <div class="grid-items">
         <p>Before</p>
-        <input type="number">
+        <input type="number" [(ngModel)]="viewAdjust.sheetQuantityBefore">
       </div>
 
       <div class="grid-items">
         <p>Changed</p>
-        <input type="number" class="change">
+        <input type="number" class="change" [(ngModel)]="viewAdjust.sheetQuantityChanged">
       </div>
 
       <div class="grid-items">
         <p>After</p>
-        <input type="number" class="after">
+        <input type="number" class="after" [(ngModel)]="viewAdjust.sheetQuantityAfter">
       </div>
     </div>
 
@@ -75,17 +75,17 @@
     <div class="grid-container">
       <div class="grid-items">
         <p>Before</p>
-        <input type="number">
+        <input type="number" [(ngModel)]="viewAdjust.pieceQuantityBefore">
       </div>
 
       <div class="grid-items">
         <p>Changed</p>
-        <input type="number" class="change">
+        <input type="number" class="change" [(ngModel)]="viewAdjust.pieceQuantityChanged">
       </div>
 
       <div class="grid-items">
         <p>After</p>
-        <input type="number" class="after">
+        <input type="number" class="after" [(ngModel)]="viewAdjust.pieceQuantityAfter">
       </div>
     </div>
   </div>
@@ -95,7 +95,7 @@
 
     <div class="reference-num">
       <p>Reference Number</p>
-      <input type="number"/>
+      <input type="text" [(ngModel)]="viewAdjust.referenceNumber">
     </div>
     
     <div class="notes">

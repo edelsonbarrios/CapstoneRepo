@@ -70,8 +70,8 @@ export class ManageStockAdjustmentComponent implements OnInit{
     this.stockAdjust = stockMovement;
   }
 
-  openViewAdjustmentForm(){
-    this.viewAdjust = new StockMovement;
+  openViewAdjustmentForm(request: StockMovement){
+    this.viewAdjust = request;
   }
 
   closeStockAdjustmentForm() {
