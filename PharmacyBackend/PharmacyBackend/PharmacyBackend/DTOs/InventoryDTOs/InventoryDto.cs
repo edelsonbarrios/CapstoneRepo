@@ -1,9 +1,12 @@
-﻿namespace PharmacyBackend.DTOs.InventoryDTOs
+﻿using PharmacyBackend.DTOs.ProductDTOs;
+
+namespace PharmacyBackend.DTOs.InventoryDTOs
 {
     public class InventoryDto
     {
         public int InventoryID { get; set; }
         public int ProductID { get; set; }
+        public ProductDto Product { get; set; }
         public string ProductName { get; set; } = string.Empty;
         public string BatchNumber { get; set; } = string.Empty;
         public DateTime ManufacturingDate { get; set; }

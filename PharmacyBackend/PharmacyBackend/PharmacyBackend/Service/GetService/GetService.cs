@@ -879,35 +879,80 @@ namespace PharmacyBackend.Service.GetService
         #region Inventory 
         public async Task<IEnumerable<InventoryDto>> GetAllInventoryAsync()
         {
+            // Get inventories from repository (ensure repo returns Product navigation if possible)
             var inventories = await _getRepo.GetAllInventoryAsync();
 
-            foreach(var inv in inventories)
+            // Deactivate inventories with invalid total pieces (existing behavior)
+            foreach (var inv in inventories)
             {
-                if(inv.TotalPiecesAvailable < 0)
+                if (inv.TotalPiecesAvailable < 0)
                 {
                     inv.IsActive = false;
                     await _updateRepo.UpdateInventoryAsync(inv);
                 }
             }
 
-            return inventories.Select(i => new InventoryDto
+            // Map to DTOs (only fields present on InventoryDto)
+            var result = inventories.Select(i => new InventoryDto
             {
                 InventoryID = i.InventoryID,
                 ProductID = i.ProductID,
+
+                // Map nested Product -> ProductDto (safe null checks)
+                Product = i.Product == null ? null : new ProductDto
+                {
+                    ProductID = i.Product.ProductID,
+                    ProductName = i.Product.ProductName,
+                    CategoryID = i.Product.CategoryID,
+                    BrandID = i.Product.BrandID,
+                    GenericID = i.Product.GenericID,
+                    FormulationID = i.Product.FormulationID,
+                    ClassificationID = i.Product.ClassificationID,
+                    TypeID = i.Product.TypeID,
+                    IsActive = i.Product.IsActive,
+                    DateCreated = i.Product.DateCreated,
+                    SheetsPerBox = i.Product.SheetsPerBox,
+                    PiecesPerSheet = i.Product.PiecesPerSheet,
+                    BoxPrice = i.Product.BoxPrice,
+                    SheetPrice = i.Product.SheetPrice,
+                    PiecePrice = i.Product.PiecePrice,
+                    ReorderLevel = i.Product.ReorderLevel,
+
+                    // Derived product properties (guarded against null Inventory collections)
+                    ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+                    NearExpiryStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsNearExpiry && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+                    IsCriticalStock = (i.Product.Inventory?.Where(x => x.IsActive && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0) <= i.Product.ReorderLevel,
+                    HasExpiredStock = i.Product.Inventory?.Any(x => x.IsActive && x.IsExpired) ?? false,
+
+                    // Related names
+                    CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
+                    BrandName = i.Product.Brand?.BrandName ?? string.Empty,
+                    GenericName = i.Product.Generic?.GenericName ?? string.Empty,
+                    FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
+                    ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
+                    TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
+                },
+
+                // Inventory-specific fields
                 ProductName = i.Product?.ProductName ?? string.Empty,
                 BatchNumber = i.BatchNumber,
                 ManufacturingDate = i.ManufacturingDate,
                 ExpirationDate = i.ExpirationDate,
+
                 BoxQuantity = i.BoxQuantity,
                 SheetQuantity = i.SheetQuantity,
                 PieceQuantity = i.PieceQuantity,
+
                 SheetsPerBox = i.SheetsPerBox,
                 PiecesPerSheet = i.PiecesPerSheet,
+
                 ReorderLevel = i.ReorderLevel,
                 CostPrice = i.CostPrice,
+
                 BoxPrice = i.BoxPrice,
                 SheetPrice = i.SheetPrice,
                 PiecePrice = i.PiecePrice,
+
                 DateAdded = i.DateAdded,
                 IsActive = i.IsActive,
                 IsExpired = i.IsExpired,
@@ -915,7 +960,10 @@ namespace PharmacyBackend.Service.GetService
                 IsCriticalStock = i.IsCriticalStock,
                 IsMultiUnit = i.IsMultiUnit,
                 TotalPiecesAvailable = i.TotalPiecesAvailable
-            });
+            })
+            .ToList();
+
+            return result;
         }
         public async Task<List<InventoryDto>> GetAllAvailableInventoryAsync()
         {

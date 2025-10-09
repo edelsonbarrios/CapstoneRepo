@@ -43,13 +43,37 @@
         <p>{{viewProduct.categoryName}}</p>
       </div>
 
+      <div class="form-group">
+        <label>Sheets Per Box</label>
+        <p>{{viewProduct.sheetsPerBox}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Box Price</label>
+        <p>{{viewProduct.boxPrice}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Sheet Price</label>
+        <p>{{viewProduct.sheetPrice}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Piece Price</label>
+        <p>{{viewProduct.piecePrice}}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Reorder Level</label>
+        <p>{{viewProduct.reorderLevel}}</p>
+      </div>
+
     </div>
 
   </div>
 
   <!-- VIEW PRODUCT FOOTER -->
   <div class="modal-footer">
-    <button class="btn-update">Update</button>
     <button class="btn-cancel" (click)="closeViewProductForm()">Cancel</button>
   </div>
 </div>

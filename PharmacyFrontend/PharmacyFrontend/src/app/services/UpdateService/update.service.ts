@@ -13,6 +13,7 @@ import { Classification } from '../../models/classification-models/classificatio
 import { TypeModel } from '../../models/type-models/type';
 import { AssignProductSupplierRequest } from '../../models/supplier-models/assign-product-supplier';
 import { Supplier } from '../../models/supplier-models/supplier';
+import { UpdateProductRequest } from '../../models/product-models/update-product-request';
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +97,9 @@ export class UpdateService {
  //Product Service
   archiveProductByIdAsync(productId : number) : Observable<{message: string}> {
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveProduct?productId=${productId}`, {});
+  }
+  updateProductAsync(productId: number, request: UpdateProductRequest) : Observable<any> {
+    return this.httpClient.put<any>(`${this.apiUrl}/Put/Product?id=${productId}`, request);
   }
  //Product Service End
 }

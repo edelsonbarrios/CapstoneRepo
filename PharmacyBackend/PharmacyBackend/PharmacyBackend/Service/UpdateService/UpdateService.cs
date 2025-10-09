@@ -295,9 +295,6 @@ namespace PharmacyBackend.Service.UpdateService
             var formulationId = await GetFormulationIdByNameAsync(dto.FormulationName);
             var classificationId = await GetClassificationIdByNameAsync(dto.ClassificationName);
             var typeId = await GetTypeIdByNameAsync(dto.TypeName);
-            var supplierId = !string.IsNullOrEmpty(dto.SupplierName)
-                ? await GetSupplierIdByNameAsync(dto.SupplierName)
-                : null;
 
             // Validate that all required entities exist
             if (categoryId == null)
@@ -312,8 +309,6 @@ namespace PharmacyBackend.Service.UpdateService
                 throw new ArgumentException($"Classification '{dto.ClassificationName}' not found.");
             if (typeId == null)
                 throw new ArgumentException($"Type '{dto.TypeName}' not found.");
-            if (!string.IsNullOrEmpty(dto.SupplierName) && supplierId == null)
-                throw new ArgumentException($"Supplier '{dto.SupplierName}' not found.");
 
             // Update the product with resolved IDs
             existing.ProductName = dto.ProductName;
@@ -323,7 +318,13 @@ namespace PharmacyBackend.Service.UpdateService
             existing.FormulationID = formulationId.Value;
             existing.ClassificationID = classificationId.Value;
             existing.TypeID = typeId.Value;
-            existing.IsActive = dto.IsActive;
+            existing.SheetsPerBox = dto.SheetsPerBox;
+            existing.PiecesPerSheet = dto.PiecesPerSheet;
+            existing.BoxPrice = dto.BoxPrice;
+            existing.SheetPrice = dto.SheetPrice;
+            existing.PiecePrice = dto.PiecePrice;
+            existing.ReorderLevel = dto.ReorderLevel;
+
 
             await _updateRepo.UpdateProductAsync(existing);
             return true;

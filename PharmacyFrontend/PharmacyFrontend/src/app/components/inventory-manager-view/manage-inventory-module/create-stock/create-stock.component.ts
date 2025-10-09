@@ -21,6 +21,7 @@ export class CreateStockComponent implements OnInit{
   @Output() closeForm = new EventEmitter<void>();
   products : Product[] = [];
   employee: Employee = new Employee();
+  selectedProduct : Product = new Product();
 
   constructor(
     private postService : PostService,
@@ -32,10 +33,22 @@ export class CreateStockComponent implements OnInit{
     this.getLoggedInEmployee();
   }
 
+  onSelectProduct(request: Product) {
+    this.selectedProduct = request;
+
+    this.createStock.sheetsPerBox = this.selectedProduct.sheetsPerBox;
+    this.createStock.piecesPerSheet = this.selectedProduct.piecesPerSheet;
+    this.createStock.reorderLevel = this.selectedProduct.reorderLevel;
+    this.createStock.boxPrice = this.selectedProduct.boxPrice;
+    this.createStock.sheetPrice = this.selectedProduct.sheetPrice;
+    this.createStock.piecePrice = this.selectedProduct.piecePrice;
+  }
+
   createInventory() {
     if(!this.createStock) return;
+    if(!this.selectedProduct) return;
     const requestPayload : CreateInventory = {
-      productName : this.createStock.productName,
+      productName : this.selectedProduct.productName,
       batchNumber: this.createStock.batchNumber,
       manufacturingDate : new Date(this.createStock.manufacturingDate).toISOString(),
       expirationDate : new Date(this.createStock.expirationDate).toISOString(),
@@ -60,6 +73,7 @@ export class CreateStockComponent implements OnInit{
       },
       error: err => {
         console.log(`${err.error}`);
+        console.log(requestPayload);
       }
     });
   }

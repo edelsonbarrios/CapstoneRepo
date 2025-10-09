@@ -493,16 +493,6 @@ export const routes: Routes = [
         data: { roles: ['Cashier'] },
       },
       {
-        path: 'cashier-header',
-        loadComponent: () => {
-          return import(
-            './components/cashier-view/cashier-header/cashier-header.component'
-          ).then((m) => m.CashierHeaderComponent);
-        },
-        canActivate: [authGuard],
-        data: { roles: ['Cashier'] },
-      },
-      {
         path: 'cashier-transaction',
         loadComponent: () => {
           return import(

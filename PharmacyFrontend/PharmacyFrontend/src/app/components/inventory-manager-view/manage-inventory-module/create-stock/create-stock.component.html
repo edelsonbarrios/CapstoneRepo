@@ -8,10 +8,9 @@
     <div class="form-grid">
 
       <div class="form-group">
-        <label>Product Name</label>
-        <select name="" [(ngModel)]="createStock.productName">
-          <option value="">Select Product</option>
-          <option *ngFor="let p of products" value="{{p.productName}}">{{p.productName}}</option>
+        <label>Product</label>
+        <select [(ngModel)]="selectedProduct" (ngModelChange)="onSelectProduct($event)">
+          <option *ngFor="let p of products" [ngValue]="p">{{p.productName}}</option>
         </select>
       </div>
 
@@ -21,23 +20,23 @@
       </div>
 
       <div class="form-group">
-        <label>Box Quantity</label>
+        <label>Box Quantity</label> 
         <input type="number" [(ngModel)]="createStock.boxQuantity">
       </div>
 
       <div class="form-group">
         <label>Sheets Per Box</label>
-        <input type="number" [(ngModel)]="createStock.sheetsPerBox">
+        <input type="number" [(ngModel)]="selectedProduct.sheetsPerBox">
       </div>
 
       <div class="form-group">
         <label>Piece Per Sheet</label>
-        <input type="number" [(ngModel)]="createStock.piecesPerSheet">
+        <input type="number" [(ngModel)]="selectedProduct.piecesPerSheet">
       </div>
 
       <div class="form-group">
         <label>Reorder Level</label>
-        <input type="number" [(ngModel)]="createStock.reorderLevel">
+        <input type="number" [(ngModel)]="selectedProduct.reorderLevel">
       </div>
 
       <div class="form-group">
@@ -57,26 +56,17 @@
 
       <div class="form-group">
         <label>Box Price*</label>
-        <input type="number" [(ngModel)]="createStock.boxPrice">
+        <input type="number" [(ngModel)]="selectedProduct.boxPrice">
       </div>
 
       <div class="form-group">
         <label>Sheet Price</label>
-        <input type="number" [(ngModel)]="createStock.sheetPrice">
+        <input type="number" [(ngModel)]="selectedProduct.sheetPrice">
       </div>
 
       <div class="form-group">
         <label>Piece Price</label>
-        <input type="number" [(ngModel)]="createStock.piecePrice">
-      </div>
-
-      <div class="form-group">
-        <label>Status</label>
-        <select id="status">
-          <option>In Stock</option>
-          <option>Low on Stock</option>
-          <option>Out of stock</option>
-        </select>
+        <input type="number" [(ngModel)]="selectedProduct.piecePrice">
       </div>
 
     </div>

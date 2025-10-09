@@ -1,7 +1,7 @@
 ﻿//DTOs/ProductDTOs/UpdateProductDto.cs
 namespace PharmacyBackend.DTOs.ProductDTOs
 {
-    public class UpdateProductDto : CreateProductDto
+    public class UpdateProductDto
     {
         public string ProductName { get; set; } = string.Empty;
         public string CategoryName { get; set; } = string.Empty;
@@ -10,9 +10,12 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public string FormulationName { get; set; } = string.Empty;
         public string ClassificationName { get; set; } = string.Empty;
         public string TypeName { get; set; } = string.Empty;
-        public string? SupplierName { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public bool IsActive { get; set; }
+        public int SheetsPerBox { get; set; }
+        public int PiecesPerSheet { get; set; }
+        public decimal BoxPrice { get; set; }
+        public decimal SheetPrice { get; set; }
+        public decimal PiecePrice { get; set; }
+        public int ReorderLevel { get; set; }
     }
 }
 

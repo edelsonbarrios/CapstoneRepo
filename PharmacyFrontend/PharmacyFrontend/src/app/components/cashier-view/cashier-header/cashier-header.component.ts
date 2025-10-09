@@ -8,17 +8,14 @@ import { LogInToken } from '../../shared/token';
 @Component({
   selector: 'app-cashier-header',
   standalone: true,
-  imports: [RouterLink,NgIf,ViewCashierProductsComponent],
+  imports: [RouterLink, NgIf, ViewCashierProductsComponent],
   templateUrl: './cashier-header.component.html',
-  styleUrl: './cashier-header.component.scss'
+  styleUrl: './cashier-header.component.scss',
 })
 export class CashierHeaderComponent {
-  viewCashierProduct ?: Product | null;
+  viewCashierProduct?: Product | null;
 
-  constructor(
-    private router : Router
-  ) {}
-  
+  constructor(private router: Router) {}
 
   openViewCashierProductForm() {
     this.viewCashierProduct = new Product();
@@ -30,6 +27,7 @@ export class CashierHeaderComponent {
 
   logOut() {
     localStorage.removeItem(LogInToken);
+    this.router.navigate(['/log-in'], { replaceUrl: true });
     this.router.navigateByUrl('/log-in');
   }
 }

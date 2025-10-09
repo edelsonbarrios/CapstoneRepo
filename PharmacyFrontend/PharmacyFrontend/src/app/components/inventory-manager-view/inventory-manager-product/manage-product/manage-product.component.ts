@@ -83,8 +83,13 @@ export class ManageProductComponent implements OnInit{
     this.viewProduct = product;
   }
 
-  openUpdateProductForm() {
-    this.updateProduct = new Product();
+  openUpdateProductForm(productToUpdate: Product) {
+    this.updateProduct = productToUpdate;
+  }
+
+  closeUpdateProductForm() {
+    this.updateProduct = null;
+    this.getAllProducts();
   }
 
   closeViewProductForm() {

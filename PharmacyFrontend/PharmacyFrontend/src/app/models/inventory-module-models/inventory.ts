@@ -1,6 +1,9 @@
+import { Product } from "../product-models/product";
+
 export class Inventory {
     inventoryID: number = 0;
     productID: number = 0;
+    product: Product = new Product();
     productName: string = '';
     batchNumber: string = '';
     manufacturingDate: Date = new Date();

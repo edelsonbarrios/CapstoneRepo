@@ -1,5 +1,5 @@
 export class CreateInventory {
-    productName: string = '';
+    productName?: string = '';
     batchNumber: string = '';
     manufacturingDate: string = '';
     expirationDate: string = '';

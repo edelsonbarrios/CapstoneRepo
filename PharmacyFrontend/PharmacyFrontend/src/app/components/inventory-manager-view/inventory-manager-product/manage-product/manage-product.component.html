@@ -27,7 +27,7 @@
           <td>{{p.boxPrice}}</td>
           <td>
             <button class="btn-view" (click)="openViewProductForm(p)">See Detais</button>
-            <button class="btn-update" (click)="openUpdateProductForm()">Update</button>
+            <button class="btn-update" (click)="openUpdateProductForm(p)">Update</button>
             <button class="btn-archive" (click)="archiveProduct(p.productID)">Archive</button>
           </td>
         </tr>
@@ -60,6 +60,8 @@
 
 <div class="modal-overlay" *ngIf="updateProduct">
   <app-update-product 
+  [productToUpdate]="updateProduct"
   *ngIf="updateProduct"
+  (closeForm)="closeUpdateProductForm()"
   ></app-update-product>
 </div>

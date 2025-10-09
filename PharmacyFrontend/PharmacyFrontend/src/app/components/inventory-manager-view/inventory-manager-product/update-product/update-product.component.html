@@ -3,52 +3,137 @@
   <!-- UPDATE PRODUCT HEADER -->
   <div class="modal-header">
     <div class="modal-title">
-      <h2>BIOGESIC&ndash;RX&ndash;001</h2>
+      <h2>{{ productToUpdate.productName || 'Update Product' }}</h2>
       <a>&#10006;</a>
     </div>
   </div>
 
   <!-- UPDATE PRODUCT BODY -->
   <div class="modal-body">
-
     <div class="form-grid">
+
+      <!-- PRODUCT NAME -->
+      <div class="form-group">
+        <label>Product Name</label>
+        <input
+          type="text"
+          [(ngModel)]="productToUpdate.productName"
+          placeholder="Enter product name"
+        />
+      </div>
+
+      <!-- GENERIC NAME -->
       <div class="form-group">
         <label>Generic Name</label>
-        <input type="text">
+        <select [(ngModel)]="productToUpdate.genericName">
+          <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
+        </select>
       </div>
 
+      <div class="form-group">
+        <label>Brand Name</label>
+        <select [(ngModel)]="productToUpdate.brandName">
+          <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
+        </select>
+      </div>
+
+      <!-- CLASSIFICATION -->
       <div class="form-group">
         <label>Classification</label>
-        <input type="text">
+        <select [(ngModel)]="productToUpdate.classificationName">
+          <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
+        </select>
       </div>
 
+      <!-- TYPE -->
       <div class="form-group">
         <label>Type</label>
-        <input type="text">
+        <select [(ngModel)]="productToUpdate.typeName">
+          <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
+        </select>
       </div>
 
+      <!-- FORMULATION -->
       <div class="form-group">
         <label>Formulation</label>
-        <input type="text">
+        <select [(ngModel)]="productToUpdate.formulationName">
+          <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
+        </select>
       </div>
 
-      <div class="form-group">
-        <label>Price (&#8369;)</label>
-        <input type="text">
-      </div>
-
+      <!-- CATEGORY -->
       <div class="form-group">
         <label>Category</label>
-        <input type="text">
+        <select [(ngModel)]="productToUpdate.categoryName">
+          <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
+        </select>
       </div>
 
-    </div>
+      <!-- SHEETS PER BOX -->
+      <div class="form-group">
+        <label>Sheets Per Box</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.sheetsPerBox"
+          placeholder="Enter sheets per box"
+        />
+      </div>
 
+      <!-- PIECES PER SHEET -->
+      <div class="form-group">
+        <label>Pieces Per Sheet</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.piecesPerSheet"
+          placeholder="Enter pieces per sheet"
+        />
+      </div>
+
+      <!-- BOX PRICE -->
+      <div class="form-group">
+        <label>Box Price (&#8369;)</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.boxPrice"
+          placeholder="Enter box price"
+        />
+      </div>
+
+      <!-- SHEET PRICE -->
+      <div class="form-group">
+        <label>Sheet Price (&#8369;)</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.sheetPrice"
+          placeholder="Enter sheet price"
+        />
+      </div>
+
+      <!-- PIECE PRICE -->
+      <div class="form-group">
+        <label>Piece Price (&#8369;)</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.piecePrice"
+          placeholder="Enter piece price"
+        />
+      </div>
+
+      <!-- REORDER LEVEL -->
+      <div class="form-group">
+        <label>Reorder Level</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.reorderLevel"
+          placeholder="Enter reorder level"
+        />
+      </div>
+    </div>
   </div>
 
   <!-- UPDATE PRODUCT FOOTER -->
   <div class="modal-footer">
-    <button class="btn-update">Update</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-update" (click)="updateProduct()">Update</button>
+    <button class="btn-cancel" (click)="closeUpdateProductForm()">Cancel</button>
   </div>
 </div>

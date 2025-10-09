@@ -71,6 +71,7 @@ export class ManageStockEntryComponent implements OnInit{
 
   closeCreateStockForm() {
     this.createStock = null;
+    this.getAllInventories();
   }
 
   closeViewStockForm() {

@@ -22,10 +22,7 @@ import { ResetService } from '../../../services/ResetService/reset.service';
   templateUrl: './cashier-dashboard.component.html',
   styleUrls: ['./cashier-dashboard.component.scss'],
 })
-export class CashierDashboardComponent implements OnInit, OnDestroy {
-  // --------------------------
-  // UI States
-  // --------------------------
+export class CashierDashboardComponent implements OnInit {
   viewSettle?: Product | null;
   printReceipt?: Product | null;
   loggedInEmployee: Employee = new Employee();
@@ -72,10 +69,6 @@ export class CashierDashboardComponent implements OnInit, OnDestroy {
     this.getLoggedInUser();
     this.getAllProducts();
     this.getAllCategories();
-  }
-
-  ngOnDestroy(): void {
-    this.resetSubscription.unsubscribe();
   }
 
   resetComponent(): void {
