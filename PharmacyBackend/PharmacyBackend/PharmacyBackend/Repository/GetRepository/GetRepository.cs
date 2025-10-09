@@ -396,14 +396,15 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Product>> GetAllProductAsync()
         {
             return await _context.Product
-               .Include(p => p.Category)
-               .Include(p => p.Brand)
-               .Include(p => p.Generic)
-               .Include(p => p.Formulation)
-               .Include(p => p.Classification)
-               .Include(p => p.TypeModel)
-               .Where(p => p.IsActive == true)
-               .ToListAsync();
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Include(p => p.Generic)
+                .Include(p => p.Formulation)
+                .Include(p => p.Classification)
+                .Include(p => p.TypeModel)
+                .OrderByDescending(p => p.DateCreated) 
+                .ThenByDescending(p => p.ProductID)   
+                .ToListAsync();
         }
 
         public async Task<Product?> GetProductByIdAsync(int id)

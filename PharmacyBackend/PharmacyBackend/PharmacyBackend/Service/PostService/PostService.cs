@@ -263,6 +263,12 @@ namespace PharmacyBackend.Service.PostService
             return await _context.Product
                 .FirstOrDefaultAsync(p => p.ProductName.ToLower() == productName.ToLower());
         }
+        private async Task<bool> ProductExistsWithBrandAsync(string productName, int brandId)
+        {
+            return await _context.Product
+                .AnyAsync(p => p.ProductName.ToLower() == productName.ToLower()
+                            && p.BrandID == brandId);
+        }
 
         private async Task<int?> GetCategoryIdByNameAsync(string categoryName)
         {
@@ -361,6 +367,13 @@ namespace PharmacyBackend.Service.PostService
                 throw new ArgumentException($"Classification '{dto.ClassificationName}' not found.");
             if (typeId == null)
                 throw new ArgumentException($"Type '{dto.TypeName}' not found.");
+
+            // Check if product with same name and brand already exists
+            if (await ProductExistsWithBrandAsync(dto.ProductName, brandId.Value))
+            {
+                throw new InvalidOperationException(
+                    $"A product with name '{dto.ProductName}' and brand '{dto.BrandName}' already exists.");
+            }
 
             var product = new Product
             {
