@@ -1,4 +1,5 @@
-﻿using PharmacyBackend.DTOs.SalesDTOs;
+﻿using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -25,6 +26,27 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<Account> GetAccountByIdAsync(int id);
         public Task<bool> AccountUsernameValidation(string userName);
         public Task<Account> SearchAccountByUsernameAsync(string userName);
+        #endregion
+
+        #region Daily Sales
+        Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null
+        );
+
+        Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate
+        );
+
+        Task<IEnumerable<SalesTransaction>> GetFilteredSalesTransactionsAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null
+        );
         #endregion
 
         #region Sales

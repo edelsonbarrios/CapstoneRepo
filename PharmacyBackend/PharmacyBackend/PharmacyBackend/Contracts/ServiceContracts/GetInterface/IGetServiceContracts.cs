@@ -15,6 +15,7 @@ using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DashboardDTOs;
+using PharmacyBackend.DTOs.DailySaleDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -43,6 +44,27 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<List<AccountDTO>> GetAllAccountsAsync();
         public Task<AccountDTO> GetAccountByIdAsync(int id);
         public Task<bool> AccountUsernameValidation(string userName);
+        #endregion
+
+        #region Daily Sales
+        Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null
+        );
+
+        Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate
+        );
+
+        Task<IEnumerable<SalesTransactionDto>> GetFilteredSalesTransactionsAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null
+        );
         #endregion
 
         #region Sales

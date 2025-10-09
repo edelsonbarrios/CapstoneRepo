@@ -18,6 +18,7 @@ using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
+using PharmacyBackend.DTOs.DailySaleDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -266,6 +267,83 @@ namespace PharmacyBackend.Service.GetService
             return modifAccount;
         }
 
+
+        #endregion
+
+        #region Daily Sales
+
+        public async Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null)
+        {
+            var summary = await _getRepo.GetDailySalesSummaryAsync(
+                startDate,
+                endDate,
+                employeeId,
+                paymentMethod
+            );
+
+            return summary;
+        }
+
+        public async Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate)
+        {
+            var products = await _getRepo.GetProductSalesSummaryAsync(startDate, endDate);
+
+            return products;
+        }
+
+        public async Task<IEnumerable<SalesTransactionDto>> GetFilteredSalesTransactionsAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null)
+        {
+            var transactions = await _getRepo.GetFilteredSalesTransactionsAsync(
+                startDate,
+                endDate,
+                employeeId,
+                paymentMethod
+            );
+
+            // Map to DTO
+            var transactionDtos = transactions.Select(t => new SalesTransactionDto
+            {
+                Id = t.Id,
+                TransactionDate = t.TransactionDate,
+                InvoiceNumber = t.InvoiceNumber,
+                TotalAmount = t.TotalAmount,
+                DiscountAmount = t.DiscountAmount,
+                VATAmount = t.VATAmount,
+                NetAmount = t.NetAmount,
+                PaymentMethod = t.PaymentMethod,
+                AmountPaid = t.AmountPaid,
+                ChangeAmount = t.ChangeAmount,
+                DiscountId = t.DiscountId,
+                EmployeeID = t.EmployeeID,
+                VATId = t.VATId,
+                DiscountName = t.Discount?.DiscountName ?? string.Empty,
+                EmployeeName = t.Employee != null ? $"{t.Employee.FirstName} {t.Employee.LastName}" : string.Empty,
+                VATRate = t.VAT?.VATRate,
+                Items = t.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    SalesTransactionId = i.SalesTransactionId,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            });
+
+            return transactionDtos;
+        }
 
         #endregion
 

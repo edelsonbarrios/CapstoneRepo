@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.DataContext;
+using PharmacyBackend.DTOs.DailySaleDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
@@ -104,6 +105,137 @@ namespace PharmacyBackend.Repository.GET
                 .Take(8)
                 .ToListAsync();
         }
+        #endregion
+
+        #region Daily Sales
+
+        public async Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null)
+        {
+            // Ensure we're comparing dates only (ignore time)
+            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
+            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            // End of the day
+
+            // Base query
+            var query = _context.SalesTransaction
+                .Include(st => st.Items)
+                .Where(st => st.TransactionDate >= start && st.TransactionDate <= end);
+
+            // Apply filters
+            if (employeeId.HasValue)
+            {
+                query = query.Where(st => st.EmployeeID == employeeId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(paymentMethod))
+            {
+                query = query.Where(st => st.PaymentMethod == paymentMethod);
+            }
+
+            var transactions = await query.ToListAsync();
+
+            // Calculate summary
+            var summary = new DailySalesSummaryDto
+            {
+                TotalSales = transactions.Sum(t => t.NetAmount),
+                TotalTransactions = transactions.Count,
+                TotalItemsSold = transactions.SelectMany(t => t.Items).Sum(i => i.Quantity),
+                UniqueProductsCount = transactions
+                    .SelectMany(t => t.Items)
+                    .Select(i => i.ProductId)
+                    .Distinct()
+                    .Count()
+            };
+
+            return summary;
+        }
+
+        public async Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
+            DateTime startDate,
+            DateTime endDate)
+        {
+            // Ensure we're comparing dates only (ignore time)
+            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
+            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            // End of the day
+
+            // Get sales items within date range
+            var salesData = await _context.SalesItem
+                .Include(si => si.SalesTransaction)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Inventory)
+                .Where(si => si.SalesTransaction.TransactionDate >= start
+                          && si.SalesTransaction.TransactionDate <= end)
+                .GroupBy(si => new
+                {
+                    si.ProductId,
+                    si.Product.ProductName
+                })
+                .Select(g => new
+                {
+                    ProductId = g.Key.ProductId,
+                    ProductName = g.Key.ProductName,
+                    QuantitySold = g.Sum(si => si.Quantity),
+                    TotalSales = g.Sum(si => si.Subtotal),
+                    Product = g.FirstOrDefault().Product
+                })
+                .ToListAsync();
+
+            // Map to DTO and calculate available stock from current inventory
+            var result = salesData.Select(sd => new ProductSalesSummaryDto
+            {
+                ProductId = sd.ProductId,
+                ProductName = sd.ProductName,
+                QuantitySold = sd.QuantitySold,
+                AvailableStock = sd.Product?.Inventory?
+                    .Where(i => i.IsActive && !i.IsExpired)
+                    .Sum(i => i.TotalPiecesAvailable) ?? 0,
+                TotalSales = sd.TotalSales
+            }).ToList();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<SalesTransaction>> GetFilteredSalesTransactionsAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null)
+        {
+            // Ensure we're comparing dates only (ignore time)
+            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
+            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // End of the day
+
+            // Base query with includes
+            var query = _context.SalesTransaction
+                .Include(st => st.Items)
+                    .ThenInclude(si => si.Product)
+                .Include(st => st.Employee)
+                .Include(st => st.Discount)
+                .Include(st => st.VAT)
+                .Where(st => st.TransactionDate >= start && st.TransactionDate <= end);
+
+            // Apply filters
+            if (employeeId.HasValue)
+            {
+                query = query.Where(st => st.EmployeeID == employeeId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(paymentMethod))
+            {
+                query = query.Where(st => st.PaymentMethod == paymentMethod);
+            }
+
+            // Order by date descending (newest first)
+            query = query.OrderByDescending(st => st.TransactionDate);
+
+            return await query.ToListAsync();
+        }
+
         #endregion
 
         #region Sales

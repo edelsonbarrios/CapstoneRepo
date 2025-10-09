@@ -10,6 +10,7 @@ using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
+using PharmacyBackend.DTOs.DailySaleDTOs;
 using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
 
@@ -131,6 +132,125 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Username does not exist.");
             return Ok(account);
         }
+        #endregion
+
+        #region Daily Sales Endpoints
+
+        /// <summary>
+        /// Get daily sales summary with optional filters
+        /// </summary>
+        /// <param name="startDate">Start date (required)</param>
+        /// <param name="endDate">End date (required)</param>
+        /// <param name="employeeId">Filter by employee/cashier (optional)</param>
+        /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
+        /// <returns>Summary containing total sales, transactions, items sold, and unique products</returns>
+        [HttpGet("daily-sales/summary")]
+        public async Task<IActionResult> GetDailySalesSummary(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int? employeeId = null,
+            [FromQuery] string paymentMethod = null)
+        {
+            try
+            {
+                // Validate dates
+                if (startDate > endDate)
+                {
+                    return BadRequest(new { message = "Start date cannot be after end date" });
+                }
+
+                var summary = await _getService.GetDailySalesSummaryAsync(
+                    startDate,
+                    endDate,
+                    employeeId,
+                    paymentMethod
+                );
+
+                return Ok(summary);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving daily sales summary", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Get product sales summary for date range
+        /// </summary>
+        /// <param name="startDate">Start date (required)</param>
+        /// <param name="endDate">End date (required)</param>
+        /// <returns>List of products with quantity sold, available stock, and total sales</returns>
+        [HttpGet("daily-sales/products")]
+        public async Task<IActionResult> GetProductSalesSummary(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                // Validate dates
+                if (startDate > endDate)
+                {
+                    return BadRequest(new { message = "Start date cannot be after end date" });
+                }
+
+                var products = await _getService.GetProductSalesSummaryAsync(startDate, endDate);
+
+                if (!products.Any())
+                {
+                    return Ok(new List<ProductSalesSummaryDto>());
+                }
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving product sales summary", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Get filtered sales transactions
+        /// </summary>
+        /// <param name="startDate">Start date (required)</param>
+        /// <param name="endDate">End date (required)</param>
+        /// <param name="employeeId">Filter by employee/cashier (optional)</param>
+        /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
+        /// <returns>List of sales transactions with items</returns>
+        [HttpGet("daily-sales/transactions")]
+        public async Task<IActionResult> GetFilteredSalesTransactions(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int? employeeId = null,
+            [FromQuery] string paymentMethod = null)
+        {
+            try
+            {
+                // Validate dates
+                if (startDate > endDate)
+                {
+                    return BadRequest(new { message = "Start date cannot be after end date" });
+                }
+
+                var transactions = await _getService.GetFilteredSalesTransactionsAsync(
+                    startDate,
+                    endDate,
+                    employeeId,
+                    paymentMethod
+                );
+
+                if (!transactions.Any())
+                {
+                    return Ok(new List<SalesTransactionDto>());
+                }
+
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving sales transactions", error = ex.Message });
+            }
+        }
+
         #endregion
 
         #region Sales
