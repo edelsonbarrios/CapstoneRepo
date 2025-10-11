@@ -404,6 +404,7 @@ namespace PharmacyBackend.Repository.GET
                 .Include(p => p.TypeModel)
                 .OrderByDescending(p => p.DateCreated) 
                 .ThenByDescending(p => p.ProductID)   
+                .Where(p => p.IsActive == true)
                 .ToListAsync();
         }
 

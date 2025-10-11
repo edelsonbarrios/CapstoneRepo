@@ -45,6 +45,15 @@ namespace PharmacyBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EmployeeId = 1,
+                            EncryptedPassword = "Gs1jr+Z19Y22IXBRoh0ZOg==",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Brand", b =>
@@ -292,6 +301,27 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Main Office",
+                            Age = 0,
+                            BirthDate = new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CivilStatus = "",
+                            CreatedAt = new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedBy = 0,
+                            Email = "superadmin@gmail.com",
+                            EmployeeCode = "EMP-001",
+                            FirstName = "Admin",
+                            Gender = "",
+                            IsActive = true,
+                            LastName = "Main",
+                            MiddleName = "",
+                            PhoneNumber = "0000000000",
+                            RoleId = 1
+                        });
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.EmployeeHistory", b =>
@@ -478,6 +508,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("TypeID")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UnitMeasurement")
+                        .HasColumnType("text");
+
                     b.HasKey("ProductID");
 
                     b.HasIndex("BrandID");
@@ -621,6 +654,23 @@ namespace PharmacyBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RolePosition = "Administrator"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RolePosition = "Inventory Manager"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RolePosition = "Cashier"
+                        });
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.StockMovement", b =>
@@ -723,17 +773,6 @@ namespace PharmacyBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("Supplier");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "",
-                            ContactNumber = "",
-                            Email = "",
-                            IsActive = true,
-                            SupplierName = "Default Supplier"
-                        });
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.TypeModel", b =>

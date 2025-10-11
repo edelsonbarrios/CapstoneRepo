@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -288,17 +289,56 @@ namespace PharmacyBackend.DataContext
 
             modelBuilder.Entity<SalesItem>().ToTable("SalesItem");
 
-            modelBuilder.Entity<Supplier>().HasData(
-                new Supplier
+            modelBuilder.Entity<Employee>().HasData(
+                new Employee
                 {
                     Id = 1,
-                    SupplierName = "Default Supplier",
-                    ContactNumber = "",
-                    Email = "",
-                    Address = "",
+                    LastName = "Main",
+                    FirstName = "Admin",
+                    MiddleName = "",
+                    BirthDate = DateTime.SpecifyKind(new DateTime(2000, 1, 1), DateTimeKind.Utc),
+                    Gender = "",
+                    RoleId = 1,
+                    EmployeeCode = "EMP-001",
+                    Age = 0,
+                    CivilStatus = "",
+                    Email = "superadmin@gmail.com",
+                    PhoneNumber = "0000000000",
+                    Address = "Main Office",
+                    CreatedBy = 0,
+                    CreatedAt = DateTime.SpecifyKind(new DateTime(2000, 1, 1), DateTimeKind.Utc),
                     IsActive = true
                 }
             );
+
+            modelBuilder.Entity<Account>()
+                .HasData(
+                new Account
+                {
+                    Id = 1,
+                    Username = "admin",
+                    EncryptedPassword = AesHelper.Encrypt("admin"),
+                    EmployeeId = 1
+                }
+                );
+
+            modelBuilder.Entity<Role>().HasData(
+                new Role
+                {
+                    Id = 1,
+                    RolePosition = "Administrator"
+                },
+                new Role
+                {
+                    Id = 2,
+                    RolePosition = "Inventory Manager"
+                },
+                new Role
+                {
+                    Id = 3,
+                    RolePosition = "Cashier"
+                }
+                );
         }
     }
 }

@@ -4,10 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace PharmacyBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -202,13 +204,14 @@ namespace PharmacyBackend.Migrations
                     FormulationID = table.Column<int>(type: "integer", nullable: false),
                     ClassificationID = table.Column<int>(type: "integer", nullable: false),
                     TypeID = table.Column<int>(type: "integer", nullable: false),
-                    SheetsPerBox = table.Column<int>(type: "integer", nullable: true),
-                    PiecesPerSheet = table.Column<int>(type: "integer", nullable: true),
+                    SheetsPerBox = table.Column<int>(type: "integer", nullable: false),
+                    PiecesPerSheet = table.Column<int>(type: "integer", nullable: false),
                     BoxPrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     SheetPrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     PiecePrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     ReorderLevel = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    UnitMeasurement = table.Column<string>(type: "text", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -547,9 +550,24 @@ namespace PharmacyBackend.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Supplier",
-                columns: new[] { "Id", "Address", "ContactNumber", "Email", "IsActive", "SupplierName" },
-                values: new object[] { 1, "", "", "", true, "Default Supplier" });
+                table: "Roles",
+                columns: new[] { "Id", "RolePosition" },
+                values: new object[,]
+                {
+                    { 1, "Administrator" },
+                    { 2, "Inventory Manager" },
+                    { 3, "Cashier" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Employees",
+                columns: new[] { "Id", "Address", "Age", "ArchivedAt", "ArchivedBy", "BirthDate", "CivilStatus", "CreatedAt", "CreatedBy", "Email", "EmployeeCode", "FirstName", "Gender", "IsActive", "LastName", "MiddleName", "PhoneNumber", "RoleId", "UpdatedAt", "UpdatedBy" },
+                values: new object[] { 1, "Main Office", 0, null, null, new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", new DateTime(2000, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 0, "superadmin@gmail.com", "EMP-001", "Admin", "", true, "Main", "", "0000000000", 1, null, null });
+
+            migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "Id", "EmployeeId", "EncryptedPassword", "Username" },
+                values: new object[] { 1, 1, "Gs1jr+Z19Y22IXBRoh0ZOg==", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_EmployeeId",

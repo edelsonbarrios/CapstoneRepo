@@ -42,6 +42,7 @@ namespace PharmacyBackend.Models
         public int ReorderLevel { get; set; }
 
         public bool IsActive { get; set; } = true;
+        public string UnitMeasurement { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
         // Navigation properties

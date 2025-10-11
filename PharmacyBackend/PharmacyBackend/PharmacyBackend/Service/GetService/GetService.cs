@@ -608,6 +608,7 @@ namespace PharmacyBackend.Service.GetService
                 SheetPrice = p.SheetPrice,
                 PiecePrice = p.PiecePrice,
                 ReorderLevel = p.ReorderLevel,
+                UnitMeasurement = p.UnitMeasurement,
 
 
                 // Inventory calculations
@@ -651,6 +652,7 @@ namespace PharmacyBackend.Service.GetService
                 SheetPrice = p.SheetPrice,
                 PiecePrice = p.PiecePrice,
                 ReorderLevel = p.ReorderLevel,
+                UnitMeasurement = p.UnitMeasurement,
 
                 // Inventory calculations
                 //TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,

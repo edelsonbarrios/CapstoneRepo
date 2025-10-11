@@ -74,14 +74,20 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label>Sheets Per Box</label>
-        <input type="number" [(ngModel)]="newProduct.sheetsPerBox">
+      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
+        <label *ngIf="unitMeasurement == 'Multi-Level'">Sheets Per Box</label>
+        <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.sheetsPerBox">
+        
       </div>
 
-      <div class="form-group">
-        <label>Pieces Per Sheet</label>
-        <input type="number" [(ngModel)]="newProduct.piecesPerSheet">
+      <div class="form-group" *ngIf="unitMeasurement == 'Dual-Level'">
+        <label *ngIf="unitMeasurement == 'Dual-Level'">Piece Per Box</label>
+        <input *ngIf="unitMeasurement == 'Dual-Level'" type="number" [(ngModel)]="newProduct.sheetsPerBox">
+      </div>
+
+      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
+        <label *ngIf="unitMeasurement == 'Multi-Level'">Pieces Per Sheet</label>
+        <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.piecesPerSheet">
       </div>
 
       <div class="form-group">
@@ -89,9 +95,9 @@
         <input type="number" [(ngModel)]="newProduct.boxPrice">
       </div>
 
-      <div class="form-group">
-        <label>Sheet Price (&#8369;)</label>
-        <input type="number" [(ngModel)]="newProduct.sheetPrice">
+      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
+        <label *ngIf="unitMeasurement == 'Multi-Level'">Sheet Price (&#8369;)</label>
+        <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.sheetPrice">
       </div>
 
       <div class="form-group">
@@ -102,6 +108,14 @@
       <div class="form-group">
         <label>Reorder Level</label>
         <input type="number" [(ngModel)]="newProduct.reorderLevel">
+      </div>
+
+      <div class="form-group">
+        <label>Unit of Measurement</label>
+        <select [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
+          <option value="Multi-Level">Multi Level</option>
+          <option value="Dual-Level">Dual Level</option>
+        </select>
       </div>
 
     </div>

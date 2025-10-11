@@ -391,6 +391,7 @@ namespace PharmacyBackend.Service.PostService
                 SheetPrice = dto.SheetPrice,
                 PiecePrice = dto.PiecePrice,
                 ReorderLevel = dto.ReorderLevel,
+                UnitMeasurement = dto.UnitMeasurement,
                 DateCreated = DateTime.UtcNow
             };
 

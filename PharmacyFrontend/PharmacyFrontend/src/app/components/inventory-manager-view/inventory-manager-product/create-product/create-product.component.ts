@@ -31,6 +31,7 @@ export class CreateProductComponent implements OnInit{
   classifications : Classification[] = [];
   suppliers : Supplier[] = [];
   showSuccessAlert: boolean = false;
+  unitMeasurement: string = 'Multi-Level';
 
   constructor(
     private postService : PostService,
@@ -38,6 +39,7 @@ export class CreateProductComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    this.newProduct.unitMeasurement = 'Multi-Level';
     this.getAllCategories();
     this.getAllBrands();
     this.getAllGenerics();
@@ -139,7 +141,8 @@ export class CreateProductComponent implements OnInit{
       boxPrice: this.newProduct.boxPrice,
       sheetPrice: this.newProduct.sheetPrice,
       piecePrice: this.newProduct.piecePrice,
-      reorderLevel: this.newProduct.reorderLevel
+      reorderLevel: this.newProduct.reorderLevel,
+      unitMeasurement: this.newProduct.unitMeasurement
     };
     this.postService.createProductAsync(requestPayload).subscribe({
       next: res => {
@@ -158,5 +161,9 @@ export class CreateProductComponent implements OnInit{
   closeSuccessAlert() {
     this.showSuccessAlert = false;
     this.closeCreateProductForm();
+  }
+
+  selectUnitOfMeasurement(measurement: string) {
+    this.unitMeasurement = measurement;
   }
 }
