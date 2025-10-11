@@ -34,6 +34,7 @@
         <tr>
           <th>Product</th>
           <th>Unit Cost</th>
+          <th>Unit Measurement</th>
           <th>Box Qty</th>
           <th>Sheet Qty</th>
           <th>Piece Quantity</th>
@@ -45,6 +46,7 @@
         <tr *ngFor="let item of paginatedItems; let i = index">
           <td>{{ item.productName }}</td>
           <td>{{ item.boxPrice | currency:'PHP' }}</td>
+          <td>{{item.unitMeasurement}}</td>
 
           <!-- BOX QUANTITY -->
           <td>

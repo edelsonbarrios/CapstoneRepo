@@ -15,6 +15,7 @@ export class PurchaseOrderItem {
   batchNumber: string = '';
   manufacturingDate : Date = new Date();
   expirationDate: Date = new Date();
+  unitMeasurement: string = '';
 
   category: string = '';
   type: string = '';

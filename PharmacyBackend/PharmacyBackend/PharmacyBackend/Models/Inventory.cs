@@ -53,12 +53,25 @@ namespace PharmacyBackend.Models
         {
             get
             {
-                var pieces = PieceQuantity;
-                if (PiecesPerSheet.HasValue)
-                    pieces += SheetQuantity * PiecesPerSheet.Value;
-                if (SheetsPerBox.HasValue && PiecesPerSheet.HasValue)
-                    pieces += BoxQuantity * SheetsPerBox.Value * PiecesPerSheet.Value;
-                return pieces;
+                // Case 1: Triple-level (Box → Sheet → Piece)
+                if (SheetsPerBox.HasValue && PiecesPerSheet.HasValue && PiecesPerSheet.Value > 0)
+                {
+                    return (BoxQuantity * SheetsPerBox.Value * PiecesPerSheet.Value)
+                         + (SheetQuantity * PiecesPerSheet.Value)
+                         + PieceQuantity;
+                }
+
+                // Case 2: Dual-level (Box → Piece)
+                else if (SheetsPerBox.HasValue && (!PiecesPerSheet.HasValue || PiecesPerSheet.Value == 0))
+                {
+                    return (BoxQuantity * SheetsPerBox.Value) + PieceQuantity;
+                }
+
+                // Case 3: Single-level (Only pieces)
+                else
+                {
+                    return PieceQuantity;
+                }
             }
         }
 

@@ -106,9 +106,11 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       category: p.categoryName,
       classification: p.classificationName,
       type: p.typeName,
+      unitMeasurement: p.unitMeasurement,
     }));
 
     this.purchaseOrders.purchaseOrderItems.push(...items);
+    console.log(items);
     this.updatePagination();
     this.computeTotalAmount();
     this.openProductForm = false;
@@ -191,25 +193,51 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   recalculateQuantitiesAndTotals(item: PurchaseOrderItem) {
-    // Find product details using productId
     const product = this.selectedSupplier.products.find(
       (p) => p.productID === item.productId
     );
     if (!product) return;
 
-    // Auto compute sheet and piece quantities
-    item.sheetQuantityOrdered = item.boxQuantityOrdered * product.sheetsPerBox;
-    item.pieceQuantityOrdered =
-      item.sheetQuantityOrdered * product.piecesPerSheet;
+    // Reset defaults
+    item.sheetQuantityOrdered = 0;
+    item.pieceQuantityOrdered = 0;
+    item.sheetPrice = 0;
+    item.piecePrice = 0;
 
-    // Auto compute sheet and piece prices (derived)
-    item.sheetPrice = product.boxPrice / product.sheetsPerBox;
-    item.piecePrice = item.sheetPrice / product.piecesPerSheet;
+    // Dual-level: Box → Piece
+    if (product.unitMeasurement === 'Dual-Level') {
+      item.pieceQuantityOrdered =
+        item.boxQuantityOrdered * (product.sheetsPerBox || 1); // here sheetsPerBox acts as piecesPerBox
 
-    // Total cost based on box quantity (primary purchase unit)
+      // piece price = boxPrice / piecesPerBox
+      item.piecePrice =
+        product.sheetsPerBox && product.sheetsPerBox > 0
+          ? product.boxPrice / product.sheetsPerBox
+          : product.piecePrice;
+    }
+
+    // Triple-level: Box → Sheet → Piece
+    else if (product.unitMeasurement === 'Multi-Level') {
+      item.sheetQuantityOrdered =
+        item.boxQuantityOrdered * product.sheetsPerBox;
+      item.pieceQuantityOrdered =
+        item.sheetQuantityOrdered * product.piecesPerSheet;
+
+      // Derived prices
+      item.sheetPrice =
+        product.sheetsPerBox && product.sheetsPerBox > 0
+          ? product.boxPrice / product.sheetsPerBox
+          : product.sheetPrice;
+
+      item.piecePrice =
+        product.piecesPerSheet && product.piecesPerSheet > 0
+          ? item.sheetPrice / product.piecesPerSheet
+          : product.piecePrice;
+    }
+
+    // Total cost based on box quantity
     item.totalCost = item.boxQuantityOrdered * item.boxPrice;
 
-    // Update grand total
     this.computeTotalAmount();
   }
 

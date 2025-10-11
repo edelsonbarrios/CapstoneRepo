@@ -44,9 +44,8 @@ export class PurchaseOrderProductsComponent implements OnInit{
 
   addSelected() {
     const selected = this.supplierProudcts.filter(p => p.selected);
-    console.log(selected);
     this.productsSelected.emit(selected);
-    this.close.emit(); // auto-close after adding
+    this.close.emit();
   }
 
   cancel() {
