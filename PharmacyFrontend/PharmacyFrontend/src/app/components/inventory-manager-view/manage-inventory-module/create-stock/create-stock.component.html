@@ -21,22 +21,27 @@
 
       <div class="form-group">
         <label>Box Quantity</label> 
-        <input type="number" [(ngModel)]="createStock.boxQuantity">
+        <input type="number" [(ngModel)]="createStock.boxQuantity" min="0">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
         <label>Sheets Per Box</label>
-        <input type="number" [(ngModel)]="selectedProduct.sheetsPerBox">
+        <input type="number" [(ngModel)]="selectedProduct.sheetsPerBox" min="0">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level'">
+        <label>Piece Per Box</label>
+        <input type="number" [(ngModel)]="selectedProduct.sheetsPerBox" min="0">
+      </div>
+
+      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
         <label>Piece Per Sheet</label>
-        <input type="number" [(ngModel)]="selectedProduct.piecesPerSheet">
+        <input type="number" [(ngModel)]="selectedProduct.piecesPerSheet" min="0">
       </div>
 
       <div class="form-group">
         <label>Reorder Level</label>
-        <input type="number" [(ngModel)]="selectedProduct.reorderLevel">
+        <input type="number" [(ngModel)]="selectedProduct.reorderLevel" min="0">
       </div>
 
       <div class="form-group">
@@ -51,22 +56,22 @@
 
       <div class="form-group">
         <label>Cost Price*</label>
-        <input type="number" [(ngModel)]="createStock.costPrice">
+        <input type="number" [(ngModel)]="createStock.costPrice" min="0">
       </div>
 
       <div class="form-group">
         <label>Box Price*</label>
-        <input type="number" [(ngModel)]="selectedProduct.boxPrice">
+        <input type="number" [(ngModel)]="selectedProduct.boxPrice" min="0">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
         <label>Sheet Price</label>
-        <input type="number" [(ngModel)]="selectedProduct.sheetPrice">
+        <input type="number" [(ngModel)]="selectedProduct.sheetPrice" min="0">
       </div>
 
       <div class="form-group">
         <label>Piece Price</label>
-        <input type="number" [(ngModel)]="selectedProduct.piecePrice">
+        <input type="number" [(ngModel)]="selectedProduct.piecePrice" min="0">
       </div>
 
     </div>
