@@ -587,41 +587,98 @@ namespace PharmacyBackend.Service.UpdateService
                 var product = inventory?.Product ?? await _getRepo.GetProductByIdAsync(poItem.ProductID);
                 if (product is null) continue;
 
-                var computedSheetQty = item.BoxQuantityReceived * product.SheetsPerBox;
-                var computedPieceQty = computedSheetQty * product.PiecesPerSheet;
-
-                poItem.BoxQuantityReceived = item.BoxQuantityReceived;
-                poItem.SheetQuantityReceived = computedSheetQty;
-                poItem.PieceQuantityReceived = computedPieceQty;
 
                 if (inventory is null)
                 {
-                    var newInventory = new Inventory()
+                    if(product.UnitMeasurement == "Multi-Level")
                     {
-                        ProductID = item.ProductID,
-                        BoxQuantity = item.BoxQuantityReceived,
-                        SheetQuantity = computedSheetQty,
-                        PieceQuantity = computedPieceQty,
-                        BatchNumber = item.BatchNumber,
-                        ManufacturingDate = item.ManufacturingDate,
-                        ExpirationDate = item.ExpirationDate,
-                        ReorderLevel = product.ReorderLevel,
-                        SheetsPerBox = product.SheetsPerBox,
-                        PiecesPerSheet = product.PiecesPerSheet,
-                        BoxPrice = product.BoxPrice,
-                        SheetPrice = product.SheetPrice,
-                        PiecePrice = product.PiecePrice,
-                        DateAdded = DateTime.UtcNow,
-                        IsActive = true
-                    };
-                    await _postRepo.CreateInventoryAsync(newInventory);
+                        var computedSheetQty = item.BoxQuantityReceived * product.SheetsPerBox;
+                        var computedPieceQty = product.PiecesPerSheet * computedSheetQty;
+                        poItem.BoxQuantityReceived = item.BoxQuantityReceived;
+
+                        var newInventory = new Inventory()
+                        {
+                            ProductID = item.ProductID,
+                            BoxQuantity = item.BoxQuantityReceived,
+                            SheetQuantity = computedSheetQty,
+                            PieceQuantity = computedPieceQty,
+                            BatchNumber = item.BatchNumber,
+                            ManufacturingDate = item.ManufacturingDate,
+                            ExpirationDate = item.ExpirationDate,
+                            ReorderLevel = product.ReorderLevel,
+                            SheetsPerBox = product.SheetsPerBox,
+                            PiecesPerSheet = product.PiecesPerSheet,
+                            BoxPrice = product.BoxPrice,
+                            SheetPrice = product.SheetPrice,
+                            PiecePrice = product.PiecePrice,
+                            DateAdded = DateTime.UtcNow,
+                            IsActive = true
+                        };
+                        await _postRepo.CreateInventoryAsync(newInventory);
+
+                        var stockMovement = new StockMovement
+                        {
+                            InventoryID = newInventory.InventoryID,
+                            MovementType = "Received PO",
+                            BoxQuantityBefore = 0,
+                            SheetQuantityBefore = 0,
+                            PieceQuantityBefore = 0,
+                            BoxQuantityChanged = item.BoxQuantityReceived,
+                            SheetQuantityChanged = 0,
+                            PieceQuantityChanged = 0,
+                            BoxQuantityAfter = newInventory.BoxQuantity,
+                            SheetQuantityAfter = newInventory.SheetQuantity,
+                            PieceQuantityAfter = newInventory.PieceQuantity,
+                            ReferenceNumber = purchaseOrder.PurchaseOrderNumber ?? $"PO-{purchaseOrder.PurchaseOrderNumber}",
+                            Notes = $"New stock received for product {product.ProductName}.",
+                            EmployeeID = request.EmployeeId,
+                        };
+                        await _context.StockMovement.AddAsync(stockMovement);
+                    }
+                    else if(product.UnitMeasurement == "Dual-Level")
+                    {
+                        poItem.BoxQuantityReceived = item.BoxQuantityReceived;
+                        var computedPieceQty = item.BoxQuantityReceived * product.SheetsPerBox;
+                        var newInventory = new Inventory()
+                        {
+                            ProductID = item.ProductID,
+                            BoxQuantity = item.BoxQuantityReceived,
+                            SheetQuantity = 0,
+                            PieceQuantity = computedPieceQty,
+                            BatchNumber = item.BatchNumber,
+                            ManufacturingDate = item.ManufacturingDate,
+                            ExpirationDate = item.ExpirationDate,
+                            ReorderLevel = product.ReorderLevel,
+                            SheetsPerBox = 0,
+                            PiecesPerSheet = 0,
+                            BoxPrice = product.BoxPrice,
+                            SheetPrice = 0,
+                            PiecePrice = product.PiecePrice,
+                            DateAdded = DateTime.UtcNow,
+                            IsActive = true
+                        };
+                        await _postRepo.CreateInventoryAsync(newInventory);
+
+                        var stockMovement = new StockMovement
+                        {
+                            InventoryID = newInventory.InventoryID,
+                            MovementType = "Received PO",
+                            BoxQuantityBefore = 0,
+                            SheetQuantityBefore = 0,
+                            PieceQuantityBefore = 0,
+                            BoxQuantityChanged = item.BoxQuantityReceived,
+                            SheetQuantityChanged = 0,
+                            PieceQuantityChanged = computedPieceQty,
+                            BoxQuantityAfter = newInventory.BoxQuantity,
+                            SheetQuantityAfter = newInventory.SheetQuantity,
+                            PieceQuantityAfter = newInventory.PieceQuantity,
+                            ReferenceNumber = purchaseOrder.PurchaseOrderNumber ?? $"PO-{purchaseOrder.PurchaseOrderNumber}",
+                            Notes = $"New stock received for product {product.ProductName}.",
+                            EmployeeID = request.EmployeeId,
+                        };
+                        await _context.StockMovement.AddAsync(stockMovement);
+                    }
                 }
-                else if(inventory is not null)
-                {
-                    inventory.BoxQuantity += item.BoxQuantityReceived;
-                    inventory.SheetQuantity += computedSheetQty;
-                    inventory.PieceQuantity += computedPieceQty;
-                } 
             }
             purchaseOrder.Status = "Received";
             purchaseOrder.DeliveryDate = DateTime.UtcNow;
