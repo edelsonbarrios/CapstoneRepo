@@ -600,8 +600,8 @@ namespace PharmacyBackend.Service.UpdateService
                     {
                         ProductID = item.ProductID,
                         BoxQuantity = item.BoxQuantityReceived,
-                        SheetQuantity = item.SheetQuantityReceived,
-                        PieceQuantity = item.PieceQuantityReceived,
+                        SheetQuantity = computedSheetQty,
+                        PieceQuantity = computedPieceQty,
                         BatchNumber = item.BatchNumber,
                         ManufacturingDate = item.ManufacturingDate,
                         ExpirationDate = item.ExpirationDate,
@@ -615,25 +615,6 @@ namespace PharmacyBackend.Service.UpdateService
                         IsActive = true
                     };
                     await _postRepo.CreateInventoryAsync(newInventory);
-
-                    var stockMovement = new StockMovement
-                    {
-                        InventoryID = newInventory.InventoryID,
-                        MovementType = "Received PO",
-                        BoxQuantityBefore = 0,
-                        SheetQuantityBefore = 0,
-                        PieceQuantityBefore = 0,
-                        BoxQuantityChanged = item.BoxQuantityReceived,
-                        SheetQuantityChanged = computedSheetQty,
-                        PieceQuantityChanged = computedPieceQty,
-                        BoxQuantityAfter = newInventory.BoxQuantity,
-                        SheetQuantityAfter = newInventory.SheetQuantity,
-                        PieceQuantityAfter = newInventory.PieceQuantity,
-                        ReferenceNumber = purchaseOrder.PurchaseOrderNumber ?? $"PO-{purchaseOrder.PurchaseOrderNumber}",
-                        Notes = $"New stock received for product {product.ProductName}.",
-                        EmployeeID = request.EmployeeId,
-                    };
-                    await _context.StockMovement.AddAsync(stockMovement);
                 }
                 else if(inventory is not null)
                 {

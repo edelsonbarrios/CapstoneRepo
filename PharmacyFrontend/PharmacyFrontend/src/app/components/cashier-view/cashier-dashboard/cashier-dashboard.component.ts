@@ -27,7 +27,6 @@ export class CashierDashboardComponent implements OnInit {
   printReceipt?: Product | null;
   loggedInEmployee: Employee = new Employee();
 
-  // Products with temporary UI states
   products: (Product & {
     selected?: boolean;
     quantity?: number;
@@ -40,18 +39,19 @@ export class CashierDashboardComponent implements OnInit {
     boxQuantity: number;
     sheetQuantity: number;
     pieceQuantity: number;
+    unitMeasurement: string;
   })[] = [];
 
-  // Cart items (aligned with backend)
+
   selectedProducts: {
     productID: number;
     productName: string;
     unitType: 'Box' | 'Sheet' | 'Piece';
     quantity: number;
     unitPrice: number;
+    unitMeasurement: string;
   }[] = [];
 
-  // Filters
   searchTerm: string = '';
   categories: Category[] = [];
   selectedCategory: string = '';
@@ -62,9 +62,7 @@ export class CashierDashboardComponent implements OnInit {
     private resetService: ResetService
   ) {}
 
-  // --------------------------
-  // Lifecycle
-  // --------------------------
+
   ngOnInit(): void {
     this.getLoggedInUser();
     this.getAllProducts();
@@ -74,13 +72,9 @@ export class CashierDashboardComponent implements OnInit {
   resetComponent(): void {
     this.getService.getAllInventoriesAsync().subscribe(response => {
       this.products = response.message
-
     })
   }
 
-  // --------------------------
-  // Data Fetching
-  // --------------------------
   getAllCategories() {
     this.getService.getAllCategoriesAsync().subscribe({
       next: (res) => (this.categories = res),
@@ -100,11 +94,23 @@ export class CashierDashboardComponent implements OnInit {
           piecesPerSheet: p.piecesPerSheet,
           boxQuantity: p.boxQuantity,
           sheetQuantity: p.sheetQuantity,
-          pieceQuantity: p.pieceQuantity
+          pieceQuantity: p.pieceQuantity,
+          unitMeasurement: p.product?.unitMeasurement
         }));
+        console.log(this.products);
       },
       error: (err) => console.error(err.error),
     });
+  }
+
+  getAvailableUnitMeasurements(product: any) : string[] {
+    if(!product) return [];
+    console.log('unitMeasurement:', product.unitMeasurement);
+    if(product.unitMeasurement == 'Multi-Level') {
+      return ['Box','Sheet','Piece'];
+    }else {
+      return ['Box', 'Piece']
+    }
   }
 
   getLoggedInUser() {
@@ -125,9 +131,7 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
-  // --------------------------
-  // Filtering Logic
-  // --------------------------
+
   get filteredProducts() {
     const term = this.searchTerm?.toLowerCase()?.trim();
     return this.products.filter((p) => {
@@ -141,9 +145,7 @@ export class CashierDashboardComponent implements OnInit {
     });
   }
 
-  // --------------------------
-  // Pricing Helpers
-  // --------------------------
+
   getProductUnitPriceDisplay(product: any): number {
     const unit = product.tempUnitType || 'Box';
     return this.resolveUnitPriceFromProduct(product, unit);
@@ -168,9 +170,7 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
-  // --------------------------
-  // Cart Management
-  // --------------------------
+
   addSelectedProducts() {
     const toAdd = this.products.filter((p) => p.selected);
 
@@ -192,21 +192,18 @@ export class CashierDashboardComponent implements OnInit {
           unitType,
           quantity: qtyToAdd,
           unitPrice: price,
+          unitMeasurement: p.unitMeasurement
         });
       }
 
-      // Reset UI states
       p.selected = false;
       p.quantity = 0;
-      // reset to Box explicitly (requested behavior)
+
       p.tempUnitType = 'Box';
     });
   }
 
-  /**
-   * Called when any cart numeric field changes (qty or unit price).
-   * Keeps values sane and ensures a unit price exists if empty.
-   */
+
   onCartItemChange(item: any) {
     if (!item.quantity || item.quantity < 1) item.quantity = 1;
     if (!item.unitPrice || item.unitPrice < 0) item.unitPrice = 0;
@@ -215,28 +212,20 @@ export class CashierDashboardComponent implements OnInit {
     if (product && (!item.unitPrice || item.unitPrice === 0)) {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
     }
-
-    // Ensure quantity doesn't exceed available stock for selected unit
     const max = this.getMaxQuantity(item);
     if (max !== Infinity && item.quantity > max) {
       item.quantity = max;
     }
   }
 
-  /**
-   * Called specifically when the user changes the unit type for a cart item.
-   * This will update the unit price to the resolved price for the new unit.
-   * (We intentionally overwrite unitPrice here so the price reflects the unit selection.)
-   */
   onCartItemUnitTypeChange(item: any) {
     const product = this.products.find((p) => p.productID === item.productID);
     if (!product) return;
 
-    // set the unit price to the resolved price for the new unit type
     const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
     item.unitPrice = resolved;
 
-    // also clamp quantity to max available for the new unit if necessary
+
     const max = this.getMaxQuantity(item);
     if (max !== Infinity && item.quantity > max) {
       item.quantity = max;
@@ -247,9 +236,7 @@ export class CashierDashboardComponent implements OnInit {
     this.selectedProducts = [];
   }
 
-  // --------------------------
-  // Computation Helpers
-  // --------------------------
+
   getTotalItems(): number {
     return this.selectedProducts.reduce((acc, p) => acc + (p.quantity || 0), 0);
   }

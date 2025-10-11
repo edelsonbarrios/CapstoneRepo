@@ -53,7 +53,7 @@ namespace PharmacyBackend.Models
         {
             get
             {
-                // Case 1: Triple-level (Box → Sheet → Piece)
+                // Case 1: Multi-level (Box → Sheet → Piece)
                 if (SheetsPerBox.HasValue && PiecesPerSheet.HasValue && PiecesPerSheet.Value > 0)
                 {
                     return (BoxQuantity * SheetsPerBox.Value * PiecesPerSheet.Value)

@@ -521,13 +521,25 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Inventory>> GetAllInventoryAsync()
         {
             return await _context.Inventory
-                .Include(p => p.Product)
+                .Include(i => i.Product)
+                .ThenInclude(p => p.Category)
+                .Include(i => i.Product.Brand)
+                .Include(i => i.Product.Generic)
+                .Include(i => i.Product.Formulation)
+                .Include(i => i.Product.Classification)
+                .Include(i => i.Product.TypeModel)
                 .ToListAsync();
         }
         public async Task<List<Inventory>> GetAllAvailableInventoryAsync()
         {
             var inventories = await _context.Inventory
                 .Include(i => i.Product)
+                .ThenInclude(p => p.Category)
+                .Include(i => i.Product.Brand)
+                .Include(i => i.Product.Generic)
+                .Include(i => i.Product.Formulation)
+                .Include(i => i.Product.Classification)
+                .Include(i => i.Product.TypeModel)
                 .ToListAsync();
 
             return inventories

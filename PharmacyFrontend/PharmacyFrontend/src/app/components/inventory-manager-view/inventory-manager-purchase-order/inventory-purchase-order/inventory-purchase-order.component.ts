@@ -207,7 +207,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     // Dual-level: Box → Piece
     if (product.unitMeasurement === 'Dual-Level') {
       item.pieceQuantityOrdered =
-        item.boxQuantityOrdered * (product.sheetsPerBox || 1); // here sheetsPerBox acts as piecesPerBox
+        item.boxQuantityOrdered * (product.sheetsPerBox || 0); // here sheetsPerBox acts as piecesPerBox
 
       // piece price = boxPrice / piecesPerBox
       item.piecePrice =

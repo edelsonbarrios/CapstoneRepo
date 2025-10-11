@@ -3,15 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.AccountDTOs;
-using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
-using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore.Storage.Json;
 
 namespace PharmacyBackend.Repository.POST
 {
@@ -249,115 +246,129 @@ namespace PharmacyBackend.Repository.POST
             {
                 if (remainingPieces <= 0) break;
 
-                var deductedPieces = await DeductFromSingleInventory(inventory, remainingPieces, invoiceNumber, employeeId);
-                remainingPieces -= deductedPieces;
+                // Calculate how many pieces this inventory can provide
+                var availablePieces = inventory.TotalPiecesAvailable;
+
+                var piecesToDeduct = Math.Min(remainingPieces, availablePieces);
+
+                // 🔹 Determine the equivalent unit quantity for deduction
+                var unitQuantityToDeduct = salesItem.UnitType.ToLower() switch
+                {
+                    "box" => piecesToDeduct / ((inventory.SheetsPerBox ?? 1) * (inventory.PiecesPerSheet ?? 1)),
+                    "sheet" => piecesToDeduct / (inventory.PiecesPerSheet ?? 1),
+                    "piece" => piecesToDeduct,
+                    _ => piecesToDeduct
+                };
+
+                // Call the deduction method using the **unit quantity**, not pieces
+                await DeductFromSingleInventory(inventory, unitQuantityToDeduct, invoiceNumber, employeeId, salesItem.UnitType);
+
+                remainingPieces -= piecesToDeduct;
             }
         }
 
         private int CalculatePiecesNeeded(string unitType, int quantity, Inventory sampleInventory)
         {
-            return unitType.ToLower() switch
+            var sheetsPerBox = sampleInventory.SheetsPerBox ?? 0;
+            var piecesPerSheet = sampleInventory.PiecesPerSheet ?? 0;
+
+            var hasSheets = (sampleInventory.SheetsPerBox ?? 0) > 0;
+            var hasPieces = (sampleInventory.PiecesPerSheet ?? 0) > 0;
+
+            if(hasSheets && hasPieces)
             {
-                "box" => quantity * (sampleInventory.SheetsPerBox ?? 1) * (sampleInventory.PiecesPerSheet ?? 1),
-                "sheet" => quantity * (sampleInventory.PiecesPerSheet ?? 1),
-                "piece" => quantity,
-                _ => quantity
-            };
+                return unitType.ToLower() switch
+                {
+                    "box" => quantity * sheetsPerBox * piecesPerSheet,
+                    "sheet" => quantity * piecesPerSheet,
+                    "piece" => quantity,
+                    _ => quantity
+                };
+            }
+            if(hasSheets && !hasPieces)
+            {
+                return unitType.ToLower() switch
+                {
+                    "box" => quantity * 1,
+                    "sheet" => quantity,
+                    "piece" => quantity,
+                    _ => quantity
+                };
+            }
+            if (!hasSheets && !hasPieces)
+            {
+                return quantity;
+            }
+            return quantity;
         }
 
-        private async Task<int> DeductFromSingleInventory(Inventory inventory, int piecesNeeded, string referenceNumber, int? employeeId)
+        private async Task<int> DeductFromSingleInventory(
+            Inventory inventory,
+            int quantity,
+            string referenceNumber,
+            int? employeeId,
+            string unitType
+        )
         {
+            var sheetsPerBox = inventory.SheetsPerBox ?? 0;
+            var piecesPerSheet = inventory.PiecesPerSheet ?? 0;
+
             var beforeBox = inventory.BoxQuantity;
             var beforeSheet = inventory.SheetQuantity;
             var beforePiece = inventory.PieceQuantity;
 
-            var availablePieces = inventory.TotalPiecesAvailable;
-            var piecesToDeduct = Math.Min(piecesNeeded, availablePieces);
-            var remainingToDeduct = piecesToDeduct;
-
-            // Deduct hierarchy: pieces -> sheets -> boxes
-            // Deduct from loose pieces first
-            if (remainingToDeduct > 0 && inventory.PieceQuantity > 0)
+            switch (unitType.ToLower())
             {
-                var piecesFromLoose = Math.Min(remainingToDeduct, inventory.PieceQuantity);
-                inventory.PieceQuantity -= piecesFromLoose;
-                remainingToDeduct -= piecesFromLoose;
+                case "box":
+                    // Deduct 1 box
+                    inventory.BoxQuantity -= quantity;
+
+                    // Deduct sheets based on SheetsPerBox
+                    var sheetsToDeduct = quantity * sheetsPerBox;
+                    inventory.SheetQuantity -= sheetsToDeduct;
+
+                    // Deduct pieces based on SheetsPerBox * PiecesPerSheet
+                    var piecesToDeductFromBox = sheetsToDeduct * piecesPerSheet;
+                    inventory.PieceQuantity -= piecesToDeductFromBox;
+                    break;
+
+                case "sheet":
+                    // Deduct 1 sheet
+                    inventory.SheetQuantity -= quantity;
+
+                    // Deduct pieces based on PiecesPerSheet
+                    var piecesToDeductFromSheet = quantity * piecesPerSheet;
+                    inventory.PieceQuantity -= piecesToDeductFromSheet;
+                    break;
+
+                case "piece":
+                    // Deduct directly
+                    inventory.PieceQuantity -= quantity;
+                    break;
+
+                default:
+                    // Fallback if unitType is invalid
+                    inventory.PieceQuantity -= quantity;
+                    break;
             }
 
-            // Then deduct from loose sheets
-            if (remainingToDeduct > 0 && inventory.SheetQuantity > 0 && inventory.PiecesPerSheet.HasValue)
-            {
-                var sheetsNeeded = (int)Math.Ceiling((double)remainingToDeduct / inventory.PiecesPerSheet.Value);
-                var sheetsToUse = Math.Min(sheetsNeeded, inventory.SheetQuantity);
-                var piecesFromSheets = sheetsToUse * inventory.PiecesPerSheet.Value;
+            // Prevent negatives
+            if (inventory.BoxQuantity < 0) inventory.BoxQuantity = 0;
+            if (inventory.SheetQuantity < 0) inventory.SheetQuantity = 0;
+            if (inventory.PieceQuantity < 0) inventory.PieceQuantity = 0;
 
-                inventory.SheetQuantity -= sheetsToUse;
-                var excessPieces = piecesFromSheets - remainingToDeduct;
+            // Recalculate total pieces
+            var totalPieces =
+                (inventory.BoxQuantity * sheetsPerBox * piecesPerSheet) +
+                (inventory.SheetQuantity * piecesPerSheet) +
+                inventory.PieceQuantity;
 
-                if (excessPieces > 0)
-                {
-                    inventory.PieceQuantity += excessPieces;
-                    remainingToDeduct = 0;
-                }
-                else
-                {
-                    remainingToDeduct -= piecesFromSheets;
-                }
-            }
-
-            // Finally deduct from boxes
-            if (remainingToDeduct > 0 && inventory.BoxQuantity > 0 &&
-                inventory.SheetsPerBox.HasValue && inventory.PiecesPerSheet.HasValue)
-            {
-                var piecesPerBox = inventory.SheetsPerBox.Value * inventory.PiecesPerSheet.Value;
-                var boxesNeeded = (int)Math.Ceiling((double)remainingToDeduct / piecesPerBox);
-                var boxesToUse = Math.Min(boxesNeeded, inventory.BoxQuantity);
-                var piecesFromBoxes = boxesToUse * piecesPerBox;
-
-                inventory.BoxQuantity -= boxesToUse;
-                var excessPieces = piecesFromBoxes - remainingToDeduct;
-
-                if (excessPieces > 0)
-                {
-                    var excessSheets = excessPieces / inventory.PiecesPerSheet.Value;
-                    var leftoverPieces = excessPieces % inventory.PiecesPerSheet.Value;
-                    inventory.SheetQuantity += excessSheets;
-                    inventory.PieceQuantity += leftoverPieces;
-                    remainingToDeduct = 0;
-                }
-                else
-                {
-                    remainingToDeduct -= piecesFromBoxes;
-                }
-            }
-
-            // Update inventory
             _context.Inventory.Update(inventory);
-
-            /*// Create stock movement record
-            var stockMovement = new StockMovement
-            {
-                InventoryID = inventory.InventoryID,
-                MovementType = "Sale",
-                BoxQuantityBefore = beforeBox,
-                SheetQuantityBefore = beforeSheet,
-                PieceQuantityBefore = beforePiece,
-                BoxQuantityChanged = inventory.BoxQuantity - beforeBox,  
-                SheetQuantityChanged = inventory.SheetQuantity - beforeSheet,  
-                PieceQuantityChanged = inventory.PieceQuantity - beforePiece,  
-                BoxQuantityAfter = inventory.BoxQuantity,
-                SheetQuantityAfter = inventory.SheetQuantity,
-                PieceQuantityAfter = inventory.PieceQuantity,
-                ReferenceNumber = referenceNumber,
-                Notes = $"Sale deduction: {piecesToDeduct} pieces equivalent",
-                EmployeeID = employeeId
-            };
-
-            await _context.StockMovement.AddAsync(stockMovement);*/
             await _context.SaveChangesAsync();
 
-            return piecesToDeduct;
+            return quantity;
         }
+
 
         #endregion
 
