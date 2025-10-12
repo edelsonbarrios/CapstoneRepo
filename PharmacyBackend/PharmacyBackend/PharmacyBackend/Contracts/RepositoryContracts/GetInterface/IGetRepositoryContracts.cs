@@ -30,22 +30,22 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
 
         #region Daily Sales
         Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             int? employeeId = null,
             string paymentMethod = null
         );
 
         Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate
+            DateTime? startDate = null,
+            DateTime? endDate = null
         );
 
         Task<IEnumerable<SalesTransaction>> GetFilteredSalesTransactionsAsync(
-            DateTime startDate,
-            DateTime endDate,
-            int? employeeId = null,
-            string paymentMethod = null
+           DateTime? startDate = null,
+           DateTime? endDate = null,
+           int? employeeId = null,
+           string paymentMethod = null
         );
         #endregion
 
@@ -141,6 +141,46 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<StockMovement> GetStockMovementByIdAsync(int id);
         public Task<IEnumerable<StockMovement>> GetStockMovementByInventoryIdAsync(int inventoryId);
         public Task<IEnumerable<StockMovement>> GetStockMovementByProductIdAsync(int productId);
+        #endregion
+
+        #region Reports
+
+        //Sales Report
+        /// <summary>
+        /// Gets sales transactions grouped by payment method for the specified date range
+        /// </summary>
+        Task<IEnumerable<IGrouping<string, SalesTransaction>>> GetSalesGroupedByPaymentMethodAsync(
+            DateTime startDate,
+            DateTime endDate
+        );
+
+        //Inventory Report
+        /// <summary>
+        /// Gets inventory filtered by date added and optional filter type
+        /// </summary>
+        Task<IEnumerable<Inventory>> GetInventoryReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType
+        );
+
+        /// <summary>
+        /// Gets overstocked inventory (stock > 2x reorder level)
+        /// </summary>
+        Task<IEnumerable<Inventory>> GetOverstockedInventoryAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null
+        );
+        
+        //Fast Moving Product
+        /// <summary>
+        /// Gets sales items grouped by product for fast-moving analysis
+        /// </summary>
+        Task<IEnumerable<IGrouping<int, SalesItem>>> GetSalesItemsGroupedByProductAsync(
+            DateTime startDate,
+            DateTime endDate
+        );
+
         #endregion
     }
 }

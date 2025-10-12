@@ -62,7 +62,7 @@ export class ViewSettleComponent implements OnInit {
   }
 
   calculateTotals() {
-    const vatAmount = this.subtotal * ((this.selectedVat?.vatRate || 0) / 100);
+    const vatAmount = this.subtotal * ((this.selectedVat?.vatRate || 12) / 100);
     const discountAmount = this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100);
     return this.subtotal + vatAmount - discountAmount;
   }

@@ -110,15 +110,29 @@ namespace PharmacyBackend.Repository.GET
         #region Daily Sales
 
         public async Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             int? employeeId = null,
             string paymentMethod = null)
         {
-            // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
-            // End of the day
+            // Default to today in UTC
+            var utcNow = DateTime.UtcNow;
+            var todayStart = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
+            var todayEnd = todayStart.AddDays(1).AddTicks(-1);
+
+            // If dates provided, use them; otherwise use today
+            DateTime start, end;
+
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                start = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                end = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            }
+            else
+            {
+                start = todayStart;
+                end = todayEnd;
+            }
 
             // Base query
             var query = _context.SalesTransaction
@@ -155,13 +169,27 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate)
+            DateTime? startDate = null,
+            DateTime? endDate = null)
         {
-            // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
-            // End of the day
+            // Default to today in UTC
+            var utcNow = DateTime.UtcNow;
+            var todayStart = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
+            var todayEnd = todayStart.AddDays(1).AddTicks(-1);
+
+            // If dates provided, use them; otherwise use today
+            DateTime start, end;
+
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                start = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                end = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            }
+            else
+            {
+                start = todayStart;
+                end = todayEnd;
+            }
 
             // Get sales items within date range
             var salesData = await _context.SalesItem
@@ -201,16 +229,30 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<SalesTransaction>> GetFilteredSalesTransactionsAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             int? employeeId = null,
             string paymentMethod = null)
         {
-            // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // End of the day
+            // Default to today in UTC
+            var utcNow = DateTime.UtcNow;
+            var todayStart = new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, 0, 0, 0, DateTimeKind.Utc);
+            var todayEnd = todayStart.AddDays(1).AddTicks(-1);
 
-            // Base query with includes
+            // If dates provided, use them; otherwise use today
+            DateTime start, end;
+
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                start = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                end = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            }
+            else
+            {
+                start = todayStart;
+                end = todayEnd;
+            }
+
             var query = _context.SalesTransaction
                 .Include(st => st.Items)
                     .ThenInclude(si => si.Product)
@@ -219,7 +261,6 @@ namespace PharmacyBackend.Repository.GET
                 .Include(st => st.VAT)
                 .Where(st => st.TransactionDate >= start && st.TransactionDate <= end);
 
-            // Apply filters
             if (employeeId.HasValue)
             {
                 query = query.Where(st => st.EmployeeID == employeeId.Value);
@@ -230,7 +271,6 @@ namespace PharmacyBackend.Repository.GET
                 query = query.Where(st => st.PaymentMethod == paymentMethod);
             }
 
-            // Order by date descending (newest first)
             query = query.OrderByDescending(st => st.TransactionDate);
 
             return await query.ToListAsync();
@@ -700,6 +740,127 @@ namespace PharmacyBackend.Repository.GET
                 .Include(sm => sm.Employee)
                 .Where(sm => sm.Inventory.ProductID == productId)
                 .OrderByDescending(sm => sm.MovementDate)
+                .ToListAsync();
+        }
+        #endregion
+
+        #region Reports
+        //Sales Report
+        public async Task<IEnumerable<IGrouping<string, SalesTransaction>>> GetSalesGroupedByPaymentMethodAsync(
+           DateTime startDate,
+           DateTime endDate)
+        {
+            return await _context.SalesTransaction
+                .Include(st => st.Items)
+                    .ThenInclude(si => si.Product)
+                .Include(st => st.Employee)
+                .Include(st => st.Discount)
+                .Include(st => st.VAT)
+                .Where(st => st.TransactionDate >= startDate && st.TransactionDate <= endDate)
+                .GroupBy(st => st.PaymentMethod)
+                .ToListAsync();
+        }
+
+        //Inventory Reports
+        public async Task<IEnumerable<Inventory>> GetInventoryReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType)
+        {
+            var query = _context.Inventory
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Generic)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Formulation)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Classification)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.TypeModel)
+                .Where(i => i.DateAdded >= startDate && i.DateAdded <= endDate && i.IsActive);
+
+            // Apply filter based on type
+            switch (filterType?.ToUpper())
+            {
+                case "CRITICALSTOCK":
+                    query = query.Where(i => i.IsCriticalStock && !i.IsExpired);
+                    break;
+                case "NEAREXPIRY":
+                    query = query.Where(i => i.IsNearExpiry && !i.IsExpired);
+                    break;
+                case "OVERSTOCKED":
+                    // Will be handled by GetOverstockedInventoryAsync
+                    return await GetOverstockedInventoryAsync(startDate, endDate);
+                case "EXPIRED":
+                    query = query.Where(i => i.IsExpired);
+                    break;
+                case "ALL":
+                default:
+                    // No additional filter
+                    break;
+            }
+
+            return await query
+                .OrderBy(i => i.Product.ProductName)
+                .ThenBy(i => i.ExpirationDate)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Inventory>> GetOverstockedInventoryAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            var query = _context.Inventory
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Generic)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Formulation)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Classification)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.TypeModel)
+                .Where(i => i.IsActive && !i.IsExpired);
+
+            // Apply date filter if provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                query = query.Where(i => i.DateAdded >= startDate.Value && i.DateAdded <= endDate.Value);
+            }
+
+            var inventories = await query.ToListAsync();
+
+            // Filter overstocked: BoxQuantity > 2 * ReorderLevel
+            var overstocked = inventories
+                .Where(i => i.BoxQuantity > (i.ReorderLevel * 2))
+                .OrderByDescending(i => i.BoxQuantity)
+                .ToList();
+
+            return overstocked;
+        }
+
+        //Fast Moving Product
+        public async Task<IEnumerable<IGrouping<int, SalesItem>>> GetSalesItemsGroupedByProductAsync(
+            DateTime startDate,
+            DateTime endDate)
+        {
+            return await _context.SalesItem
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Generic)
+                .Include(si => si.SalesTransaction)
+                .Where(si => si.SalesTransaction.TransactionDate >= startDate
+                          && si.SalesTransaction.TransactionDate <= endDate)
+                .GroupBy(si => si.ProductId)
                 .ToListAsync();
         }
         #endregion

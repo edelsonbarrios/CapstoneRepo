@@ -19,6 +19,7 @@ using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.ReportDtos;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -1516,6 +1517,224 @@ namespace PharmacyBackend.Service.GetService
                 EmployeeName = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty
             });
         }
+        #endregion
+
+        #region Reports
+        //Sales Report
+
+        public async Task<SalesReportDto> GetSalesReportAsync(DateTime startDate, DateTime endDate)
+        {
+            // Get all transactions for the period
+            var transactions = await _getRepo.GetSalesTransactionsByDateRangeAsync(startDate, endDate);
+            var transactionsList = transactions.ToList();
+
+            // Get grouped by payment method
+            var groupedByPayment = await _getRepo.GetSalesGroupedByPaymentMethodAsync(startDate, endDate);
+
+            var report = new SalesReportDto
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                TotalTransactions = transactionsList.Count,
+                TotalRevenue = transactionsList.Sum(t => t.TotalAmount),
+                TotalDiscount = transactionsList.Sum(t => t.DiscountAmount),
+                TotalVAT = transactionsList.Sum(t => t.VATAmount),
+                NetAmount = transactionsList.Sum(t => t.NetAmount),
+                PaymentMethodBreakdown = new List<PaymentMethodSummaryDto>()
+            };
+
+            // Calculate payment method breakdown
+            var totalRevenue = report.TotalRevenue;
+            foreach (var group in groupedByPayment)
+            {
+                var paymentMethodTotal = group.Sum(t => t.TotalAmount);
+                var transactionCount = group.Count();
+
+                report.PaymentMethodBreakdown.Add(new PaymentMethodSummaryDto
+                {
+                    PaymentMethod = group.Key ?? "Unknown",
+                    TransactionCount = transactionCount,
+                    TotalRevenue = paymentMethodTotal,
+                    AverageTransactionValue = transactionCount > 0 ? paymentMethodTotal / transactionCount : 0,
+                    Percentage = totalRevenue > 0 ? (paymentMethodTotal / totalRevenue) * 100 : 0
+                });
+            }
+
+            // Sort by revenue descending
+            report.PaymentMethodBreakdown = report.PaymentMethodBreakdown
+                .OrderByDescending(pm => pm.TotalRevenue)
+                .ToList();
+
+            return report;
+        }
+
+        //Inventory Report
+        public async Task<InventoryReportSummaryDto> GetInventoryReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType = "All")
+        {
+            var inventories = await _getRepo.GetInventoryReportAsync(startDate, endDate, filterType);
+            var inventoriesList = inventories.ToList();
+
+            var report = new InventoryReportSummaryDto
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                FilterType = filterType,
+                TotalItems = inventoriesList.Count,
+                TotalProducts = inventoriesList.Select(i => i.ProductID).Distinct().Count(),
+                TotalInventoryValue = inventoriesList.Sum(i => i.CostPrice * i.BoxQuantity),
+                InventoryItems = inventoriesList.Select(i => new InventoryDto
+                {
+                    InventoryID = i.InventoryID,
+                    ProductID = i.ProductID,
+                    Product = i.Product == null ? null : new ProductDto
+                    {
+                        ProductID = i.Product.ProductID,
+                        ProductName = i.Product.ProductName,
+                        CategoryID = i.Product.CategoryID,
+                        BrandID = i.Product.BrandID,
+                        GenericID = i.Product.GenericID,
+                        FormulationID = i.Product.FormulationID,
+                        ClassificationID = i.Product.ClassificationID,
+                        TypeID = i.Product.TypeID,
+                        IsActive = i.Product.IsActive,
+                        DateCreated = i.Product.DateCreated,
+                        SheetsPerBox = i.Product.SheetsPerBox,
+                        PiecesPerSheet = i.Product.PiecesPerSheet,
+                        BoxPrice = i.Product.BoxPrice,
+                        SheetPrice = i.Product.SheetPrice,
+                        PiecePrice = i.Product.PiecePrice,
+                        ReorderLevel = i.Product.ReorderLevel,
+                        CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
+                        BrandName = i.Product.Brand?.BrandName ?? string.Empty,
+                        GenericName = i.Product.Generic?.GenericName ?? string.Empty,
+                        FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
+                        ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
+                        TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
+                    },
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    BatchNumber = i.BatchNumber,
+                    ManufacturingDate = i.ManufacturingDate,
+                    ExpirationDate = i.ExpirationDate,
+                    BoxQuantity = i.BoxQuantity,
+                    SheetQuantity = i.SheetQuantity,
+                    PieceQuantity = i.PieceQuantity,
+                    SheetsPerBox = i.SheetsPerBox,
+                    PiecesPerSheet = i.PiecesPerSheet,
+                    ReorderLevel = i.ReorderLevel,
+                    CostPrice = i.CostPrice,
+                    BoxPrice = i.BoxPrice,
+                    SheetPrice = i.SheetPrice,
+                    PiecePrice = i.PiecePrice,
+                    DateAdded = i.DateAdded,
+                    IsActive = i.IsActive,
+                    IsExpired = i.IsExpired,
+                    IsNearExpiry = i.IsNearExpiry,
+                    IsCriticalStock = i.IsCriticalStock,
+                    IsMultiUnit = i.IsMultiUnit,
+                    TotalPiecesAvailable = i.TotalPiecesAvailable
+                }).ToList()
+            };
+
+            return report;
+        }
+
+        //Fast Moving Product
+        /*
+        public async Task<FastMovingProductsReportDto> GetFastMovingProductsReportAsync(
+           DateTime startDate,
+           DateTime endDate,
+           int topN = 20,
+           int minimumPiecesSold = 10)
+        {
+            var salesItemsGrouped = await _getRepo.GetSalesItemsGroupedByProductAsync(startDate, endDate);
+            var daysInPeriod = (endDate - startDate).Days + 1;
+
+            var fastMovingProducts = new List<FastMovingProductDto>();
+
+            foreach (var group in salesItemsGrouped)
+            {
+                var product = group.First().Product;
+                if (product == null) continue;
+
+                // Calculate total pieces sold (convert all units to pieces)
+                int totalPiecesSold = 0;
+                int totalBoxesSold = 0;
+                int totalSheetsSold = 0;
+
+                foreach (var item in group)
+                {
+                    // Convert based on UnitType
+                    switch (item.UnitType?.ToUpper())
+                    {
+                        case "BOX":
+                            totalBoxesSold += item.Quantity;
+                            totalPiecesSold += item.Quantity * (product.SheetsPerBox ?? 1) * (product.PiecesPerSheet ?? 1);
+                            break;
+                        case "SHEET":
+                            totalSheetsSold += item.Quantity;
+                            totalPiecesSold += item.Quantity * (product.PiecesPerSheet ?? 1);
+                            break;
+                        case "PIECE":
+                            totalPiecesSold += item.Quantity;
+                            break;
+                        default:
+                            totalPiecesSold += item.Quantity; // Default to pieces
+                            break;
+                    }
+                }
+
+                // Apply minimum threshold filter
+                if (totalPiecesSold < minimumPiecesSold)
+                    continue;
+
+                var totalRevenue = group.Sum(si => si.Subtotal);
+                var totalTransactions = group.Select(si => si.SalesTransactionId).Distinct().Count();
+
+                fastMovingProducts.Add(new FastMovingProductDto
+                {
+                    ProductId = product.ProductID,
+                    ProductName = product.ProductName,
+                    CategoryName = product.Category?.CategoryName ?? string.Empty,
+                    BrandName = product.Brand?.BrandName ?? string.Empty,
+                    GenericName = product.Generic?.GenericName ?? string.Empty,
+                    TotalPiecesSold = totalPiecesSold,
+                    TotalBoxesSold = totalBoxesSold,
+                    TotalSheetsSold = totalSheetsSold,
+                    TotalTransactions = totalTransactions,
+                    TotalRevenue = totalRevenue,
+                    DaysInPeriod = daysInPeriod,
+                    AveragePiecesPerDay = daysInPeriod > 0 ? (decimal)totalPiecesSold / daysInPeriod : 0,
+                    AverageRevenuePerDay = daysInPeriod > 0 ? totalRevenue / daysInPeriod : 0
+                });
+            }
+
+            // Sort by total pieces sold descending and take top N
+            var topProducts = fastMovingProducts
+                .OrderByDescending(p => p.TotalPiecesSold)
+                .Take(topN)
+                .ToList();
+
+            // Assign ranks
+            for (int i = 0; i < topProducts.Count; i++)
+            {
+                topProducts[i].Rank = i + 1;
+            }
+
+            var report = new FastMovingProductsReportDto
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                TotalDays = daysInPeriod,
+                TopN = topN,
+                MinimumThreshold = minimumPiecesSold,
+                Products = topProducts
+            };
+
+            return report;
+        }*/
         #endregion
 
     }

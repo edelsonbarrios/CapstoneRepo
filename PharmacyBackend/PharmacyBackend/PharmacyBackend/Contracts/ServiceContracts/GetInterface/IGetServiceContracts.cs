@@ -16,6 +16,7 @@ using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.ReportDtos;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -151,6 +152,40 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<StockMovementDto> GetStockMovementByIdAsync(int id);
         public Task<IEnumerable<StockMovementDto>> GetStockMovementByInventoryIdAsync(int inventoryId);
         public Task<IEnumerable<StockMovementDto>> GetStockMovementByProductIdAsync(int productId);
+        #endregion
+
+        #region Reports
+        //Sales Reports
+        /// <summary>
+        /// Gets comprehensive sales report with payment method breakdown
+        /// </summary>
+        Task<SalesReportDto> GetSalesReportAsync(
+            DateTime startDate,
+            DateTime endDate
+        );
+
+        //Inventory Reports
+        /// <summary>
+        /// Gets inventory report with filtering options
+        /// FilterType: "All", "CriticalStock", "NearExpiry", "Overstocked", "Expired"
+        /// </summary>
+        Task<InventoryReportSummaryDto> GetInventoryReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType = "All"
+        );
+        /*
+        //Fast Moving Product
+        /// <summary>
+        /// Gets fast-moving products report based on quantity sold and sales frequency
+        /// </summary>
+        Task<FastMovingProductsReportDto> GetFastMovingProductsReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int topN = 20,
+            int minimumPiecesSold = 10
+        );
+        */
         #endregion
     }
 }

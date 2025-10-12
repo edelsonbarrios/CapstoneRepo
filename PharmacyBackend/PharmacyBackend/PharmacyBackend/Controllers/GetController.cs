@@ -135,33 +135,36 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Daily Sales Endpoints
-
         /// <summary>
-        /// Get daily sales summary with optional filters
+        /// Get daily sales summary with optional filters (defaults to today's sales)
         /// </summary>
-        /// <param name="startDate">Start date (required)</param>
-        /// <param name="endDate">End date (required)</param>
+        /// <param name="startDate">Start date (optional - defaults to today)</param>
+        /// <param name="endDate">End date (optional - defaults to today)</param>
         /// <param name="employeeId">Filter by employee/cashier (optional)</param>
         /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
         /// <returns>Summary containing total sales, transactions, items sold, and unique products</returns>
         [HttpGet("daily-sales/summary")]
         public async Task<IActionResult> GetDailySalesSummary(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int? employeeId = null,
             [FromQuery] string paymentMethod = null)
         {
             try
             {
+                // Default to today if dates not provided
+                var start = startDate ?? DateTime.Today;
+                var end = endDate ?? DateTime.Today;
+
                 // Validate dates
-                if (startDate > endDate)
+                if (start > end)
                 {
                     return BadRequest(new { message = "Start date cannot be after end date" });
                 }
 
                 var summary = await _getService.GetDailySalesSummaryAsync(
-                    startDate,
-                    endDate,
+                    start,
+                    end,
                     employeeId,
                     paymentMethod
                 );
@@ -175,25 +178,29 @@ namespace PharmacyBackend.Controllers
         }
 
         /// <summary>
-        /// Get product sales summary for date range
+        /// Get product sales summary for date range (defaults to today's sales)
         /// </summary>
-        /// <param name="startDate">Start date (required)</param>
-        /// <param name="endDate">End date (required)</param>
+        /// <param name="startDate">Start date (optional - defaults to today)</param>
+        /// <param name="endDate">End date (optional - defaults to today)</param>
         /// <returns>List of products with quantity sold, available stock, and total sales</returns>
         [HttpGet("daily-sales/products")]
         public async Task<IActionResult> GetProductSalesSummary(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate)
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null)
         {
             try
             {
+                // Default to today if dates not provided
+                var start = startDate ?? DateTime.Today;
+                var end = endDate ?? DateTime.Today;
+
                 // Validate dates
-                if (startDate > endDate)
+                if (start > end)
                 {
                     return BadRequest(new { message = "Start date cannot be after end date" });
                 }
 
-                var products = await _getService.GetProductSalesSummaryAsync(startDate, endDate);
+                var products = await _getService.GetProductSalesSummaryAsync(start, end);
 
                 if (!products.Any())
                 {
@@ -209,31 +216,35 @@ namespace PharmacyBackend.Controllers
         }
 
         /// <summary>
-        /// Get filtered sales transactions
+        /// Get filtered sales transactions (defaults to today's transactions)
         /// </summary>
-        /// <param name="startDate">Start date (required)</param>
-        /// <param name="endDate">End date (required)</param>
+        /// <param name="startDate">Start date (optional - defaults to today)</param>
+        /// <param name="endDate">End date (optional - defaults to today)</param>
         /// <param name="employeeId">Filter by employee/cashier (optional)</param>
         /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
         /// <returns>List of sales transactions with items</returns>
         [HttpGet("daily-sales/transactions")]
         public async Task<IActionResult> GetFilteredSalesTransactions(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int? employeeId = null,
             [FromQuery] string paymentMethod = null)
         {
             try
             {
+                // Default to today if dates not provided
+                var start = startDate ?? DateTime.Today;
+                var end = endDate ?? DateTime.Today;
+
                 // Validate dates
-                if (startDate > endDate)
+                if (start > end)
                 {
                     return BadRequest(new { message = "Start date cannot be after end date" });
                 }
 
                 var transactions = await _getService.GetFilteredSalesTransactionsAsync(
-                    startDate,
-                    endDate,
+                    start,
+                    end,
                     employeeId,
                     paymentMethod
                 );
@@ -250,7 +261,6 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = "An error occurred while retrieving sales transactions", error = ex.Message });
             }
         }
-
         #endregion
 
         #region Sales
