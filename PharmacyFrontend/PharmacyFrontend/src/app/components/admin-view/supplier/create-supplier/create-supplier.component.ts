@@ -19,7 +19,6 @@ export class CreateSupplierComponent {
   // Error properties
   supplierNameError: string = '';
   contactNumberError: string = '';
-  emailError: string = '';
   addressError: string = '';
 
   constructor(
@@ -30,7 +29,6 @@ export class CreateSupplierComponent {
     // Clear previous errors
     this.supplierNameError = '';
     this.contactNumberError = '';
-    this.emailError = '';
     this.addressError = '';
 
     let hasErrors = false;
@@ -44,12 +42,6 @@ export class CreateSupplierComponent {
     // Validate contact number
     if (!this.newSupplier.contactNumber || this.newSupplier.contactNumber.trim() === '') {
       this.contactNumberError = 'Contact number is required';
-      hasErrors = true;
-    }
-
-    // Validate email
-    if (!this.newSupplier.email || this.newSupplier.email.trim() === '') {
-      this.emailError = 'Email is required';
       hasErrors = true;
     }
 
@@ -78,7 +70,6 @@ export class CreateSupplierComponent {
     // Clear errors when closing form
     this.supplierNameError = '';
     this.contactNumberError = '';
-    this.emailError = '';
     this.addressError = '';
     this.closeForm.emit();
   }
