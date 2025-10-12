@@ -40,6 +40,7 @@ namespace PharmacyBackend.Models
 
         public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
+        public int? PiecePerBox { get; set; }
 
         public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
 
@@ -62,9 +63,9 @@ namespace PharmacyBackend.Models
                 }
 
                 // Case 2: Dual-level (Box → Piece)
-                else if (SheetsPerBox.HasValue && (!PiecesPerSheet.HasValue || PiecesPerSheet.Value == 0))
+                else if (PiecePerBox.HasValue && (!PiecesPerSheet.HasValue || PiecesPerSheet.Value == 0))
                 {
-                    return (BoxQuantity * SheetsPerBox.Value) + PieceQuantity;
+                    return (BoxQuantity * PiecePerBox.Value) + PieceQuantity;
                 }
 
                 // Case 3: Single-level (Only pieces)

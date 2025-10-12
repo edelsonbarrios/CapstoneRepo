@@ -212,10 +212,6 @@ export class CashierDashboardComponent implements OnInit {
     if (product && (!item.unitPrice || item.unitPrice === 0)) {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
     }
-    const max = this.getMaxQuantity(item);
-    if (max !== Infinity && item.quantity > max) {
-      item.quantity = max;
-    }
   }
 
   onCartItemUnitTypeChange(item: any) {

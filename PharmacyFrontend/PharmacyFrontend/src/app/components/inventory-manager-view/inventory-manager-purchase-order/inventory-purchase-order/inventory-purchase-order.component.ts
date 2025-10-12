@@ -17,13 +17,7 @@ import { jwtDecode } from 'jwt-decode';
 @Component({
   selector: 'app-inventory-purchase-order',
   standalone: true,
-  imports: [
-    FormsModule,
-    NgIf,
-    PurchaseOrderProductsComponent,
-    CurrencyPipe,
-    NgFor,
-  ],
+  imports: [FormsModule, NgIf, PurchaseOrderProductsComponent, CurrencyPipe, NgFor],
   templateUrl: './inventory-purchase-order.component.html',
   styleUrl: './inventory-purchase-order.component.scss',
 })
@@ -34,16 +28,12 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   employee: Employee = new Employee();
   selectedSupplier: Supplier = new Supplier();
 
-  // Pagination properties
   paginatedItems: PurchaseOrderItem[] = [];
-  currentPage: number = 1;
-  itemsPerPage: number = 3;
-  totalPages: number = 0;
+  currentPage = 1;
+  itemsPerPage = 3;
+  totalPages = 0;
 
-  constructor(
-    private getService: GetService,
-    private postService: PostService
-  ) {}
+  constructor(private getService: GetService, private postService: PostService) {}
 
   ngOnInit(): void {
     this.getAllSuppliers();
@@ -52,16 +42,12 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(
-      this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage
-    );
+    this.totalPages = Math.ceil(this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
+
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(
-      startIndex,
-      endIndex
-    );
+    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
@@ -72,12 +58,11 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   openProductsForm() {
-    if (!this.selectedSupplier) {
-      alert('Please select a supplier first');
+    if (!this.selectedSupplier || !this.selectedSupplier.products?.length) {
+      alert('Please select a supplier with available products first.');
       return;
     }
     this.openProductForm = true;
-    console.log(this.selectedSupplier);
   }
 
   closeProductsForm() {
@@ -85,21 +70,20 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   onProductsSelected(products: Product[]) {
-    console.log(products);
     const items: PurchaseOrderItem[] = products.map((p) => ({
       id: 0,
       productId: p.productID,
       productName: p.productName,
-      boxQuantityOrdered: 1, // default, user can edit later
+      boxQuantityOrdered: 1,
       boxQuantityReceived: 0,
-      sheetQuantityOrdered: 1,
+      sheetQuantityOrdered: 0,
       sheetQuantityReceived: 0,
-      pieceQuantityOrdered: 1,
+      pieceQuantityOrdered: 0,
       pieceQuantityReceived: 0,
       boxPrice: p.boxPrice,
       sheetPrice: p.sheetPrice,
       piecePrice: p.piecePrice,
-      totalCost: p.boxPrice, // qty(1) * price
+      totalCost: p.boxPrice,
       batchNumber: '',
       manufacturingDate: new Date(),
       expirationDate: new Date(),
@@ -110,86 +94,9 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     }));
 
     this.purchaseOrders.purchaseOrderItems.push(...items);
-    console.log(items);
     this.updatePagination();
     this.computeTotalAmount();
     this.openProductForm = false;
-  }
-
-  computeTotalAmount() {
-    this.purchaseOrders.totalAmount =
-      this.purchaseOrders.purchaseOrderItems.reduce(
-        (sum, item) => sum + item.totalCost,
-        0
-      );
-  }
-
-  updateItemTotal(item: PurchaseOrderItem) {
-    item.totalCost = item.boxQuantityOrdered * item.boxPrice;
-    this.computeTotalAmount();
-  }
-
-  removeItem(index: number) {
-    this.purchaseOrders.purchaseOrderItems.splice(index, 1);
-    this.updatePagination();
-    this.computeTotalAmount();
-  }
-
-  // New method for removing items with pagination
-  removeItemPaginated(item: PurchaseOrderItem) {
-    const index = this.purchaseOrders.purchaseOrderItems.findIndex(
-      (i) => i === item
-    );
-    if (index !== -1) {
-      this.purchaseOrders.purchaseOrderItems.splice(index, 1);
-
-      // Adjust current page if necessary
-      if (this.paginatedItems.length === 1 && this.currentPage > 1) {
-        this.currentPage--;
-      }
-
-      this.updatePagination();
-      this.computeTotalAmount();
-    }
-  }
-
-  createPurchaseOrder() {
-    const requestPayload: CreatePurchaseOrder = {
-      purchaseOrderNumber: this.purchaseOrders.purchaseOrderNumber,
-      orderDate: new Date(this.purchaseOrders.orderDate).toISOString(),
-      deliveryDate: new Date(this.purchaseOrders.deliveryDate).toISOString(),
-      employeeLastName: this.employee.lastName,
-      supplierName: this.selectedSupplier.supplierName,
-      notes: this.purchaseOrders.notes,
-      purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
-        (item) => ({
-          productId: item.productId,
-          boxQuantityOrdered: item.boxQuantityOrdered,
-          boxQuantityReceived: item.boxQuantityReceived,
-          sheetQuantityOrdered: item.sheetQuantityOrdered,
-          sheetQuantityReceived: item.sheetQuantityReceived,
-          pieceQuantityOrdered: item.pieceQuantityOrdered,
-          pieceQuantityReceived: item.pieceQuantityReceived,
-          boxPrice: item.boxPrice,
-          sheetPrice: item.sheetPrice,
-          piecePrice: item.piecePrice,
-          batchNumber: item.batchNumber,
-          manufacturingDate: new Date(item.manufacturingDate).toISOString(),
-          expirationDate: new Date(item.expirationDate).toISOString(),
-        })
-      ),
-    };
-
-    this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
-      next: (res) => {
-        alert(`Purchase Order successfully`);
-        this.clearFields();
-      },
-      error: (err) => {
-        console.log(`${err.error}`);
-        console.log(requestPayload);
-      },
-    });
   }
 
   recalculateQuantitiesAndTotals(item: PurchaseOrderItem) {
@@ -198,83 +105,101 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     );
     if (!product) return;
 
-    // Reset defaults
+    // Reset
     item.sheetQuantityOrdered = 0;
     item.pieceQuantityOrdered = 0;
-    item.sheetPrice = 0;
-    item.piecePrice = 0;
 
-    // Dual-level: Box → Piece
     if (product.unitMeasurement === 'Dual-Level') {
+      // Box → Piece
+      item.pieceQuantityOrdered = item.boxQuantityOrdered * (product.sheetsPerBox || 0);
+    } else if (product.unitMeasurement === 'Multi-Level') {
+      // Box → Sheet → Piece
+      item.sheetQuantityOrdered = item.boxQuantityOrdered * (product.sheetsPerBox || 0);
       item.pieceQuantityOrdered =
-        item.boxQuantityOrdered * (product.sheetsPerBox || 0); // here sheetsPerBox acts as piecesPerBox
-
-      // piece price = boxPrice / piecesPerBox
-      item.piecePrice =
-        product.sheetsPerBox && product.sheetsPerBox > 0
-          ? product.boxPrice / product.sheetsPerBox
-          : product.piecePrice;
+        item.sheetQuantityOrdered * (product.piecesPerSheet || 0);
     }
 
-    // Triple-level: Box → Sheet → Piece
-    else if (product.unitMeasurement === 'Multi-Level') {
-      item.sheetQuantityOrdered =
-        item.boxQuantityOrdered * product.sheetsPerBox;
-      item.pieceQuantityOrdered =
-        item.sheetQuantityOrdered * product.piecesPerSheet;
-
-      // Derived prices
-      item.sheetPrice =
-        product.sheetsPerBox && product.sheetsPerBox > 0
-          ? product.boxPrice / product.sheetsPerBox
-          : product.sheetPrice;
-
-      item.piecePrice =
-        product.piecesPerSheet && product.piecesPerSheet > 0
-          ? item.sheetPrice / product.piecesPerSheet
-          : product.piecePrice;
-    }
-
-    // Total cost based on box quantity
-    item.totalCost = item.boxQuantityOrdered * item.boxPrice;
-
+    item.totalCost = item.boxQuantityOrdered * product.boxPrice;
     this.computeTotalAmount();
   }
 
+  computeTotalAmount() {
+    this.purchaseOrders.totalAmount = this.purchaseOrders.purchaseOrderItems.reduce(
+      (sum, item) => sum + item.totalCost,
+      0
+    );
+  }
+
+  removeItemPaginated(item: PurchaseOrderItem) {
+    const index = this.purchaseOrders.purchaseOrderItems.findIndex((i) => i === item);
+    if (index !== -1) {
+      this.purchaseOrders.purchaseOrderItems.splice(index, 1);
+      if (this.paginatedItems.length === 1 && this.currentPage > 1) this.currentPage--;
+      this.updatePagination();
+      this.computeTotalAmount();
+    }
+  }
+
+  createPurchaseOrder() {
+    const requestPayload: CreatePurchaseOrder = {
+      purchaseOrderNumber: this.purchaseOrders.purchaseOrderNumber,
+      orderDate: new Date().toISOString(),
+      deliveryDate: new Date(this.purchaseOrders.deliveryDate).toISOString(),
+      employeeLastName: this.employee.lastName,
+      supplierName: this.selectedSupplier.supplierName,
+      notes: this.purchaseOrders.notes,
+      purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map((item) => ({
+        productId: item.productId,
+        boxQuantityOrdered: item.boxQuantityOrdered,
+        boxQuantityReceived: item.boxQuantityReceived,
+        sheetQuantityOrdered: item.sheetQuantityOrdered,
+        sheetQuantityReceived: item.sheetQuantityReceived,
+        pieceQuantityOrdered: item.pieceQuantityOrdered,
+        pieceQuantityReceived: item.pieceQuantityReceived,
+        boxPrice: item.boxPrice,
+        sheetPrice: item.sheetPrice,
+        piecePrice: item.piecePrice,
+        batchNumber: item.batchNumber,
+        manufacturingDate: new Date(item.manufacturingDate).toISOString(),
+        expirationDate: new Date(item.expirationDate).toISOString(),
+      })),
+    };
+
+    this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
+      next: () => {
+        alert('Purchase Order created successfully!');
+        this.clearFields();
+      },
+      error: (err) => {
+        console.error(err.error);
+      },
+    });
+  }
+
   clearFields() {
-    this.purchaseOrders = new PurchaseOrder(); // resets everything
-    this.purchaseOrders.purchaseOrderItems = []; // ensure items array cleared
+    this.purchaseOrders = new PurchaseOrder();
+    this.purchaseOrders.purchaseOrderItems = [];
     this.currentPage = 1;
     this.updatePagination();
   }
 
   getAllSuppliers() {
     this.getService.getAllSuppliersAsync().subscribe({
-      next: (res) => {
-        this.suppliers = res;
-      },
-      error: (err) => {
-        console.log(`${err.error}`);
-      },
+      next: (res) => (this.suppliers = res),
+      error: (err) => console.error(err.error),
     });
   }
 
   getLoggedInUser() {
-    var token = localStorage.getItem(LogInToken);
+    const token = localStorage.getItem(LogInToken);
     if (!token) return;
 
-    var employee: any = jwtDecode(token);
-
-    const employeeId = parseInt(employee.EmployeeId);
-    if (!employeeId) console.log(`Employee Id does not exist.`);
+    const decoded: any = jwtDecode(token);
+    const employeeId = parseInt(decoded.EmployeeId);
 
     this.getService.GetEmployeeById(employeeId).subscribe({
-      next: (res) => {
-        this.employee = res;
-      },
-      error: (err) => {
-        console.log(`Logged-in user does not exist.`);
-      },
+      next: (res) => (this.employee = res),
+      error: () => console.error('Logged-in user not found.'),
     });
   }
 }

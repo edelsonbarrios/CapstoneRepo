@@ -19,6 +19,7 @@ namespace PharmacyBackend.DTOs.InventoryDTOs
 
         // Unit specifications
         public int? SheetsPerBox { get; set; }
+        public int? PiecePerBox { get; set; }
         public int? PiecesPerSheet { get; set; }
 
         public int ReorderLevel { get; set; }

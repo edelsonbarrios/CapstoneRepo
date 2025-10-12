@@ -13,4 +13,5 @@ export class CreateProductRequest {
   piecePrice: number = 0;
   reorderLevel: number = 0;
   unitMeasurement: string = '';
+  piecePerBox: number = 0;
 }

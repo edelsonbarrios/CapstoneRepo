@@ -392,7 +392,8 @@ namespace PharmacyBackend.Service.PostService
                 PiecePrice = dto.PiecePrice,
                 ReorderLevel = dto.ReorderLevel,
                 UnitMeasurement = dto.UnitMeasurement,
-                DateCreated = DateTime.UtcNow
+                DateCreated = DateTime.UtcNow,
+                PiecePerBox = dto.PiecePerBox
             };
 
             var created = await _postRepo.CreateProductAsync(product);
@@ -556,12 +557,12 @@ namespace PharmacyBackend.Service.PostService
         {
             try
             {
-                // Find product by name (reusing your existing helper pattern)
+
                 var product = await GetProductByNameAsync(dto.ProductName);
                 if (product == null)
-                    throw new ArgumentException($"Product '{dto.ProductName}' not found");
+                    throw new ArgumentException($"Product '{dto.ProductName}' not found.");
 
-                // Check for existing batch (following your requirements)
+                
                 var existingInventory = await _context.Inventory
                     .FirstOrDefaultAsync(i => i.ProductID == product.ProductID &&
                                              i.BatchNumber == dto.BatchNumber &&
@@ -569,16 +570,9 @@ namespace PharmacyBackend.Service.PostService
 
                 if (existingInventory != null)
                 {
-                    // Update existing batch (same batch number = update)
-                    var beforeBox = existingInventory.BoxQuantity;
-                    var beforeSheet = existingInventory.SheetQuantity;
-                    var beforePiece = existingInventory.PieceQuantity;
-
                     existingInventory.BoxQuantity += dto.BoxQuantity;
                     existingInventory.SheetQuantity += dto.SheetQuantity;
                     existingInventory.PieceQuantity += dto.PieceQuantity;
-
-                    // Update dates and prices (as per your requirements)
                     existingInventory.ExpirationDate = dto.ExpirationDate;
                     existingInventory.ManufacturingDate = dto.ManufacturingDate;
                     existingInventory.BoxPrice = dto.BoxPrice;
@@ -586,10 +580,10 @@ namespace PharmacyBackend.Service.PostService
                     existingInventory.PiecePrice = dto.PiecePrice;
                     existingInventory.CostPrice = dto.CostPrice;
 
+
                     await _updateRepo.UpdateInventoryAsync(existingInventory);
 
-                    // Create stock movement for addition to existing batch
-                    var additionMovement = new CreateStockMovementDto
+                    var movement = new CreateStockMovementDto
                     {
                         InventoryID = existingInventory.InventoryID,
                         MovementType = "Stock In",
@@ -600,23 +594,27 @@ namespace PharmacyBackend.Service.PostService
                         Notes = dto.Notes ?? $"Stock addition to batch {dto.BatchNumber}"
                     };
 
-                    await CreateStockMovementAsync(additionMovement);
+                    await CreateStockMovementAsync(movement);
                     return true;
                 }
-                else
+
+
+                Inventory inventory;
+
+                if (product.UnitMeasurement == "Multi-Level")
                 {
-                    // Create new inventory (separate batches)
-                    var inventory = new Inventory
+                    
+                    inventory = new Inventory
                     {
                         ProductID = product.ProductID,
                         BatchNumber = dto.BatchNumber,
                         ManufacturingDate = dto.ManufacturingDate,
                         ExpirationDate = dto.ExpirationDate,
                         BoxQuantity = dto.BoxQuantity,
-                        SheetQuantity = dto.SheetQuantity,
-                        PieceQuantity = dto.PieceQuantity,
-                        SheetsPerBox = dto.SheetsPerBox,
-                        PiecesPerSheet = dto.PiecesPerSheet,
+                        SheetQuantity = product.SheetsPerBox,
+                        PieceQuantity = product.PiecesPerSheet,
+                        SheetsPerBox = dto.SheetsPerBox ?? product.SheetsPerBox,
+                        PiecesPerSheet = dto.PiecesPerSheet ?? product.PiecesPerSheet,
                         ReorderLevel = dto.ReorderLevel,
                         BoxPrice = dto.BoxPrice,
                         SheetPrice = dto.SheetPrice,
@@ -625,16 +623,73 @@ namespace PharmacyBackend.Service.PostService
                         IsActive = true,
                         DateAdded = DateTime.UtcNow
                     };
-
-                    // This will auto-create stock movement (modified repository above)
-                    return await _postRepo.CreateInventoryAsync(inventory);
                 }
+                else if (product.UnitMeasurement == "Dual-Level")
+                {
+                    inventory = new Inventory
+                    {
+                        ProductID = product.ProductID,
+                        BatchNumber = dto.BatchNumber,
+                        ManufacturingDate = dto.ManufacturingDate,
+                        ExpirationDate = dto.ExpirationDate,
+                        BoxQuantity = dto.BoxQuantity,
+                        SheetQuantity = 0, // no sheets in dual-level
+                        PieceQuantity = product.PiecePerBox,
+                        PiecePerBox = dto.PiecePerBox ?? product.PiecePerBox,
+                        ReorderLevel = dto.ReorderLevel,
+                        BoxPrice = dto.BoxPrice,
+                        PiecePrice = dto.PiecePrice,
+                        CostPrice = dto.CostPrice,
+                        IsActive = true,
+                        DateAdded = DateTime.UtcNow
+                    };
+                }
+                else
+                {
+                    // 🔸 Single-Level fallback (Box only)
+                    inventory = new Inventory
+                    {
+                        ProductID = product.ProductID,
+                        BatchNumber = dto.BatchNumber,
+                        ManufacturingDate = dto.ManufacturingDate,
+                        ExpirationDate = dto.ExpirationDate,
+                        BoxQuantity = dto.BoxQuantity,
+                        PieceQuantity = dto.PieceQuantity,
+                        PiecePerBox = dto.PiecePerBox ?? product.PiecePerBox,
+                        BoxPrice = dto.BoxPrice,
+                        PiecePrice = dto.PiecePrice,
+                        CostPrice = dto.CostPrice,
+                        IsActive = true,
+                        DateAdded = DateTime.UtcNow
+                    };
+
+                }
+                var created = await _postRepo.CreateInventoryAsync(inventory);
+
+                if (created)
+                {
+                    var movement = new CreateStockMovementDto
+                    {
+                        InventoryID = inventory.InventoryID,
+                        MovementType = "Stock In",
+                        BoxQuantityChanged = dto.BoxQuantity,
+                        SheetQuantityChanged = dto.SheetQuantity,
+                        PieceQuantityChanged = dto.PieceQuantity,
+                        ReferenceNumber = dto.ReferenceNumber,
+                        Notes = dto.Notes ?? $"New batch {dto.BatchNumber} created."
+                    };
+
+                    await CreateStockMovementAsync(movement);
+                }
+
+                return created;
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error creating inventory: {ex.Message}", ex);
             }
         }
+
 
         public async Task<bool> AdjustInventoryStockAsync(StockAdjustmentDto dto)
         {

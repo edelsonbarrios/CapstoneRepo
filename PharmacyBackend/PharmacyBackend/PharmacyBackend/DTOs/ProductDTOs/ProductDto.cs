@@ -21,7 +21,7 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public decimal PiecePrice { get; set; }
         public int ReorderLevel { get; set; }
         public string UnitMeasurement { get; set; }
-
+        public int? PiecePerBox { get; set; }
         // Calculated fields from Inventory
         public int TotalStock { get; set; } // Calculated from active, non-expired inventory
         public int ExpiredStock { get; set; } // Expired inventory count

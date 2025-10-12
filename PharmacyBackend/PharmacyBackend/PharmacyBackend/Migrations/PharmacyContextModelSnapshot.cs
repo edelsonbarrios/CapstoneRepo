@@ -419,6 +419,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<DateTime>("ManufacturingDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("PiecePerBox")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("PiecePrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -484,6 +487,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("PiecePerBox")
+                        .HasColumnType("integer");
 
                     b.Property<decimal>("PiecePrice")
                         .HasPrecision(18, 2)

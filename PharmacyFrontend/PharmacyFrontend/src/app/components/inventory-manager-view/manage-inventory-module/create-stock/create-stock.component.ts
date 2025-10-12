@@ -64,7 +64,8 @@ export class CreateStockComponent implements OnInit{
       piecePrice : this.createStock.piecePrice,
       referenceNumber : '',
       notes: '',
-      employeeID: this.employee.id
+      employeeID: this.employee.id,
+      piecePerBox: this.selectedProduct.piecePerBox
     }
     this.postService.createNewInventoryAsync(requestPayload).subscribe({
       next: res => {

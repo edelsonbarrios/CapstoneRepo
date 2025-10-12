@@ -142,7 +142,8 @@ export class CreateProductComponent implements OnInit{
       sheetPrice: this.newProduct.sheetPrice,
       piecePrice: this.newProduct.piecePrice,
       reorderLevel: this.newProduct.reorderLevel,
-      unitMeasurement: this.newProduct.unitMeasurement
+      unitMeasurement: this.newProduct.unitMeasurement,
+      piecePerBox: this.newProduct.piecePerBox,
     };
     this.postService.createProductAsync(requestPayload).subscribe({
       next: res => {

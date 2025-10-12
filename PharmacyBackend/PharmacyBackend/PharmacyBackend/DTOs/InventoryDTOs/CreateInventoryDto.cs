@@ -28,5 +28,6 @@
         public string? ReferenceNumber { get; set; }
         public string? Notes { get; set; }
         public int? EmployeeID { get; set; }
+        public int? PiecePerBox { get; set; }
     }
 }

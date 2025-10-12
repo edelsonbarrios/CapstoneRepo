@@ -609,6 +609,7 @@ namespace PharmacyBackend.Service.GetService
                 PiecePrice = p.PiecePrice,
                 ReorderLevel = p.ReorderLevel,
                 UnitMeasurement = p.UnitMeasurement,
+                PiecePerBox = p.PiecePerBox,
 
 
                 // Inventory calculations
@@ -653,6 +654,7 @@ namespace PharmacyBackend.Service.GetService
                 PiecePrice = p.PiecePrice,
                 ReorderLevel = p.ReorderLevel,
                 UnitMeasurement = p.UnitMeasurement,
+                PiecePerBox = p.PiecePerBox,
 
                 // Inventory calculations
                 //TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,
@@ -921,6 +923,7 @@ namespace PharmacyBackend.Service.GetService
                     PiecePrice = i.Product.PiecePrice,
                     ReorderLevel = i.Product.ReorderLevel,
                     UnitMeasurement = i.Product.UnitMeasurement,
+                    PiecePerBox = i.PiecePerBox,
 
                     // Derived product properties (guarded against null Inventory collections)
                     ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
@@ -978,6 +981,7 @@ namespace PharmacyBackend.Service.GetService
             {
                 InventoryID = i.InventoryID,
                 ProductID = i.ProductID,
+                PiecePerBox = i.PiecePerBox,
 
                 // Map nested Product -> ProductDto (safe null checks)
                 Product = i.Product == null ? null : new ProductDto
@@ -999,6 +1003,7 @@ namespace PharmacyBackend.Service.GetService
                     PiecePrice = i.Product.PiecePrice,
                     ReorderLevel = i.Product.ReorderLevel,
                     UnitMeasurement = i.Product.UnitMeasurement,
+                    PiecePerBox = i.Product.PiecePerBox,
 
                     // Derived product properties (guarded against null Inventory collections)
                     ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,

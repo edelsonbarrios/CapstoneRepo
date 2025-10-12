@@ -16,4 +16,5 @@ export class CreateInventory {
     referenceNumber : string = '';
     notes: string = '';
     employeeID: number = 0;
+    piecePerBox: number = 0;
 }

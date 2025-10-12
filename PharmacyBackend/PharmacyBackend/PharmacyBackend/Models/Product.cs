@@ -31,6 +31,7 @@ namespace PharmacyBackend.Models
 
         public List<Supplier> Suppliers { get; set; }
         public int SheetsPerBox { get; set; }
+        public int PiecePerBox { get; set; }
         public int PiecesPerSheet { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]

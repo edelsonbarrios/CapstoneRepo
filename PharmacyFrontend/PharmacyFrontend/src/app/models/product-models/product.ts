@@ -17,6 +17,7 @@ export class Product {
   piecePrice: number = 0;
   reorderLevel: number = 0;
   unitMeasurement: string = '';
+  piecePerBox: number = 0;
 
 
   totalStock: number = 0;

@@ -81,7 +81,6 @@
                 <input
                   type="number"
                   min="1"
-                  [max]="getMaxQuantity(item)"
                   [(ngModel)]="item.quantity"
                   (ngModelChange)="onCartItemChange(item)"
                 />
