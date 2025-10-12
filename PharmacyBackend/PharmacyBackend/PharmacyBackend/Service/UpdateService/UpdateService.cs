@@ -632,18 +632,19 @@ namespace PharmacyBackend.Service.UpdateService
                             ProductID = item.ProductID,
                             BoxQuantity = item.BoxQuantityReceived,
                             SheetQuantity = 0,
-                            PieceQuantity = computedPieceQty,
+                            PieceQuantity = product.PiecePerBox,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,
                             ReorderLevel = product.ReorderLevel,
-                            SheetsPerBox = sheetsPerBox,
-                            PiecesPerSheet = piecesPerSheet,
+                            SheetsPerBox = 0,
+                            PiecesPerSheet = 0,
                             BoxPrice = product.BoxPrice,
                             SheetPrice = 0,
                             PiecePrice = product.PiecePrice,
                             DateAdded = DateTime.UtcNow,
-                            IsActive = true
+                            IsActive = true,
+                            PiecePerBox = product.PiecePerBox
                         };
 
                         await _postRepo.CreateInventoryAsync(newInventory);
@@ -724,34 +725,31 @@ namespace PharmacyBackend.Service.UpdateService
         }
 
         private async Task LogStockMovementAsync(
-    Inventory inventory,
-    int beforeBox, int beforeSheet, int beforePiece,
-    int changeBox, int changeSheet, int changePiece,
-    string referenceNumber, string productName, int? employeeId)
-{
-    var stockMovement = new StockMovement
-    {
-        InventoryID = inventory.InventoryID,
-        MovementType = "Received PO",
-        BoxQuantityBefore = beforeBox,
-        SheetQuantityBefore = beforeSheet,
-        PieceQuantityBefore = beforePiece,
-        BoxQuantityChanged = changeBox,
-        SheetQuantityChanged = changeSheet,
-        PieceQuantityChanged = changePiece,
-        BoxQuantityAfter = inventory.BoxQuantity,
-        SheetQuantityAfter = inventory.SheetQuantity,
-        PieceQuantityAfter = inventory.PieceQuantity,
-        ReferenceNumber = referenceNumber ?? $"PO-{referenceNumber}",
-        Notes = $"New stock received for product {productName}.",
-        EmployeeID = employeeId,
-    };
+        Inventory inventory,
+        int beforeBox, int beforeSheet, int beforePiece,
+        int changeBox, int changeSheet, int changePiece,
+        string referenceNumber, string productName, int? employeeId)
+        {
+            var stockMovement = new StockMovement
+            {
+                InventoryID = inventory.InventoryID,
+                MovementType = "Received PO",
+                BoxQuantityBefore = beforeBox,
+                SheetQuantityBefore = beforeSheet,
+                PieceQuantityBefore = beforePiece,
+                BoxQuantityChanged = changeBox,
+                SheetQuantityChanged = changeSheet,
+                PieceQuantityChanged = changePiece,
+                BoxQuantityAfter = inventory.BoxQuantity,
+                SheetQuantityAfter = inventory.SheetQuantity,
+                PieceQuantityAfter = inventory.PieceQuantity,
+                ReferenceNumber = referenceNumber ?? $"PO-{referenceNumber}",
+                Notes = $"New stock received for product {productName}.",
+                EmployeeID = employeeId,
+            };
 
-    await _context.StockMovement.AddAsync(stockMovement);
-}
-
-
-
+            await _context.StockMovement.AddAsync(stockMovement);
+        }
         #endregion
     }
 }

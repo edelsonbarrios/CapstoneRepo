@@ -94,7 +94,6 @@ export class ViewSettleComponent implements OnInit {
 
     this.paymentConfirmed.emit(eventPayload);
     console.log(eventPayload);
-    console.log(this.loggedInEmployee.id);
   }
 
   getLoggedInUser() {

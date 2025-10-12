@@ -103,6 +103,9 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     const product = this.selectedSupplier.products.find(
       (p) => p.productID === item.productId
     );
+
+    console.log(this.selectedSupplier.products);
+
     if (!product) return;
 
     // Reset

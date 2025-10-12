@@ -105,7 +105,6 @@ export class CashierDashboardComponent implements OnInit {
 
   getAvailableUnitMeasurements(product: any) : string[] {
     if(!product) return [];
-    console.log('unitMeasurement:', product.unitMeasurement);
     if(product.unitMeasurement == 'Multi-Level') {
       return ['Box','Sheet','Piece'];
     }else {
@@ -264,7 +263,6 @@ export class CashierDashboardComponent implements OnInit {
   // Payment & Transaction
   // --------------------------
   handlePayment(event: any) {
-    console.log('Payment confirmed:', event);
 
     const employeeId = event.employeeID;
     if (!employeeId || employeeId <= 0) {
@@ -308,7 +306,6 @@ export class CashierDashboardComponent implements OnInit {
       netAmount: totalAmount - discountAmount + vatAmount,
     };
 
-    console.log('Constructed payload:', salesTransactionPayload);
 
     this.postService.createSalesTransactionAsync(event).subscribe({
       next: () => {
@@ -318,6 +315,7 @@ export class CashierDashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error creating transaction:', err);
+        console.log(salesTransactionPayload);
         alert('Failed to create transaction.');
       },
     });

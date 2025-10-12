@@ -311,24 +311,22 @@ namespace PharmacyBackend.Repository.POST
         }
 
         private async Task<int> DeductFromSingleInventory(
-    Inventory inventory,
-    int piecesNeeded,
-    string referenceNumber,
-    int? employeeId,
-    string unitType = "piece") // added unitType for better context
-        {
+            Inventory inventory,
+            int piecesNeeded,
+            string referenceNumber,
+            int? employeeId,
+            string unitType = "piece"
+            ) 
+         {
             var beforeBox = inventory.BoxQuantity;
             var beforeSheet = inventory.SheetQuantity;
             var beforePiece = inventory.PieceQuantity;
 
             var remainingToDeduct = piecesNeeded;
-
-            // Calculate conversion factors
             int sheetsPerBox = inventory.SheetsPerBox ?? 0;
             int piecesPerSheet = inventory.PiecesPerSheet ?? 0;
             int piecesPerBox = inventory.PiecePerBox ?? (sheetsPerBox > 0 && piecesPerSheet > 0 ? sheetsPerBox * piecesPerSheet : 0);
 
-            // 🧩 Start deduction based on unit type
             switch (unitType.ToLower())
             {
                 case "piece":
