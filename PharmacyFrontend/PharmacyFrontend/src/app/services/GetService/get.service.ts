@@ -17,6 +17,8 @@ import { Supplier } from '../../models/supplier-models/supplier';
 import { Product } from '../../models/product-models/product';
 import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order';
 import { Inventory } from '../../models/inventory-module-models/inventory';
+import { SalesTransaction } from '../../models/sales-transaction-models/sales-transaction';
+import { DailySalesSummary } from '../../models/sales-transaction-models/daily-sales-summary';
 @Injectable({
   providedIn: 'root'
 })
@@ -147,4 +149,13 @@ export class GetService {
     return this.httpClient.get<any>(`${this.apiUrl}/Get/StockMovementAll`);
   }
   //Stock Movement Service End
+
+  //Transaction Service
+  getAllSalesTransactionsAsync() : Observable<SalesTransaction[]> {
+    return this.httpClient.get<SalesTransaction[]>(`${this.apiUrl}/Get/TransactionAll`);
+  }
+  getDailySalesSummaryAsync() : Observable<DailySalesSummary> {
+    return this.httpClient.get<DailySalesSummary>(`${this.apiUrl}/Get/daily-sales/summary`);
+  }
+  //Transaction Service End 
 }

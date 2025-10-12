@@ -5,28 +5,28 @@
     <div class="grid-items total-sales">
       <div class="upper-container">
         <h2>SALES</h2>
-        <p>&#8369;8,105.10</p>
+        <p>{{dailySalesSummary.totalSales}}</p>
       </div>
     </div>
 
     <div class="grid-items total-transaction">
       <div class="upper-container">
         <h2>TRANSACTIONS</h2>
-        <p>36</p>
+        <p>{{dailySalesSummary.totalTransactions}}</p>
       </div>
     </div>
 
     <div class="grid-items item-sold">
       <div class="upper-container">
         <h2>ITEM SOLD</h2>
-        <p>137</p>
+        <p>{{dailySalesSummary.totalItemsSold}}</p>
       </div>
     </div>
 
     <div class="grid-items total-product">
       <div class="upper-container">
         <h2>PRODUCT</h2>
-        <p>27</p>
+        <p>{{dailySalesSummary.uniqueProductsCount}}</p>
       </div>
     </div>
 
@@ -133,88 +133,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1702904366</td>
-            <td>01/15/2025</td>
-            <td>&#8369;459.70</td>
-            <td>&#8369;489.00</td>
-            <td>&#8369;29.30</td>
-            <td>Cash</td>
-            <td>Kristine</td>
+          <tr *ngFor="let st of transactions">
+            <td>{{st.invoiceNumber}}</td>
+            <td>{{st.transactionDate | date: 'dd-MM-yyy'}}</td>
+            <td>{{st.totalAmount}}</td>
+            <td>{{st.amountPaid}}</td>
+            <td>{{st.changeAmount}}</td>
+            <td>{{st.paymentMethod}}</td>
+            <td>{{st.employeeName}}</td>
             <td>
               <button class="btn-view" (click)="openViewSalesForm()">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1702905367</td>
-            <td>02/03/2025</td>
-            <td>&#8369;524.87</td>
-            <td>&#8369;815.00</td>
-            <td>&#8369;290.13</td>
-            <td>Cash</td>
-            <td>Edelson</td>
-            <td>
-              <button class="btn-view">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1702905406</td>
-            <td>03/22/2025</td>
-            <td>&#8369;92.17</td>
-            <td>&#8369;97.80</td>
-            <td>&#8369;5.63</td>
-            <td>Cash</td>
-            <td>Harvey</td>
-            <td>
-              <button class="btn-view">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1702905521</td>
-            <td>04/01/2025</td>
-            <td>&#8369;548.71</td>
-            <td>&#8369;652.00</td>
-            <td>&#8369;103.29</td>
-            <td>Cash</td>
-            <td>Harvey</td>
-            <td>
-              <button class="btn-view">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1702980773</td>
-            <td>05/10/2025</td>
-            <td>&#8369;73.13</td>
-            <td>&#8369;407.50</td>
-            <td>&#8369;334.37</td>
-            <td>Cash</td>
-            <td>Axl</td>
-            <td>
-              <button class="btn-view">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1702981262</td>
-            <td>06/18/2025</td>
-            <td>&#8369;553.84</td>
-            <td>&#8369;4,075.00</td>
-            <td>&#8369;3,521.16</td>
-            <td>Cash</td>
-            <td>Edelson</td>
-            <td>
-              <button class="btn-view">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>1702983381</td>
-            <td>07/25/2025</td>
-            <td>&#8369;196.19</td>
-            <td>&#8369;407.50</td>
-            <td>&#8369;211.31</td>
-            <td>Cash</td>
-            <td>Harvey</td>
-            <td>
-              <button class="btn-view">View</button>
             </td>
           </tr>
         </tbody>
