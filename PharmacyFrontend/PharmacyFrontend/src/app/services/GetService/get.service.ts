@@ -157,5 +157,8 @@ export class GetService {
   getDailySalesSummaryAsync() : Observable<DailySalesSummary> {
     return this.httpClient.get<DailySalesSummary>(`${this.apiUrl}/Get/daily-sales/summary`);
   }
+  getSummarySalesForTodayAsync() : Observable<DailySalesSummary> {
+    return this.httpClient.get<DailySalesSummary>(`${this.apiUrl}/Get/DailySalesSummary`);
+  }
   //Transaction Service End 
 }

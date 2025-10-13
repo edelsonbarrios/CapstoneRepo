@@ -29,9 +29,10 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #endregion
 
         #region Daily Sales
+        public Task<DailySalesSummaryDto> GetSummarySalesForToday();
         Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate,
+            DateTime? endDate,
             int? employeeId = null,
             string paymentMethod = null
         );

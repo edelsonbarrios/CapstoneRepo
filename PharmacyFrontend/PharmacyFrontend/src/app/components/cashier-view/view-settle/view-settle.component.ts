@@ -87,7 +87,7 @@ export class ViewSettleComponent implements OnInit {
         productId: i.productID,
         quantity: i.quantity,
         unitType: i.unitType,
-        unitPrice: i.price,
+        unitPrice: i.unitPrice,
         salesTransactionId: 0, // backend should ignore or set this
       })),
     };

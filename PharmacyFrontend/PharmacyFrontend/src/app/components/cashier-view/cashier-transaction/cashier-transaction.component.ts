@@ -32,7 +32,7 @@ export class CashierTransactionComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllSalesTransactions();
-    this.getDailySalesSummary();
+    this.getSummarySalesForToday();
   }
 
   getAllSalesTransactions() {
@@ -48,6 +48,17 @@ export class CashierTransactionComponent implements OnInit {
 
   getDailySalesSummary() {
     this.getService.getDailySalesSummaryAsync().subscribe({
+      next: res => {
+        this.dailySalesSummary = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getSummarySalesForToday() {
+    this.getService.getSummarySalesForTodayAsync().subscribe({
       next: res => {
         this.dailySalesSummary = res;
       },

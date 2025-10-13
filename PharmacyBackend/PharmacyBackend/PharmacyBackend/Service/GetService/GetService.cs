@@ -271,10 +271,17 @@ namespace PharmacyBackend.Service.GetService
         #endregion
 
         #region Daily Sales
+        public async Task<DailySalesSummaryDto> GetSummarySalesForToday()
+        {
+            var transaction = await _getRepo.GetSummarySalesForToday();
+            if (transaction is null)
+                return new DailySalesSummaryDto();
+            return transaction;
+        }
 
         public async Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate,
+            DateTime? endDate,
             int? employeeId = null,
             string paymentMethod = null)
         {

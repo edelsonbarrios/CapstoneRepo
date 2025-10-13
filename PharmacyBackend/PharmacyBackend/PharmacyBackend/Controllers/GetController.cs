@@ -144,6 +144,14 @@ namespace PharmacyBackend.Controllers
         /// <param name="employeeId">Filter by employee/cashier (optional)</param>
         /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
         /// <returns>Summary containing total sales, transactions, items sold, and unique products</returns>
+        [HttpGet("DailySalesSummary")]
+        public async Task<ActionResult<DailySalesSummaryDto>> GetSummarySalesForToday()
+        {
+            var summary = await _getService.GetSummarySalesForToday();
+            if (summary is null)
+                return NotFound("No transactions for today.");
+            return Ok(summary);
+        }
         [HttpGet("daily-sales/summary")]
         public async Task<IActionResult> GetDailySalesSummary(
             [FromQuery] DateTime startDate,

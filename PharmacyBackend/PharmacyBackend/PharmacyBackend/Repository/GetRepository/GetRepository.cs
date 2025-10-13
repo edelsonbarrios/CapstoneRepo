@@ -108,16 +108,35 @@ namespace PharmacyBackend.Repository.GET
         #endregion
 
         #region Daily Sales
+        public async Task<DailySalesSummaryDto> GetSummarySalesForToday()
+        {
+            var transactions = await _context.SalesTransaction
+                .Include(st => st.Items)
+                .Where(st => st.TransactionDate.Date >= DateTime.UtcNow.Date
+                && st.TransactionDate.Date <= DateTime.UtcNow.Date)
+                .ToListAsync();
+            return new DailySalesSummaryDto
+            {
+                TotalSales = transactions.Sum(t => t.NetAmount),
+                TotalTransactions = transactions.Count(),
+                TotalItemsSold = transactions.SelectMany(t => t.Items).Sum(i => i.Quantity),
+                UniqueProductsCount = transactions
+                    .SelectMany(t => t.Items)
+                    .Select(i => i.ProductId)
+                    .Distinct()
+                    .Count()
+            };
+        }
 
         public async Task<DailySalesSummaryDto> GetDailySalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate,
+            DateTime? endDate,
             int? employeeId = null,
             string paymentMethod = null)
         {
             // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            var start = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+            var end = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
             // End of the day
 
             // Base query
@@ -129,6 +148,13 @@ namespace PharmacyBackend.Repository.GET
             if (employeeId.HasValue)
             {
                 query = query.Where(st => st.EmployeeID == employeeId.Value);
+            }
+
+            if(startDate == null || endDate == null)
+            {
+                query = _context.SalesTransaction
+                    .Where(st => st.TransactionDate >= DateTime.UtcNow.Date
+                    && st.TransactionDate < DateTime.UtcNow.Date.AddDays(1));
             }
 
             if (!string.IsNullOrEmpty(paymentMethod))
