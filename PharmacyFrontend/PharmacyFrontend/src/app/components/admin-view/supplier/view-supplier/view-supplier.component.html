@@ -1,4 +1,4 @@
-<div class="wrapper" *ngIf="viewSupplier as supplier">
+<div class="wrapper" *ngIf="viewSupplier as supplier && !showSuccessAlert">
   <!-- HEADER -->
   <header>
     <h2>{{ isEditMode ? 'Edit Supplier' : 'Supplier Details' }}</h2>
@@ -93,5 +93,14 @@
     <button *ngIf="!isEditMode" (click)="toggleViewMode()" class="edit-btn">Edit</button>
     <button *ngIf="isEditMode" (click)="saveChanges()" class="save-btn">Save</button>
     <button (click)="closeViewForm()" class="close-btn">Close</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Supplier has been Updated Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>
