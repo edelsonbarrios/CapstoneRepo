@@ -20,6 +20,7 @@ export class ManageProductComponent implements OnInit{
   updateProduct ?: Product | null;
   products : Product[] = [];
   paginatedProducts: Product[] = [];
+  showSuccessAlert: boolean = false;
   
   // Pagination properties
   currentPage: number = 1;
@@ -66,8 +67,7 @@ export class ManageProductComponent implements OnInit{
     if(id == null) return;
     this.updateService.archiveProductByIdAsync(id).subscribe({
       next: res => {
-        alert(`${res.message}`);
-        this.getAllProducts();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error.message}`);
@@ -98,6 +98,12 @@ export class ManageProductComponent implements OnInit{
 
   closeCreateProductForm() {
     this.newProduct = null;
+    this.getAllProducts();
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.currentPage = 1;
     this.getAllProducts();
   }
 }

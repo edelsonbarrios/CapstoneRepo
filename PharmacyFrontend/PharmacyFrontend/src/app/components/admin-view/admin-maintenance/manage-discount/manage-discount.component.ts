@@ -22,6 +22,8 @@ export class ManageDiscountComponent implements OnInit {
   newDiscount: Discount = new Discount();
   errorMessage: string = '';
   editDiscount?: Product | null;
+  showSuccessAlert: boolean = false;
+  successMessage: string = '';
 
   // Pagination properties
   currentPage: number = 1;
@@ -81,10 +83,8 @@ export class ManageDiscountComponent implements OnInit {
     this.postService.createDiscountAsync(requestPayload).subscribe({
       next: (res) => {
         this.errorMessage = '';
-        alert('Discount successfully created.');
-        this.newDiscount.discountName = '';
-        this.newDiscount.discountRate = 0;
-        this.getAllDiscount();
+        this.successMessage = 'Discount has been Added Successfully';
+        this.showSuccessAlert = true;
       },
       error: (err) => {
         alert(`${err.error}`);
@@ -97,14 +97,21 @@ export class ManageDiscountComponent implements OnInit {
     if (!discount) return;
     this.updateService.archiveDiscountAsync(discount.id).subscribe({
       next: mes => {
-        alert(`${mes.message}`);
-        this.currentPage = 1;
-        this.getAllDiscount();
+        this.successMessage = 'Discount has been Archived Successfully';
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error.message}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.newDiscount.discountName = '';
+    this.newDiscount.discountRate = 0;
+    this.currentPage = 1;
+    this.getAllDiscount();
   }
 
   openEditDiscountForm() {

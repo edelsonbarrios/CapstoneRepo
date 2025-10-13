@@ -15,6 +15,7 @@ export class ViewSupplierComponent {
   @Input() viewSupplier: Supplier = new Supplier();
   @Output() closeForm = new EventEmitter<void>();
   isEditMode: boolean = false;
+  showSuccessAlert: boolean = false;
 
   // Pagination properties
   currentPage: number = 1;
@@ -66,15 +67,19 @@ export class ViewSupplierComponent {
       .updateSupplierAsync(this.viewSupplier.id, this.viewSupplier)
       .subscribe({
         next: (res) => {
-          alert(`${res.message}`);
-          this.isEditMode = false;
-          this.closeForm.emit();
+          this.showSuccessAlert = true;
         },
         error: (err) => {
-          console.error(err); // good for debugging
+          console.error(err);
           alert(JSON.stringify(err.error));
           console.log(JSON.stringify(err.error));
         },
       });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.isEditMode = false;
+    this.closeForm.emit();
   }
 }

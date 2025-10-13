@@ -23,6 +23,8 @@ export class VatEntryComponent implements OnInit{
   createdVat : VAT = new VAT();
   vatError: string = '';
   editVat ?: Product | null;
+  showSuccessAlert: boolean = false;
+  successMessage: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -82,10 +84,8 @@ export class VatEntryComponent implements OnInit{
     };
     this.postService.createVatAsync(requestPayload).subscribe({
       next: res => {
-        alert(`VAT successfully created.`);
-        this.createdVat.vatName = ''
-        this.createdVat.vatRate = 0;
-        this.getAllVat();
+        this.successMessage = 'VAT has been Added Successfully';
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error}`);
@@ -99,14 +99,21 @@ export class VatEntryComponent implements OnInit{
     if(!vat) return;
     this.updateService.archiveVatAsync(vat.vatid).subscribe({
       next: mes => {
-        alert(`${mes.message}`);
-        this.currentPage = 1;
-        this.getAllVat();
+        this.successMessage = 'VAT has been Archived Successfully';
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error.message}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.createdVat.vatName = '';
+    this.createdVat.vatRate = 0;
+    this.currentPage = 1;
+    this.getAllVat();
   }
 
   openEditVatForm() {

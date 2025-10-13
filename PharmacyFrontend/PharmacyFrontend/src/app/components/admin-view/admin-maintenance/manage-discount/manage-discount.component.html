@@ -24,6 +24,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="discounts.length === 0">
+          <td colspan="5" style="text-align: center; color: #888; padding: 1rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let d of paginatedDiscounts">
           <td>{{d.discountName}}</td>
           <td>Percentage</td>
@@ -38,7 +43,7 @@
     </table>
 
     <!-- PAGINATION CONTROLS -->
-    <div class="pagination-controls">
+    <div class="pagination-controls" *ngIf="discounts.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
@@ -48,4 +53,15 @@
 
 <div class="modal-overlay" *ngIf="editDiscount">
   <app-edit-discount *ngIf="editDiscount"></app-edit-discount>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">{{successMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
+  </div>
 </div>

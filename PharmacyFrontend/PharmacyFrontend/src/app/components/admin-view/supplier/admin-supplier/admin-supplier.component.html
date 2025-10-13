@@ -17,6 +17,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="suppliers.length === 0">
+          <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let s of paginatedSuppliers">
           <td>{{s.supplierName}}</td>
           <td>{{s.contactNumber}}</td>
@@ -37,7 +42,7 @@
     </table>
 
     <!-- PAGINATION CONTROLS -->
-    <div class="pagination-controls">
+    <div class="pagination-controls" *ngIf="suppliers.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
@@ -67,4 +72,15 @@
   [viewSupplier]="viewSupplier"
   (closeForm)="closeViewSupplierForm()"
   ></app-view-supplier>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Supplier has been Archived Successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
+  </div>
 </div>

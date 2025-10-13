@@ -20,6 +20,7 @@ export class AdminSupplierComponent implements OnInit{
   newSupplier ?: Supplier | null;
   assignSupplier?: Supplier | null;
   viewSupplier?: Supplier | null;
+  showSuccessAlert: boolean = false;
   
   // Pagination properties
   currentPage: number = 1;
@@ -91,13 +92,17 @@ export class AdminSupplierComponent implements OnInit{
   archiveSupplier(supplier : Supplier) {
     this.updateService.archiveSupplierAsync(supplier.id).subscribe({
       next: res => {
-        alert(`${res.message}`);
-        this.currentPage = 1;
-        this.getAllSuppliers();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error.message}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.currentPage = 1;
+    this.getAllSuppliers();
   }
 }

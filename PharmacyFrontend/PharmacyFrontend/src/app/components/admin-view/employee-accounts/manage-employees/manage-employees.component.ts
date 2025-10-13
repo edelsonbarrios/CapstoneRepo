@@ -24,6 +24,7 @@ export class ManageEmployeesComponent implements OnInit{
   newEmployee : any;
   lastNameSearch : string = '';
   loggedInEmployeeId: number = 0;
+  showSuccessAlert: boolean = false;
   
   // Pagination properties
   currentPage: number = 1;
@@ -92,9 +93,7 @@ export class ManageEmployeesComponent implements OnInit{
 
     this.updateService.ArchiveEmployeeAsync(requestPayload).subscribe({
       next: mes => {
-        alert(`${mes.message}`);
-        this.currentPage = 1;
-        this.getAllEmployees();
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error}`);
@@ -102,6 +101,12 @@ export class ManageEmployeesComponent implements OnInit{
         this.getAllEmployees();
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.currentPage = 1;
+    this.getAllEmployees();
   }
 
   openViewEmployeeForm(employee : Employee) {

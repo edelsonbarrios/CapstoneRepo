@@ -24,10 +24,9 @@
         <p class="error-message" *ngIf="contactNumberError">{{ contactNumberError }}</p>
       </div>
 
-      <div class="form-group" [class.error]="emailError">
+      <div class="form-group">
         <label for="email">Email Address</label>
         <input type="email" id="email" placeholder="examplesupplier@gmail.com" [(ngModel)]="newSupplier.email">
-        <p class="error-message" *ngIf="emailError">{{ emailError }}</p>
       </div>
 
       <div class="form-group" [class.error]="addressError">

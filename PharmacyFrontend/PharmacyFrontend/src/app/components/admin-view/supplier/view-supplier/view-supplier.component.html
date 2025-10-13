@@ -1,4 +1,4 @@
-<div class="wrapper" *ngIf="viewSupplier as supplier">
+  <div class="wrapper" *ngIf="viewSupplier && !showSuccessAlert" [hidden]="showSuccessAlert">
   <!-- HEADER -->
   <header>
     <h2>{{ isEditMode ? 'Edit Supplier' : 'Supplier Details' }}</h2>
@@ -8,10 +8,10 @@
   <!-- PROFILE -->
   <section class="profile-section">
     <div class="profile-info">
-      <div class="avatar">{{ supplier.supplierName[0] || '?' }}</div>
+      <div class="avatar">{{ viewSupplier.supplierName[0] || '?' }}</div>
       <div class="details">
-        <h3>{{ supplier.supplierName }}</h3>
-        <p class="small-text">{{ supplier.email }}</p>
+        <h3>{{ viewSupplier.supplierName }}</h3>
+        <p class="small-text">{{ viewSupplier.email }}</p>
       </div>
     </div>
   </section>
@@ -22,32 +22,32 @@
     <div class="supplier-property">
       <label>Supplier Name</label>
       <div>
-        <span *ngIf="!isEditMode">{{ supplier.supplierName }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.supplierName" placeholder="Enter supplier name" />
+        <span *ngIf="!isEditMode">{{ viewSupplier.supplierName }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="viewSupplier.supplierName" placeholder="Enter supplier name" />
       </div>
     </div>
 
     <div class="supplier-property">
       <label>Contact</label>
       <div>
-        <span *ngIf="!isEditMode">{{ supplier.contactNumber }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.contactNumber" placeholder="Enter contact number" />
+        <span *ngIf="!isEditMode">{{ viewSupplier.contactNumber }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="viewSupplier.contactNumber" placeholder="Enter contact number" />
       </div>
     </div>
 
     <div class="supplier-property">
       <label>Email</label>
       <div>
-        <span *ngIf="!isEditMode">{{ supplier.email }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.email" placeholder="Enter email" />
+        <span *ngIf="!isEditMode">{{ viewSupplier.email }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="viewSupplier.email" placeholder="Enter email" />
       </div>
     </div>
 
     <div class="supplier-property">
       <label>Address</label>
       <div>
-        <span *ngIf="!isEditMode">{{ supplier.address }}</span>
-        <input *ngIf="isEditMode" type="text" [(ngModel)]="supplier.address" placeholder="Enter address" />
+        <span *ngIf="!isEditMode">{{ viewSupplier.address }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="viewSupplier.address" placeholder="Enter address" />
       </div>
     </div>
   </main>
@@ -81,7 +81,7 @@
     </ng-template>
 
     <!-- PAGINATION -->
-    <div class="pagination" *ngIf="supplier.products.length > pageSize">
+    <div class="pagination" *ngIf="viewSupplier.products.length > pageSize">
       <button [disabled]="currentPage === 1" (click)="prevPage()">Previous</button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
       <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
@@ -93,5 +93,14 @@
     <button *ngIf="!isEditMode" (click)="toggleViewMode()" class="edit-btn">Edit</button>
     <button *ngIf="isEditMode" (click)="saveChanges()" class="save-btn">Save</button>
     <button (click)="closeViewForm()" class="close-btn">Close</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Supplier has been Updated Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

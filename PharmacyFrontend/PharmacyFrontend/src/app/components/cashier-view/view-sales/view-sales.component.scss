@@ -22,24 +22,28 @@
     }
   }
 
-  .transaction-info {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-
-    label {
-      font-weight: bold;
-      font-size: 1rem;
-    }
-
-    p {
-      font-size: 1rem;
-    }
-  }
-
   h2 {
     font-weight: bold;
     font-size: 1rem;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+
+    .transaction-info {
+      margin-bottom: 10px;
+
+      label {
+        font-weight: bold;
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
   }
 
   .item-table {
@@ -57,7 +61,6 @@
 
     th {
       background-color: rgb(233, 233, 233);
-      color: rgb(52, 140, 255);
       font-weight: 500;
     }
   }
