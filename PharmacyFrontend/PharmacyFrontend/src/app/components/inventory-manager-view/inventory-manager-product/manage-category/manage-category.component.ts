@@ -7,6 +7,7 @@ import { CreateCategory } from '../../../../models/product-models/createCategory
 import { Category } from '../../../../models/product-models/category';
 import { GetService } from '../../../../services/GetService/get.service';
 import { FormsModule } from '@angular/forms';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-category',
@@ -20,6 +21,7 @@ export class ManageCategoryComponent implements OnInit{
   viewCategory ?: Category | null;
   categories : Category[] = [];
   paginatedCategories: Category[] = [];
+  showSuccessAlert: boolean = false;
   
   // Pagination properties
   currentPage: number = 1;
@@ -27,7 +29,8 @@ export class ManageCategoryComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService : UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -72,5 +75,11 @@ export class ManageCategoryComponent implements OnInit{
 
   openViewCategoryForm() {
     this.viewCategory= new Category;
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.currentPage = 1;
+    this.getAllCategories();
   }
 }

@@ -17,6 +17,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="categories.length === 0">
+          <td colspan="2" style="text-align: center; color: #525252; padding: 1rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let c of paginatedCategories">
           <td>{{c.categoryName}}</td>
           <td>
@@ -28,7 +33,7 @@
     </table>
 
     <!-- PAGINATION CONTROLS -->
-    <div class="pagination-controls">
+    <div class="pagination-controls" *ngIf="categories.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
@@ -45,4 +50,15 @@
 
 <div class="modal-overlay" *ngIf="viewCategory">
   <app-view-category *ngIf="viewCategory"></app-view-category>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Category has been Archived Successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
+  </div>
 </div>
