@@ -541,6 +541,7 @@ namespace PharmacyBackend.Service.PostService
             {
                 SupplierName = dto.SupplierName,
                 ContactNumber = dto.ContactNumber,
+                ContactPerson = dto.ContactPerson,
                 Email = dto.Email,
                 Address = dto.Address,
                 IsActive = true

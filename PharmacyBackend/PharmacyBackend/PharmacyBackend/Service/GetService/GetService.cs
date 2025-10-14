@@ -827,6 +827,7 @@ namespace PharmacyBackend.Service.GetService
                 Id = s.Id,
                 SupplierName = s.SupplierName,
                 ContactNumber = s.ContactNumber,
+                ContactPerson = s.ContactPerson,
                 Email = s.Email,
                 Address = s.Address,
                 IsActive = s.IsActive,
@@ -875,6 +876,7 @@ namespace PharmacyBackend.Service.GetService
                 Id = s.Id,
                 SupplierName = s.SupplierName,
                 ContactNumber = s.ContactNumber,
+                ContactPerson = s.ContactPerson,
                 Email = s.Email,
                 Address = s.Address,
                 IsActive = s.IsActive

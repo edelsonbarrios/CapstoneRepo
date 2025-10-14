@@ -418,7 +418,9 @@ namespace PharmacyBackend.Repository.GET
         #region Category
         public async Task<IEnumerable<Category>> GetAllCategoryAsync()
         {
-            return await _context.Category.ToListAsync();
+            return await _context.Category
+                .OrderByDescending(c => c.CategoryID)
+                .ToListAsync();
         }
 
         public async Task<Category?> GetCategoryByIdAsync(int id)
@@ -430,7 +432,9 @@ namespace PharmacyBackend.Repository.GET
         #region Brand
         public async Task<IEnumerable<Brand>> GetAllBrandAsync()
         {
-            return await _context.Brand.ToListAsync();
+            return await _context.Brand
+                .OrderByDescending(b => b.BrandID)
+                .ToListAsync();
         }
         public async Task<Brand> GetBrandByIdAsync(int id)
         {
@@ -441,7 +445,9 @@ namespace PharmacyBackend.Repository.GET
         #region Generic
         public async Task<IEnumerable<Generic>> GetAllGenericAsync()
         {
-            return await _context.Generic.ToListAsync();
+            return await _context.Generic
+                .OrderByDescending(g =>  g.GenericID)
+                .ToListAsync();
         }
         public async Task<Generic> GetGenericByIdAsync(int id)
         {
@@ -452,7 +458,9 @@ namespace PharmacyBackend.Repository.GET
         #region Formulation
         public async Task<IEnumerable<Formulation>> GetAllFormulationAsync()
         {
-            return await _context.Formulation.ToListAsync();
+            return await _context.Formulation
+                .OrderByDescending(f => f.FormulationID)
+                .ToListAsync();
         }
         public async Task<Formulation> GetFormulationByIdAsync(int id)
         {
@@ -463,7 +471,9 @@ namespace PharmacyBackend.Repository.GET
         #region Classification
         public async Task<IEnumerable<Classification>> GetAllClassificationAsync()
         {
-            return await _context.Classification.ToListAsync();
+            return await _context.Classification
+                .OrderByDescending(c => c.ClassificationID)
+                .ToListAsync();
         }
         public async Task<Classification> GetClassificationByIdAsync(int id)
         {
@@ -474,7 +484,9 @@ namespace PharmacyBackend.Repository.GET
         #region Type
         public async Task<IEnumerable<TypeModel>> GetAllTypeModelAsync()
         {
-            return await _context.TypeModel.ToListAsync();
+            return await _context.TypeModel
+                .OrderByDescending(T => T.TypeID)
+                .ToListAsync();
         }
         public async Task<TypeModel> GetTypeModelByIdAsync(int id)
         {
@@ -529,6 +541,8 @@ namespace PharmacyBackend.Repository.GET
                 .Include(i => i.Product.Formulation)
                 .Include(i => i.Product.Classification)
                 .Include(i => i.Product.TypeModel)
+                .OrderByDescending(i => i.DateAdded)
+                .ThenByDescending(i => i.InventoryID)
                 .ToListAsync();
         }
         public async Task<List<Inventory>> GetAllAvailableInventoryAsync()
@@ -541,6 +555,8 @@ namespace PharmacyBackend.Repository.GET
                 .Include(i => i.Product.Formulation)
                 .Include(i => i.Product.Classification)
                 .Include(i => i.Product.TypeModel)
+                .OrderByDescending(i => i.DateAdded)
+                .ThenByDescending(i => i.InventoryID)
                 .ToListAsync();
 
             return inventories
@@ -582,7 +598,7 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Inventory>> GetNearExpiryInventoryAsync()
         {
             var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
-            var nearExpiryDate = DateTime.SpecifyKind(DateTime.Now.AddDays(30), DateTimeKind.Utc);
+            var nearExpiryDate = DateTime.SpecifyKind(DateTime.Now.AddDays(90), DateTimeKind.Utc);
 
             return await _context.Inventory
                 .Include(i => i.Product)
