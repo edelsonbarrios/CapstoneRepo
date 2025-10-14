@@ -16,6 +16,7 @@ namespace PharmacyBackend.Models
         public decimal TotalAmount { get; set; }
         public string Status { get; set; } = "Pending"; // Pending, Received, 
         public string? Notes { get; set; }
+        public bool IsActive { get; set; }
 
         // Navigation property
         public Supplier Supplier { get; set; }

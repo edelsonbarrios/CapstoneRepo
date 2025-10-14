@@ -1,0 +1,12 @@
+<div class="modal-overlay">
+  <div class="wrapper">
+    <h1>{{message}}</h1>
+    <p class="subtext">This action cannot be undone. Please confirm your choice.</p>
+
+    <div class="button-wrapper">
+      <button class="btn-confirm" (click)="onCommit()">Yes, Delete</button>
+      <button class="btn-cancel" (click)="closeArchiveForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+

@@ -85,7 +85,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
           this.closeForm.emit();
         },
         error: (err) => {
-          console.log(`${err.error}`);
+          alert(`${err.error}`);
           console.log(requestPayload);
         },
       });

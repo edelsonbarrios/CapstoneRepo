@@ -33,7 +33,7 @@
           <td>
             <button class="btn-view" (click)="openViewProductForm(p)">See Detais</button>
             <button class="btn-update" (click)="openUpdateProductForm(p)">Update</button>
-            <button class="btn-archive" (click)="archiveProduct(p.productID)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveProductForm(p.productID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -80,4 +80,16 @@
       <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [alertMessage]="'Product has been deleted.'"
+  [id]="showArchiveForm"
+  [message]="message"
+
+  (onArchive)="archiveProduct(showArchiveForm)"
+  (onCancel)="closeArchiveProductForm()"
+  ></app-archive-confirmation>
 </div>

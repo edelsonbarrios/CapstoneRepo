@@ -40,6 +40,7 @@ export class CreateProductComponent implements OnInit{
 
   ngOnInit(): void {
     this.newProduct.unitMeasurement = 'Multi-Level';
+    this.newProduct.categoryName = 'Medicine';
     this.getAllCategories();
     this.getAllBrands();
     this.getAllGenerics();

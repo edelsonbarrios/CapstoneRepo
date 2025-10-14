@@ -62,6 +62,9 @@ export class UpdateService {
   markPurchaseOrderAsReceivedAsync(purchaseOrder : PurchaseOrderReceivedRequest) : Observable<boolean> {
     return this.httpClient.put<boolean>(`${this.apiUrl}/Put/MarkAsReceived`, purchaseOrder);
   } 
+  archivePurchaseOrderByIdAsync(id: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/ArchivePurchaseOrder?id=${id}`, {});
+  }
  //Purchase Order Service End
 
  //Brand Service

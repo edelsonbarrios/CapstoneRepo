@@ -683,7 +683,7 @@ namespace PharmacyBackend.Repository.GET
                 .Include(po => po.Supplier)
                 .Include(po => po.PurchaseOrderItems)
                     .ThenInclude(poi => poi.Product)
-                .Where(po => po.Status.Equals("Pending"))
+                .Where(po => po.Status.Equals("Pending") && po.IsActive == true)
                 .ToListAsync();
         }
         #endregion

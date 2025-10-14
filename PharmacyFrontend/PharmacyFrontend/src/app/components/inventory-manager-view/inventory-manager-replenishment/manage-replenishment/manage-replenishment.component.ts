@@ -4,6 +4,8 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { ViewPurchaseOrderDetailsComponent } from '../view-purchase-order-details/view-purchase-order-details.component';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-replenishment',
@@ -13,7 +15,8 @@ import { ViewPurchaseOrderDetailsComponent } from '../view-purchase-order-detail
     NgFor, 
     DatePipe,
     ViewPurchaseOrderDetailsComponent,
-    NgIf
+    NgIf,
+    ArchiveConfirmationComponent
   ],
   templateUrl: './manage-replenishment.component.html',
   styleUrl: './manage-replenishment.component.scss'
@@ -22,6 +25,7 @@ export class ManageReplenishmentComponent implements OnInit{
   purchaseOrders : PurchaseOrder[] = [];
   paginatedPurchaseOrders: PurchaseOrder[] = [];
   purchaseOrder ?: PurchaseOrder | null;
+  showArchiveForm : number = 0;
   
   // Pagination properties
   currentPage: number = 1;
@@ -29,7 +33,8 @@ export class ManageReplenishmentComponent implements OnInit{
   totalPages: number = 0;
   
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService : UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +70,28 @@ export class ManageReplenishmentComponent implements OnInit{
   
   viewPurchaseOrderDetails(purchaseOrder: PurchaseOrder) {
     this.purchaseOrder = purchaseOrder;
+  }
+
+  openArchivePurchaseOrderForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchivePurchaseOrderForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archivePurchaseOrder() {
+    this.updateService.archivePurchaseOrderByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        console.log(res.message);
+        this.showArchiveForm = 0;
+        this.getAllPendingPurchaseOrders();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+        console.log(this.showArchiveForm);
+      }
+    });
   }
 
   closeViewPurchaseOrderForm() {

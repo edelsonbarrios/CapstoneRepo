@@ -6,11 +6,19 @@ import { ViewProductComponent } from '../view-product/view-product.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { UpdateProductComponent } from '../update-product/update-product.component';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 
 @Component({
   selector: 'app-manage-product',
   standalone: true,
-  imports: [CreateProductComponent, NgIf, ViewProductComponent, NgFor, UpdateProductComponent],
+  imports: [
+    CreateProductComponent, 
+    NgIf, 
+    ViewProductComponent, 
+    NgFor, 
+    UpdateProductComponent,
+    ArchiveConfirmationComponent
+  ],
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss'
 })
@@ -21,6 +29,8 @@ export class ManageProductComponent implements OnInit{
   products : Product[] = [];
   paginatedProducts: Product[] = [];
   showSuccessAlert: boolean = false;
+  showArchiveForm : number = 0;
+  message: string = 'Are you sure you want to delete this product?';
   
   // Pagination properties
   currentPage: number = 1;
@@ -63,11 +73,20 @@ export class ManageProductComponent implements OnInit{
     }
   }
 
+  openArchiveProductForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveProductForm() {
+    this.showArchiveForm = 0;
+  }
+
   archiveProduct(id : number) {
     if(id == null) return;
     this.updateService.archiveProductByIdAsync(id).subscribe({
       next: res => {
-        this.showSuccessAlert = true;
+        this.showArchiveForm = 0;
+        this.getAllProducts();
       },
       error: err => {
         console.log(`${err.error.message}`);

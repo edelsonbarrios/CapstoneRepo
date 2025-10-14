@@ -504,4 +504,11 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'archive-confirmation',
+    loadComponent: () => {
+      return import('./components/shared/archive-confirmation/archive-confirmation.component')
+      .then(m => m.ArchiveConfirmationComponent);
+    }
+  }
 ];

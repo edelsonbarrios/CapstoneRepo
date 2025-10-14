@@ -1,0 +1,137 @@
+/* Modal Overlay (shared by both modals) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* Confirmation Wrapper */
+.wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px 40px;
+  width: 420px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeInScale 0.25s ease-in-out;
+}
+
+.wrapper h1 {
+  font-size: 20px;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.wrapper .subtext {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* Buttons */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.button-wrapper button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-confirm {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: #b42b39;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #cfcfcf;
+}
+
+/* Success Alert Styling (yours, slightly refined) */
+.success-alert {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  width: 400px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  animation: fadeInScale 0.25s ease-in-out;
+}
+
+.success-alert .alert-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: #28a745;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+}
+
+.success-alert .alert-message {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 500;
+}
+
+.alert-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ok-btn {
+  padding: 8px 24px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.ok-btn:hover {
+  background: #0066dd;
+}
+
+/* Simple animation for both modals */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
@@ -24,10 +25,12 @@ namespace PharmacyBackend.Controllers
     public class PutController : ControllerBase
     {
         private readonly IUpdateServiceContracts _updateService;
+        private readonly IGetServiceContracts _getService;
 
-        public PutController(IUpdateServiceContracts updateService)
+        public PutController(IUpdateServiceContracts updateService, IGetServiceContracts getService)
         {
             _updateService = updateService;
+            _getService = getService;
         }
 
         #region Employee
@@ -270,11 +273,30 @@ namespace PharmacyBackend.Controllers
             if (request is null)
                 return BadRequest("Purchase order is empty");
 
+            foreach(var item in request.PurchaseOrderItems)
+            {
+                var product = await _getService.GetProductByIdAsync(item.ProductID);
+                if (product.IsActive == false)
+                    return NotFound("Product is inactive");
+                if (item.BoxQuantityReceived <= 0)
+                    return BadRequest($"Received Quantity of {product.ProductName} is 0. ");
+            }
+
             var purchaseOrder = await _updateService.MarkAsReceivedAsync(request);
             if (!purchaseOrder)
                 return BadRequest("Please fill all the required properties.");
 
             return Ok(purchaseOrder);
+        }
+        [HttpPut("ArchivePurchaseOrder")]
+        public async Task<ActionResult<ArchivePurchaseOrderResponse>> ArchivePurchaseOrderByIdAsync(int id)
+        {
+            if (id == 0)
+                return BadRequest(new ArchivePurchaseOrderResponse { Message = "Purchase Order does not exist." });
+            var archivePurchaseOrder = await _updateService.ArchivePurchaseOrderByIdAsync(id);
+            if (!archivePurchaseOrder)
+                return BadRequest(new ArchivePurchaseOrderResponse { Message = "Purchase Order cannot be deleted." });
+            return Ok(archivePurchaseOrder);
         }
         #endregion
     }

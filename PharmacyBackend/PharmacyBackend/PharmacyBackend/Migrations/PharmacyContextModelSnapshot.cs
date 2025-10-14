@@ -550,6 +550,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("EmployeeID")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Notes")
                         .HasColumnType("text");
 

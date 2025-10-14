@@ -575,6 +575,8 @@ namespace PharmacyBackend.Service.UpdateService
 
             foreach (var item in request.PurchaseOrderItems)
             {
+                if (item.BoxQuantityReceived <= 0)
+                    return false;
                 var poItem = purchaseOrder.PurchaseOrderItems
                     .FirstOrDefault(po => po.Id == item.Id);
                 if (poItem is null)
@@ -721,6 +723,17 @@ namespace PharmacyBackend.Service.UpdateService
             purchaseOrder.TotalAmount = request.TotalAmount;
             await _context.SaveChangesAsync();
 
+            return true;
+        }
+
+        public async Task<bool> ArchivePurchaseOrderByIdAsync(int id)
+        {
+            var purchaseOrder = await _getRepo.GetPurchaseOrderByIdAsync(id);
+            if (purchaseOrder is null)
+                return false;
+            purchaseOrder.IsActive = false;
+            _context.Update(purchaseOrder);
+            await _context.SaveChangesAsync();
             return true;
         }
 

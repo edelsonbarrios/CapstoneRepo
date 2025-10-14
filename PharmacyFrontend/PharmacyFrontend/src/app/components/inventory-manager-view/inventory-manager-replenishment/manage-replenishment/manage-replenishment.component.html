@@ -35,7 +35,7 @@
             <td>{{po.status}}</td>
             <td style="text-align: center;">
               <button class="btn-confirm" (click)="viewPurchaseOrderDetails(po)">View PO</button>
-              <button class="btn-archive">Archive</button>
+              <button class="btn-archive" (click)="openArchivePurchaseOrderForm(po.id)">Archive</button>
             </td>
           </tr>
         </tbody>
@@ -57,4 +57,16 @@
   [purchaseOrder]="purchaseOrder"
   (closeForm)="closeViewPurchaseOrderForm()"
   ></app-view-purchase-order-details>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [alertMessage]="'Product has been deleted.'"
+  [id]="showArchiveForm"
+  [message]="'Are you sure you want to delete this Purchase Order?'"
+
+  (onArchive)="archivePurchaseOrder()"
+  (onCancel)="closeArchivePurchaseOrderForm()"
+  ></app-archive-confirmation>
 </div>
