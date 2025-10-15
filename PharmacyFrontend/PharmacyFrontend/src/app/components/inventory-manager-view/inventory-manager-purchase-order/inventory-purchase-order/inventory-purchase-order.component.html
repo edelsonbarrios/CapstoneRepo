@@ -56,8 +56,6 @@
           <th>Unit Cost</th>
           <th>Unit Measurement</th>
           <th>Box Qty</th>
-          <th>Sheet Qty</th>
-          <th>Piece Qty</th>
           <th>Total</th>
           <th></th>
         </tr>
@@ -75,24 +73,6 @@
               min="0"
               [(ngModel)]="item.boxQuantityOrdered"
               (input)="recalculateQuantitiesAndTotals(item)"
-            />
-          </td>
-
-          <!-- Sheet Quantity (readonly) -->
-          <td>
-            <input
-              type="number"
-              [value]="item.sheetQuantityOrdered"
-              readonly
-            />
-          </td>
-
-          <!-- Piece Quantity (readonly) -->
-          <td>
-            <input
-              type="number"
-              [value]="item.pieceQuantityOrdered"
-              readonly
             />
           </td>
 

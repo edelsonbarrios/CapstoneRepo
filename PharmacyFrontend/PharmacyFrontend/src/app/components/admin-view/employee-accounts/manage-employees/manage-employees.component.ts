@@ -9,11 +9,19 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
 import { ArchiveEmployeeRequest } from '../../../../models/employee-models/archiveEmployeeRequest';
 import { LogInToken } from '../../../shared/token';
 import { jwtDecode } from 'jwt-decode';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 
 @Component({
   selector: 'app-manage-employees',
   standalone: true,
-  imports: [NgForOf, ViewEmployeeComponent, NgIf, CreateEmployeeComponent, FormsModule],
+  imports: [
+    NgForOf, 
+    ViewEmployeeComponent, 
+    NgIf, 
+    CreateEmployeeComponent, 
+    FormsModule,
+    ArchiveConfirmationComponent
+  ],
   templateUrl: './manage-employees.component.html',
   styleUrl: './manage-employees.component.scss'
 })
@@ -25,6 +33,8 @@ export class ManageEmployeesComponent implements OnInit{
   lastNameSearch : string = '';
   loggedInEmployeeId: number = 0;
   showSuccessAlert: boolean = false;
+  showArchiveForm: number = 0;
+  employeeToArchive: Employee = new Employee();
   
   // Pagination properties
   currentPage: number = 1;
@@ -82,13 +92,28 @@ export class ManageEmployeesComponent implements OnInit{
     }
   }
 
-  archiveEmployee(employee: Employee) {
-    if(!employee) return ;
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveEmployee() {
+    this.getService.GetEmployeeById(this.showArchiveForm).subscribe({
+      next: res => {
+        this.employeeToArchive = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
     const requestPayload : ArchiveEmployeeRequest = {
-      employeeId : employee.id,
+      employeeId : this.employeeToArchive.id,
       actionPerformed : '',
       performedBy : this.loggedInEmployeeId,
-      performedAt : new Date(employee.birthDate).toISOString()
+      performedAt : new Date(this.employeeToArchive.birthDate).toISOString()
     };
 
     this.updateService.ArchiveEmployeeAsync(requestPayload).subscribe({

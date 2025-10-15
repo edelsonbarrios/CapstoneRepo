@@ -118,6 +118,9 @@ export class GetService {
   getAllSuppliersAsync() : Observable<Supplier[]> {
     return this.httpClient.get<Supplier[]>(`${this.apiUrl}/Get/SupplierAll`);
   }
+  getSupplierByIdAsync(id: number) : Observable<Supplier> {
+    return this.httpClient.get<Supplier>(`${this.apiUrl}/Get/SupplierId`);
+  }
   //Supplier Service End
 
   //Product Service

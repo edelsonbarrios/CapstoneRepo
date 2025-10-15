@@ -6,11 +6,12 @@ import { CreateSupplierComponent } from '../create-supplier/create-supplier.comp
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { AssignProductsSupplierComponent } from "../assign-products-supplier/assign-products-supplier.component";
 import { ViewSupplierComponent } from "../view-supplier/view-supplier.component";
+import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmation/archive-confirmation.component";
 
 @Component({
   selector: 'app-admin-supplier',
   standalone: true,
-  imports: [NgFor, CreateSupplierComponent, NgIf, AssignProductsSupplierComponent, ViewSupplierComponent],
+  imports: [NgFor, CreateSupplierComponent, NgIf, AssignProductsSupplierComponent, ViewSupplierComponent, ArchiveConfirmationComponent],
   templateUrl: './admin-supplier.component.html',
   styleUrl: './admin-supplier.component.scss'
 })
@@ -21,6 +22,8 @@ export class AdminSupplierComponent implements OnInit{
   assignSupplier?: Supplier | null;
   viewSupplier?: Supplier | null;
   showSuccessAlert: boolean = false;
+  showArchiveForm : number = 0;
+  supplierToArchive: Supplier = new Supplier();
   
   // Pagination properties
   currentPage: number = 1;
@@ -89,10 +92,32 @@ export class AdminSupplierComponent implements OnInit{
     this.viewSupplier = null;
   }
 
-  archiveSupplier(supplier : Supplier) {
-    this.updateService.archiveSupplierAsync(supplier.id).subscribe({
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  getSupplierById(id: number) : Supplier{
+    this.getService.getSupplierByIdAsync(id).subscribe({
       next: res => {
-        this.showSuccessAlert = true;
+        return res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+        return null;
+      }
+    });
+    return new Supplier();
+  }
+
+  archiveSupplier() {
+    this.updateService.archiveSupplierAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        this.showArchiveForm = 0;
+        this.getAllSuppliers();
       },
       error: err => {
         console.log(`${err.error.message}`);

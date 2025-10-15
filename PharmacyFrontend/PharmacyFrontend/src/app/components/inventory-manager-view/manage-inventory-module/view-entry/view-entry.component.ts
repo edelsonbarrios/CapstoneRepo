@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Product } from '../../../../models/product-models/product';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-view-entry',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './view-entry.component.html',
   styleUrl: './view-entry.component.scss'
 })

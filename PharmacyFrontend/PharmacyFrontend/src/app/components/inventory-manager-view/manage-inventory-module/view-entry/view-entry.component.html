@@ -44,12 +44,12 @@
 
       <div class="form-group">
         <label>Manufacturing Date</label>
-        <p>{{viewEntry.manufacturingDate}}</p>
+        <p>{{viewEntry.manufacturingDate | date: 'dd-MM-yyyy'}}</p>
       </div>
 
       <div class="form-group">
         <label>Expiration</label>
-        <p>{{viewEntry.expirationDate}}</p>
+        <p>{{viewEntry.expirationDate | date: 'dd-MM-yyyy'}}</p>
       </div>
 
       <div class="form-group">

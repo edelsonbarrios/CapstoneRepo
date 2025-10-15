@@ -5,7 +5,7 @@ import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-archive-confirmation',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './archive-confirmation.component.html',
   styleUrls: ['./archive-confirmation.component.scss']
 })
@@ -19,16 +19,23 @@ export class ArchiveConfirmationComponent {
   @Output() onArchive = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();
 
+  showSuccessAlert : boolean = false;
+
 
   constructor(
    private updateService: UpdateService
   ) {}
 
   onCommit() {
-    this.onArchive.emit();
+    this.showSuccessAlert = true;
   }
 
   closeArchiveForm() {
     this.onCancel.emit();
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.onArchive.emit();
   }
 }

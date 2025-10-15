@@ -34,7 +34,7 @@
             <div class="action-btns">
               <button class="btn add" (click)="openAssignProductSupplierForm(s)">+ Assign Product</button>
               <button class="btn edit" (click)="openViewSupplierForm(s)">View Details</button>
-              <button class="btn archive" (click)="archiveSupplier(s)">Archive</button>
+              <button class="btn archive" (click)="openArchiveForm(s.id)">Archive</button>
             </div>
           </td>
         </tr>
@@ -74,13 +74,16 @@
   ></app-view-supplier>
 </div>
 
-<!-- Success Alert Modal -->
-<div class="modal-overlay" *ngIf="showSuccessAlert">
-  <div class="success-alert">
-    <div class="alert-icon">✓</div>
-    <p class="alert-message">Supplier has been Archived Successfully</p>
-    <div class="alert-footer">
-      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
-    </div>
-  </div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'Supplier sucessfully deleted.'"
+  [message]="'Do you really want to delete this supplier?'"
+
+  (onArchive)="archiveSupplier()"
+  (onCancel)="closeArchiveForm()"
+  ></app-archive-confirmation>
 </div>
+
