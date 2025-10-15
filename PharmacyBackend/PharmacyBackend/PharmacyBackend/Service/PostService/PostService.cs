@@ -542,6 +542,7 @@ namespace PharmacyBackend.Service.PostService
                 SupplierName = dto.SupplierName,
                 ContactNumber = dto.ContactNumber,
                 ContactPerson = dto.ContactPerson,
+                ContactPersonNumber = dto.ContactPersonNumber,
                 Email = dto.Email,
                 Address = dto.Address,
                 IsActive = true

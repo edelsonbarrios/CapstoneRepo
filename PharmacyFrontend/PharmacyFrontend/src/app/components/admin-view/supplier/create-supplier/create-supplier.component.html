@@ -24,6 +24,18 @@
         <p class="error-message" *ngIf="contactNumberError">{{ contactNumberError }}</p>
       </div>
 
+      <div class="form-group" [class.error]="supplierNameError">
+        <label for="supplierName">Contact Person <span class="required">*</span></label>
+        <input type="text" id="supplierName" placeholder="e.g., Dyna Drug" [(ngModel)]="newSupplier.contactPerson">
+        <p class="error-message" *ngIf="supplierNameError">{{ supplierNameError }}</p>
+      </div>
+
+      <div class="form-group" [class.error]="contactNumberError">
+        <label for="contactNumber">Contact Person Number <span class="required">*</span></label>
+        <input type="text" id="contactNumber" placeholder="e.g., 09xx xxx xxxx" [(ngModel)]="newSupplier.contactPersonNumber">
+        <p class="error-message" *ngIf="contactNumberError">{{ contactNumberError }}</p>
+      </div>
+
       <div class="form-group">
         <label for="email">Email Address</label>
         <input type="email" id="email" placeholder="examplesupplier@gmail.com" [(ngModel)]="newSupplier.email">

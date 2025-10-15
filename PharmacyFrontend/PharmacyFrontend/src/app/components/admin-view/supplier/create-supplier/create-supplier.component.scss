@@ -86,8 +86,8 @@
       }
 
       /* Make email + address span across two columns */
-      .form-group:nth-child(3),
-      .form-group:nth-child(4) {
+      .form-group:nth-child(5),
+      .form-group:nth-child(6) {
         grid-column: span 2;
       }
     }

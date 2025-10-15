@@ -770,6 +770,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("ContactPerson")
                         .HasColumnType("text");
 
+                    b.Property<string>("ContactPersonNumber")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
