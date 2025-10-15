@@ -17,6 +17,7 @@ export class AddClassificationComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   classificationNameError: string = '';
+  showSuccessAlert: boolean = false;
   
   constructor(
     private postService : PostService
@@ -34,14 +35,18 @@ export class AddClassificationComponent {
 
     this.postService.createNewClassificationAsync(this.addClassification).subscribe({
       next: res => {
-        alert(`Classification successfully created.`);
-        this.closeAddClassificationForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
         this.addClassification.classificationName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeAddClassificationForm();
   }
 
   closeAddClassificationForm() {

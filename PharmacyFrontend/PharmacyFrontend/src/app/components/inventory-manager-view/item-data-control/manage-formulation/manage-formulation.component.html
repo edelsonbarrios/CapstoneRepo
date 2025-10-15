@@ -17,6 +17,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="formulations.length === 0">
+          <td colspan="2" style="text-align: center; color: #525252; padding: 1rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let f of paginatedFormulations">
           <td>{{f.formulationName}}</td>
           <td style="text-align: center;">

@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
 
     <!-- ADD CLASSIFICATION HEADER -->
     <div class="modal-header">
@@ -18,4 +18,13 @@
         <button class="btn-save" (click)="createNewClassification()">Save</button>
         <button class="btn-cancel" (click)="closeAddClassificationForm()">Cancel</button>
     </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Classification has been Added Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+  </div>
 </div>
