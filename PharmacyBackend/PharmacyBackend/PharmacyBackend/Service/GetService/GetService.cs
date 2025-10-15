@@ -869,6 +869,7 @@ namespace PharmacyBackend.Service.GetService
                 SupplierName = s.SupplierName,
                 ContactNumber = s.ContactNumber,
                 ContactPerson = s.ContactPerson,
+                ContactPersonNumber = s.ContactPersonNumber,
                 Email = s.Email,
                 Address = s.Address,
                 IsActive = s.IsActive,
@@ -887,6 +888,7 @@ namespace PharmacyBackend.Service.GetService
                 SupplierName = s.SupplierName,
                 ContactNumber = s.ContactNumber,
                 ContactPerson = s.ContactPerson,
+                ContactPersonNumber = s.ContactPersonNumber,
                 Email = s.Email,
                 Address = s.Address,
                 IsActive = s.IsActive

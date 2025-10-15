@@ -29,7 +29,9 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<List<Account>> GetAllAccountsAsync()
         {
-            return await _context.Accounts.ToListAsync();
+            return await _context.Accounts
+                .OrderByDescending(a => a.Id)
+                .ToListAsync();
         }
         public async Task<Account> SearchAccountByUsernameAsync(string userName)
         {
@@ -407,6 +409,7 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Discount>> GetAllDiscountAsync()
         {
             return await _context.Discounts
+                .OrderByDescending(d => d.Id)
                 .Where(d => d.IsActive == true)
                 .ToListAsync();
         }
