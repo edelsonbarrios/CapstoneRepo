@@ -16,6 +16,7 @@ export class AddBrandComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   brandNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private postService: PostService
@@ -33,13 +34,17 @@ export class AddBrandComponent {
 
     this.postService.createBrandAsync(this.addBrand).subscribe({
       next: res => {
-        alert(`Brand successfully created.`);
-        this.closeCreateBrandForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeCreateBrandForm();
   }
 
   closeCreateBrandForm() {

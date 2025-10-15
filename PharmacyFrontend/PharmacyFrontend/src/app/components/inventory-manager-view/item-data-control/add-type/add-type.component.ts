@@ -17,6 +17,7 @@ export class AddTypeComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   typeNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private postService : PostService
@@ -34,14 +35,18 @@ export class AddTypeComponent {
 
     this.postService.createNewTypeAsync(this.addType).subscribe({
       next: res => {
-        alert(`Type successsfully created.`);
-        this.closeAddTypeForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
         this.addType.typeName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeAddTypeForm();
   }
 
   closeAddTypeForm() {

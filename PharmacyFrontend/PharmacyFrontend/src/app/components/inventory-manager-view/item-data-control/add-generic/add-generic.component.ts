@@ -18,6 +18,7 @@ export class AddGenericComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   genericNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private postService : PostService
@@ -35,13 +36,17 @@ export class AddGenericComponent {
 
     this.postService.createGenericAsync(this.addGeneric).subscribe({
       next: res => {
-        alert(`Generic sucesssfully created.`);
-        this.closeAddGenericForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeAddGenericForm();
   }
 
   closeAddGenericForm() {

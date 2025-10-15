@@ -17,6 +17,7 @@ export class AddFormulationComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   formulationNameError: string = '';
+  showSuccessAlert: boolean = false;
   
   constructor(
     private postService : PostService
@@ -34,13 +35,17 @@ export class AddFormulationComponent {
 
     this.postService.createNewFormulationAsync(this.addFormulation).subscribe({
       next: res => {
-        alert(`Formulation successfully created.`);
-        this.closeAddFormulationForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeAddFormulationForm();
   }
 
   closeAddFormulationForm() {

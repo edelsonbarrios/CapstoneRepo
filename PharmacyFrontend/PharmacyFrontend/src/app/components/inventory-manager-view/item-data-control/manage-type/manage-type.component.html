@@ -17,6 +17,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="types.length === 0">
+          <td colspan="2" style="text-align: center; color: #525252; padding: 1rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let t of paginatedTypes">
           <td>{{t.typeName}}</td>
           <td style="text-align: center;">

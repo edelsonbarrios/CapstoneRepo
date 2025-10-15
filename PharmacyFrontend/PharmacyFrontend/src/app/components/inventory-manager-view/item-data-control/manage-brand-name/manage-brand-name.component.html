@@ -17,6 +17,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="brands.length === 0">
+          <td colspan="2" style="text-align: center; color: #525252; padding: 1rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let b of paginatedBrands">
           <td>{{b.brandName}}</td>
           <td style="text-align: center">
