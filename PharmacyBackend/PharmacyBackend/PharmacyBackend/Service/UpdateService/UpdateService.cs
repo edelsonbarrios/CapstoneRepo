@@ -432,6 +432,7 @@ namespace PharmacyBackend.Service.UpdateService
 
             existing.SupplierName = dto.SupplierName;
             existing.ContactNumber = dto.ContactNumber;
+            existing.ContactPerson = dto.ContactPerson;
             existing.Email = dto.Email;
             existing.Address = dto.Address;
             existing.IsActive = dto.IsActive;

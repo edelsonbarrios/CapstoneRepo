@@ -46,7 +46,7 @@ namespace PharmacyBackend.Models
 
         // Helper properties
         public bool IsExpired => DateTime.UtcNow > ExpirationDate;
-        public bool IsNearExpiry => DateTime.UtcNow.AddDays(30) > ExpirationDate;
+        public bool IsNearExpiry => DateTime.UtcNow.AddDays(90) > ExpirationDate;
         public bool IsCriticalStock => BoxQuantity <= ReorderLevel;
 
         // Calculate total pieces available

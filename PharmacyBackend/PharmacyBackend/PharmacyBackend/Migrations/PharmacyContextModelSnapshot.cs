@@ -767,6 +767,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("ContactNumber")
                         .HasColumnType("text");
 
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
 

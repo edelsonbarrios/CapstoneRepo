@@ -7,6 +7,7 @@ namespace PharmacyBackend.DTOs.SupplierDTOs
         public int Id { get; set; }
         public string SupplierName { get; set; } = string.Empty;
         public string ContactNumber { get; set; } = string.Empty;
+        public string ContactPerson { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public bool IsActive { get; set; }
