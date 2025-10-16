@@ -26,9 +26,7 @@
               <th>Batch No.</th>
               <th>Unit Type</th>
               <th>Price</th>
-              <th>Box</th>
-              <th>Sheet</th>
-              <th>Piece</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -42,9 +40,7 @@
                 </select>
               </td>
               <td>{{ getProductUnitPriceDisplay(product) | currency:'PHP':'symbol':'1.2-2' }}</td>
-              <td>{{ product.boxQuantity }}</td>
-              <td>{{ product.sheetQuantity }}</td>
-              <td>{{ product.pieceQuantity }}</td>
+              <td><button (click)="openViewInventoryForm(product)">View</button></td>
             </tr>
           </tbody>
         </table>
@@ -139,4 +135,12 @@
   <app-print-receipt
     *ngIf="printReceipt"
   ></app-print-receipt>
+</div>
+
+<div class="modal-overlay" *ngIf="viewInventory">
+  <app-view-inventory
+  *ngIf="viewInventory"
+  [viewInventory]="viewInventory"
+  (closeForm)="closeViewInventoryForm()"
+  ></app-view-inventory>
 </div>

@@ -1,0 +1,100 @@
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 800px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .modal-header {
+    margin-bottom: 0.5rem;
+
+    .modal-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        font-size: 1.4rem;
+      }
+      a {
+        cursor: pointer;
+      }
+    }
+
+    .desc {
+      color: rgb(99, 98, 98);
+      font-size: 0.9rem;
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    border-bottom: 1px solid #89baee;
+    padding-bottom: 0.5rem;
+
+    .left-column,
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 5px;
+        color: #25405e;
+      }
+
+      p {
+        font-size: 14px;
+        color: #333;
+        margin: 0;
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: right;
+    margin-top: 0.9rem;
+
+    button {
+      padding: 0.4rem;
+      margin-right: 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+
+      &:active {
+        opacity: 0.8;
+      }
+    }
+
+    .btn-update {
+      color: white;
+      background-color: rgba(206, 175, 0, 1);
+
+      &:hover {
+        background-color: rgb(180, 154, 4);
+      }
+    }
+
+    .btn-cancel {
+      color: #007bff;
+      background-color: white;
+      border: 1px solid #007bff;
+
+      &:hover {
+        background-color: #007bff;
+        color: white;
+      }
+    }
+  }
+}

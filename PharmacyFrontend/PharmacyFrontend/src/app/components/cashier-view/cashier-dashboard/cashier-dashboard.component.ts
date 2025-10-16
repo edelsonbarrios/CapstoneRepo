@@ -14,11 +14,13 @@ import { ViewSettleComponent } from '../view-settle/view-settle.component';
 import { PrintReceiptComponent } from '../print-receipt/print-receipt.component';
 import { Subscription } from 'rxjs';
 import { ResetService } from '../../../services/ResetService/reset.service';
+import { Inventory } from '../../../models/inventory-module-models/inventory';
+import { ViewInventoryComponent } from '../view-inventory/view-inventory.component';
 
 @Component({
   selector: 'app-cashier-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ViewSettleComponent, PrintReceiptComponent],
+  imports: [CommonModule, FormsModule, ViewSettleComponent, PrintReceiptComponent, ViewInventoryComponent],
   templateUrl: './cashier-dashboard.component.html',
   styleUrls: ['./cashier-dashboard.component.scss'],
 })
@@ -26,12 +28,13 @@ export class CashierDashboardComponent implements OnInit {
   viewSettle?: Product | null;
   printReceipt?: Product | null;
   loggedInEmployee: Employee = new Employee();
+  viewInventory: any;
 
   products: (Product & {
     selected?: boolean;
     quantity?: number;
     batchNumber?: string;
-    tempUnitType?: 'Box' | 'Sheet' | 'Piece';
+    tempUnitType?: 'Piece' | 'Sheet' | 'Box';
     sheetPrice?: number;
     piecePrice?: number;
     sheetsPerBox?: number;
@@ -40,6 +43,9 @@ export class CashierDashboardComponent implements OnInit {
     sheetQuantity: number;
     pieceQuantity: number;
     unitMeasurement: string;
+    product: Product;
+    piecePerBox: number;
+    reorderLevel: number;
   })[] = [];
 
 
@@ -56,10 +62,9 @@ export class CashierDashboardComponent implements OnInit {
   categories: Category[] = [];
   selectedCategory: string = '';
 
-  private resetSubscription!: Subscription
-  constructor(private getService: GetService, 
+  constructor(
+    private getService: GetService, 
     private postService: PostService,
-    private resetService: ResetService
   ) {}
 
 
@@ -87,7 +92,7 @@ export class CashierDashboardComponent implements OnInit {
       next: (res) => {
         this.products = res.map((p: any) => ({
           ...p,
-          tempUnitType: 'Box',
+          tempUnitType: 'Piece',
           sheetPrice: p.sheetPrice,
           piecePrice: p.piecePrice,
           sheetsPerBox: p.sheetsPerBox,
@@ -95,7 +100,10 @@ export class CashierDashboardComponent implements OnInit {
           boxQuantity: p.boxQuantity,
           sheetQuantity: p.sheetQuantity,
           pieceQuantity: p.pieceQuantity,
-          unitMeasurement: p.product?.unitMeasurement
+          unitMeasurement: p.product?.unitMeasurement,
+          product: p.product,
+          piecePerBox: p.piecePerBox,
+          reorderLevel: p.reorderLevel
         }));
         console.log(this.products);
       },
@@ -106,9 +114,9 @@ export class CashierDashboardComponent implements OnInit {
   getAvailableUnitMeasurements(product: any) : string[] {
     if(!product) return [];
     if(product.unitMeasurement == 'Multi-Level') {
-      return ['Box','Sheet','Piece'];
+      return ['Piece','Sheet','Box'];
     }else {
-      return ['Box', 'Piece']
+      return ['Piece', 'Box']
     }
   }
 
@@ -259,9 +267,6 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
-  // --------------------------
-  // Payment & Transaction
-  // --------------------------
   handlePayment(event: any) {
 
     const employeeId = event.employeeID;
@@ -324,9 +329,6 @@ export class CashierDashboardComponent implements OnInit {
     this.closeViewSettle();
   }
 
-  // --------------------------
-  // Modal Controls
-  // --------------------------
   openViewSettleForm() {
     this.viewSettle = new Product();
   }
@@ -341,9 +343,6 @@ export class CashierDashboardComponent implements OnInit {
     this.printReceipt = new Product();
   }
 
-  // --------------------------
-  // Utility
-  // --------------------------
   private generateInvoiceNumber(): string {
     const now = new Date();
     const ts =
@@ -355,5 +354,12 @@ export class CashierDashboardComponent implements OnInit {
       ('0' + now.getSeconds()).slice(-2);
     const random = Math.floor(Math.random() * 9000) + 1000;
     return `INV-${ts}-${random}`;
+  }
+
+  openViewInventoryForm(inv: any) {
+    this.viewInventory = inv;
+  }
+  closeViewInventoryForm() {
+    this.viewInventory = null;
   }
 }
