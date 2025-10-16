@@ -566,6 +566,33 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<string> GenerateNewPurchaseOrderNumberAsync()
+        {
+            int currentYear = DateTime.Now.Year;
+            int newNumber = 1; // Default starting number if none found
+
+            // Find the latest PO for the current year
+            var lastPo = await _context.PurchaseOrder
+                .Where(po => po.PurchaseOrderNumber.StartsWith($"PO-{currentYear}-"))
+                .OrderByDescending(po => po.PurchaseOrderNumber)
+                .Select(po => po.PurchaseOrderNumber)
+                .FirstOrDefaultAsync();
+
+            if (!string.IsNullOrEmpty(lastPo))
+            {
+                // Extract numeric part from the last PO number
+                var match = System.Text.RegularExpressions.Regex.Match(lastPo, @"(\d+)$");
+                if (match.Success && int.TryParse(match.Value, out int lastNumber))
+                {
+                    newNumber = lastNumber + 1;
+                }
+            }
+
+            // Format with leading zeros, e.g. PO-2025-0001
+            string newPurchaseOrderNumber = $"PO-{currentYear}-{newNumber:D4}";
+            return newPurchaseOrderNumber;
+        }
+
         #endregion
 
         #region PurchaseOrderItem

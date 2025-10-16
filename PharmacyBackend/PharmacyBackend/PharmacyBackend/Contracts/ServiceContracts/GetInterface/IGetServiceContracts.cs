@@ -16,6 +16,7 @@ using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
+using System.Runtime.CompilerServices;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts

@@ -461,6 +461,15 @@ namespace PharmacyBackend.Controllers
                 return BadRequest($"Error creating purchase order: {ex.Message}");
             }
         }
+        [HttpPost("NewPONumber")]
+        public async Task<IActionResult> GenerateNewPurchaseOrderNumberAsync()
+        {
+            var newPurchaseOrderNumber = await _postService.GenerateNewPurchaseOrderNumberAsync();
+            if(string.IsNullOrEmpty(newPurchaseOrderNumber)) {
+               return BadRequest("Cannot generate a new invoice number.");
+            }
+            return Content(newPurchaseOrderNumber);
+        }
         #endregion
 
         #region StockMovement

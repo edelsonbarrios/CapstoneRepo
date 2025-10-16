@@ -17,7 +17,13 @@ import { jwtDecode } from 'jwt-decode';
 @Component({
   selector: 'app-inventory-purchase-order',
   standalone: true,
-  imports: [FormsModule, NgIf, PurchaseOrderProductsComponent, CurrencyPipe, NgFor],
+  imports: [
+    FormsModule,
+    NgIf,
+    PurchaseOrderProductsComponent,
+    CurrencyPipe,
+    NgFor,
+  ],
   templateUrl: './inventory-purchase-order.component.html',
   styleUrl: './inventory-purchase-order.component.scss',
 })
@@ -27,27 +33,37 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   suppliers: Supplier[] = [];
   employee: Employee = new Employee();
   selectedSupplier: Supplier = new Supplier();
+  purchaseOrderNumber: string = '';
 
   paginatedItems: PurchaseOrderItem[] = [];
   currentPage = 1;
   itemsPerPage = 3;
   totalPages = 0;
 
-  constructor(private getService: GetService, private postService: PostService) {}
+  constructor(
+    private getService: GetService,
+    private postService: PostService
+  ) {}
 
   ngOnInit(): void {
     this.getAllSuppliers();
     this.getLoggedInUser();
+    this.generateNewPurchaseOrderNumber();
     this.updatePagination();
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(
+      this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage
+    );
     if (this.totalPages === 0) this.totalPages = 1;
 
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(startIndex, endIndex);
+    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(
+      startIndex,
+      endIndex
+    );
   }
 
   goToPage(page: number) {
@@ -114,10 +130,12 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
     if (product.unitMeasurement === 'Dual-Level') {
       // Box → Piece
-      item.pieceQuantityOrdered = item.boxQuantityOrdered * (product.sheetsPerBox || 0);
+      item.pieceQuantityOrdered =
+        item.boxQuantityOrdered * (product.sheetsPerBox || 0);
     } else if (product.unitMeasurement === 'Multi-Level') {
       // Box → Sheet → Piece
-      item.sheetQuantityOrdered = item.boxQuantityOrdered * (product.sheetsPerBox || 0);
+      item.sheetQuantityOrdered =
+        item.boxQuantityOrdered * (product.sheetsPerBox || 0);
       item.pieceQuantityOrdered =
         item.sheetQuantityOrdered * (product.piecesPerSheet || 0);
     }
@@ -127,17 +145,21 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   computeTotalAmount() {
-    this.purchaseOrders.totalAmount = this.purchaseOrders.purchaseOrderItems.reduce(
-      (sum, item) => sum + item.totalCost,
-      0
-    );
+    this.purchaseOrders.totalAmount =
+      this.purchaseOrders.purchaseOrderItems.reduce(
+        (sum, item) => sum + item.totalCost,
+        0
+      );
   }
 
   removeItemPaginated(item: PurchaseOrderItem) {
-    const index = this.purchaseOrders.purchaseOrderItems.findIndex((i) => i === item);
+    const index = this.purchaseOrders.purchaseOrderItems.findIndex(
+      (i) => i === item
+    );
     if (index !== -1) {
       this.purchaseOrders.purchaseOrderItems.splice(index, 1);
-      if (this.paginatedItems.length === 1 && this.currentPage > 1) this.currentPage--;
+      if (this.paginatedItems.length === 1 && this.currentPage > 1)
+        this.currentPage--;
       this.updatePagination();
       this.computeTotalAmount();
     }
@@ -145,27 +167,29 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   createPurchaseOrder() {
     const requestPayload: CreatePurchaseOrder = {
-      purchaseOrderNumber: this.purchaseOrders.purchaseOrderNumber,
+      purchaseOrderNumber: this.purchaseOrderNumber,
       orderDate: new Date().toISOString(),
       deliveryDate: new Date(this.purchaseOrders.deliveryDate).toISOString(),
       employeeLastName: this.employee.lastName,
       supplierName: this.selectedSupplier.supplierName,
       notes: this.purchaseOrders.notes,
-      purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map((item) => ({
-        productId: item.productId,
-        boxQuantityOrdered: item.boxQuantityOrdered,
-        boxQuantityReceived: item.boxQuantityReceived,
-        sheetQuantityOrdered: item.sheetQuantityOrdered,
-        sheetQuantityReceived: item.sheetQuantityReceived,
-        pieceQuantityOrdered: item.pieceQuantityOrdered,
-        pieceQuantityReceived: item.pieceQuantityReceived,
-        boxPrice: item.boxPrice,
-        sheetPrice: item.sheetPrice,
-        piecePrice: item.piecePrice,
-        batchNumber: item.batchNumber,
-        manufacturingDate: new Date(item.manufacturingDate).toISOString(),
-        expirationDate: new Date(item.expirationDate).toISOString(),
-      })),
+      purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
+        (item) => ({
+          productId: item.productId,
+          boxQuantityOrdered: item.boxQuantityOrdered,
+          boxQuantityReceived: item.boxQuantityReceived,
+          sheetQuantityOrdered: item.sheetQuantityOrdered,
+          sheetQuantityReceived: item.sheetQuantityReceived,
+          pieceQuantityOrdered: item.pieceQuantityOrdered,
+          pieceQuantityReceived: item.pieceQuantityReceived,
+          boxPrice: item.boxPrice,
+          sheetPrice: item.sheetPrice,
+          piecePrice: item.piecePrice,
+          batchNumber: item.batchNumber,
+          manufacturingDate: new Date(item.manufacturingDate).toISOString(),
+          expirationDate: new Date(item.expirationDate).toISOString(),
+        })
+      ),
     };
 
     this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
@@ -203,6 +227,17 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.getService.GetEmployeeById(employeeId).subscribe({
       next: (res) => (this.employee = res),
       error: () => console.error('Logged-in user not found.'),
+    });
+  }
+
+  generateNewPurchaseOrderNumber() {
+    this.postService.generateNewPurchaseOrderNumberAsync().subscribe({
+      next: (res) => {
+        this.purchaseOrderNumber = res;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
     });
   }
 }

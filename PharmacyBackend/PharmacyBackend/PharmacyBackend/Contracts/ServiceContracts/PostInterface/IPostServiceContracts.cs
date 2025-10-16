@@ -84,6 +84,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         #region PurchaseOrder
         public Task<bool> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto);
+        public Task<string> GenerateNewPurchaseOrderNumberAsync();
         #endregion
 
         #region StockMovement

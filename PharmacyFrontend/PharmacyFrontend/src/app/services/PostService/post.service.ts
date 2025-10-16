@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap,  } from 'rxjs';
+import { Observable, ObservedValueOf, tap,  } from 'rxjs';
 import { LogInToken } from '../../components/shared/token';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
@@ -79,6 +79,9 @@ export class PostService {
   createPurchaseOrderAsync(purchaseOrder: CreatePurchaseOrder) : Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/PurchaseOrder`, purchaseOrder);
   }
+  generateNewPurchaseOrderNumberAsync(): Observable<string> {
+  return this.httpClient.post(`${this.apiUrl}/Post/NewPONumber`, {}, { responseType: 'text' });
+}
   //Purchase Order Service End
 
   // Brand Service

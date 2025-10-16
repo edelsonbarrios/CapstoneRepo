@@ -814,7 +814,15 @@ namespace PharmacyBackend.Service.PostService
 
             return true;
         }
-
+        public async Task<string> GenerateNewPurchaseOrderNumberAsync()
+        {
+            var newPurchaseOrderNumber = await _postRepo.GenerateNewPurchaseOrderNumberAsync();
+            if (string.IsNullOrWhiteSpace(newPurchaseOrderNumber))
+            {
+                return null;
+            }
+            return newPurchaseOrderNumber;
+        }
         #endregion
 
         #region StockMovement
