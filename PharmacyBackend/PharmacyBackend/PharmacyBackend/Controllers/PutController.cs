@@ -178,6 +178,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return Ok();
         }
+        [HttpPut("ArchiveGeneric")]
+        public async Task<ActionResult<object>> ArchiveGenericByIdAsync(int genericId)
+        {
+            if (genericId == 0)
+                return NotFound(new { Message = "Generic does not exist." });
+            var archiveGeneric = await _updateService.ArchiveGenericByIdAsync(genericId);
+            if (!archiveGeneric)
+                return BadRequest(new { Message = "Generic cannot be deleted." });
+            return Ok(new { Message = "Generic successfully deleted." });
+        }
         #endregion
 
         #region Formulation

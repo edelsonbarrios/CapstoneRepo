@@ -483,7 +483,7 @@ namespace PharmacyBackend.Repository.GET
         }
         public async Task<Generic> GetGenericByIdAsync(int id)
         {
-            return await _context.Generic.FindAsync(id);
+            return await _context.Generic.AsNoTracking().FirstOrDefaultAsync(g => g.GenericID == id);
         }
         #endregion
 

@@ -49,6 +49,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Generic
         public Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto);
+        public Task<bool> ArchiveGenericByIdAsync(int genericId);
         #endregion
 
         #region Formulation

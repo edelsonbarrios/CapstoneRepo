@@ -401,6 +401,16 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateGenericAsync(existing);
             return true;
         }
+        public async Task<bool> ArchiveGenericByIdAsync(int genericId)
+        {
+            var generic = await _getRepo.GetGenericByIdAsync(genericId);
+            if (generic is null)
+                return false;
+            generic.IsActive = false;
+            await _updateRepo.UpdateGenericAsync(generic);
+            return true;
+
+        }
         #endregion
 
         #region Formulation

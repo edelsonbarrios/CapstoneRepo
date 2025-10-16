@@ -81,6 +81,9 @@ export class UpdateService {
   updateGenericAsync(id: number, generic : Generic) : Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Generic?id=${id}`, generic);
   }
+  archiveGenericByIdAsync(genericId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveGeneric?genericId=${genericId}`, {});
+  }
  //Generic Service End
 
  //Formulation Service
