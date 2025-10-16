@@ -72,6 +72,9 @@ export class UpdateService {
   updateBrandAsync(id: number, brand: Brand) : Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Brand?id=${id}`, brand);
   }
+  archiveBrandByIdAsync(brandId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveBrand?brandId=${brandId}`, {});
+  }
  //Brand Service End
 
  //Generic Service

@@ -8,6 +8,7 @@ namespace PharmacyBackend.Models
         [Key]
         public int BrandID { get; set; }
         public string BrandName { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
 
         public ICollection<Product> Products { get; set; }
     }

@@ -157,6 +157,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        [HttpPut("ArchiveBrand")]
+        public async Task<ActionResult<object>> ArchiveBrandByIdAsync(int brandId)
+        {
+            if (brandId == 0)
+                return NotFound(new { Message = "Brand does not exist." });
+            var updateBrand = await _updateService.ArchiveBrandByIdAsync(brandId);
+            if (!updateBrand)
+                return BadRequest(new { Message = "Brand cannot be deleted." });
+            return Ok(new { Message = "Brand successfully deleted." });
+        }
         #endregion
 
         #region Generic

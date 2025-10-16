@@ -8,6 +8,7 @@ namespace PharmacyBackend.Models
         [Key]
         public int GenericID { get; set; }
         public string GenericName { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
 
         public ICollection<Product> Products { get; set; }
     }

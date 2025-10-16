@@ -5,11 +5,19 @@ import { AddBrandComponent } from '../add-brand/add-brand.component';
 import { EditBrandComponent } from '../edit-brand/edit-brand.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Brand } from '../../../../models/brand-models/brand';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-brand-name',
   standalone: true,
-  imports: [NgIf, AddBrandComponent, EditBrandComponent, NgFor],
+  imports: [
+    NgIf, 
+    AddBrandComponent, 
+    EditBrandComponent, 
+    NgFor,
+    ArchiveConfirmationComponent
+  ],
   templateUrl: './manage-brand-name.component.html',
   styleUrl: './manage-brand-name.component.scss',
 })
@@ -18,13 +26,17 @@ export class ManageBrandNameComponent implements OnInit{
   editBrand?: Brand | null;
   brands: Brand[] = [];
   paginatedBrands: Brand[] = [];
+  showArchiveForm : number = 0;
   
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
 
-  constructor(private getService: GetService) {}
+  constructor(
+    private getService: GetService,
+    private updateService : UpdateService
+  ) {}
 
   ngOnInit(): void {
     this.getAllBrands();
@@ -39,6 +51,27 @@ export class ManageBrandNameComponent implements OnInit{
       error: (err) => {
         console.log(`${err.error}`);
       },
+    });
+  }
+
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveBrand() {
+    if(this.showArchiveForm == 0 || !this.showArchiveForm) return;
+    this.updateService.archiveBrandByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        this.showArchiveForm = 0;
+        this.getAllBrands();
+      },
+      error: err => {
+        console.log(`${err.error.message}`);
+      }
     });
   }
 

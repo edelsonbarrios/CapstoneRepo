@@ -379,6 +379,15 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateBrandAsync(existing);
             return true;
         }
+        public async Task<bool> ArchiveBrandByIdAsync(int brandId)
+        {
+            var brand = await _getRepo.GetBrandByIdAsync(brandId);
+            if (brand is null)
+                return false;
+            brand.IsActive = false;
+            await _updateRepo.UpdateBrandAsync(brand);
+            return true;
+        }
         #endregion
 
         #region Generic

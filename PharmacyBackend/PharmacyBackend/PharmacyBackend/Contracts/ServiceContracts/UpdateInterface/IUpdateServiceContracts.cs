@@ -44,6 +44,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Brand
         public Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto);
+        public Task<bool> ArchiveBrandByIdAsync(int brandId);
         #endregion
 
         #region Generic
