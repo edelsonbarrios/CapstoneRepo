@@ -52,7 +52,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let i of inventoryDashboard.criticalStockItems">
+          <tr *ngIf="inventoryDashboard.criticalStockItems.length === 0">
+            <td colspan="4" style="text-align: center; color: #525252; padding: 1rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let i of paginatedCriticalItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
             <td><span class="stock-box">{{i.totalPiecesAvailable}}</span></td>
@@ -60,6 +65,13 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS -->
+      <div class="pagination-controls" *ngIf="inventoryDashboard.criticalStockItems.length > 0">
+        <button class="btn-page" [disabled]="criticalCurrentPage === 1" (click)="goToCriticalPage(criticalCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{criticalCurrentPage}} of {{criticalTotalPages}}</span>
+        <button class="btn-page" [disabled]="criticalCurrentPage === criticalTotalPages" (click)="goToCriticalPage(criticalCurrentPage + 1)">Next</button>
+      </div>
     </div>
 
     <div class="grid-items">
@@ -75,7 +87,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let i of inventoryDashboard.nearExpiryItems">
+          <tr *ngIf="inventoryDashboard.nearExpiryItems.length === 0">
+            <td colspan="4" style="text-align: center; color: #525252; padding: 1rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let i of paginatedNearExpiryItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
             <td><span class="expiry-date" >{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
@@ -83,12 +100,18 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS -->
+      <div class="pagination-controls" *ngIf="inventoryDashboard.nearExpiryItems.length > 0">
+        <button class="btn-page" [disabled]="nearExpiryCurrentPage === 1" (click)="goToNearExpiryPage(nearExpiryCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{nearExpiryCurrentPage}} of {{nearExpiryTotalPages}}</span>
+        <button class="btn-page" [disabled]="nearExpiryCurrentPage === nearExpiryTotalPages" (click)="goToNearExpiryPage(nearExpiryCurrentPage + 1)">Next</button>
+      </div>
     </div>
   </div>
 
   <div class="third-container">
     <h3>Expired Stock Items</h3>
-
 
     <table class="expired-items">
         <thead>
@@ -102,7 +125,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let i of inventoryDashboard.expiredStockItems">
+          <tr *ngIf="inventoryDashboard.expiredStockItems.length === 0">
+            <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let i of paginatedExpiredItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
             <td><span class="expiry-date">{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
@@ -112,5 +140,12 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS -->
+      <div class="pagination-controls" *ngIf="inventoryDashboard.expiredStockItems.length > 0">
+        <button class="btn-page" [disabled]="expiredCurrentPage === 1" (click)="goToExpiredPage(expiredCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{expiredCurrentPage}} of {{expiredTotalPages}}</span>
+        <button class="btn-page" [disabled]="expiredCurrentPage === expiredTotalPages" (click)="goToExpiredPage(expiredCurrentPage + 1)">Next</button>
+      </div>
   </div>
 </div>
