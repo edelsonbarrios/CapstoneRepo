@@ -2,110 +2,143 @@
   <div class="purchase-order-form">
     <h2>Create Purchase Order</h2>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="poNumber">Purchase Order Number</label>
-        <input
-          type="text"
-          id="poNumber"
-          placeholder="Enter PO Number"
-          [(ngModel)]="purchaseOrderNumber"
-          readonly
-        />
+    <!-- Form Header Section -->
+    <div class="form-header">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="poNumber">Purchase Order Number</label>
+          <input
+            type="text"
+            id="poNumber"
+            placeholder="Enter PO Number"
+            [(ngModel)]="purchaseOrderNumber"
+            readonly
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="supplier">Supplier Name</label>
+          <select id="supplier" [(ngModel)]="selectedSupplier">
+            <option value="">-- Select Supplier --</option>
+            <option *ngFor="let s of suppliers" [ngValue]="s">
+              {{ s.supplierName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="notes">Notes</label>
+        <textarea
+          id="notes"
+          rows="2"
+          placeholder="Add notes (optional)"
+          [(ngModel)]="purchaseOrders.notes"
+        ></textarea>
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="supplier">Supplier Name</label>
-        <select
-          id="supplier"
-          [(ngModel)]="selectedSupplier"
-        >
-          <option value="">-- Select Supplier --</option>
-          <option *ngFor="let s of suppliers" [ngValue]="s">
-            {{ s.supplierName }}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group full-width">
-      <label for="notes">Notes</label>
-      <textarea
-        id="notes"
-        rows="3"
-        placeholder="Add notes"
-        [(ngModel)]="purchaseOrders.notes"
-      ></textarea>
-    </div>
-
-    <h3>Order Items</h3>
-    <table class="items-table">
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Unit Cost</th>
-          <th>Unit Measurement</th>
-          <th>Box Qty</th>
-          <th>Total</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of paginatedItems; let i = index">
-          <td>{{ item.productName }}</td>
-          <td>{{ item.boxPrice | currency:'PHP' }}</td>
-          <td>{{ item.unitMeasurement }}</td>
-
-          <!-- Box Quantity -->
-          <td>
+    <!-- Items Section -->
+    <div class="items-section">
+      <div class="items-header">
+        <h3>Order Items</h3>
+        <div class="header-actions">
+          <div class="search-box">
             <input
-              type="number"
-              min="0"
-              [(ngModel)]="item.boxQuantityOrdered"
-              (input)="recalculateQuantitiesAndTotals(item)"
+              type="text"
+              placeholder="Search products..."
+              [(ngModel)]="searchQuery"
+              (input)="onSearchChange()"
+              class="search-input"
             />
-          </td>
+            <span class="search-icon">🔍</span>
+          </div>
+          <button class="add-item-btn" (click)="openProductsForm()">
+            + Add Item
+          </button>
+        </div>
+      </div>
 
-          <td style="color: green;">{{ item.totalCost | currency:'PHP' }}</td>
-          <td>
-            <button class="remove-btn" (click)="removeItemPaginated(item)">✕</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <div class="table-container">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Unit Cost</th>
+              <th>Unit Measurement</th>
+              <th>Box Qty</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="paginatedItems.length === 0">
+              <td colspan="6" class="empty-state">
+                {{ searchQuery ? 'No products found matching your search.' : 'No items added yet. Click "Add Item" to start.' }}
+              </td>
+            </tr>
+            <tr *ngFor="let item of paginatedItems">
+              <td class="product-name">{{ item.productName }}</td>
+              <td>{{ item.boxPrice | currency : "PHP" }}</td>
+              <td>
+                <span class="unit-badge">{{ item.unitMeasurement }}</span>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  min="1"
+                  [(ngModel)]="item.boxQuantityOrdered"
+                  (input)="recalculateQuantitiesAndTotals(item)"
+                  class="qty-input"
+                />
+              </td>
+              <td class="total-cost">
+                {{ item.totalCost | currency : "PHP" }}
+              </td>
+              <td>
+                <button class="remove-btn" (click)="removeItemPaginated(item)">
+                  ✕
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <!-- Pagination Controls -->
-    <div class="pagination-controls">
-      <button
-        class="btn-page"
-        [disabled]="currentPage === 1"
-        (click)="goToPage(currentPage - 1)"
-      >
-        Previous
-      </button>
+      <!-- Pagination Controls -->
+      <div class="pagination-controls">
+        <button
+          class="btn-page"
+          [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)"
+        >
+          ← Previous
+        </button>
 
-      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
 
-      <button
-        class="btn-page"
-        [disabled]="currentPage === totalPages"
-        (click)="goToPage(currentPage + 1)"
-      >
-        Next
-      </button>
+        <button
+          class="btn-page"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(currentPage + 1)"
+        >
+          Next →
+        </button>
+      </div>
     </div>
 
-    <button class="add-item-btn" (click)="openProductsForm()">+ Add Item</button>
-
+    <!-- Footer Section -->
     <div class="footer">
       <div class="total">
         <strong>Total Amount:</strong>
-        <span>{{ purchaseOrders.totalAmount | currency }}</span>
+        <span class="total-amount">{{
+          purchaseOrders.totalAmount | currency : "PHP"
+        }}</span>
       </div>
       <div class="actions">
-        <button class="create-btn" (click)="createPurchaseOrder()">Create PO</button>
+        <button class="create-btn" (click)="createPurchaseOrder()">
+          Create Purchase Order
+        </button>
       </div>
     </div>
   </div>
@@ -114,7 +147,6 @@
 <!-- Product Modal -->
 <div class="modal-overlay" *ngIf="openProductForm">
   <app-purchase-order-products
-    *ngIf="openProductForm"
     (close)="closeProductsForm()"
     [supplierProudcts]="selectedSupplier.products"
     (productsSelected)="onProductsSelected($event)"

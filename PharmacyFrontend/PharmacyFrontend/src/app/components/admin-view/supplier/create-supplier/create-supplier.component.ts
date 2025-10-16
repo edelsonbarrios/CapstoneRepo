@@ -62,6 +62,7 @@ export class CreateSupplierComponent {
       },
       error: err => {
         console.log(`${err.error}`);
+        console.log(this.newSupplier);
       }
     });
   }

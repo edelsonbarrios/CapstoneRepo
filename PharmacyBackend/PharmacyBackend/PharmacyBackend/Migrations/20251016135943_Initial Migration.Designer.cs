@@ -12,8 +12,8 @@ using PharmacyBackend.DataContext;
 namespace PharmacyBackend.Migrations
 {
     [DbContext(typeof(PharmacyContext))]
-    [Migration("20251016060330_Altering Product Properties")]
-    partial class AlteringProductProperties
+    [Migration("20251016135943_Initial Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

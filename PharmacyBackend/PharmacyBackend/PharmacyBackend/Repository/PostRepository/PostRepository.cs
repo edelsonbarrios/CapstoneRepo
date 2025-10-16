@@ -501,6 +501,8 @@ namespace PharmacyBackend.Repository.POST
         #region Supplier
         public async Task<bool> CreateSupplierAsync(Supplier supplier)
         {
+            supplier.Products = new List<Product>();
+
             await _context.Supplier.AddAsync(supplier);
             await _context.SaveChangesAsync();
             return true;

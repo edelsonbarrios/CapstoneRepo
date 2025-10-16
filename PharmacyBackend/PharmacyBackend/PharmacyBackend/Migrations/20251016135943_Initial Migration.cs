@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PharmacyBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitMigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -116,6 +116,8 @@ namespace PharmacyBackend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SupplierName = table.Column<string>(type: "text", nullable: true),
                     ContactNumber = table.Column<string>(type: "text", nullable: true),
+                    ContactPerson = table.Column<string>(type: "text", nullable: true),
+                    ContactPersonNumber = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
                     Address = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
@@ -198,13 +200,14 @@ namespace PharmacyBackend.Migrations
                     ProductID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProductName = table.Column<string>(type: "text", nullable: true),
-                    CategoryID = table.Column<int>(type: "integer", nullable: false),
-                    BrandID = table.Column<int>(type: "integer", nullable: false),
-                    GenericID = table.Column<int>(type: "integer", nullable: false),
-                    FormulationID = table.Column<int>(type: "integer", nullable: false),
-                    ClassificationID = table.Column<int>(type: "integer", nullable: false),
-                    TypeID = table.Column<int>(type: "integer", nullable: false),
+                    CategoryID = table.Column<int>(type: "integer", nullable: true),
+                    BrandID = table.Column<int>(type: "integer", nullable: true),
+                    GenericID = table.Column<int>(type: "integer", nullable: true),
+                    FormulationID = table.Column<int>(type: "integer", nullable: true),
+                    ClassificationID = table.Column<int>(type: "integer", nullable: true),
+                    TypeID = table.Column<int>(type: "integer", nullable: true),
                     SheetsPerBox = table.Column<int>(type: "integer", nullable: false),
+                    PiecePerBox = table.Column<int>(type: "integer", nullable: false),
                     PiecesPerSheet = table.Column<int>(type: "integer", nullable: false),
                     BoxPrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     SheetPrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
@@ -317,7 +320,8 @@ namespace PharmacyBackend.Migrations
                     EmployeeID = table.Column<int>(type: "integer", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     Status = table.Column<string>(type: "text", nullable: true, defaultValue: "Pending"),
-                    Notes = table.Column<string>(type: "text", nullable: true)
+                    Notes = table.Column<string>(type: "text", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -398,7 +402,8 @@ namespace PharmacyBackend.Migrations
                     PiecePrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     CostPrice = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     DateAdded = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    PiecePerBox = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {

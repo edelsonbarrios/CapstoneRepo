@@ -698,12 +698,16 @@ namespace PharmacyBackend.Repository.GET
         }
         public async Task<List<PurchaseOrder>> GetPendingPurchaseOrdersAsync()
         {
-            return await _context.PurchaseOrder
+            var pendings = await _context.PurchaseOrder
                 .Include(po => po.Supplier)
                 .Include(po => po.PurchaseOrderItems)
                     .ThenInclude(poi => poi.Product)
                 .Where(po => po.Status.Equals("Pending") && po.IsActive == true)
                 .ToListAsync();
+
+            var papat = "string papat";
+
+            return pendings;
         }
         #endregion
 

@@ -847,7 +847,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SuppliersId");
 
-                    b.ToTable("ProductSupplier");
+                    b.ToTable("ProductSupplier", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Account", b =>

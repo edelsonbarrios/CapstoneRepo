@@ -35,9 +35,12 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   selectedSupplier: Supplier = new Supplier();
   purchaseOrderNumber: string = '';
 
+  // Search filter
+  searchQuery: string = '';
+
   paginatedItems: PurchaseOrderItem[] = [];
   currentPage = 1;
-  itemsPerPage = 3;
+  itemsPerPage = 5;
   totalPages = 0;
 
   constructor(
@@ -52,18 +55,35 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.updatePagination();
   }
 
-  updatePagination() {
-    this.totalPages = Math.ceil(
-      this.purchaseOrders.purchaseOrderItems.length / this.itemsPerPage
+  // Filtered items based on search query
+  get filteredItems(): PurchaseOrderItem[] {
+    if (!this.searchQuery.trim()) {
+      return this.purchaseOrders.purchaseOrderItems;
+    }
+    const query = this.searchQuery.toLowerCase();
+    return this.purchaseOrders.purchaseOrderItems.filter(item =>
+      item.productName.toLowerCase().includes(query)
     );
+  }
+
+  updatePagination() {
+    const items = this.filteredItems;
+    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
+
+    // Reset to page 1 if current page exceeds total pages
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = 1;
+    }
 
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedItems = this.purchaseOrders.purchaseOrderItems.slice(
-      startIndex,
-      endIndex
-    );
+    this.paginatedItems = items.slice(startIndex, endIndex);
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   goToPage(page: number) {
@@ -120,8 +140,6 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       (p) => p.productID === item.productId
     );
 
-    console.log(this.selectedSupplier.products);
-
     if (!product) return;
 
     // Reset
@@ -158,14 +176,22 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     );
     if (index !== -1) {
       this.purchaseOrders.purchaseOrderItems.splice(index, 1);
-      if (this.paginatedItems.length === 1 && this.currentPage > 1)
-        this.currentPage--;
       this.updatePagination();
       this.computeTotalAmount();
     }
   }
 
   createPurchaseOrder() {
+    if (this.purchaseOrders.purchaseOrderItems.length === 0) {
+      alert('Please add at least one item to the purchase order.');
+      return;
+    }
+
+    if (!this.selectedSupplier.supplierName) {
+      alert('Please select a supplier.');
+      return;
+    }
+
     const requestPayload: CreatePurchaseOrder = {
       purchaseOrderNumber: this.purchaseOrderNumber,
       orderDate: new Date().toISOString(),
@@ -199,6 +225,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       },
       error: (err) => {
         console.error(err.error);
+        alert('Failed to create purchase order. Please try again.');
       },
     });
   }
@@ -206,6 +233,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   clearFields() {
     this.purchaseOrders = new PurchaseOrder();
     this.purchaseOrders.purchaseOrderItems = [];
+    this.searchQuery = '';
     this.currentPage = 1;
     this.updatePagination();
   }

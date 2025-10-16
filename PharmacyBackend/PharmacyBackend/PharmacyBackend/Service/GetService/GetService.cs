@@ -829,40 +829,6 @@ namespace PharmacyBackend.Service.GetService
         public async Task<IEnumerable<SupplierDTO>> GetAllSupplierAsync()
         {
             var suppliers = await _getRepo.GetAllSupplierAsync();
-            var products = await _getRepo.GetAllProductAsync();
-
-            var productDTO = products.Select(p => new ProductDto
-            {
-                ProductID = p.ProductID,
-                ProductName = p.ProductName,
-                CategoryID = p.CategoryID,
-                BrandID = p.BrandID,
-                GenericID = p.GenericID,
-                FormulationID = p.FormulationID,
-                ClassificationID = p.ClassificationID,
-                TypeID = p.TypeID,
-                IsActive = p.IsActive,
-                DateCreated = p.DateCreated,
-                SheetsPerBox = p.SheetsPerBox,
-                PiecesPerSheet = p.PiecesPerSheet,
-                BoxPrice = p.BoxPrice,
-                SheetPrice = p.SheetPrice,
-                PiecePrice = p.PiecePrice,
-                ReorderLevel = p.ReorderLevel,
-                UnitMeasurement = p.UnitMeasurement,
-                PiecePerBox = p.PiecePerBox,
-
-                // Inventory calculations
-                HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
-
-                // Related entity names
-                CategoryName = p.Category?.CategoryName ?? string.Empty,
-                BrandName = p.Brand?.BrandName ?? string.Empty,
-                GenericName = p.Generic?.GenericName ?? string.Empty,
-                FormulationName = p.Formulation?.FormulationName ?? string.Empty,
-                ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
-                TypeName = p.TypeModel?.TypeName ?? string.Empty,
-            }).ToList();
             return suppliers.Select(s => new SupplierDTO
             {
                 Id = s.Id,
@@ -873,7 +839,38 @@ namespace PharmacyBackend.Service.GetService
                 Email = s.Email,
                 Address = s.Address,
                 IsActive = s.IsActive,
-                Products = productDTO
+                Products = s.Products.Select(p => new ProductDto
+                {
+                    ProductID = p.ProductID,
+                    ProductName = p.ProductName,
+                    CategoryID = p.CategoryID,
+                    BrandID = p.BrandID,
+                    GenericID = p.GenericID,
+                    FormulationID = p.FormulationID,
+                    ClassificationID = p.ClassificationID,
+                    TypeID = p.TypeID,
+                    IsActive = p.IsActive,
+                    DateCreated = p.DateCreated,
+                    SheetsPerBox = p.SheetsPerBox,
+                    PiecesPerSheet = p.PiecesPerSheet,
+                    BoxPrice = p.BoxPrice,
+                    SheetPrice = p.SheetPrice,
+                    PiecePrice = p.PiecePrice,
+                    ReorderLevel = p.ReorderLevel,
+                    UnitMeasurement = p.UnitMeasurement,
+                    PiecePerBox = p.PiecePerBox,
+
+                    // Inventory calculations
+                    HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
+
+                    // Related entity names
+                    CategoryName = p.Category?.CategoryName ?? string.Empty,
+                    BrandName = p.Brand?.BrandName ?? string.Empty,
+                    GenericName = p.Generic?.GenericName ?? string.Empty,
+                    FormulationName = p.Formulation?.FormulationName ?? string.Empty,
+                    ClassificationName = p.Classification?.ClassificationName ?? string.Empty,
+                    TypeName = p.TypeModel?.TypeName ?? string.Empty,
+                }).ToList()
             });
         }
 

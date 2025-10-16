@@ -110,7 +110,12 @@ namespace PharmacyBackend.DataContext
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Suppliers)
-                .WithMany(s => s.Products);
+                .WithMany(s => s.Products)
+                .UsingEntity(j => j.ToTable("ProductSupplier"));
+
+            modelBuilder.Entity<Supplier>()
+                .Navigation(s => s.Products)
+                .AutoInclude(false);
 
             // Inventory relationships
             modelBuilder.Entity<Inventory>()

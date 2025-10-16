@@ -545,7 +545,8 @@ namespace PharmacyBackend.Service.PostService
                 ContactPersonNumber = dto.ContactPersonNumber,
                 Email = dto.Email,
                 Address = dto.Address,
-                IsActive = true
+                IsActive = true,
+                Products = new List<Product>()
             };
 
             var created = await _postRepo.CreateSupplierAsync(supplier);

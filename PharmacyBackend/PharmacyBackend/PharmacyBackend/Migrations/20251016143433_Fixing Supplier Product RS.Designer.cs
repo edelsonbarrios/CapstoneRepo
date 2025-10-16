@@ -12,8 +12,8 @@ using PharmacyBackend.DataContext;
 namespace PharmacyBackend.Migrations
 {
     [DbContext(typeof(PharmacyContext))]
-    [Migration("20251015174245_Adding ContactPersonNumber to Supplier Entity")]
-    partial class AddingContactPersonNumbertoSupplierEntity
+    [Migration("20251016143433_Fixing Supplier Product RS")]
+    partial class FixingSupplierProductRS
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -470,22 +470,22 @@ namespace PharmacyBackend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BrandID")
+                    b.Property<int?>("BrandID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int?>("CategoryID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ClassificationID")
+                    b.Property<int?>("ClassificationID")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("FormulationID")
+                    b.Property<int?>("FormulationID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("GenericID")
+                    b.Property<int?>("GenericID")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
@@ -514,7 +514,7 @@ namespace PharmacyBackend.Migrations
                     b.Property<int>("SheetsPerBox")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TypeID")
+                    b.Property<int?>("TypeID")
                         .HasColumnType("integer");
 
                     b.Property<string>("UnitMeasurement")
@@ -850,7 +850,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SuppliersId");
 
-                    b.ToTable("ProductSupplier");
+                    b.ToTable("ProductSupplier", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Account", b =>
@@ -954,38 +954,32 @@ namespace PharmacyBackend.Migrations
                     b.HasOne("PharmacyBackend.Models.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PharmacyBackend.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PharmacyBackend.Models.Classification", "Classification")
                         .WithMany("Products")
                         .HasForeignKey("ClassificationID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PharmacyBackend.Models.Formulation", "Formulation")
                         .WithMany("Products")
                         .HasForeignKey("FormulationID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PharmacyBackend.Models.Generic", "Generic")
                         .WithMany("Products")
                         .HasForeignKey("GenericID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PharmacyBackend.Models.TypeModel", "TypeModel")
                         .WithMany("Products")
                         .HasForeignKey("TypeID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Brand");
 

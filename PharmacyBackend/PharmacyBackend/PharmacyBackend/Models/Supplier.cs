@@ -13,7 +13,7 @@ namespace PharmacyBackend.Models
         public string Email { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
-        public List<Product> Products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; }
 
         // Navigation properties
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
