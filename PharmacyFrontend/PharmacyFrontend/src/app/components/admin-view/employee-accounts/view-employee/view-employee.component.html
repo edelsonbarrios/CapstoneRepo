@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" *ngIf="!showSuccessAlert">
   <header>
     <img src="/images/view-employee-images/see-details.png" alt="See Details Image">
     <h1 *ngIf="!isEditMode">See Details</h1>
@@ -102,5 +102,14 @@
     <button *ngIf="!isEditMode" (click)="toggleViewMode()">Edit</button>
     <button *ngIf="isEditMode" (click)="toggleEditMode(employee)">Save</button>
     <button (click)="closeViewForm()">Close</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Employee has been edited Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

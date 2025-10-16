@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIf, DatePipe} from '@angular/common';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { UpdateEmployeeRequest } from '../../../../models/employee-models/updateEmployeeRequest';
+
 @Component({
   selector: 'app-view-employee',
   standalone: true,
@@ -15,6 +16,7 @@ export class ViewEmployeeComponent {
   @Input() employee : Employee = new Employee();
   @Output() closeForm = new EventEmitter<void>();
   isEditMode : boolean = false;
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService: UpdateService
@@ -47,12 +49,17 @@ export class ViewEmployeeComponent {
 
     this.updateService.UpdateEmployeeAsync(employee).subscribe({
       next: res => {
-        alert(`${res.message}`);
-        this.isEditMode = false;
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error.message}`);
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.isEditMode = false;
+    this.closeForm.emit();
   }
 }
