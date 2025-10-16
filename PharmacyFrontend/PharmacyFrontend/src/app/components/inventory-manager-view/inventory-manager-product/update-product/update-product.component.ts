@@ -28,6 +28,7 @@ export class UpdateProductComponent implements OnInit{
   types: TypeModel[] = [];
   formulations: Formulation[] = [];
   categories: Category[] = [];
+  showSuccessAlert: boolean = false;
 
   constructor(
     private getService : GetService,
@@ -56,8 +57,7 @@ export class UpdateProductComponent implements OnInit{
     };
     this.updateService.updateProductAsync(this.productToUpdate.productID, requestPayload).subscribe({
       next: res => {
-        alert(`Product successfully updated.`);
-        this.closeForm.emit();
+        this.showSuccessAlert = true;
       },
       error: err => {
         alert(`${err.error}`);
@@ -68,6 +68,11 @@ export class UpdateProductComponent implements OnInit{
 
   closeUpdateProductForm() {
     this.closeForm.emit();
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeUpdateProductForm();
   }
 
   getAllItemDataControls() {

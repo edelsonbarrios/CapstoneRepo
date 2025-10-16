@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
   <div class="modal-header">
     <h2>Add Stock Entry</h2>
     <p>Fill in the details to add new entry.</p>
@@ -90,5 +90,14 @@
   <div class="modal-footer">
     <button class="btn-save" (click)="createInventory()">Save</button>
     <button class="btn-cancel" (click)="closeCreateInventoryForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Stock Entry has been Added Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

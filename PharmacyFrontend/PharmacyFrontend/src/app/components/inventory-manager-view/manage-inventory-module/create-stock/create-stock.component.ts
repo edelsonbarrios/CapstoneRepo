@@ -22,6 +22,7 @@ export class CreateStockComponent implements OnInit{
   products : Product[] = [];
   employee: Employee = new Employee();
   selectedProduct : Product = new Product();
+  showSuccessAlert: boolean = false;
 
   constructor(
     private postService : PostService,
@@ -69,8 +70,7 @@ export class CreateStockComponent implements OnInit{
     }
     this.postService.createNewInventoryAsync(requestPayload).subscribe({
       next: res => {
-        alert(`Inventory successfully created.`);
-        this.closeCreateInventoryForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
@@ -81,6 +81,11 @@ export class CreateStockComponent implements OnInit{
 
   closeCreateInventoryForm() {
     this.closeForm.emit();
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeCreateInventoryForm();
   }
 
   getAllProducts() {

@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
   <div class="modal-header">
     <h2>Stock Adjustment</h2>
   </div>
@@ -49,5 +49,14 @@
   <div class="modal-footer">
     <button class="btn-save" (click)="createNewStockMovement()">Save</button>
     <button class="btn-cancel" (click)="closeStockAdjustmentForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Stock has been Adjust Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>
