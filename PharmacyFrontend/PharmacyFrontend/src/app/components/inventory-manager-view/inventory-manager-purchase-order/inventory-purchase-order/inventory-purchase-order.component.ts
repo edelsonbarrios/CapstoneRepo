@@ -34,6 +34,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   employee: Employee = new Employee();
   selectedSupplier: Supplier = new Supplier();
   purchaseOrderNumber: string = '';
+  showSuccessAlert: boolean = false;
 
   // Search filter
   searchQuery: string = '';
@@ -220,7 +221,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
     this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
       next: () => {
-        alert('Purchase Order created successfully!');
+        this.showSuccessAlert = true;
         this.clearFields();
       },
       error: (err) => {
@@ -267,5 +268,9 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         console.log(`${err.error}`);
       },
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
   }
 }

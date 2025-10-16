@@ -6,6 +6,8 @@ import { EditGenericComponent } from '../edit-generic/edit-generic.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Generic } from '../../../../models/generic-models/generic';
 import { FormsModule } from '@angular/forms';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-generic-name',
@@ -16,6 +18,7 @@ import { FormsModule } from '@angular/forms';
     EditGenericComponent,
     FormsModule,
     NgFor,
+    ArchiveConfirmationComponent
   ],
   templateUrl: './manage-generic-name.component.html',
   styleUrl: './manage-generic-name.component.scss',
@@ -25,13 +28,17 @@ export class ManageGenericNameComponent implements OnInit {
   editGeneric?: Generic | null;
   generics: Generic[] = [];
   paginatedGenerics: Generic[] = [];
+  showArchiveForm : number = 0;
 
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
 
-  constructor(private getService: GetService) {}
+  constructor(
+    private getService: GetService,
+    private updateService: UpdateService
+  ) {}
 
   ngOnInit(): void {
     this.getAllGenerics();
@@ -46,6 +53,27 @@ export class ManageGenericNameComponent implements OnInit {
       error: (err) => {
         console.log(`${err.error}`);
       },
+    });
+  }
+
+  openArchiveConfirmationForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveConfirmationForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveGeneric() {
+    if(this.showArchiveForm === 0 || !this.showArchiveForm) return;
+    this.updateService.archiveGenericByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        this.showArchiveForm = 0
+        this.getAllGenerics();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
     });
   }
 

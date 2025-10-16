@@ -449,6 +449,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Category
                 .OrderByDescending(c => c.CategoryID)
+                .Where(c => c.IsActive == true)
                 .ToListAsync();
         }
 
@@ -463,6 +464,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Brand
                 .OrderByDescending(b => b.BrandID)
+                .Where(b => b.IsActive == true)
                 .ToListAsync();
         }
         public async Task<Brand> GetBrandByIdAsync(int id)
@@ -476,11 +478,12 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Generic
                 .OrderByDescending(g =>  g.GenericID)
+                .Where(g => g.IsActive == true)
                 .ToListAsync();
         }
         public async Task<Generic> GetGenericByIdAsync(int id)
         {
-            return await _context.Generic.FindAsync(id);
+            return await _context.Generic.AsNoTracking().FirstOrDefaultAsync(g => g.GenericID == id);
         }
         #endregion
 
@@ -489,6 +492,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Formulation
                 .OrderByDescending(f => f.FormulationID)
+                .Where(f => f.IsActive == true)
                 .ToListAsync();
         }
         public async Task<Formulation> GetFormulationByIdAsync(int id)
@@ -502,6 +506,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Classification
                 .OrderByDescending(c => c.ClassificationID)
+                .Where(c => c.IsActive == true)
                 .ToListAsync();
         }
         public async Task<Classification> GetClassificationByIdAsync(int id)
@@ -515,6 +520,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.TypeModel
                 .OrderByDescending(T => T.TypeID)
+                .Where(t => t.IsActive == true)
                 .ToListAsync();
         }
         public async Task<TypeModel> GetTypeModelByIdAsync(int id)

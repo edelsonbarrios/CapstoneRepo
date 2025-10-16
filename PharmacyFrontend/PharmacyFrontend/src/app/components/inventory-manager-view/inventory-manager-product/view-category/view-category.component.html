@@ -3,7 +3,7 @@
   <!-- MODAL HEADER -->
   <div class="modal-header">
     <div class="modal-title">
-      <h2>Add New Category</h2>
+      <h2>Update Category</h2>
       <a>&#10006;</a>
     </div>
     <div class="desc">Modify the category details.</div>
@@ -14,18 +14,8 @@
 
    <div class="form">
      <div class="form-group">
-      <label>Item Code</label>
-      <input type="text">
-    </div>
-
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text">
-    </div>
-    
-    <div class="form-group">
-      <label>Description</label>
-      <input type="text">
+      <label>Category Name</label>
+      <input type="text" [(ngModel)]="viewCategory.categoryName">
     </div>
 
    </div>
@@ -34,7 +24,17 @@
 
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-update">Update</button>
-    <button class="btn-cancel">Cancel</button>
+    <button class="btn-update" (click)="updateCategory()">Update</button>
+    <button class="btn-cancel" (click)="closeUpdateCategoryForm()">Cancel</button>
+  </div>
+</div>
+
+<div class="success-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Category Successfully updated.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
   </div>
 </div>

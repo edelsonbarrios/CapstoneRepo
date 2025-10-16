@@ -14,27 +14,27 @@
     <div class="form-grid">
       
       <!-- LEFT COLUMN: Product Information -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="viewInventory.product?.brandName">
         <label>Brand</label>
         <p>{{ viewInventory.product.brandName }}</p>
       </div>
 
-      <div class="form-group" *ngIf="viewInventory.genericName">
+      <div class="form-group" *ngIf="viewInventory.product?.genericName">
         <label>Generic Name</label>
         <p>{{ viewInventory.product.genericName }}</p>
       </div>
 
-      <div class="form-group" *ngIf="viewInventory.classificationName">
+      <div class="form-group" *ngIf="viewInventory.product?.classificationName">
         <label>Classification</label>
         <p>{{ viewInventory.product.classificationName }}</p>
       </div>
 
-      <div class="form-group" *ngIf="viewInventory.typeName">
+      <div class="form-group" *ngIf="viewInventory.product.typeName">
         <label>Type</label>
         <p>{{ viewInventory.product.typeName }}</p>
       </div>
 
-      <div class="form-group" *ngIf="viewInventory.formulationName">
+      <div class="form-group" *ngIf="viewInventory.product?.formulationName">
         <label>Formulation</label>
         <p>{{ viewInventory.product.formulationName }}</p>
       </div>

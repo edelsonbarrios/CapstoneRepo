@@ -8,6 +8,7 @@ namespace PharmacyBackend.Models
         [Key]
         public int FormulationID { get; set; }
         public string FormulationName { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
 
         public ICollection<Product> Products { get; set; }
     }

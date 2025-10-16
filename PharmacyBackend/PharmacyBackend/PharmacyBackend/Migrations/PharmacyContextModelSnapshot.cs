@@ -67,6 +67,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("BrandName")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.HasKey("BrandID");
 
                     b.ToTable("Brand");
@@ -203,6 +206,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<string>("ClassificationName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.HasKey("ClassificationID");
 
@@ -364,6 +370,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("FormulationName")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.HasKey("FormulationID");
 
                     b.ToTable("Formulation");
@@ -379,6 +388,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<string>("GenericName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.HasKey("GenericID");
 
@@ -797,6 +809,9 @@ namespace PharmacyBackend.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TypeID"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("TypeName")
                         .HasColumnType("text");

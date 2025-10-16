@@ -128,13 +128,23 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Category
-        [HttpPut("Update/Category")]
+        [HttpPut("Category")]
         public async Task<IActionResult> UpdateCategoryAsync(int id, [FromBody] UpdateCategoryDto dto)
         {
             var success = await _updateService.UpdateCategoryAsync(id, dto);
             if (!success)
                 return NotFound("Category not found or update failed.");
-            return Ok("Category updated successfully.");
+            return Ok(new { Message = "Product sucessfully updated."});
+        }
+        [HttpPut("ArchiveCategory")]
+        public async Task<ActionResult<object>> ArchiveCategoryByIdAsync(int categoryId)
+        {
+            if (categoryId == 0)
+                return NotFound(new { Message = "Category does not exist." });
+            var archiveCategory = await _updateService.ArchiveCategoryByIdAsync(categoryId);
+            if (!archiveCategory)
+                return BadRequest(new { Message = "Category cannot be updated." });
+            return Ok(new { Message = "Category successsfully archived." });
         }
         #endregion
 
@@ -147,6 +157,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        [HttpPut("ArchiveBrand")]
+        public async Task<ActionResult<object>> ArchiveBrandByIdAsync(int brandId)
+        {
+            if (brandId == 0)
+                return NotFound(new { Message = "Brand does not exist." });
+            var updateBrand = await _updateService.ArchiveBrandByIdAsync(brandId);
+            if (!updateBrand)
+                return BadRequest(new { Message = "Brand cannot be deleted." });
+            return Ok(new { Message = "Brand successfully deleted." });
+        }
         #endregion
 
         #region Generic
@@ -157,6 +177,16 @@ namespace PharmacyBackend.Controllers
             if (!success)
                 return NotFound();
             return Ok();
+        }
+        [HttpPut("ArchiveGeneric")]
+        public async Task<ActionResult<object>> ArchiveGenericByIdAsync(int genericId)
+        {
+            if (genericId == 0)
+                return NotFound(new { Message = "Generic does not exist." });
+            var archiveGeneric = await _updateService.ArchiveGenericByIdAsync(genericId);
+            if (!archiveGeneric)
+                return BadRequest(new { Message = "Generic cannot be deleted." });
+            return Ok(new { Message = "Generic successfully deleted." });
         }
         #endregion
 

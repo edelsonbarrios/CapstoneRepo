@@ -352,9 +352,18 @@ namespace PharmacyBackend.Service.UpdateService
             if (existing == null) return false;
 
             existing.CategoryName = dto.CategoryName;
-            existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateCategoryAsync(existing);
+            return true;
+        }
+        public async Task<bool> ArchiveCategoryByIdAsync(int categoryId)
+        {
+            if (categoryId == 0) return false;
+            var category = await _getRepo.GetCategoryByIdAsync(categoryId);
+            if (category is null)
+                return false;
+            category.IsActive = false;
+            await _updateRepo.UpdateCategoryAsync(category);
             return true;
         }
         #endregion
@@ -370,6 +379,15 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateBrandAsync(existing);
             return true;
         }
+        public async Task<bool> ArchiveBrandByIdAsync(int brandId)
+        {
+            var brand = await _getRepo.GetBrandByIdAsync(brandId);
+            if (brand is null)
+                return false;
+            brand.IsActive = false;
+            await _updateRepo.UpdateBrandAsync(brand);
+            return true;
+        }
         #endregion
 
         #region Generic
@@ -382,6 +400,16 @@ namespace PharmacyBackend.Service.UpdateService
 
             await _updateRepo.UpdateGenericAsync(existing);
             return true;
+        }
+        public async Task<bool> ArchiveGenericByIdAsync(int genericId)
+        {
+            var generic = await _getRepo.GetGenericByIdAsync(genericId);
+            if (generic is null)
+                return false;
+            generic.IsActive = false;
+            await _updateRepo.UpdateGenericAsync(generic);
+            return true;
+
         }
         #endregion
 

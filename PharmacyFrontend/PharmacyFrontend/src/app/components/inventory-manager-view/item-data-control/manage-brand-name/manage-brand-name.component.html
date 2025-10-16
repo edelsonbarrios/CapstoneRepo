@@ -26,7 +26,7 @@
           <td>{{b.brandName}}</td>
           <td style="text-align: center">
             <button class="btn-edit" (click)="openEditBrandForm(b)">Edit</button>
-            <button class="btn-archive" (click)="goToPage(1)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveForm(b.brandID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -54,4 +54,16 @@
   [editBrand]="editBrand"
   (closeForm)="closeEditBrandForm()"
   ></app-edit-brand>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'Brand successfully deleted.'"
+  [message]="'Do you really want to delete this brand?'"
+  
+  (onArchive)="archiveBrand()"
+  (onCancel)="closeArchiveForm()"
+  ></app-archive-confirmation>
 </div>
