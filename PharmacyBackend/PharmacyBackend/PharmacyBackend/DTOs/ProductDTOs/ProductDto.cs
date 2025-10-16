@@ -5,7 +5,7 @@ namespace PharmacyBackend.DTOs.ProductDTOs
     {
         public int ProductID { get; set; }
         public string ProductName { get; set; } = string.Empty;
-        public int? CategoryID { get; set; }
+        public int CategoryID { get; set; }
         public int? BrandID { get; set; }
         public int? GenericID { get; set; }
         public int? FormulationID { get; set; }

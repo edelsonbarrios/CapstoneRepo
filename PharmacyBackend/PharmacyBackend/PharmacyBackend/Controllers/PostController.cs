@@ -181,8 +181,9 @@ namespace PharmacyBackend.Controllers
             }
             catch (Exception ex)
             {
+                
                 return BadRequest($"Error creating product: {ex.Message}");
-            }
+            } 
         }
         #endregion
 
