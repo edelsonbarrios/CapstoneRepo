@@ -128,13 +128,23 @@ namespace PharmacyBackend.Controllers
         #endregion
 
         #region Category
-        [HttpPut("Update/Category")]
+        [HttpPut("Category")]
         public async Task<IActionResult> UpdateCategoryAsync(int id, [FromBody] UpdateCategoryDto dto)
         {
             var success = await _updateService.UpdateCategoryAsync(id, dto);
             if (!success)
                 return NotFound("Category not found or update failed.");
-            return Ok("Category updated successfully.");
+            return Ok(new { Message = "Product sucessfully updated."});
+        }
+        [HttpPut("ArchiveCategory")]
+        public async Task<ActionResult<object>> ArchiveCategoryByIdAsync(int categoryId)
+        {
+            if (categoryId == 0)
+                return NotFound(new { Message = "Category does not exist." });
+            var archiveCategory = await _updateService.ArchiveCategoryByIdAsync(categoryId);
+            if (!archiveCategory)
+                return BadRequest(new { Message = "Category cannot be updated." });
+            return Ok(new { Message = "Category successsfully archived." });
         }
         #endregion
 

@@ -25,8 +25,8 @@
         <tr *ngFor="let c of paginatedCategories">
           <td>{{c.categoryName}}</td>
           <td>
-            <button class="btn-update" (click)="openViewCategoryForm()">Update</button>
-            <button class="btn-archive">Archive</button>
+            <button class="btn-update" (click)="openViewCategoryForm(c)">Update</button>
+            <button class="btn-archive" (click)="openArchiveForm(c.categoryID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -48,8 +48,12 @@
   ></app-create-category>
 </div>
 
-<div class="modal-overlay" *ngIf="viewCategory">
-  <app-view-category *ngIf="viewCategory"></app-view-category>
+<div class="modal-overlay" *ngIf="categoryToUpdate">
+  <app-view-category 
+  *ngIf="categoryToUpdate"
+  [viewCategory]="categoryToUpdate"
+  (closeForm)="closeUpdateCategoryForm()"
+  ></app-view-category>
 </div>
 
 <!-- Success Alert Modal -->
@@ -61,4 +65,16 @@
       <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'Category successfully deleted.'"
+  [message]="'Do you really want to delete this category?'"
+  
+  (onArchive)="archiveCategory()"
+  (onCancel)="closeArchiveForm()"
+  ></app-archive-confirmation>
 </div>

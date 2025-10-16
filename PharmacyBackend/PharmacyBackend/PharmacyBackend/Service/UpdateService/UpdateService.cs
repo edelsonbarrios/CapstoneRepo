@@ -352,9 +352,18 @@ namespace PharmacyBackend.Service.UpdateService
             if (existing == null) return false;
 
             existing.CategoryName = dto.CategoryName;
-            existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateCategoryAsync(existing);
+            return true;
+        }
+        public async Task<bool> ArchiveCategoryByIdAsync(int categoryId)
+        {
+            if (categoryId == 0) return false;
+            var category = await _getRepo.GetCategoryByIdAsync(categoryId);
+            if (category is null)
+                return false;
+            category.IsActive = false;
+            await _updateRepo.UpdateCategoryAsync(category);
             return true;
         }
         #endregion

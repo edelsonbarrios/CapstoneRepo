@@ -449,6 +449,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Category
                 .OrderByDescending(c => c.CategoryID)
+                .Where(c => c.IsActive == true)
                 .ToListAsync();
         }
 

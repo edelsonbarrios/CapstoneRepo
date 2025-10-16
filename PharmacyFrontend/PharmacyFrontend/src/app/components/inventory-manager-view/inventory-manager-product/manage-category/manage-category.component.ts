@@ -8,11 +8,12 @@ import { Category } from '../../../../models/product-models/category';
 import { GetService } from '../../../../services/GetService/get.service';
 import { FormsModule } from '@angular/forms';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmation/archive-confirmation.component";
 
 @Component({
   selector: 'app-manage-category',
   standalone: true,
-  imports: [NgIf,CreateCategoryComponent,ViewCategoryComponent, CommonModule, FormsModule],
+  imports: [NgIf, CreateCategoryComponent, ViewCategoryComponent, CommonModule, FormsModule, ArchiveConfirmationComponent],
   templateUrl: './manage-category.component.html',
   styleUrl: './manage-category.component.scss'
 })
@@ -22,6 +23,8 @@ export class ManageCategoryComponent implements OnInit{
   categories : Category[] = [];
   paginatedCategories: Category[] = [];
   showSuccessAlert: boolean = false;
+  categoryToUpdate ?: Category | null;
+  showArchiveForm : number = 0;
   
   // Pagination properties
   currentPage: number = 1;
@@ -56,6 +59,24 @@ export class ManageCategoryComponent implements OnInit{
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedCategories = this.categories.slice(startIndex, endIndex);
   }
+  
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveCategory() {
+    this.updateService.archiveCategoryByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        if(!this.showArchiveForm) return;
+        this.showArchiveForm = 0;
+        this.getAllCategories();
+      }
+    })
+  }
 
   goToPage(page: number) {
     if (page >= 1 && page <= this.totalPages) {
@@ -73,8 +94,12 @@ export class ManageCategoryComponent implements OnInit{
     this.getAllCategories();
   }
 
-  openViewCategoryForm() {
-    this.viewCategory= new Category;
+  openViewCategoryForm(cat: Category) {
+    this.categoryToUpdate = cat;
+  }
+
+  closeUpdateCategoryForm() {
+    this.categoryToUpdate = null;
   }
 
   closeSuccessAlert() {

@@ -14,6 +14,7 @@ import { TypeModel } from '../../models/type-models/type';
 import { AssignProductSupplierRequest } from '../../models/supplier-models/assign-product-supplier';
 import { Supplier } from '../../models/supplier-models/supplier';
 import { UpdateProductRequest } from '../../models/product-models/update-product-request';
+import { Category } from '../../models/category-models/category';
 
 @Injectable({
   providedIn: 'root'
@@ -105,4 +106,13 @@ export class UpdateService {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Product?id=${productId}`, request);
   }
  //Product Service End
+
+ //Category Service
+  updateCategoryAsync(categoryId: number, request: Category) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/Category?id=${categoryId}`, request);
+  }
+  archiveCategoryByIdAsync(categoryId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveCategory?categoryId=${categoryId}`, {});
+  }
+ //Category Service End
 }
