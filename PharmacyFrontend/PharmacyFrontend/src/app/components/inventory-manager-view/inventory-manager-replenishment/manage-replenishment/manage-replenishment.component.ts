@@ -29,7 +29,7 @@ export class ManageReplenishmentComponent implements OnInit{
   
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 6;
+  itemsPerPage: number = 9;
   totalPages: number = 0;
   
   constructor(
