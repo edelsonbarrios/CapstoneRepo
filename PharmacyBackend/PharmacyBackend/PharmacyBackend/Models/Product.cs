@@ -11,7 +11,7 @@ namespace PharmacyBackend.Models
         public int ProductID { get; set; }
         public string ProductName { get; set; } = string.Empty;
 
-        public int? CategoryID { get; set; }
+        public int CategoryID { get; set; }
         public Category Category { get; set; }  // Navigation
 
         public int? BrandID { get; set; }

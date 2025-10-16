@@ -470,7 +470,7 @@ namespace PharmacyBackend.Migrations
                     b.Property<int?>("BrandID")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("CategoryID")
+                    b.Property<int>("CategoryID")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ClassificationID")
@@ -956,7 +956,8 @@ namespace PharmacyBackend.Migrations
                     b.HasOne("PharmacyBackend.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.Classification", "Classification")
                         .WithMany("Products")
