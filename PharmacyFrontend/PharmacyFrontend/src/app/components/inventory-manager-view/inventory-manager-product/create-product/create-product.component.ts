@@ -152,6 +152,8 @@ export class CreateProductComponent implements OnInit{
       },
       error: err => {
         alert(`${err.error}`);
+        console.log(`${err.error}`);
+        console.log(requestPayload);
       }
     });
   }

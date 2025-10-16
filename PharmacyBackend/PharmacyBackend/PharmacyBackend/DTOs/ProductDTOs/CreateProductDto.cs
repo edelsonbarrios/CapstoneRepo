@@ -5,11 +5,11 @@ namespace PharmacyBackend.DTOs.ProductDTOs
     {
         public string ProductName { get; set; } = string.Empty;
         public string CategoryName { get; set; } = string.Empty;
-        public string BrandName { get; set; } = string.Empty;
-        public string GenericName { get; set; } = string.Empty;
-        public string FormulationName { get; set; } = string.Empty;
-        public string ClassificationName { get; set; } = string.Empty;
-        public string TypeName { get; set; } = string.Empty;
+        public string? BrandName { get; set; } = string.Empty;
+        public string? GenericName { get; set; } = string.Empty;
+        public string? FormulationName { get; set; } = string.Empty;
+        public string? ClassificationName { get; set; } = string.Empty;
+        public string? TypeName { get; set; } = string.Empty;
         public int SheetsPerBox { get; set; }
         public int PiecesPerSheet { get; set; }
         public decimal BoxPrice { get; set; }
