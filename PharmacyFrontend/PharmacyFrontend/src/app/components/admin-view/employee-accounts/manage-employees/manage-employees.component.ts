@@ -118,10 +118,11 @@ export class ManageEmployeesComponent implements OnInit{
 
     this.updateService.ArchiveEmployeeAsync(requestPayload).subscribe({
       next: mes => {
-        this.showSuccessAlert = true;
+        this.showArchiveForm = 0;
+        this.getAllEmployees();
       },
       error: err => {
-        alert(`${err.error}`);
+        console.log(`${err.error}`);
         this.currentPage = 1;
         this.getAllEmployees();
       }

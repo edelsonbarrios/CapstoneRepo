@@ -88,6 +88,7 @@
                   step="0.01"
                   [(ngModel)]="item.unitPrice"
                   (ngModelChange)="onCartItemChange(item)"
+                  readonly
                 />
               </td>
               <td>{{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}</td>

@@ -1,6 +1,6 @@
 <div class="modal" *ngIf="employeeId && !showSuccessAlert">
   <div class="modal-header">
-    <h2>👤 Add Employee</h2>
+    <h2>👤 Add Employee Account</h2>
     <p>Quickly add employee by filling the form</p>
     <button class="upload-btn">Upload Photo</button>
   </div>
@@ -20,7 +20,7 @@
 
         <div class="form-group" [class.error]="passwordError">
           <label>Password<span>*</span></label>
-          <input type="text" placeholder="Enter Password" [(ngModel)]="newAccount.password">
+          <input type="password" placeholder="Enter Password" [(ngModel)]="newAccount.password">
           <p class="error-message" *ngIf="passwordError">{{ passwordError }}</p>
         </div>
       </div>
