@@ -15,25 +15,28 @@
     <div class="form-grid">
 
       <!-- Product Name (Text Input) -->
-      <div class="form-group">
+      <div class="form-group" [class.error]="productNameError">
         <label>Product Name</label>
         <input type="text" [(ngModel)]="newProduct.productName">
+        <p class="error-message" *ngIf="productNameError">{{ productNameError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="categoryNameError">
         <label>Category Name</label>
         <select [(ngModel)]="newProduct.categoryName">
           <option value="">-- Select Category --</option>
           <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
         </select>
+        <p class="error-message" *ngIf="categoryNameError">{{ categoryNameError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="unitMeasurementError">
         <label>Unit of Measurement</label>
         <select [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
           <option value="Multi-Level">Multi Level</option>
           <option value="Dual-Level">Dual Level</option>
         </select>
+        <p class="error-message" *ngIf="unitMeasurementError">{{ unitMeasurementError }}</p>
       </div>
 
       <!-- Brand Name -->
@@ -83,25 +86,28 @@
 
       
 
-      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
+      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="sheetsPerBoxError">
         <label *ngIf="unitMeasurement == 'Multi-Level'">Sheets Per Box</label>
         <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.sheetsPerBox">
-        
+        <p class="error-message" *ngIf="sheetsPerBoxError">{{ sheetsPerBoxError }}</p>
       </div>
 
-      <div class="form-group" *ngIf="unitMeasurement == 'Dual-Level'">
+      <div class="form-group" *ngIf="unitMeasurement == 'Dual-Level'" [class.error]="piecePerBoxError">
         <label *ngIf="unitMeasurement == 'Dual-Level'">Piece Per Box</label>
         <input *ngIf="unitMeasurement == 'Dual-Level'" type="number" [(ngModel)]="newProduct.piecePerBox">
+        <p class="error-message" *ngIf="piecePerBoxError">{{ piecePerBoxError }}</p>
       </div>
 
-      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
+      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="piecesPerSheetError">
         <label *ngIf="unitMeasurement == 'Multi-Level'">Pieces Per Sheet</label>
         <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.piecesPerSheet">
+        <p class="error-message" *ngIf="piecesPerSheetError">{{ piecesPerSheetError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="boxPriceError">
         <label>Box Price (&#8369;)</label>
         <input type="number" [(ngModel)]="newProduct.boxPrice">
+        <p class="error-message" *ngIf="boxPriceError">{{ boxPriceError }}</p>
       </div>
 
       <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
@@ -109,14 +115,16 @@
         <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.sheetPrice">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="piecePriceError">
         <label>Piece Price (&#8369;)</label>
         <input type="number" [(ngModel)]="newProduct.piecePrice">
+        <p class="error-message" *ngIf="piecePriceError">{{ piecePriceError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="reorderLevelError">
         <label>Reorder Level</label>
         <input type="number" [(ngModel)]="newProduct.reorderLevel">
+        <p class="error-message" *ngIf="reorderLevelError">{{ reorderLevelError }}</p>
       </div>
 
     </div>

@@ -16,12 +16,24 @@ export class CreateCategoryComponent {
   @Input() newCategory: CreateCategory = new CreateCategory;
   @Output() closeForm = new EventEmitter<void>();
   showSuccessAlert: boolean = false;
+  
+  // Validation error property
+  categoryNameError: string = '';
 
   constructor(
     private postService : PostService
   ) {}
 
   createCategory() {
+    // Clear previous error
+    this.categoryNameError = '';
+    
+    // Validate category name
+    if (!this.newCategory.categoryName || this.newCategory.categoryName.trim() === '') {
+      this.categoryNameError = 'Category name is required';
+      return;
+    }
+
     if(!this.newCategory) return;
     this.postService.createNewCategoryAsync(this.newCategory).subscribe({
       next: res => {
@@ -34,6 +46,8 @@ export class CreateCategoryComponent {
   }
 
   closeCreateCategoryForm() {
+    // Clear error when closing form
+    this.categoryNameError = '';
     this.closeForm.emit();
   }
 
