@@ -616,6 +616,7 @@ namespace PharmacyBackend.Service.GetService
                 PiecePrice = p.PiecePrice,
                 ReorderLevel = p.ReorderLevel,
                 UnitMeasurement = p.UnitMeasurement,
+                Description = p.Description,
                 PiecePerBox = p.PiecePerBox,
 
 
@@ -661,6 +662,7 @@ namespace PharmacyBackend.Service.GetService
                 PiecePrice = p.PiecePrice,
                 ReorderLevel = p.ReorderLevel,
                 UnitMeasurement = p.UnitMeasurement,
+                Description = p.Description,
                 PiecePerBox = p.PiecePerBox,
 
                 // Inventory calculations
