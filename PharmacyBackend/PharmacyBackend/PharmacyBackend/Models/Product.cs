@@ -42,6 +42,8 @@ namespace PharmacyBackend.Models
         public decimal PiecePrice { get; set; }
         public int ReorderLevel { get; set; }
 
+        public string Description { get; set; } = string.Empty;
+
         public bool IsActive { get; set; } = true;
         public string UnitMeasurement { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;

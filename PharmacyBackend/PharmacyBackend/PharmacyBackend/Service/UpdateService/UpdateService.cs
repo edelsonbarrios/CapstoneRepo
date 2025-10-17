@@ -220,6 +220,27 @@ namespace PharmacyBackend.Service.UpdateService
                 .FirstOrDefaultAsync(c => c.CategoryName.ToLower() == categoryName.ToLower());
             return category?.CategoryID;
         }
+        private async Task<bool> ProductExistsWithoutBrandAsync(string productName, int? excludeProductId = null)
+        {
+            var query = _context.Product
+                .Where(p => p.ProductName == productName && p.BrandID == null);
+
+            if (excludeProductId.HasValue)
+                query = query.Where(p => p.ProductID != excludeProductId.Value);
+
+            return await query.AnyAsync();
+        }
+
+        private async Task<bool> ProductExistsWithBrandAsync(string productName, int brandId, int? excludeProductId = null)
+        {
+            var query = _context.Product
+                .Where(p => p.ProductName.ToLower() == productName.ToLower() && p.BrandID == brandId);
+
+            if (excludeProductId.HasValue)
+                query = query.Where(p => p.ProductID != excludeProductId.Value);
+
+            return await query.AnyAsync();
+        }
 
         private async Task<int?> GetBrandIdByNameAsync(string brandName)
         {
@@ -288,27 +309,79 @@ namespace PharmacyBackend.Service.UpdateService
             var existing = await _getRepo.GetProductByIdAsync(id);
             if (existing == null) return false;
 
-            // Resolve names to IDs using the same helper methods
+            // Resolve category first to determine if it's medicine
             var categoryId = await GetCategoryIdByNameAsync(dto.CategoryName);
-            var brandId = await GetBrandIdByNameAsync(dto.BrandName);
-            var genericId = await GetGenericIdByNameAsync(dto.GenericName);
-            var formulationId = await GetFormulationIdByNameAsync(dto.FormulationName);
-            var classificationId = await GetClassificationIdByNameAsync(dto.ClassificationName);
-            var typeId = await GetTypeIdByNameAsync(dto.TypeName);
-
-            // Validate that all required entities exist
             if (categoryId == null)
                 throw new ArgumentException($"Category '{dto.CategoryName}' not found.");
-            if (brandId == null)
-                throw new ArgumentException($"Brand '{dto.BrandName}' not found.");
-            if (genericId == null)
-                throw new ArgumentException($"Generic '{dto.GenericName}' not found.");
-            if (formulationId == null)
-                throw new ArgumentException($"Formulation '{dto.FormulationName}' not found.");
-            if (classificationId == null)
-                throw new ArgumentException($"Classification '{dto.ClassificationName}' not found.");
-            if (typeId == null)
-                throw new ArgumentException($"Type '{dto.TypeName}' not found.");
+
+            // Get category to check if it's medicine
+            var category = await _context.Category.FindAsync(categoryId.Value);
+            if (category == null)
+                throw new ArgumentException($"Category not found in database.");
+
+            bool isMedicine = category.CategoryName.Equals("Medicine", StringComparison.OrdinalIgnoreCase);
+
+            // Medicine-specific fields
+            int? brandId = null;
+            int? genericId = null;
+            int? formulationId = null;
+            int? classificationId = null;
+            int? typeId = null;
+
+            if (isMedicine)
+            {
+                // For medicine, all fields are required
+                brandId = await GetBrandIdByNameAsync(dto.BrandName);
+                genericId = await GetGenericIdByNameAsync(dto.GenericName);
+                formulationId = await GetFormulationIdByNameAsync(dto.FormulationName);
+                classificationId = await GetClassificationIdByNameAsync(dto.ClassificationName);
+                typeId = await GetTypeIdByNameAsync(dto.TypeName);
+
+                // Validate required for medicine
+                if (brandId == null)
+                    throw new ArgumentException($"Brand '{dto.BrandName}' is required for medicine products.");
+                if (genericId == null)
+                    throw new ArgumentException($"Generic '{dto.GenericName}' is required for medicine products.");
+                if (formulationId == null)
+                    throw new ArgumentException($"Formulation '{dto.FormulationName}' is required for medicine products.");
+                if (classificationId == null)
+                    throw new ArgumentException($"Classification '{dto.ClassificationName}' is required for medicine products.");
+                if (typeId == null)
+                    throw new ArgumentException($"Type '{dto.TypeName}' is required for medicine products.");
+
+                // Check for duplicates (excluding current product)
+                if (await ProductExistsWithBrandAsync(dto.ProductName, brandId.Value, id))
+                {
+                    throw new InvalidOperationException(
+                        $"A product with name '{dto.ProductName}' and brand '{dto.BrandName}' already exists.");
+                }
+            }
+            else
+            {
+                // For non-medicine, brand is optional but resolve if provided
+                if (!string.IsNullOrWhiteSpace(dto.BrandName))
+                {
+                    brandId = await GetBrandIdByNameAsync(dto.BrandName);
+                }
+
+                // Check for duplicates (excluding current product)
+                if (brandId.HasValue)
+                {
+                    if (await ProductExistsWithBrandAsync(dto.ProductName, brandId.Value, id))
+                    {
+                        throw new InvalidOperationException(
+                            $"A product with name '{dto.ProductName}' and brand '{dto.BrandName}' already exists.");
+                    }
+                }
+                else
+                {
+                    if (await ProductExistsWithoutBrandAsync(dto.ProductName, id))
+                    {
+                        throw new InvalidOperationException(
+                            $"A product with name '{dto.ProductName}' (without brand) already exists.");
+                    }
+                }
+            }
 
             // Update the product with resolved IDs
             existing.ProductName = dto.ProductName;
@@ -324,6 +397,7 @@ namespace PharmacyBackend.Service.UpdateService
             existing.SheetPrice = dto.SheetPrice;
             existing.PiecePrice = dto.PiecePrice;
             existing.ReorderLevel = dto.ReorderLevel;
+            existing.Description = dto.Description;
 
 
             await _updateRepo.UpdateProductAsync(existing);
@@ -433,6 +507,7 @@ namespace PharmacyBackend.Service.UpdateService
             existing.SupplierName = dto.SupplierName;
             existing.ContactNumber = dto.ContactNumber;
             existing.ContactPerson = dto.ContactPerson;
+            existing.ContactPersonNumber = dto.ContactPersonNumber;
             existing.Email = dto.Email;
             existing.Address = dto.Address;
             existing.IsActive = dto.IsActive;
