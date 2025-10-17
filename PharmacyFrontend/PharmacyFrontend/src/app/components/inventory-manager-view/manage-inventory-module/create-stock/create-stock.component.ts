@@ -22,6 +22,14 @@ export class CreateStockComponent implements OnInit{
   products : Product[] = [];
   employee: Employee = new Employee();
   selectedProduct : Product = new Product();
+  showSuccessAlert: boolean = false;
+
+  // Validation error properties
+  productError: string = '';
+  batchNumberError: string = '';
+  manufacturingDateError: string = '';
+  expirationDateError: string = '';
+  costPriceError: string = '';
 
   constructor(
     private postService : PostService,
@@ -35,6 +43,10 @@ export class CreateStockComponent implements OnInit{
 
   onSelectProduct(request: Product) {
     this.selectedProduct = request;
+    // Clear product error when a product is selected
+    if (this.selectedProduct && this.selectedProduct.productName) {
+      this.productError = '';
+    }
 
     this.createStock.sheetsPerBox = this.selectedProduct.sheetsPerBox;
     this.createStock.piecesPerSheet = this.selectedProduct.piecesPerSheet;
@@ -45,6 +57,49 @@ export class CreateStockComponent implements OnInit{
   }
 
   createInventory() {
+    // Clear previous errors
+    this.productError = '';
+    this.batchNumberError = '';
+    this.manufacturingDateError = '';
+    this.expirationDateError = '';
+    this.costPriceError = '';
+
+    let isValid = true;
+
+    // Validate product selection
+    if (!this.selectedProduct || !this.selectedProduct.productName) {
+      this.productError = 'Product is required';
+      isValid = false;
+    }
+
+    // Validate batch number
+    if (!this.createStock.batchNumber || this.createStock.batchNumber.trim() === '') {
+      this.batchNumberError = 'Batch number is required';
+      isValid = false;
+    }
+
+    // Validate manufacturing date
+    if (!this.createStock.manufacturingDate) {
+      this.manufacturingDateError = 'Manufacturing date is required';
+      isValid = false;
+    }
+
+    // Validate expiration date
+    if (!this.createStock.expirationDate) {
+      this.expirationDateError = 'Expiration date is required';
+      isValid = false;
+    }
+
+    // Validate cost price
+    if (!this.createStock.costPrice || this.createStock.costPrice <= 0) {
+      this.costPriceError = 'Cost price is required';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
     if(!this.createStock) return;
     if(!this.selectedProduct) return;
     const requestPayload : CreateInventory = {
@@ -69,8 +124,7 @@ export class CreateStockComponent implements OnInit{
     }
     this.postService.createNewInventoryAsync(requestPayload).subscribe({
       next: res => {
-        alert(`Inventory successfully created.`);
-        this.closeCreateInventoryForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
@@ -80,7 +134,18 @@ export class CreateStockComponent implements OnInit{
   }
 
   closeCreateInventoryForm() {
+    // Clear all errors when closing form
+    this.productError = '';
+    this.batchNumberError = '';
+    this.manufacturingDateError = '';
+    this.expirationDateError = '';
+    this.costPriceError = '';
     this.closeForm.emit();
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeCreateInventoryForm();
   }
 
   getAllProducts() {

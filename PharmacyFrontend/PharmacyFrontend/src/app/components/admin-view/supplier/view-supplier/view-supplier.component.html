@@ -28,12 +28,27 @@
     </div>
 
     <div class="supplier-property">
-      <label>Contact</label>
+      <label>Contact Person</label>
+      <div>
+        <span>Sample</span>
+      </div>
+    </div>
+
+    <div class="supplier-property">
+      <label>Contact #1</label>
       <div>
         <span *ngIf="!isEditMode">{{ viewSupplier.contactNumber }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="viewSupplier.contactNumber" placeholder="Enter contact number" />
       </div>
     </div>
+
+    <div class="supplier-property">
+      <label>Contact #2</label>
+      <div>
+        <span>Sample</span>
+      </div>
+    </div>
+
 
     <div class="supplier-property">
       <label>Email</label>

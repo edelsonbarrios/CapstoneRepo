@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
   <div class="modal-header">
     <h2>Add Stock Entry</h2>
     <p>Fill in the details to add new entry.</p>
@@ -7,11 +7,12 @@
   <div class="modal-body">
     <div class="form-grid">
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="productError">
         <label>Product</label>
         <select [(ngModel)]="selectedProduct" (ngModelChange)="onSelectProduct($event)">
           <option *ngFor="let p of products" [ngValue]="p">{{p.productName}}</option>
         </select>
+        <p class="error-message" *ngIf="productError">{{ productError }}</p>
       </div>
 
       <div class="form-group">
@@ -19,9 +20,10 @@
         <input type="text" placeholder="Category Name" [(ngModel)]="selectedProduct.categoryName">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="batchNumberError">
         <label>Batch Number</label>
         <input type="text" placeholder="Batch Number" [(ngModel)]="createStock.batchNumber">
+        <p class="error-message" *ngIf="batchNumberError">{{ batchNumberError }}</p>
       </div>
 
       <div class="form-group">
@@ -54,19 +56,22 @@
         <input type="number" [(ngModel)]="selectedProduct.reorderLevel" min="0">
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="manufacturingDateError">
         <label>Manufacturing Date</label>
         <input type="date" [(ngModel)]="createStock.manufacturingDate">
+        <p class="error-message" *ngIf="manufacturingDateError">{{ manufacturingDateError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="expirationDateError">
         <label>Expiry Date</label>
         <input type="date" [(ngModel)]="createStock.expirationDate">
+        <p class="error-message" *ngIf="expirationDateError">{{ expirationDateError }}</p>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" [class.error]="costPriceError">
         <label>Cost Price*</label>
         <input type="number" [(ngModel)]="createStock.costPrice" min="0">
+        <p class="error-message" *ngIf="costPriceError">{{ costPriceError }}</p>
       </div>
 
       <div class="form-group">
@@ -90,5 +95,14 @@
   <div class="modal-footer">
     <button class="btn-save" (click)="createInventory()">Save</button>
     <button class="btn-cancel" (click)="closeCreateInventoryForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Stock Entry has been Added Successfully</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

@@ -29,6 +29,7 @@ export class StockAdjustComponent implements OnInit {
   refNumber: string = '';
   movementType: string = '';
   movementTypes : string[] = ['Stock In', 'Stock Out', 'Adjustment', 'Return', 'Damaged', 'Expired', 'Count Correction'];
+  showSuccessAlert: boolean = false;
 
   constructor(
     private postService: PostService,
@@ -53,8 +54,7 @@ export class StockAdjustComponent implements OnInit {
     }
     this.postService.adjustInventoryStockAsync(requestPayload).subscribe({
       next: res => {
-        alert(`Stock Adjusted successfully.`);
-        this.closeStockAdjustmentForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
@@ -84,6 +84,11 @@ export class StockAdjustComponent implements OnInit {
   closeStockAdjustmentForm() {
     this.closeForm.emit();
     console.log(this.stockAdjust);
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeStockAdjustmentForm();
   }
 
 }

@@ -9,7 +9,9 @@
       <thead>
         <tr>
           <th>Supplier Name</th>
-          <th>Contact</th>
+          <th>Contact Person</th>
+          <th>Contact #1</th>
+          <th>Contact #2</th>
           <th>Email</th>
           <th>Address</th>
           <th>Status</th>
@@ -24,7 +26,9 @@
         </tr>
         <tr *ngFor="let s of paginatedSuppliers">
           <td>{{s.supplierName}}</td>
+          <td></td>
           <td>{{s.contactNumber}}</td>
+          <td></td>
           <td>{{s.email}}</td>
           <td>{{s.address}}</td>
           <td>

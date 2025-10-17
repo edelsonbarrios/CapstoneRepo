@@ -62,6 +62,20 @@
     }
   }
 
+  // Error state styling
+  &.error {
+    input,
+    select {
+      border: 1px solid red;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  }
+
   /* 🌟 Makes conditional inputs auto-occupy free space when one column is hidden */
   &:has(input[ng-reflect-ng-if]),
   &:has(select[ng-reflect-ng-if]) {

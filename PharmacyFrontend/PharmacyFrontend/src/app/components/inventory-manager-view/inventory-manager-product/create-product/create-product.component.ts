@@ -33,6 +33,17 @@ export class CreateProductComponent implements OnInit{
   showSuccessAlert: boolean = false;
   unitMeasurement: string = 'Multi-Level';
 
+  // Validation error properties
+  productNameError: string = '';
+  categoryNameError: string = '';
+  unitMeasurementError: string = '';
+  sheetsPerBoxError: string = '';
+  piecesPerSheetError: string = '';
+  piecePerBoxError: string = '';
+  boxPriceError: string = '';
+  piecePriceError: string = '';
+  reorderLevelError: string = '';
+
   constructor(
     private postService : PostService,
     private getService : GetService
@@ -128,6 +139,79 @@ export class CreateProductComponent implements OnInit{
   }
 
   createProduct() {
+    // Clear previous errors
+    this.productNameError = '';
+    this.categoryNameError = '';
+    this.unitMeasurementError = '';
+    this.sheetsPerBoxError = '';
+    this.piecesPerSheetError = '';
+    this.piecePerBoxError = '';
+    this.boxPriceError = '';
+    this.piecePriceError = '';
+    this.reorderLevelError = '';
+
+    let isValid = true;
+
+    // Validate product name
+    if (!this.newProduct.productName || this.newProduct.productName.trim() === '') {
+      this.productNameError = 'Product name is required';
+      isValid = false;
+    }
+
+    // Validate category name
+    if (!this.newProduct.categoryName || this.newProduct.categoryName.trim() === '') {
+      this.categoryNameError = 'Category name is required';
+      isValid = false;
+    }
+
+    // Validate unit measurement
+    if (!this.newProduct.unitMeasurement || this.newProduct.unitMeasurement.trim() === '') {
+      this.unitMeasurementError = 'Unit of measurement is required';
+      isValid = false;
+    }
+
+    // Validate Multi-Level specific fields
+    if (this.unitMeasurement === 'Multi-Level') {
+      if (!this.newProduct.sheetsPerBox || this.newProduct.sheetsPerBox <= 0) {
+        this.sheetsPerBoxError = 'Sheets per box is required';
+        isValid = false;
+      }
+      if (!this.newProduct.piecesPerSheet || this.newProduct.piecesPerSheet <= 0) {
+        this.piecesPerSheetError = 'Pieces per sheet is required';
+        isValid = false;
+      }
+    }
+
+    // Validate Dual-Level specific fields
+    if (this.unitMeasurement === 'Dual-Level') {
+      if (!this.newProduct.piecePerBox || this.newProduct.piecePerBox <= 0) {
+        this.piecePerBoxError = 'Piece per box is required';
+        isValid = false;
+      }
+    }
+
+    // Validate box price
+    if (!this.newProduct.boxPrice || this.newProduct.boxPrice <= 0) {
+      this.boxPriceError = 'Box price is required';
+      isValid = false;
+    }
+
+    // Validate piece price
+    if (!this.newProduct.piecePrice || this.newProduct.piecePrice <= 0) {
+      this.piecePriceError = 'Piece price is required';
+      isValid = false;
+    }
+
+    // Validate reorder level
+    if (!this.newProduct.reorderLevel || this.newProduct.reorderLevel <= 0) {
+      this.reorderLevelError = 'Reorder level is required';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
     if(!this.newProduct) return;
     const requestPayload : CreateProductRequest = {
       productName: this.newProduct.productName,
@@ -158,6 +242,16 @@ export class CreateProductComponent implements OnInit{
   }
 
   closeCreateProductForm() {
+    // Clear all errors when closing form
+    this.productNameError = '';
+    this.categoryNameError = '';
+    this.unitMeasurementError = '';
+    this.sheetsPerBoxError = '';
+    this.piecesPerSheetError = '';
+    this.piecePerBoxError = '';
+    this.boxPriceError = '';
+    this.piecePriceError = '';
+    this.reorderLevelError = '';
     this.closeForm.emit();
   }
 
