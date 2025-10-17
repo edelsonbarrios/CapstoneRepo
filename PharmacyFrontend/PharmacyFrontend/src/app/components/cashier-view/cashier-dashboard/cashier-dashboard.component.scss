@@ -68,6 +68,22 @@
           border-radius: 6px;
           padding: 0.4rem;
         }
+        button {
+          padding-inline: 1.25rem;
+          padding-block: 0.5rem;
+          border-radius: 5px;
+          border: 1px solid #0077cc;
+          color: #0077cc;
+          cursor: pointer;
+          transition: opacity 0.15s;
+
+          &:hover {
+            opacity: 0.6;
+          }
+          &:active {
+            opacity: 0.3;
+          }
+        }
       }
 
       .btn-primary {
