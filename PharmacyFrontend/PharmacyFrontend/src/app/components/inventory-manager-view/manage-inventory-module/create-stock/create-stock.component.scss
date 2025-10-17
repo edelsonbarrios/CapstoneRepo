@@ -56,6 +56,20 @@
         font-size: 0.8rem;
         color: rgb(77, 77, 77);
       }
+
+      // Error state styling
+      &.error {
+        input,
+        select {
+          border: 1px solid red;
+        }
+
+        .error-message {
+          color: red;
+          font-size: 0.875rem;
+          margin-top: 0.25rem;
+        }
+      }
     }
   }
 
