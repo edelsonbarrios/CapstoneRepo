@@ -491,6 +491,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<int?>("FormulationID")
                         .HasColumnType("integer");
 

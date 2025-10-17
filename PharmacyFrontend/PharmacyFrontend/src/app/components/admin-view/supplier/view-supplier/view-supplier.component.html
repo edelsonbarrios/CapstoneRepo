@@ -1,9 +1,8 @@
-  <div class="wrapper" *ngIf="viewSupplier && !showSuccessAlert" [hidden]="showSuccessAlert">
+<div class="wrapper" *ngIf="viewSupplier && !showSuccessAlert" [hidden]="showSuccessAlert">
   <!-- HEADER -->
   <header>
     <h2>{{ isEditMode ? 'Edit Supplier' : 'Supplier Details' }}</h2>
   </header>
-  <hr />
 
   <!-- PROFILE -->
   <section class="profile-section">
@@ -15,6 +14,7 @@
       </div>
     </div>
   </section>
+
   <hr />
 
   <!-- SUPPLIER DETAILS -->
@@ -48,7 +48,6 @@
         <span>Sample</span>
       </div>
     </div>
-
 
     <div class="supplier-property">
       <label>Email</label>
@@ -106,7 +105,7 @@
   <!-- ACTION BUTTONS -->
   <div class="button-wrapper">
     <button *ngIf="!isEditMode" (click)="toggleViewMode()" class="edit-btn">Edit</button>
-    <button *ngIf="isEditMode" (click)="saveChanges()" class="save-btn">Save</button>
+    <button *ngIf="isEditMode" (click)="saveChanges()" class="save-btn">Save Changes</button>
     <button (click)="closeViewForm()" class="close-btn">Close</button>
   </div>
 </div>

@@ -12,8 +12,8 @@ using PharmacyBackend.DataContext;
 namespace PharmacyBackend.Migrations
 {
     [DbContext(typeof(PharmacyContext))]
-    [Migration("20251016135943_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20251017190747_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<string>("BrandName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.HasKey("BrandID");
 
@@ -206,6 +209,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<string>("ClassificationName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.HasKey("ClassificationID");
 
@@ -367,6 +373,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("FormulationName")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.HasKey("FormulationID");
 
                     b.ToTable("Formulation");
@@ -382,6 +391,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<string>("GenericName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.HasKey("GenericID");
 
@@ -473,7 +485,7 @@ namespace PharmacyBackend.Migrations
                     b.Property<int?>("BrandID")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("CategoryID")
+                    b.Property<int>("CategoryID")
                         .HasColumnType("integer");
 
                     b.Property<int?>("ClassificationID")
@@ -481,6 +493,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<int?>("FormulationID")
                         .HasColumnType("integer");
@@ -801,6 +816,9 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TypeID"));
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("TypeName")
                         .HasColumnType("text");
 
@@ -850,7 +868,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SuppliersId");
 
-                    b.ToTable("ProductSupplier");
+                    b.ToTable("ProductSupplier", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Account", b =>
@@ -959,7 +977,8 @@ namespace PharmacyBackend.Migrations
                     b.HasOne("PharmacyBackend.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PharmacyBackend.Models.Classification", "Classification")
                         .WithMany("Products")
