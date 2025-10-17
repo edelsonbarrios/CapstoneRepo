@@ -126,6 +126,10 @@ namespace PharmacyBackend.Repository.POST
                     if (vat == null)
                         throw new ArgumentException($"VAT with ID {salesTransaction.VATId} not found");
                 }
+                //Validation For Payment
+                if (salesTransaction.AmountPaid <= 0)
+                    throw new ArgumentException("Payment amount must be greater than zero to complete transaction");
+
 
                 // Process items and update inventory
                 foreach (var item in salesTransaction.Items)
@@ -191,6 +195,7 @@ namespace PharmacyBackend.Repository.POST
 
             if (salesItem.Quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than zero");
+
 
             var product = await _context.Product.FindAsync(salesItem.ProductId);
             if (product == null)
