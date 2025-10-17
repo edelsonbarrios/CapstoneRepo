@@ -23,14 +23,14 @@
       </div>
 
       <!-- GENERIC NAME -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.genericName">
         <label>Generic Name</label>
         <select [(ngModel)]="productToUpdate.genericName">
           <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.brandName">
         <label>Brand Name</label>
         <select [(ngModel)]="productToUpdate.brandName">
           <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
@@ -38,7 +38,7 @@
       </div>
 
       <!-- CLASSIFICATION -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.classificationName">
         <label>Classification</label>
         <select [(ngModel)]="productToUpdate.classificationName">
           <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
@@ -46,7 +46,7 @@
       </div>
 
       <!-- TYPE -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.typeName">
         <label>Type</label>
         <select [(ngModel)]="productToUpdate.typeName">
           <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
@@ -54,7 +54,7 @@
       </div>
 
       <!-- FORMULATION -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.formulationName">
         <label>Formulation</label>
         <select [(ngModel)]="productToUpdate.formulationName">
           <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
@@ -62,7 +62,7 @@
       </div>
 
       <!-- CATEGORY -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.categoryName">
         <label>Category</label>
         <select [(ngModel)]="productToUpdate.categoryName">
           <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
@@ -70,7 +70,7 @@
       </div>
 
       <!-- SHEETS PER BOX -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.sheetsPerBox">
         <label>Sheets Per Box</label>
         <input
           type="number"
@@ -80,7 +80,7 @@
       </div>
 
       <!-- PIECES PER SHEET -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.piecesPerSheet">
         <label>Pieces Per Sheet</label>
         <input
           type="number"
@@ -89,8 +89,17 @@
         />
       </div>
 
+      <div class="form-group" *ngIf="productToUpdate.piecePerBox">
+        <label>Pieces Per Box</label>
+        <input
+          type="number"
+          [(ngModel)]="productToUpdate.piecePerBox"
+          placeholder="Enter pieces per sheet"
+        />
+      </div>
+
       <!-- BOX PRICE -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.boxPrice">
         <label>Box Price (&#8369;)</label>
         <input
           type="number"
@@ -100,7 +109,7 @@
       </div>
 
       <!-- SHEET PRICE -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.sheetPrice">
         <label>Sheet Price (&#8369;)</label>
         <input
           type="number"
@@ -110,7 +119,7 @@
       </div>
 
       <!-- PIECE PRICE -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.piecePrice">
         <label>Piece Price (&#8369;)</label>
         <input
           type="number"
@@ -120,7 +129,7 @@
       </div>
 
       <!-- REORDER LEVEL -->
-      <div class="form-group">
+      <div class="form-group" *ngIf="productToUpdate.reorderLevel">
         <label>Reorder Level</label>
         <input
           type="number"

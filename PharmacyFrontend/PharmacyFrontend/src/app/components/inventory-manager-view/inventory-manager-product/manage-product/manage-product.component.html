@@ -28,7 +28,8 @@
         <tr *ngFor="let p of paginatedProducts">
           <td>{{p.productName}}</td>
           <td>{{p.categoryName}}</td>
-          <td>{{p.brandName}}</td>
+          <td *ngIf="p.brandName">{{p.brandName}}</td>
+          <td *ngIf="p.brandName == ''">N/A</td>
           <td>{{p.boxPrice}}</td>
           <td>
             <button class="btn-view" (click)="openViewProductForm(p)">See Details</button>

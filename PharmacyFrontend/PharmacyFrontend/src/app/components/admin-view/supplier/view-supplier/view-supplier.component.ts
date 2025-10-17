@@ -7,7 +7,7 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
 @Component({
   selector: 'app-view-supplier',
   standalone: true,
-  imports: [FormsModule, NgIf, NgFor, CurrencyPipe],
+  imports: [FormsModule, NgIf, NgFor],
   templateUrl: './view-supplier.component.html',
   styleUrl: './view-supplier.component.scss',
 })

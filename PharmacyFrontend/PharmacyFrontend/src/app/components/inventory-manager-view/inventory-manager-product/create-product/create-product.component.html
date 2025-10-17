@@ -31,7 +31,7 @@
       </div>
 
       <div class="form-group" [class.error]="unitMeasurementError">
-        <label>Unit of Measurement</label>
+        <label>Medicine Packaging</label>
         <select [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
           <option value="Multi-Level">Multi Level</option>
           <option value="Dual-Level">Dual Level</option>
@@ -68,7 +68,7 @@
 
       <!-- Type -->
       <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
-        <label>Type</label>
+        <label>Type of Medicine</label>
         <select [(ngModel)]="newProduct.typeName">
           <option value="">-- Select Type --</option>
           <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
