@@ -5,11 +5,19 @@ import { AddFormulationComponent } from '../add-formulation/add-formulation.comp
 import { EditFormulationComponent } from '../edit-formulation/edit-formulation.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Formulation } from '../../../../models/formulation-models/formulation';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-formulation',
   standalone: true,
-  imports: [NgIf,AddFormulationComponent,EditFormulationComponent, NgFor],
+  imports: [
+    NgIf,
+    AddFormulationComponent,
+    EditFormulationComponent, 
+    NgFor,
+    ArchiveConfirmationComponent
+  ],
   templateUrl: './manage-formulation.component.html',
   styleUrl: './manage-formulation.component.scss'
 })
@@ -18,6 +26,9 @@ export class ManageFormulationComponent implements OnInit{
   editFormulation ?: Formulation | null;
   formulations: Formulation[] = [];
   paginatedFormulations: Formulation[] = [];
+  showArchiveForm: number = 0;
+  alertMessage : string = '';
+  successMessage: string = '';
 
   // Pagination properties
   currentPage: number = 1;
@@ -25,7 +36,8 @@ export class ManageFormulationComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService : UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +49,25 @@ export class ManageFormulationComponent implements OnInit{
       next: res => {
         this.formulations = res;
         this.updatePagination();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveFormulation() {
+    this.updateService.archiveFormulationByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        this.showArchiveForm = 0;
+        this.getAllFormulation();
       },
       error: err => {
         console.log(`${err.error}`);

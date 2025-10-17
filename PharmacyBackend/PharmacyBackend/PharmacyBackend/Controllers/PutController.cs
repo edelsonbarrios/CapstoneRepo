@@ -199,6 +199,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        [HttpPut("ArchiveFormulation")]
+        public async Task<ActionResult<object>> ArchiveFormulationByIdAsync(int formulationId)
+        {
+            if (formulationId == 0)
+                return NotFound(new { Message = "Formulation does not exist." });
+            var archiveFormulation = await _updateService.ArchiveFormulationByIdAsync(formulationId);
+            if (!archiveFormulation)
+                return BadRequest(new { Message = "Formulation cannot be deleted." });
+            return Ok(new { Message = "Formulation successfully deleted." });
+        }
         #endregion
 
         #region Classification
@@ -209,6 +219,16 @@ namespace PharmacyBackend.Controllers
             if (!success)
                 return NotFound();
             return NoContent();
+        }
+        [HttpPut("ArchiveClassification")]
+        public async Task<ActionResult<object>> ArchiveClassificationByIdAsync(int classificationId)
+        {
+            if (classificationId == 0)
+                return NotFound(new { Message = "Classification does not exist." });
+            var archiveClassification = await _updateService.ArchiveClassificationByIdAsync(classificationId);
+            if (!archiveClassification)
+                return BadRequest(new { Message = "Classification cannot be deleted." });
+            return Ok(new { Message = "Classification successfully deleted." });
         }
         #endregion
 

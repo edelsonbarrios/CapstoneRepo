@@ -54,10 +54,12 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Formulation
         public Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto);
+        public Task<bool> ArchiveFormulationByIdAsync(int formulationId);
         #endregion
 
         #region Classification
         public Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto);
+        public Task<bool> ArchiveClassificationByIdAsync(int classificationId);
         #endregion
 
         #region Type

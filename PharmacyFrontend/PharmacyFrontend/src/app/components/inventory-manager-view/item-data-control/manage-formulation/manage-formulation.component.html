@@ -26,7 +26,7 @@
           <td>{{f.formulationName}}</td>
           <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditFormulationForm(f)">Edit</button>
-            <button class="btn-archive" (click)="goToPage(1)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveForm(f.formulationID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -54,4 +54,16 @@
   [editFormulation]="editFormulation"
   (closeForm)="closeEditFormulationForm()"
   ></app-edit-formulation>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'Formulation sucessfully deleted.'"
+  [message]="'Do you really want to delete this formulation?'"
+
+  (onArchive)="archiveFormulation()"
+  (onCancel)="closeArchiveForm()"
+  ></app-archive-confirmation>
 </div>

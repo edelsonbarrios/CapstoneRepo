@@ -498,6 +498,15 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateFormulationAsync(existing);
             return true;
         }
+        public async Task<bool> ArchiveFormulationByIdAsync(int formulationId)
+        {
+            var formulation = await _getRepo.GetFormulationByIdAsync(formulationId);
+            if (formulation is null)
+                return false;
+            formulation.IsActive = false;
+            await _updateRepo.UpdateFormulationAsync(formulation);
+            return true;
+        }
         #endregion
 
         #region Classification
@@ -509,6 +518,15 @@ namespace PharmacyBackend.Service.UpdateService
             existing.ClassificationName = dto.ClassificationName;
 
             await _updateRepo.UpdateClassificationAsync(existing);
+            return true;
+        }
+        public async Task<bool> ArchiveClassificationByIdAsync(int classificationId)
+        {
+            var classification = await _getRepo.GetClassificationByIdAsync(classificationId);
+            if (classification is null)
+                return false;
+            classification.IsActive = false;
+            await _updateRepo.UpdateClassificationAsync(classification);
             return true;
         }
         #endregion

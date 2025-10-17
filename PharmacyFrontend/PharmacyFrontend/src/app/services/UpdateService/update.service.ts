@@ -90,11 +90,17 @@ export class UpdateService {
   updateFormulationAsync(id: number, formulation: Formulation) : Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Formulation?id=${id}`, formulation);
   }
+  archiveFormulationByIdAsync(formulationId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveFormulation?formulationId=${formulationId}`, {});
+  }
  //Formulation Service End
 
  //Classification Service
   updateClassificationAsync(id: number, classification: Classification) : Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Classification?id=${id}`, classification);
+  }
+  archiveClassificationByIdAsync(classificationId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveClassification?classificationId=${classificationId}`, {});
   }
  //Classification Service End
 
