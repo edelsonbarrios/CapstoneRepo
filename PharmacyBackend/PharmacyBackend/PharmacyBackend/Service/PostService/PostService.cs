@@ -443,6 +443,7 @@ namespace PharmacyBackend.Service.PostService
                 PiecePrice = dto.PiecePrice,
                 ReorderLevel = dto.ReorderLevel,
                 UnitMeasurement = dto.UnitMeasurement,
+                Description = dto.Description,
                 DateCreated = DateTime.UtcNow,
                 PiecePerBox = dto.PiecePerBox
             };

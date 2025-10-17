@@ -16,6 +16,7 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public decimal SheetPrice { get; set; }
         public decimal PiecePrice { get; set; }
         public int ReorderLevel { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }
 
