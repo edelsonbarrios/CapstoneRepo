@@ -1,48 +1,111 @@
 <div class="modal-content" *ngIf="!showSuccessAlert">
-  <span class="close" (click)="close.emit()">&times;</span>
-  <h2>Select Products</h2>
+  <div class="modal-header">
+    <h2>Select Products</h2>
+    <span class="close" (click)="close.emit()">&times;</span>
+  </div>
 
-  <table class="product-table">
-    <thead>
-      <tr>
-        <th><input type="checkbox" (change)="toggleAll($event)" /></th>
-        <th>Product Name</th>
-        <th>Category</th>
-        <th>Brand</th>
-        <th>Generic</th>
-        <th>Formualation</th>
-        <th>Classification</th>
-        <th>Type</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of products">
-        <td>
-          <input type="checkbox" [(ngModel)]="product.selected" />
-        </td>
-        <td>{{ product.productName }}</td>
-        <td>{{product.categoryName}}</td>
-        <td>{{product.brandName}}</td>
-        <td>{{product.genericName}}</td>
-        <td>{{product.formulationName}}</td>
-        <td>{{product.classificationName}}</td>
-        <td>{{product.typeName}}</td>
-        <td>{{ product.boxPrice | currency:'PHP' }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="modal-body">
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search by product name, category, brand, or generic..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          class="search-input"
+        />
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="selection-info" *ngIf="selectedCount > 0">
+        <span class="badge">{{ selectedCount }} selected</span>
+      </div>
+    </div>
 
-  <div class="actions">
-    <button class="btn-secondary" (click)="close.emit();">Cancel</button>
-    <button class="btn-primary" (click)="assignProducts()">Add Selected</button>
+    <!-- Table Container -->
+    <div class="table-container">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <input
+                type="checkbox"
+                (change)="toggleAll($event)"
+                title="Select all on this page"
+              />
+            </th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Brand</th>
+            <th>Generic</th>
+            <th>Formulation</th>
+            <th>Classification</th>
+            <th>Type</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="paginatedProducts.length === 0">
+            <td colspan="9" class="empty-state">
+              {{
+                searchQuery
+                  ? "No products found matching your search."
+                  : "No products available."
+              }}
+            </td>
+          </tr>
+          <tr *ngFor="let product of paginatedProducts">
+            <td class="checkbox-col">
+              <input type="checkbox" [(ngModel)]="product.selected" />
+            </td>
+            <td class="product-name">{{ product.productName }}</td>
+            <td>{{ product.categoryName || 'N/A' }}</td>
+            <td>{{ product.brandName || 'N/A' }}</td>
+            <td>{{ product.genericName || 'N/A' }}</td>
+            <td>{{ product.formulationName || 'N/A' }}</td>
+            <td>{{ product.classificationName || 'N/A' }}</td>
+            <td>{{ product.typeName || 'N/A' }}</td>
+            <td class="price">{{ product.boxPrice | currency : "PHP" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <button
+        class="btn-page"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        ← Previous
+      </button>
+
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+
+      <button
+        class="btn-page"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="modal-footer">
+    <button class="btn-secondary" (click)="cancel()">Cancel</button>
+    <button class="btn-primary" (click)="assignProducts()">
+      Add Selected ({{ selectedCount }})
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
 <div class="success-alert" *ngIf="showSuccessAlert">
   <div class="alert-icon">✓</div>
-  <p class="alert-message">Product has been successfully Assigned</p>
+  <p class="alert-message">Product has been successfully assigned</p>
   <div class="alert-footer">
     <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
