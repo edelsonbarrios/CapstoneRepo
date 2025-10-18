@@ -11,7 +11,8 @@ import { ViewAdjustmentComponent } from '../view-adjustment/view-adjustment.comp
 @Component({
   selector: 'app-manage-stock-adjustment',
   standalone: true,
-  imports: [StockAdjustComponent,
+  imports: [
+    StockAdjustComponent,
     NgIf, 
     CommonModule, 
     FormsModule,
@@ -20,11 +21,12 @@ import { ViewAdjustmentComponent } from '../view-adjustment/view-adjustment.comp
   templateUrl: './manage-stock-adjustment.component.html',
   styleUrl: './manage-stock-adjustment.component.scss'
 })
-export class ManageStockAdjustmentComponent implements OnInit{
-  stockAdjust ?: StockMovement | null;
-  viewAdjust ?: StockMovement | null;
+export class ManageStockAdjustmentComponent implements OnInit {
+  stockAdjust?: StockMovement | null;
+  viewAdjust?: StockMovement | null;
   stockMovements: StockMovement[] = [];
   paginatedStockMovements: StockMovement[] = [];
+  searchQuery: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -32,11 +34,27 @@ export class ManageStockAdjustmentComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService: GetService
   ) {}
 
   ngOnInit(): void {
     this.getAllStockMovements();
+  }
+
+  get filteredStockMovements(): StockMovement[] {
+    if (!this.searchQuery.trim()) {
+      return this.stockMovements;
+    }
+    const query = this.searchQuery.toLowerCase();
+    return this.stockMovements.filter(sm => 
+      sm.productName.toLowerCase().includes(query) ||
+      sm.referenceNumber.toLowerCase().includes(query)
+    );
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   getAllStockMovements() {
@@ -52,11 +70,12 @@ export class ManageStockAdjustmentComponent implements OnInit{
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.stockMovements.length / this.itemsPerPage);
+    const items = this.filteredStockMovements;
+    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedStockMovements = this.stockMovements.slice(startIndex, endIndex);
+    this.paginatedStockMovements = items.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
@@ -66,15 +85,20 @@ export class ManageStockAdjustmentComponent implements OnInit{
     }
   }
 
-  openStockAdjustmentForm(stockMovement : StockMovement) {
+  openStockAdjustmentForm(stockMovement: StockMovement) {
     this.stockAdjust = stockMovement;
   }
 
-  openViewAdjustmentForm(request: StockMovement){
+  openViewAdjustmentForm(request: StockMovement) {
     this.viewAdjust = request;
   }
 
   closeStockAdjustmentForm() {
     this.stockAdjust = null;
+    this.getAllStockMovements();
+  }
+
+  closeViewAdjustmentForm() {
+    this.viewAdjust = null;
   }
 }

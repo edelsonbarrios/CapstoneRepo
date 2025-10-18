@@ -1,53 +1,55 @@
 <div class="wrapper">
+  <div class="manage-stock-adjustment">
 
-  <div class="container">
-    <div class="manage-stock-adjustment">
-
-      <!-- STOCK ADJUSTMENT CONTROLS/HEADER -->
-      <div class="adjust-control">
+    <!-- STOCK ADJUSTMENT CONTROLS/HEADER -->
+    <div class="adjust-control">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
         <input type="text" name="searchbar" id="searchbar" class="searchbar"
-          placeholder="🔍 Search by Item Code, Brand...">
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          placeholder="Search by Product Name, Reference Number...">
       </div>
+    </div>
 
-      <!-- STOCK ADJUSTMENT TABLE -->
-      <table class="adjust-table">
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Movement Type</th>
-            <th>Ref. Number</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="stockMovements.length === 0">
-            <td colspan="5" style="text-align: center; color: #525252; padding: 1rem;">
-              No recent data
-            </td>
-          </tr>
-          <tr *ngFor="let sm of paginatedStockMovements">
-            <td>{{sm.productName}}</td>
-            <td>{{sm.movementType}}</td>
-            <td>{{sm.referenceNumber}}</td>
-            <td>
-              <div class="in-stock">In Stock</div>
-            </td>
-            <td>
-              <button class="btn-view" (click)="openViewAdjustmentForm(sm)">View</button>
-              <button class="btn-adjust" (click)="openStockAdjustmentForm(sm)">Adjust</button>
-              <button class="btn-archive">Archive</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- STOCK ADJUSTMENT TABLE -->
+    <table class="adjust-table">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Movement Type</th>
+          <th>Ref. Number</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="stockMovements.length === 0">
+          <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            No recent data
+          </td>
+        </tr>
+        <tr *ngFor="let sm of paginatedStockMovements">
+          <td>{{sm.productName}}</td>
+          <td>{{sm.movementType}}</td>
+          <td>{{sm.referenceNumber}}</td>
+          <td>
+            <span class="status in-stock">In Stock</span>
+          </td>
+          <td>
+            <button class="btn-view" (click)="openViewAdjustmentForm(sm)">View</button>
+            <button class="btn-adjust" (click)="openStockAdjustmentForm(sm)">Adjust</button>
+            <button class="btn-archive">Archive</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <!-- PAGINATION CONTROLS -->
-      <div class="pagination-controls" *ngIf="stockMovements.length > 0">
-        <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
-        <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
-        <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
-      </div>
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="stockMovements.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
 </div>
@@ -64,5 +66,6 @@
   <app-view-adjustment
   *ngIf="viewAdjust"
   [viewAdjust]="viewAdjust"
+  (closeForm)="closeViewAdjustmentForm()"
   ></app-view-adjustment>
 </div>
