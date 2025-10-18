@@ -6,7 +6,10 @@
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
         <input type="text" name="searchbar" id="searchbar" class="searchbar"
-          placeholder="Search by Item Code, Brand...">
+          placeholder="Search by Item Code, Brand..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          >
       </div>
       <button class="btn-product" (click)="openCreateProductForm()">&#43; Add Product</button>
     </div>

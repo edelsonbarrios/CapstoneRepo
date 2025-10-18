@@ -7,6 +7,7 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { UpdateProductComponent } from '../update-product/update-product.component';
 import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-product',
@@ -17,7 +18,8 @@ import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmati
     ViewProductComponent, 
     NgFor, 
     UpdateProductComponent,
-    ArchiveConfirmationComponent
+    ArchiveConfirmationComponent,
+    FormsModule
   ],
   templateUrl: './manage-product.component.html',
   styleUrl: './manage-product.component.scss'
@@ -36,6 +38,7 @@ export class ManageProductComponent implements OnInit{
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
+  searchQuery: string = '';
 
   constructor(
     private getService : GetService,
@@ -58,12 +61,24 @@ export class ManageProductComponent implements OnInit{
     });
   }
 
+  get filteredProducts() : Product[] {
+    if(!this.searchQuery.trim()) return this.products;
+    const query = this.searchQuery.toLowerCase();
+    return this.products.filter(p => p.productName.toLowerCase().includes(query));
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
   updatePagination() {
-    this.totalPages = Math.ceil(this.products.length / this.itemsPerPage);
+    var items = this.filteredProducts;
+    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedProducts = this.products.slice(startIndex, endIndex);
+    this.paginatedProducts = items.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
