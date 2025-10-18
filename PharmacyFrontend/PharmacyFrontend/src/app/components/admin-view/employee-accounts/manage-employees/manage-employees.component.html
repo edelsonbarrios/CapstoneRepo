@@ -3,7 +3,10 @@
     <!-- Search & Add Employee -->
     <div class="table-header">
       <div class="search-wrapper">
-        <input type="text" placeholder="🔍 Search Last Name" class="search-box" [(ngModel)]="this.lastNameSearch"/>
+        <input type="text" placeholder="🔍 Search Last Name" class="search-box" 
+         [(ngModel)]="this.searchQuery"
+         (input)="onSearchChange()"
+          />
         <button class="btn search-btn" (click)="getEmployeesByLastName()">Search</button>
       </div>
       <button class="btn add" (click)="openCreateEmployeeForm()">+ Add Employee</button>

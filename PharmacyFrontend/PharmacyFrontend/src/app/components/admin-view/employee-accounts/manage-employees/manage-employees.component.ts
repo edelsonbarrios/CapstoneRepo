@@ -35,6 +35,7 @@ export class ManageEmployeesComponent implements OnInit{
   showSuccessAlert: boolean = false;
   showArchiveForm: number = 0;
   employeeToArchive: Employee = new Employee();
+  searchQuery: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -63,6 +64,23 @@ export class ManageEmployeesComponent implements OnInit{
     });
   }
 
+  get filteredEmployees() : Employee[] {
+    if(!this.searchQuery.trim()) {
+      return this.employees;
+    }
+    const query = this.searchQuery.toLowerCase();
+    return this.employees.filter(
+      e => e.lastName.toLowerCase().includes(query) ||
+      e.firstName.toLowerCase().includes(query) ||
+      e.middleName.toLowerCase().includes(query)
+    );
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
   getEmployeesByLastName() {
     this.getService.GetEmployeesByLastName(this.lastNameSearch).subscribe({
       next: employees => {
@@ -78,11 +96,12 @@ export class ManageEmployeesComponent implements OnInit{
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.employees.length / this.itemsPerPage);
+    const employees = this.filteredEmployees;
+    this.totalPages = Math.ceil(employees.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedEmployees = this.employees.slice(startIndex, endIndex);
+    this.paginatedEmployees = employees.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {

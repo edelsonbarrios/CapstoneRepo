@@ -7,11 +7,20 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
 import { AssignProductsSupplierComponent } from "../assign-products-supplier/assign-products-supplier.component";
 import { ViewSupplierComponent } from "../view-supplier/view-supplier.component";
 import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmation/archive-confirmation.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-supplier',
   standalone: true,
-  imports: [NgFor, CreateSupplierComponent, NgIf, AssignProductsSupplierComponent, ViewSupplierComponent, ArchiveConfirmationComponent],
+  imports: [
+    NgFor, 
+    CreateSupplierComponent, 
+    NgIf, 
+    AssignProductsSupplierComponent, 
+    ViewSupplierComponent, 
+    ArchiveConfirmationComponent,
+    FormsModule
+  ],
   templateUrl: './admin-supplier.component.html',
   styleUrl: './admin-supplier.component.scss'
 })
@@ -24,6 +33,7 @@ export class AdminSupplierComponent implements OnInit{
   showSuccessAlert: boolean = false;
   showArchiveForm : number = 0;
   supplierToArchive: Supplier = new Supplier();
+  searchQuery: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -51,12 +61,21 @@ export class AdminSupplierComponent implements OnInit{
     });
   }
 
+  get getFilteredSuppliers() : Supplier[] {
+    if(!this.searchQuery.trim()) {
+      return this.suppliers;
+    }
+    const query = this.searchQuery.toLowerCase();
+    return this.suppliers.filter(s => s.supplierName.toLowerCase().includes(query))
+  }
+
   updatePagination() {
-    this.totalPages = Math.ceil(this.suppliers.length / this.itemsPerPage);
+    const items = this.getFilteredSuppliers;
+    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedSuppliers = this.suppliers.slice(startIndex, endIndex);
+    this.paginatedSuppliers = items.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
@@ -65,6 +84,11 @@ export class AdminSupplierComponent implements OnInit{
       this.updatePagination();
     }
   }
+
+  onSearchChange() {
+  this.currentPage = 1;
+  this.updatePagination();
+}
 
   openCreateSupplierForm() {
     this.newSupplier = new Supplier();

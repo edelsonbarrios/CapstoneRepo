@@ -1,6 +1,10 @@
 <div class="wrapper">
   <div class="top-bar">
-    <input type="text" class="search-box" placeholder="🔍 Search Supplier...">
+    <input type="text" class="search-box" 
+    placeholder="🔍 Search Supplier..." 
+    [(ngModel)]="searchQuery"
+    (input)="onSearchChange()"
+    >
     <button class="btn new-supplier" (click)="openCreateSupplierForm()">+ New Supplier</button>
   </div>
 
