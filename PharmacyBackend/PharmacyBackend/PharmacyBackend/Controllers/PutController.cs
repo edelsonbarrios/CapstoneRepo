@@ -241,6 +241,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound();
             return NoContent();
         }
+        [HttpPut("ArchiveType")]
+        public async Task<ActionResult<object>> ArchiveTypeModelByIdAsync(int typeId)
+        {
+            if (typeId == 0)
+                return NotFound(new { Message = "Type does not exist." });
+            var archiveTypeModel = await _updateService.ArchiveTypeModelByIdAsync(typeId);
+            if (!archiveTypeModel)
+                return BadRequest(new { Message = "Type cannot be deleted." });
+            return Ok(new { Message = "Type successfully deleted." });
+        }
         #endregion
 
         #region Supplier

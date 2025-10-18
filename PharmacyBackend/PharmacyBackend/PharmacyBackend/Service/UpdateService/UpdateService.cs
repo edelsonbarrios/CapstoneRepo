@@ -542,6 +542,15 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateTypeModelAsync(existing);
             return true;
         }
+        public async Task<bool> ArchiveTypeModelByIdAsync(int typeId)
+        {
+            var type = await _getRepo.GetTypeModelByIdAsync(typeId);
+            if (type is null)
+                return false;
+            type.IsActive = false;
+            await _updateRepo.UpdateTypeModelAsync(type);
+            return true;
+        }
         #endregion
 
         #region Supplier

@@ -64,6 +64,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Type
         public Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto);
+        public Task<bool> ArchiveTypeModelByIdAsync(int typeId);
         #endregion
 
         #region Supplier
