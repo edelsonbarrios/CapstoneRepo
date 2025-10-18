@@ -597,7 +597,7 @@ namespace PharmacyBackend.Repository.GET
             return inventories
                 .GroupBy(i => new { i.ProductID })
                 .Select(g =>
-                    g.Where(i => i.TotalPiecesAvailable > 0 && i.IsActive && i.ExpirationDate <= DateTime.Now)
+                    g.Where(i => i.TotalPiecesAvailable > 0 && i.IsActive && i.ExpirationDate >= DateTime.Now)
                     .OrderBy(i => i.ExpirationDate)
                     .FirstOrDefault()
                 )
