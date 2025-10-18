@@ -59,12 +59,18 @@
               <input type="checkbox" [(ngModel)]="product.selected" />
             </td>
             <td class="product-name">{{ product.productName }}</td>
-            <td>{{ product.categoryName }}</td>
-            <td>{{ product.brandName }}</td>
-            <td>{{ product.genericName }}</td>
-            <td>{{ product.formulationName }}</td>
-            <td>{{ product.classificationName }}</td>
-            <td>{{ product.typeName }}</td>
+            <td *ngIf="product.categoryName">{{ product.categoryName }}</td>
+            <td *ngIf="product.categoryName == ''">N/A</td>
+            <td *ngIf="product.brandName">{{ product.brandName }}</td>
+            <td *ngIf="product.brandName == ''">N/A</td>
+            <td *ngIf="product.genericName">{{ product.genericName }}</td>
+            <td *ngIf="product.genericName == ''">N/A</td>
+            <td *ngIf="product.formulationName">{{ product.formulationName }}</td>
+            <td *ngIf="product.formulationName == ''">N/A</td>
+            <td *ngIf="product.classificationName">{{ product.classificationName }}</td>
+            <td *ngIf="product.formulationName == ''">N/A</td>
+            <td *ngIf="product.typeName">{{ product.typeName }}</td>
+            <td *ngIf="product.typeName == ''">N/A</td>
             <td class="price">{{ product.boxPrice | currency : "PHP" }}</td>
           </tr>
         </tbody>
