@@ -11,6 +11,8 @@
           id="searchbar"
           class="searchbar"
           placeholder="Search by Item Code, Brand..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
         />
       </div>
       <button class="btn-category" (click)="openCreateCategoryForm()">&#43; Add Category</button>

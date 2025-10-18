@@ -13,7 +13,13 @@ import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmati
 @Component({
   selector: 'app-manage-category',
   standalone: true,
-  imports: [NgIf, CreateCategoryComponent, ViewCategoryComponent, CommonModule, FormsModule, ArchiveConfirmationComponent],
+  imports: [
+    NgIf, 
+    CreateCategoryComponent, 
+    ViewCategoryComponent, CommonModule, 
+    FormsModule, 
+    ArchiveConfirmationComponent,
+  ],
   templateUrl: './manage-category.component.html',
   styleUrl: './manage-category.component.scss'
 })
@@ -30,6 +36,8 @@ export class ManageCategoryComponent implements OnInit{
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
+
+  searchQuery: string = '';
 
   constructor(
     private getService : GetService,
@@ -52,12 +60,24 @@ export class ManageCategoryComponent implements OnInit{
     });
   }
 
+  get filteredCategories() : Category[] {
+    if(!this.searchQuery.trim()) return this.categories;
+    const query = this.searchQuery.toLowerCase();
+    return this.categories.filter(c => c.categoryName.toLowerCase().includes(query));
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
   updatePagination() {
-    this.totalPages = Math.ceil(this.categories.length / this.itemsPerPage);
+    var categories = this.filteredCategories;
+    this.totalPages = Math.ceil(categories.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedCategories = this.categories.slice(startIndex, endIndex);
+    this.paginatedCategories = categories.slice(startIndex, endIndex);
   }
   
   openArchiveForm(id: number) {
