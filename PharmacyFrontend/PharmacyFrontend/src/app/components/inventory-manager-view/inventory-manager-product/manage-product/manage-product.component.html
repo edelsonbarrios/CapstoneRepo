@@ -3,8 +3,11 @@
 
     <!-- PRODUCT CONTROLS/HEADER -->
     <div class="product-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand...">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          placeholder="Search by Item Code, Brand...">
+      </div>
       <button class="btn-product" (click)="openCreateProductForm()">&#43; Add Product</button>
     </div>
 
@@ -21,7 +24,7 @@
       </thead>
       <tbody>
         <tr *ngIf="products.length === 0">
-          <td colspan="5" style="text-align: center; color: #525252; padding: 1rem;">
+          <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">
             No recent data
           </td>
         </tr>

@@ -3,8 +3,16 @@
 
     <!-- CATEGORY CONTROLS/HEADER -->
     <div class="category-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand...">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          name="searchbar"
+          id="searchbar"
+          class="searchbar"
+          placeholder="Search by Item Code, Brand..."
+        />
+      </div>
       <button class="btn-category" (click)="openCreateCategoryForm()">&#43; Add Category</button>
     </div>
 
@@ -18,12 +26,12 @@
       </thead>
       <tbody>
         <tr *ngIf="categories.length === 0">
-          <td colspan="2" style="text-align: center; color: #525252; padding: 1rem;">
+          <td colspan="2" style="text-align: center; color: #94a3b8; padding: 2rem;">
             No recent data
           </td>
         </tr>
         <tr *ngFor="let c of paginatedCategories">
-          <td>{{c.categoryName}}</td>
+          <td>{{ c.categoryName }}</td>
           <td>
             <button class="btn-update" (click)="openViewCategoryForm(c)">Update</button>
             <button class="btn-archive" (click)="openArchiveForm(c.categoryID)">Archive</button>
@@ -35,28 +43,30 @@
     <!-- PAGINATION CONTROLS -->
     <div class="pagination-controls" *ngIf="categories.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
-      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
 </div>
 
+<!-- CREATE CATEGORY MODAL -->
 <div class="modal-overlay" *ngIf="newCategory">
-  <app-create-category 
-  *ngIf="newCategory"
-  (closeForm)="closeCreateCategoryForm()"
+  <app-create-category
+    *ngIf="newCategory"
+    (closeForm)="closeCreateCategoryForm()"
   ></app-create-category>
 </div>
 
+<!-- UPDATE/VIEW CATEGORY MODAL -->
 <div class="modal-overlay" *ngIf="categoryToUpdate">
-  <app-view-category 
-  *ngIf="categoryToUpdate"
-  [viewCategory]="categoryToUpdate"
-  (closeForm)="closeUpdateCategoryForm()"
+  <app-view-category
+    *ngIf="categoryToUpdate"
+    [viewCategory]="categoryToUpdate"
+    (closeForm)="closeUpdateCategoryForm()"
   ></app-view-category>
 </div>
 
-<!-- Success Alert Modal -->
+<!-- SUCCESS ALERT -->
 <div class="modal-overlay" *ngIf="showSuccessAlert">
   <div class="success-alert">
     <div class="alert-icon">✓</div>
@@ -67,14 +77,14 @@
   </div>
 </div>
 
+<!-- ARCHIVE CONFIRMATION -->
 <div class="modal-overlay" *ngIf="showArchiveForm">
   <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [alertMessage]="'Category successfully deleted.'"
-  [message]="'Do you really want to delete this category?'"
-  
-  (onArchive)="archiveCategory()"
-  (onCancel)="closeArchiveForm()"
+    *ngIf="showArchiveForm"
+    [id]="showArchiveForm"
+    [alertMessage]="'Category successfully deleted.'"
+    [message]="'Do you really want to delete this category?'"
+    (onArchive)="archiveCategory()"
+    (onCancel)="closeArchiveForm()"
   ></app-archive-confirmation>
 </div>
