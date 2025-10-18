@@ -26,7 +26,7 @@
           <td>{{c.classificationName}}</td>
           <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditClassificationForm(c)">Edit</button>
-            <button class="btn-archive" (click)="goToPage(1)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveConfirmationForm(c.classificationID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -54,4 +54,16 @@
   [editClassification]="editClassification"
   (closeForm)="closeEditClassificationForm()"
   ></app-edit-classification>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'Classification successfully deleted.'"
+  [message]="'Do you really want to delete this classification?'"
+
+  (onArchive)="archiveClassification()"
+  (onCancel)="closeArchiveConfirmationForm()"
+  ></app-archive-confirmation>
 </div>

@@ -5,11 +5,19 @@ import { AddClassificationComponent } from '../add-classification/add-classifica
 import { EditClassificationComponent } from '../edit-classification/edit-classification.component';
 import { Classification } from '../../../../models/classification-models/classification';
 import { GetService } from '../../../../services/GetService/get.service';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-classification',
   standalone: true,
-  imports: [NgIf,AddClassificationComponent,EditClassificationComponent, NgFor],
+  imports: [
+    NgIf,
+    AddClassificationComponent,
+    EditClassificationComponent, 
+    NgFor,
+    ArchiveConfirmationComponent
+  ],
   templateUrl: './manage-classification.component.html',
   styleUrl: './manage-classification.component.scss'
 })
@@ -18,6 +26,7 @@ export class ManageClassificationComponent implements OnInit{
   editClassification ?: Classification | null;
   classifications : Classification[] = [];
   paginatedClassifications: Classification[] = [];
+  showArchiveForm: number = 0;
 
   // Pagination properties
   currentPage: number = 1;
@@ -25,11 +34,32 @@ export class ManageClassificationComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
     this.getAllClassifications();
+  }
+
+  openArchiveConfirmationForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveConfirmationForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveClassification() {
+    this.updateService.archiveClassificationByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        this.showArchiveForm = 0;
+        this.getAllClassifications();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 
   getAllClassifications() {
