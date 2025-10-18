@@ -1,72 +1,80 @@
 <div class="wrapper">
-
-  <!-- REPS HEADER -->
-  <div class="header">
-    
+  <div class="top-bar">
+    <input
+      type="text"
+      class="search-box"
+      placeholder="🔍 Search by Item Code, Brand..."
+    />
   </div>
 
-  <div class="container">
-    <div class="manage-replenish">
+  <div class="card">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>PO Number</th>
+          <th>Supplier</th>
+          <th>Order Date</th>
+          <th>Delivery Date</th>
+          <th>Status</th>
+          <th class="center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let po of paginatedPurchaseOrders">
+          <td>{{ po.purchaseOrderNumber }}</td>
+          <td>{{ po.supplierName }}</td>
+          <td>{{ po.orderDate | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ po.deliveryDate | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ po.status }}</td>
+          <td class="center">
+            <button class="btn primary" (click)="viewPurchaseOrderDetails(po)">
+              View PO
+            </button>
+            <button class="btn danger" (click)="openArchivePurchaseOrderForm(po.id)">
+              Archive
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <!-- REPS CONTROLS/HEADER -->
-      <div class="replenish-control">
-        <input type="text" name="searchbar" id="searchbar" class="searchbar"
-          placeholder="🔍 Search by Item Code, Brand...">
-      </div>
-
-      <!-- REPS TABLE -->
-      <table class="reps-table">
-        <thead>
-          <tr>
-            <th>PO Number</th>
-            <th>Supplier</th>
-            <th>Order Date</th>
-            <th>Delivery Date</th>
-            <th>Status</th>
-            <th style="text-align: center;">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let po of paginatedPurchaseOrders">
-            <td>{{po.purchaseOrderNumber}}</td>
-            <td>{{po.supplierName}}</td>
-            <td>{{po.orderDate | date: 'dd-MM-yyyy'}}</td>
-            <td>{{po.deliveryDate | date: 'dd-MM-yyyy'}}</td>
-            <td>{{po.status}}</td>
-            <td style="text-align: center;">
-              <button class="btn-confirm" (click)="viewPurchaseOrderDetails(po)">View PO</button>
-              <button class="btn-archive" (click)="openArchivePurchaseOrderForm(po.id)">Archive</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- PAGINATION CONTROLS -->
-      <div class="pagination-controls">
-        <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
-        <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
-        <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
-      </div>
+    <div class="pagination">
+      <button
+        class="page-btn"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        ◀ Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="page-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        Next ▶
+      </button>
     </div>
   </div>
 </div>
 
+<!-- VIEW PURCHASE ORDER MODAL -->
 <div class="modal-overlay" *ngIf="purchaseOrder">
   <app-view-purchase-order-details
-  *ngIf="purchaseOrder"
-  [purchaseOrder]="purchaseOrder"
-  (closeForm)="closeViewPurchaseOrderForm()"
+    *ngIf="purchaseOrder"
+    [purchaseOrder]="purchaseOrder"
+    (closeForm)="closeViewPurchaseOrderForm()"
   ></app-view-purchase-order-details>
 </div>
 
+<!-- ARCHIVE CONFIRMATION MODAL -->
 <div class="modal-overlay" *ngIf="showArchiveForm">
   <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [alertMessage]="'Purchase Order successfully deleted.'"
-  [id]="showArchiveForm"
-  [message]="'Are you sure you want to delete this Purchase Order?'"
-
-  (onArchive)="archivePurchaseOrder()"
-  (onCancel)="closeArchivePurchaseOrderForm()"
+    *ngIf="showArchiveForm"
+    [alertMessage]="'Purchase Order successfully deleted.'"
+    [id]="showArchiveForm"
+    [message]="'Are you sure you want to delete this Purchase Order?'"
+    (onArchive)="archivePurchaseOrder()"
+    (onCancel)="closeArchivePurchaseOrderForm()"
   ></app-archive-confirmation>
 </div>

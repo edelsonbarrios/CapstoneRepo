@@ -1,41 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../../models/product-models/product';
 import { NgFor, NgIf } from '@angular/common';
 import { AddBrandComponent } from '../add-brand/add-brand.component';
 import { EditBrandComponent } from '../edit-brand/edit-brand.component';
-import { GetService } from '../../../../services/GetService/get.service';
-import { Brand } from '../../../../models/brand-models/brand';
 import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
+import { GetService } from '../../../../services/GetService/get.service';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { Brand } from '../../../../models/brand-models/brand';
 
 @Component({
   selector: 'app-manage-brand-name',
   standalone: true,
   imports: [
-    NgIf, 
-    AddBrandComponent, 
-    EditBrandComponent, 
+    NgIf,
     NgFor,
-    ArchiveConfirmationComponent
+    AddBrandComponent,
+    EditBrandComponent,
+    ArchiveConfirmationComponent,
   ],
   templateUrl: './manage-brand-name.component.html',
   styleUrl: './manage-brand-name.component.scss',
 })
-export class ManageBrandNameComponent implements OnInit{
+export class ManageBrandNameComponent implements OnInit {
   addBrand?: Brand | null;
   editBrand?: Brand | null;
   brands: Brand[] = [];
+  filteredBrands: Brand[] = [];
   paginatedBrands: Brand[] = [];
-  showArchiveForm : number = 0;
-  
+  showArchiveForm: number = 0;
+
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
 
+  // Search property
+  searchQuery: string = '';
+
   constructor(
     private getService: GetService,
-    private updateService : UpdateService
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +49,7 @@ export class ManageBrandNameComponent implements OnInit{
     this.getService.getAllBrandsAsync().subscribe({
       next: (res) => {
         this.brands = res;
+        this.filteredBrands = [...this.brands]; // keep unfiltered copy
         this.updatePagination();
       },
       error: (err) => {
@@ -54,33 +58,28 @@ export class ManageBrandNameComponent implements OnInit{
     });
   }
 
-  openArchiveForm(id: number) {
-    this.showArchiveForm = id;
-  }
+  // 🔍 Search functionality
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
 
-  closeArchiveForm() {
-    this.showArchiveForm = 0;
-  }
+    if (query === '') {
+      this.filteredBrands = [...this.brands];
+    } else {
+      this.filteredBrands = this.brands.filter(
+        (b) =>
+          b.brandName.toLowerCase().includes(query));
+    }
 
-  archiveBrand() {
-    if(this.showArchiveForm == 0 || !this.showArchiveForm) return;
-    this.updateService.archiveBrandByIdAsync(this.showArchiveForm).subscribe({
-      next: res => {
-        this.showArchiveForm = 0;
-        this.getAllBrands();
-      },
-      error: err => {
-        console.log(`${err.error.message}`);
-      }
-    });
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.brands.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.filteredBrands.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedBrands = this.brands.slice(startIndex, endIndex);
+    this.paginatedBrands = this.filteredBrands.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
@@ -105,5 +104,26 @@ export class ManageBrandNameComponent implements OnInit{
 
   closeEditBrandForm() {
     this.editBrand = null;
+  }
+
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveBrand() {
+    if (this.showArchiveForm == 0 || !this.showArchiveForm) return;
+    this.updateService.archiveBrandByIdAsync(this.showArchiveForm).subscribe({
+      next: (res) => {
+        this.showArchiveForm = 0;
+        this.getAllBrands();
+      },
+      error: (err) => {
+        console.log(`${err.error.message}`);
+      },
+    });
   }
 }

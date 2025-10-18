@@ -34,6 +34,10 @@
         <label>Issued By</label>
         <span>{{ employee.firstName }} {{ employee.lastName }}</span>
       </div>
+      <div class="summary-item">
+        <label>Receipt Number</label>
+        <input type="text" [(ngModel)]="receiptNumber" placeholder="Enter receipt number" class="receipt-input" />
+      </div>
     </div>
   </section>
 
@@ -56,7 +60,7 @@
       <tbody>
         <tr *ngFor="let item of purchaseOrder.purchaseOrderItems">
           <td>{{ item.productName }}</td>
-          <td><input type="text" [(ngModel)]="item.batchNumber" /></td>
+          <td><input type="text" [(ngModel)]="item.batchNumber" placeholder="Batch No." /></td>
           <td><input type="date" [(ngModel)]="item.manufacturingDate" /></td>
           <td><input type="date" [(ngModel)]="item.expirationDate" /></td>
           <td>{{ item.boxQuantityOrdered }}</td>
@@ -67,6 +71,7 @@
               [max]="item.boxQuantityOrdered"
               min="0"
               (input)="updateItemTotal(item)"
+              placeholder="0"
             />
           </td>
           <td>{{ item.boxPrice | currency: 'PHP' }}</td>

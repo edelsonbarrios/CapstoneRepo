@@ -25,10 +25,11 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
   @Input() purchaseOrder: PurchaseOrder = new PurchaseOrder();
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
+  receiptNumber: string = '';
 
   constructor(
     private updateService: UpdateService,
-    private getService : GetService 
+    private getService: GetService 
   ) {}
 
   ngOnInit(): void {
