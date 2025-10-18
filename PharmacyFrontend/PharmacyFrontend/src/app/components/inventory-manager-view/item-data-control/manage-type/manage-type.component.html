@@ -26,7 +26,7 @@
           <td>{{t.typeName}}</td>
           <td style="text-align: center;">
             <button class="btn-edit" (click)="openEditTypeForm(t)">Edit</button>
-            <button class="btn-archive" (click)="goToPage(1)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveConfirmationForm(t.typeID)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -54,4 +54,17 @@
   [editType]="editType"
   (closeForm)="closeEditTypeForm()"
   ></app-edit-type>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [message]="'Do you really want to delete this type?'"
+  [alertMessage]="'Type successfully deleted.'"
+
+  (onArchive)="archiveType()"
+  (onCancel)="closeArchiveConfirmationForm()"
+  ></app-archive-confirmation>
+
 </div>

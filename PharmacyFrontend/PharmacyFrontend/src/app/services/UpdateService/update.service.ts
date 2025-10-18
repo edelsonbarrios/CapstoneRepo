@@ -108,6 +108,9 @@ export class UpdateService {
   updateTypeAsync(id: number, type: TypeModel) : Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Type?id=${id}`, type);
   }
+  archiveTypeModelByIdAsync(typeId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveType?typeId=${typeId}`, {});
+  }
  //Type Service End 
 
  //Product Service

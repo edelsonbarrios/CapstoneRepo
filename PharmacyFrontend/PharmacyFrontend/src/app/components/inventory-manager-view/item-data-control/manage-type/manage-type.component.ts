@@ -6,11 +6,13 @@ import { EditTypeComponent } from '../edit-type/edit-type.component';
 import { TypeModel } from '../../../../models/type-models/type';
 import { GetService } from '../../../../services/GetService/get.service';
 import { NgForOf } from "../../../../../../node_modules/@angular/common/index";
+import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmation/archive-confirmation.component";
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-type',
   standalone: true,
-  imports: [NgIf, AddTypeComponent, EditTypeComponent, NgFor],
+  imports: [NgIf, AddTypeComponent, EditTypeComponent, NgFor, ArchiveConfirmationComponent],
   templateUrl: './manage-type.component.html',
   styleUrl: './manage-type.component.scss'
 })
@@ -19,6 +21,7 @@ export class ManageTypeComponent implements OnInit{
   editType ?: TypeModel | null;
   types : TypeModel[] = [];
   paginatedTypes: TypeModel[] = [];
+  showArchiveForm: number = 0;
 
   // Pagination properties
   currentPage: number = 1;
@@ -26,7 +29,8 @@ export class ManageTypeComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +44,26 @@ export class ManageTypeComponent implements OnInit{
         this.updatePagination();
       },
       error : err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  openArchiveConfirmationForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveConfirmationForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveType() {
+    this.updateService.archiveTypeModelByIdAsync(this.showArchiveForm).subscribe({
+      next: res => {
+        this.showArchiveForm = 0;
+        this.getAllTypes();
+      },
+      error: err => {
         console.log(`${err.error}`);
       }
     });
