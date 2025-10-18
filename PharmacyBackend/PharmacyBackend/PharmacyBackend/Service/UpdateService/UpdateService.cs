@@ -386,11 +386,11 @@ namespace PharmacyBackend.Service.UpdateService
             // Update the product with resolved IDs
             existing.ProductName = dto.ProductName;
             existing.CategoryID = categoryId.Value;
-            existing.BrandID = brandId.Value;
-            existing.GenericID = genericId.Value;
-            existing.FormulationID = formulationId.Value;
-            existing.ClassificationID = classificationId.Value;
-            existing.TypeID = typeId.Value;
+            existing.BrandID = brandId;
+            existing.GenericID = genericId;
+            existing.FormulationID = formulationId;
+            existing.ClassificationID = classificationId;
+            existing.TypeID = typeId;
             existing.SheetsPerBox = dto.SheetsPerBox;
             existing.PiecesPerSheet = dto.PiecesPerSheet;
             existing.BoxPrice = dto.BoxPrice;
