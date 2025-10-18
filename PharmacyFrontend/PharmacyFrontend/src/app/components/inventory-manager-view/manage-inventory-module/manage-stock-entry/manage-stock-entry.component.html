@@ -1,54 +1,56 @@
 <div class="wrapper">
+  <div class="manage-stock-entry">
 
-  <div class="container">
-    <div class="manage-stock-entry">
-
-      <!-- STOCK ENTRY CONTROLS/HEADER -->
-      <div class="entry-control">
+    <!-- STOCK ENTRY CONTROLS/HEADER -->
+    <div class="entry-control">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
         <input type="text" name="searchbar" id="searchbar" class="searchbar"
-          placeholder="🔍 Search by Item Code, Brand...">
-        <button class="btn-entry" (click)="openCreateStockForm()">&#43; Stock Entry</button>
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          placeholder="Search by Batch No., Product Name...">
       </div>
+      <button class="btn-entry" (click)="openCreateStockForm()">&#43; Stock Entry</button>
+    </div>
 
-      <!-- STOCK ENTRY TABLE -->
-      <table class="entry-table">
-        <thead>
-          <tr>
-            <th>Batch No.</th>
-            <th>Product Name</th>
-            <th>Box Qty</th>
-            <th>Expiration</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="inventories.length === 0">
-            <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
-              No recent data
-            </td>
-          </tr>
-          <tr *ngFor="let i of paginatedInventories">
-            <td>{{i.batchNumber}}</td>
-            <td>{{i.productName}}</td>
-            <td>{{i.boxQuantity}}</td>
-            <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
-            <td>
-              <div class="in-stock">In Stock</div>
-            </td>
-            <td>
-              <button class="btn-view" (click)="openViewEntryForm(i)">View details</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- STOCK ENTRY TABLE -->
+    <table class="entry-table">
+      <thead>
+        <tr>
+          <th>Batch No.</th>
+          <th>Product Name</th>
+          <th>Box Qty</th>
+          <th>Expiration</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="inventories.length === 0">
+          <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            No recent data
+          </td>
+        </tr>
+        <tr *ngFor="let i of paginatedInventories">
+          <td>{{i.batchNumber}}</td>
+          <td>{{i.productName}}</td>
+          <td>{{i.boxQuantity}}</td>
+          <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
+          <td>
+            <span class="status in-stock">In Stock</span>
+          </td>
+          <td>
+            <button class="btn-view" (click)="openViewEntryForm(i)">View Details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-      <!-- PAGINATION CONTROLS -->
-      <div class="pagination-controls" *ngIf="inventories.length > 0">
-        <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
-        <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
-        <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
-      </div>
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="inventories.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
 </div>
@@ -57,7 +59,7 @@
   <app-create-stock 
   *ngIf="createStock"
   (closeForm)="closeCreateStockForm()"
-  ></app-create-stock >
+  ></app-create-stock>
 </div>
 
 <div class="modal-overlay" *ngIf="viewEntry">
@@ -65,5 +67,5 @@
   *ngIf="viewEntry"
   [viewEntry]="viewEntry"
   (closeForm)="closeViewStockForm()"
-  ></app-view-entry >
+  ></app-view-entry>
 </div>

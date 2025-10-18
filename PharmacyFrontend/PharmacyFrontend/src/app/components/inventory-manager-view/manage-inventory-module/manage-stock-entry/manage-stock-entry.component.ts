@@ -5,21 +5,21 @@ import { CreateStockComponent } from '../create-stock/create-stock.component';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../../../models/product-models/product';
 import { ViewEntryComponent } from '../view-entry/view-entry.component';
 
 @Component({
   selector: 'app-manage-stock-entry',
   standalone: true,
-  imports: [CreateStockComponent, NgIf, FormsModule, CommonModule, DatePipe, ViewEntryComponent],
+  imports: [CreateStockComponent, NgIf, FormsModule, CommonModule, DatePipe, ViewEntryComponent, NgFor],
   templateUrl: './manage-stock-entry.component.html',
   styleUrl: './manage-stock-entry.component.scss'
 })
-export class ManageStockEntryComponent implements OnInit{
-  createStock ?: CreateInventory | null;
-  viewEntry ?: Inventory | null;
-  inventories : Inventory[] = [];
+export class ManageStockEntryComponent implements OnInit {
+  createStock?: CreateInventory | null;
+  viewEntry?: Inventory | null;
+  inventories: Inventory[] = [];
   paginatedInventories: Inventory[] = [];
+  searchQuery: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -27,11 +27,27 @@ export class ManageStockEntryComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService: GetService
   ) {}
 
   ngOnInit(): void {
     this.getAllInventories();
+  }
+
+  get filteredInventories(): Inventory[] {
+    if (!this.searchQuery.trim()) {
+      return this.inventories;
+    }
+    const query = this.searchQuery.toLowerCase();
+    return this.inventories.filter(inv => 
+      inv.batchNumber.toLowerCase().includes(query) ||
+      inv.productName.toLowerCase().includes(query)
+    );
+  }
+
+  onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   getAllInventories() {
@@ -47,11 +63,12 @@ export class ManageStockEntryComponent implements OnInit{
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.inventories.length / this.itemsPerPage);
+    const items = this.filteredInventories;
+    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedInventories = this.inventories.slice(startIndex, endIndex);
+    this.paginatedInventories = items.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
@@ -62,10 +79,10 @@ export class ManageStockEntryComponent implements OnInit{
   }
 
   openCreateStockForm() {
-    this.createStock = new CreateInventory;
+    this.createStock = new CreateInventory();
   }
 
-  openViewEntryForm(inv : Inventory) {
+  openViewEntryForm(inv: Inventory) {
     this.viewEntry = inv;
   }
 
