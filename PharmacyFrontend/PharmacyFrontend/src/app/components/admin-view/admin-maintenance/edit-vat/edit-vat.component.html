@@ -3,25 +3,20 @@
   <!-- VAT RATES HEADER -->
   <div class="modal-header">
     <h2>Edit VAT Rates</h2>
-    <a>X</a>
+    <a (click)="closeEditVatForm()">X</a>
   </div>
 
   <!-- EDIT VAT RATES -->
   <div class="fillup">
     <label>Name</label>
-    <input type="text">
+    <input type="text" [(ngModel)]="editVat.vatName">
 
     <label>Rates</label>
-    <input type="number">
+    <input type="number" [(ngModel)]="editVat.vatRate">
   </div>
-
-    <p>Status</p>
-    <select id="status">
-      <option>Active</option>
-    </select>
 
     <!-- FOOTER -->
      <div class="footer">
-      <button class="btn-save">Save Changes</button>
+      <button class="btn-save" (click)="editVAT()">Save Changes</button>
      </div>
 </div>

@@ -302,7 +302,7 @@ namespace PharmacyBackend.Controllers
             var success = await _updateService.UpdateVATAsync(id, dto);
             if (!success)
                 return NotFound("VAT not found or update failed.");
-            return Ok("VAT updated successfully.");
+            return Content("VAT updated successfully.");
         }
         [HttpPut("ArchiveVat")]
         public async Task<ActionResult<ArchiveVatResponse>> ArchiveVatByIdAsync(int vatId)

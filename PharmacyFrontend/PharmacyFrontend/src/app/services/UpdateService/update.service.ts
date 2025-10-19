@@ -15,119 +15,211 @@ import { AssignProductSupplierRequest } from '../../models/supplier-models/assig
 import { Supplier } from '../../models/supplier-models/supplier';
 import { UpdateProductRequest } from '../../models/product-models/update-product-request';
 import { Category } from '../../models/category-models/category';
+import { VAT } from '../../models/vat-models/vat';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UpdateService {
   apiUrl = `${BaseApiUrl}`;
-  constructor(
-    private httpClient: HttpClient
-  ) { }
+  constructor(private httpClient: HttpClient) {}
 
   //Employee Service
-  ArchiveEmployeeAsync(request : ArchiveEmployeeRequest) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveEmployee`, request);
+  ArchiveEmployeeAsync(
+    request: ArchiveEmployeeRequest
+  ): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveEmployee`,
+      request
+    );
   }
 
-  UpdateEmployeeAsync(request: Employee) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/Employee`, request);
+  UpdateEmployeeAsync(request: Employee): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/Employee`,
+      request
+    );
   }
   //Employee Service End
 
- //Discount Service
-  archiveDiscountAsync(discountId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveDiscount?discountId=${discountId}`, {});
+  //Discount Service
+  archiveDiscountAsync(discountId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveDiscount?discountId=${discountId}`,
+      {}
+    );
   }
- //Discount Service End
+  //Discount Service End
 
- //VAT Service
-  archiveVatAsync(vatId: number) : Observable<{message : string}> {
-    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/ArchiveVat?vatId=${vatId}`, {});
+  //VAT Service
+  archiveVatAsync(vatId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveVat?vatId=${vatId}`,
+      {}
+    );
   }
- //VAT Service End
+  updateVatAsync(id: number, request: VAT): Observable<string> {
+    return this.httpClient.put(`${this.apiUrl}/Put/VAT?id=${id}`, request, {
+      responseType: 'text',
+    });
+  }
 
- //Supplier Service
-  archiveSupplierAsync(supplierId : number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveSupplier?supplierId=${supplierId}`, {});
-  }
-  assignProductsToSupplierAsync(request : AssignProductSupplierRequest) : Observable<{message : string}> {
-    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/AssignProducts`, request);
-  }
-  updateSupplierAsync(id: number, supplier: Supplier) : Observable<any> {
-    return this.httpClient.put<any>(`${this.apiUrl}/Put/Supplier?id=${id}`, supplier)
-  }
- //Supplier Service End
+  //VAT Service End
 
- //Purchase Order Service
-  markPurchaseOrderAsReceivedAsync(purchaseOrder : PurchaseOrderReceivedRequest) : Observable<boolean> {
-    return this.httpClient.put<boolean>(`${this.apiUrl}/Put/MarkAsReceived`, purchaseOrder);
-  } 
-  archivePurchaseOrderByIdAsync(id: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/ArchivePurchaseOrder?id=${id}`, {});
+  //Supplier Service
+  archiveSupplierAsync(supplierId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveSupplier?supplierId=${supplierId}`,
+      {}
+    );
   }
- //Purchase Order Service End
+  assignProductsToSupplierAsync(
+    request: AssignProductSupplierRequest
+  ): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/AssignProducts`,
+      request
+    );
+  }
+  updateSupplierAsync(id: number, supplier: Supplier): Observable<any> {
+    return this.httpClient.put<any>(
+      `${this.apiUrl}/Put/Supplier?id=${id}`,
+      supplier
+    );
+  }
+  //Supplier Service End
 
- //Brand Service
-  updateBrandAsync(id: number, brand: Brand) : Observable<any> {
+  //Purchase Order Service
+  markPurchaseOrderAsReceivedAsync(
+    purchaseOrder: PurchaseOrderReceivedRequest
+  ): Observable<boolean> {
+    return this.httpClient.put<boolean>(
+      `${this.apiUrl}/Put/MarkAsReceived`,
+      purchaseOrder
+    );
+  }
+  archivePurchaseOrderByIdAsync(id: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchivePurchaseOrder?id=${id}`,
+      {}
+    );
+  }
+  //Purchase Order Service End
+
+  //Brand Service
+  updateBrandAsync(id: number, brand: Brand): Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Brand?id=${id}`, brand);
   }
-  archiveBrandByIdAsync(brandId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveBrand?brandId=${brandId}`, {});
+  archiveBrandByIdAsync(brandId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveBrand?brandId=${brandId}`,
+      {}
+    );
   }
- //Brand Service End
+  //Brand Service End
 
- //Generic Service
-  updateGenericAsync(id: number, generic : Generic) : Observable<any> {
-    return this.httpClient.put<any>(`${this.apiUrl}/Put/Generic?id=${id}`, generic);
+  //Generic Service
+  updateGenericAsync(id: number, generic: Generic): Observable<any> {
+    return this.httpClient.put<any>(
+      `${this.apiUrl}/Put/Generic?id=${id}`,
+      generic
+    );
   }
-  archiveGenericByIdAsync(genericId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveGeneric?genericId=${genericId}`, {});
+  archiveGenericByIdAsync(genericId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveGeneric?genericId=${genericId}`,
+      {}
+    );
   }
- //Generic Service End
+  //Generic Service End
 
- //Formulation Service
-  updateFormulationAsync(id: number, formulation: Formulation) : Observable<any> {
-    return this.httpClient.put<any>(`${this.apiUrl}/Put/Formulation?id=${id}`, formulation);
+  //Formulation Service
+  updateFormulationAsync(
+    id: number,
+    formulation: Formulation
+  ): Observable<any> {
+    return this.httpClient.put<any>(
+      `${this.apiUrl}/Put/Formulation?id=${id}`,
+      formulation
+    );
   }
-  archiveFormulationByIdAsync(formulationId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveFormulation?formulationId=${formulationId}`, {});
+  archiveFormulationByIdAsync(
+    formulationId: number
+  ): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveFormulation?formulationId=${formulationId}`,
+      {}
+    );
   }
- //Formulation Service End
+  //Formulation Service End
 
- //Classification Service
-  updateClassificationAsync(id: number, classification: Classification) : Observable<any> {
-    return this.httpClient.put<any>(`${this.apiUrl}/Put/Classification?id=${id}`, classification);
+  //Classification Service
+  updateClassificationAsync(
+    id: number,
+    classification: Classification
+  ): Observable<any> {
+    return this.httpClient.put<any>(
+      `${this.apiUrl}/Put/Classification?id=${id}`,
+      classification
+    );
   }
-  archiveClassificationByIdAsync(classificationId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveClassification?classificationId=${classificationId}`, {});
+  archiveClassificationByIdAsync(
+    classificationId: number
+  ): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveClassification?classificationId=${classificationId}`,
+      {}
+    );
   }
- //Classification Service End
+  //Classification Service End
 
- //Type Service
-  updateTypeAsync(id: number, type: TypeModel) : Observable<any> {
+  //Type Service
+  updateTypeAsync(id: number, type: TypeModel): Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Type?id=${id}`, type);
   }
-  archiveTypeModelByIdAsync(typeId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveType?typeId=${typeId}`, {});
+  archiveTypeModelByIdAsync(typeId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveType?typeId=${typeId}`,
+      {}
+    );
   }
- //Type Service End 
+  //Type Service End
 
- //Product Service
-  archiveProductByIdAsync(productId : number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveProduct?productId=${productId}`, {});
+  //Product Service
+  archiveProductByIdAsync(productId: number): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveProduct?productId=${productId}`,
+      {}
+    );
   }
-  updateProductAsync(productId: number, request: UpdateProductRequest) : Observable<any> {
-    return this.httpClient.put<any>(`${this.apiUrl}/Put/Product?id=${productId}`, request);
+  updateProductAsync(
+    productId: number,
+    request: UpdateProductRequest
+  ): Observable<any> {
+    return this.httpClient.put<any>(
+      `${this.apiUrl}/Put/Product?id=${productId}`,
+      request
+    );
   }
- //Product Service End
+  //Product Service End
 
- //Category Service
-  updateCategoryAsync(categoryId: number, request: Category) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/Category?id=${categoryId}`, request);
+  //Category Service
+  updateCategoryAsync(
+    categoryId: number,
+    request: Category
+  ): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/Category?id=${categoryId}`,
+      request
+    );
   }
-  archiveCategoryByIdAsync(categoryId: number) : Observable<{message: string}> {
-    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveCategory?categoryId=${categoryId}`, {});
+  archiveCategoryByIdAsync(
+    categoryId: number
+  ): Observable<{ message: string }> {
+    return this.httpClient.put<{ message: string }>(
+      `${this.apiUrl}/Put/ArchiveCategory?categoryId=${categoryId}`,
+      {}
+    );
   }
- //Category Service End
+  //Category Service End
 }

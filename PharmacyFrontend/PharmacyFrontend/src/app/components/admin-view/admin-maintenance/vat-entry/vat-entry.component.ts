@@ -30,7 +30,7 @@ export class VatEntryComponent implements OnInit{
   paginatedVats: VAT[] = [];
   createdVat : VAT = new VAT();
   vatError: string = '';
-  editVat ?: Product | null;
+  editVat ?: VAT | null;
   showSuccessAlert: boolean = false;
   successMessage: string = '';
   showArchiveForm: number = 0;
@@ -133,7 +133,11 @@ export class VatEntryComponent implements OnInit{
     this.getAllVat();
   }
 
-  openEditVatForm() {
-    this.editVat = new Product();
+  openEditVatForm(vat: VAT) {
+    this.editVat = vat;
+  }
+
+  closeEditVatForm() {
+    this.editVat = null;
   }
 }
