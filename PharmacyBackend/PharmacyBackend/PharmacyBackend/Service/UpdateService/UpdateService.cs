@@ -752,9 +752,10 @@ namespace PharmacyBackend.Service.UpdateService
 
                         await _postRepo.CreateInventoryAsync(newInventory);
 
-                        await LogStockMovementAsync(newInventory, 0, 0, 0,
+                        /*await LogStockMovementAsync(newInventory, 0, 0, 0,
                             item.BoxQuantityReceived, computedSheetQty, computedPieceQty,
                             purchaseOrder.PurchaseOrderNumber, product.ProductName, request.EmployeeId);
+                        */
                     }
                     else if (product.UnitMeasurement == "Dual-Level")
                     {
@@ -782,9 +783,10 @@ namespace PharmacyBackend.Service.UpdateService
 
                         await _postRepo.CreateInventoryAsync(newInventory);
 
-                        await LogStockMovementAsync(newInventory, 0, 0, 0,
+                        /*await LogStockMovementAsync(newInventory, 0, 0, 0,
                             item.BoxQuantityReceived, 0, computedPieceQty,
                             purchaseOrder.PurchaseOrderNumber, product.ProductName, request.EmployeeId);
+                        */
                     }
                     else // Single-level
                     {
@@ -809,9 +811,10 @@ namespace PharmacyBackend.Service.UpdateService
 
                         await _postRepo.CreateInventoryAsync(newInventory);
 
-                        await LogStockMovementAsync(newInventory, 0, 0, 0,
+                        /*await LogStockMovementAsync(newInventory, 0, 0, 0,
                             0, 0, item.BoxQuantityReceived,
                             purchaseOrder.PurchaseOrderNumber, product.ProductName, request.EmployeeId);
+                        */
                     }
                 }
                 else
@@ -835,7 +838,7 @@ namespace PharmacyBackend.Service.UpdateService
 
                     _context.Inventory.Update(inventory);
 
-                    await LogStockMovementAsync(
+                    /*await LogStockMovementAsync(
                         inventory,
                         inventory.BoxQuantity,
                         inventory.SheetQuantity,
@@ -846,6 +849,7 @@ namespace PharmacyBackend.Service.UpdateService
                         purchaseOrder.PurchaseOrderNumber,
                         product.ProductName,
                         request.EmployeeId);
+                    */
                 }
             }
 
