@@ -1,36 +1,42 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Product } from '../../../../models/product-models/product';
 import { VAT } from '../../../../models/vat-models/vat';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-edit-vat',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf],
   templateUrl: './edit-vat.component.html',
   styleUrl: './edit-vat.component.scss'
 })
 export class EditVatComponent {
   @Input() editVat: VAT = new VAT();
   @Output() closeForm = new EventEmitter<void>();
+  
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService: UpdateService
   ) {}
 
   editVAT() {
-    if(!this.editVAT) return;
+    if(!this.editVat) return;
     this.updateService.updateVatAsync(this.editVat.vatid, this.editVat).subscribe({
       next: res => {
-        alert(`${res}`);
-        this.closeForm.emit();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${JSON.stringify(err.error)}`);
         this.closeEditVatForm();
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeForm.emit();
   }
 
   closeEditVatForm() {
