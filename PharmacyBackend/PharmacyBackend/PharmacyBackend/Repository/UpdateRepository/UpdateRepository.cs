@@ -26,7 +26,6 @@ namespace PharmacyBackend.Repository.UpdateRepository
         public async Task<bool> UpdateEmployeeAsync(Employee request)
         {
             _context.Employees.Update(request);
-            _context.Accounts.Update(request.Account);
             await _context.SaveChangesAsync();
             return true;
         }

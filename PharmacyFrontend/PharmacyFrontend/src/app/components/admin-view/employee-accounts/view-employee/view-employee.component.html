@@ -10,12 +10,11 @@
   <div class="display-wrapper">
     <img src="/images/view-employee-images/nigga-man.png" alt="User Profile Image">
     <h1>{{ employee.fullName }}</h1>
-    <h2 style="margin-bottom: 10px;">{{ employee.rolePosition }}</h2>
+    <h2>{{ employee.rolePosition }}</h2>
   </div>
-  <hr><br>
+  <hr>
 
   <main>
-
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="Employee Code">
@@ -24,6 +23,39 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.employeeCode }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.employeeCode" placeholder="Employee Code">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/employee-code.png" alt="Last Name">
+        <h1>Last Name:</h1>
+      </div>
+      <div class="input-wrapper">
+        <span *ngIf="!isEditMode">{{ employee.lastName }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.lastName" placeholder="Last Name">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/employee-code.png" alt="First Name">
+        <h1>First Name:</h1>
+      </div>
+      <div class="input-wrapper">
+        <span *ngIf="!isEditMode">{{ employee.firstName }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.firstName" placeholder="First Name">
+      </div>
+    </div>
+
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/employee-code.png" alt="Middle Name">
+        <h1>Middle Name:</h1>
+      </div>
+      <div class="input-wrapper">
+        <span *ngIf="!isEditMode">{{ employee.middleName }}</span>
+        <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.middleName" placeholder="Middle Name">
       </div>
     </div>
 
@@ -38,7 +70,6 @@
       </div>
     </div>
 
-
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/phone.png" alt="Phone">
@@ -50,14 +81,13 @@
       </div>
     </div>
 
-
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/cake.png" alt="Birth Date">
         <h1>Birth Date:</h1>
       </div>
       <div class="input-wrapper">
-        <span *ngIf="!isEditMode">{{ employee.birthDate | date: 'dd-MM-yyy'}}</span>
+        <span *ngIf="!isEditMode">{{ employee.birthDate | date: 'dd-MM-yyyy'}}</span>
         <input *ngIf="isEditMode" type="date" [(ngModel)]="employee.birthDate" placeholder="Birth Date">
       </div>
     </div>
@@ -73,7 +103,6 @@
       </div>
     </div>
 
-
     <div class="employee-property">
       <div class="label">
         <img src="/images/view-employee-images/gender.png" alt="Gender">
@@ -85,6 +114,20 @@
       </div>
     </div>
 
+    <div class="employee-property">
+      <div class="label">
+        <img src="/images/view-employee-images/address.png" alt="Role Position">
+        <h1>Role Position:</h1>
+      </div>
+      <div class="input-wrapper">
+        <span *ngIf="!isEditMode">{{ employee.rolePosition }}</span>
+        <select *ngIf="isEditMode" [(ngModel)]="employee.rolePosition" class="role-select">
+          <option value="Administrator">Administrator</option>
+          <option value="Inventory Manager">Inventory Manager</option>
+          <option value="Cashier">Cashier</option>
+        </select>
+      </div>
+    </div>
 
     <div class="employee-property">
       <div class="label">
@@ -99,9 +142,9 @@
   </main>
 
   <div class="button-wrapper">
-    <button *ngIf="!isEditMode" (click)="toggleViewMode()">Edit</button>
-    <button *ngIf="isEditMode" (click)="toggleEditMode(employee)">Save</button>
-    <button (click)="closeViewForm()">Close</button>
+    <button *ngIf="!isEditMode" (click)="toggleViewMode()" class="btn-edit">Edit</button>
+    <button *ngIf="isEditMode" (click)="toggleEditMode(employee)" class="btn-save">Save</button>
+    <button (click)="closeViewForm()" class="btn-close">Close</button>
   </div>
 </div>
 

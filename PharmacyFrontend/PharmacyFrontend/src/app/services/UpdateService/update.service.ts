@@ -16,6 +16,7 @@ import { Supplier } from '../../models/supplier-models/supplier';
 import { UpdateProductRequest } from '../../models/product-models/update-product-request';
 import { Category } from '../../models/category-models/category';
 import { VAT } from '../../models/vat-models/vat';
+import { UpdateEmployeeRequest } from '../../models/employee-models/updateEmployeeRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +35,7 @@ export class UpdateService {
     );
   }
 
-  UpdateEmployeeAsync(request: Employee): Observable<{ message: string }> {
+  UpdateEmployeeAsync(request: UpdateEmployeeRequest): Observable<{ message: string }> {
     return this.httpClient.put<{ message: string }>(
       `${this.apiUrl}/Put/Employee`,
       request

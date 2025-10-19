@@ -57,7 +57,6 @@ namespace PharmacyBackend.Repository.GET
             return await _context.Employees
                 .Include(e => e.Role)
                 .Include(e => e.Account)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
         public async Task<List<Employee>> GetEmployeeByLastName(string lastName)

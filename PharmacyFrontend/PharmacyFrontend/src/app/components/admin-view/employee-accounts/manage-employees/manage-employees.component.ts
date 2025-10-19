@@ -152,6 +152,7 @@ export class ManageEmployeesComponent implements OnInit{
 
   closeViewEmployeeForm() {
     this.viewEmployee = null;
+    this.getAllEmployees();
   }
 
   openCreateEmployeeForm() {

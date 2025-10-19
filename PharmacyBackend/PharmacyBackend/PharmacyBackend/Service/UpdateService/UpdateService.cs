@@ -74,10 +74,10 @@ namespace PharmacyBackend.Service.UpdateService
                     roleId = 1;
                     break;
                 case "Cashier":
-                    roleId = 2;
+                    roleId = 3;
                     break;
                 case "Inventory Manager":
-                    roleId = 3;
+                    roleId = 2;
                     break;
             }
 
