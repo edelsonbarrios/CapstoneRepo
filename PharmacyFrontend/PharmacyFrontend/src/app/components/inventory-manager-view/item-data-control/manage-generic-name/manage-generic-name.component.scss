@@ -13,139 +13,189 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
 
-      .searchbar {
-        font-size: medium;
-        padding: 0.5rem;
-        border-radius: 0.4rem;
-        border: 2px solid #3498ff;
+      .search-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+
+        .search-icon {
+          position: absolute;
+          left: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #94a3b8;
+          font-size: 1.1rem;
+          pointer-events: none;
+        }
+
+        .searchbar {
+          width: 100%;
+          font-size: 0.9375rem;
+          padding: 0.625rem 1rem 0.625rem 2.75rem;
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          background: #f8fafc;
+          transition: all 0.2s;
+          color: #1e293b;
+
+          &::placeholder {
+            color: #94a3b8;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+          }
+
+          &:hover {
+            border-color: #cbd5e1;
+            background: #ffffff;
+          }
+        }
       }
 
       .btn-generic {
         color: white;
-        font-size: medium;
-        padding: 0.5rem;
-        border-radius: 0.3rem;
-        background-color: rgb(17, 177, 17);
-        border: 1px solid rgb(17, 177, 17);
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        padding: 0.625rem 1.5rem;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: none;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
         cursor: pointer;
-        transition: opacity 0.15s, background-color 0.15s, border 0.15s;
+        transition: all 0.2s;
+        white-space: nowrap;
 
         &:hover {
-          background-color: rgb(16, 143, 16);
-          border: 1px solid rgb(16, 143, 16);
+          background: linear-gradient(135deg, #059669 0%, #047857 100%);
+          box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+          transform: translateY(-1px);
         }
 
         &:active {
-          opacity: 0.8;
+          transform: translateY(0);
+          box-shadow: 0 1px 2px rgba(16, 185, 129, 0.3);
         }
       }
     }
 
     .generic-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
 
-      .btn-archive,
-      .btn-edit {
-        padding: 0.4rem;
-        border-radius: 0.4rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      .btn-edit,
+      .btn-archive {
+        padding: 0.5rem 0.875rem;
+        border-radius: 6px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border: none;
       }
 
       .btn-edit {
-        background-color: white;
-        color: #3498ff;
-        border: 1px solid #3498ff;
-        margin-right: 0.2rem;
-
-        &:hover {
-          background-color: #2a85e0;
-          border: 1px solid #3498ff;
-          color: white;
-        }
-
-        &:active {
-          opacity: 0.8;
-        }
-      }
-
-      .btn-update {
-        background-color: #d4d24c;
+        background-color: #f59e0b;
         color: white;
-        border: 1px solid #d4d24c;
-        margin-right: 0.2rem;
+        margin-right: 0.5rem;
 
         &:hover {
-          background-color: #bbb94a;
-          border: 1px solid #d4d24c;
+          background-color: #d97706;
+          box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
         }
 
         &:active {
-          opacity: 0.8;
+          transform: translateY(1px);
         }
       }
 
       .btn-archive {
-        background-color: rgb(228, 43, 43);
+        background-color: #ef4444;
         color: white;
-        border: 1px solid rgb(228, 43, 43);
 
         &:hover {
-          background-color: rgb(209, 34, 34);
-          border: 1px solid rgb(209, 34, 34);
+          background-color: #dc2626;
+          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
         }
 
         &:active {
-          opacity: 0.8;
+          transform: translateY(1px);
         }
       }
 
       th,
       td {
-        padding: 0.6rem;
+        padding: 0.875rem 1rem;
         text-align: left;
-        border-bottom: 1px solid #63a8e9;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      thead tr {
+        background: #f9fafb;
       }
 
       th {
-        font-weight: 400;
-        font-size: large;
-        color: #888b8f;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      tbody tr {
+        transition: background-color 0.15s;
+
+        &:last-child td {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: #f9fafb;
+        }
       }
 
       td {
-        font-size: large;
+        font-size: 0.9375rem;
+        color: #1e293b;
       }
     }
 
     .pagination-controls {
       display: flex;
-      justify-content: right;
+      justify-content: flex-end;
       align-items: center;
       gap: 1rem;
-      margin-top: 1rem;
+      margin-top: 1.25rem;
 
       .btn-page {
         padding: 0.5rem 1rem;
-        border-radius: 0.4rem;
-        border: 1px solid #3498ff;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
         background-color: white;
-        color: #3498ff;
+        color: #475569;
         cursor: pointer;
-        transition: opacity 0.15s, background-color 0.15s;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
 
         &:hover:not(:disabled) {
-          background-color: #3498ff;
-          color: white;
+          background-color: #f8fafc;
+          border-color: #cbd5e1;
         }
 
         &:active:not(:disabled) {
-          opacity: 0.8;
+          transform: scale(0.98);
         }
 
         &:disabled {
@@ -156,7 +206,8 @@
 
       .page-info {
         font-weight: 600;
-        color: #1e2f47;
+        color: #475569;
+        font-size: 0.875rem;
       }
     }
   }
@@ -172,4 +223,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }

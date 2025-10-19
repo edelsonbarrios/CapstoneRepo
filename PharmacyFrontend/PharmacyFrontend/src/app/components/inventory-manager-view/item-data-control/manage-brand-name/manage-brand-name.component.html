@@ -3,8 +3,11 @@
 
     <!-- BRAND NAME CONTROLS/HEADER -->
     <div class="brand-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand...">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          placeholder="Search by Item Code, Brand...">
+      </div>
       <button class="btn-brand" (click)="openAddBrandForm()">&#43; Add Brand</button>
     </div>
 
@@ -18,7 +21,7 @@
       </thead>
       <tbody>
         <tr *ngIf="brands.length === 0">
-          <td colspan="2" style="text-align: center; color: #525252; padding: 1rem;">
+          <td colspan="2" style="text-align: center; color: #94a3b8; padding: 2rem;">
             No recent data
           </td>
         </tr>
@@ -33,7 +36,7 @@
     </table>
 
     <!-- PAGINATION CONTROLS -->
-    <div class="pagination-controls">
+    <div class="pagination-controls" *ngIf="brands.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
