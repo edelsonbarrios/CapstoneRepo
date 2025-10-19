@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
 
   <!-- EDIT TYPE HEADER -->
   <div class="modal-header">
@@ -17,5 +17,14 @@
   <div class="modal-footer">
     <button class="btn-save" (click)="updateType()">Update</button>
     <button class="btn-cancel" (click)="closeEditTypeForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Item has been Updated</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

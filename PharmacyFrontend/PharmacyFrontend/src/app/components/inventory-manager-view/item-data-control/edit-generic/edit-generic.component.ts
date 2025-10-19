@@ -17,6 +17,7 @@ export class EditGenericComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   genericNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService : UpdateService
@@ -35,14 +36,18 @@ export class EditGenericComponent {
     if(!this.editGeneric) return;
     this.updateService.updateGenericAsync(this.editGeneric.genericID, this.editGeneric).subscribe({
       next: res => {
-        alert(`Generic successfully updated.`);
-        this.closeEditGenericForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
         this.editGeneric.genericName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeEditGenericForm();
   }
 
   closeEditGenericForm() {

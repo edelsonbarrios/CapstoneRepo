@@ -17,6 +17,7 @@ export class EditBrandComponent implements OnInit{
   @Output() closeForm = new EventEmitter<void>();
   
   brandNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService : UpdateService
@@ -39,14 +40,18 @@ export class EditBrandComponent implements OnInit{
     if(!this.editBrand) return;
     this.updateService.updateBrandAsync(this.editBrand.brandID, this.editBrand).subscribe({
       next: res => {
-        alert(`Brand sucessfully updated.`);
-        this.closeEditBrandForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
         this.editBrand.brandName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeEditBrandForm();
   }
 
   closeEditBrandForm() {

@@ -16,6 +16,7 @@ export class EditFormulationComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   formulationNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService : UpdateService
@@ -33,14 +34,18 @@ export class EditFormulationComponent {
 
     this.updateService.updateFormulationAsync(this.editFormulation.formulationID, this.editFormulation).subscribe({
       next: res => {
-        alert(`Formulation sucessfully updated.`);
-        this.closeEditFormulationForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
         this.editFormulation.formulationName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeEditFormulationForm();
   }
 
   closeEditFormulationForm() {
