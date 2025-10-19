@@ -36,6 +36,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("EncryptedPassword")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Username")
                         .HasColumnType("text");
 
@@ -52,6 +55,7 @@ namespace PharmacyBackend.Migrations
                             Id = 1,
                             EmployeeId = 1,
                             EncryptedPassword = "Gs1jr+Z19Y22IXBRoh0ZOg==",
+                            IsActive = true,
                             Username = "admin"
                         });
                 });

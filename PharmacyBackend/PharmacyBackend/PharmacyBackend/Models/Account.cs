@@ -10,6 +10,7 @@ namespace PharmacyBackend.Models
         public string Username { get; set; }
         public string EncryptedPassword { get; set; }
         public int EmployeeId { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [JsonIgnore]
         public Employee Employee { get; set; }

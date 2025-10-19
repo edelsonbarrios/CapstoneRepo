@@ -28,7 +28,7 @@ namespace PharmacyBackend.Repository.POST
         #region Account
         public async Task<string> AuthenticationAsync(LogInRequest request)
         {
-            var account = await _context.Accounts.Where(a => a.Username.Equals(request.Username))
+            var account = await _context.Accounts.Where(a => a.Username.Equals(request.Username) && a.IsActive == true)
                 .Include(a => a.Employee)
                 .ThenInclude(e => e.Role)
                 .FirstOrDefaultAsync();

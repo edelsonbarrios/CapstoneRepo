@@ -120,19 +120,11 @@ export class ManageEmployeesComponent implements OnInit{
   }
 
   archiveEmployee() {
-    this.getService.GetEmployeeById(this.showArchiveForm).subscribe({
-      next: res => {
-        this.employeeToArchive = res;
-      },
-      error: err => {
-        console.log(`${err.error}`);
-      }
-    });
     const requestPayload : ArchiveEmployeeRequest = {
-      employeeId : this.employeeToArchive.id,
-      actionPerformed : '',
+      employeeId : this.showArchiveForm,
+      actionPerformed : 'Archived',
       performedBy : this.loggedInEmployeeId,
-      performedAt : new Date(this.employeeToArchive.birthDate).toISOString()
+      performedAt : new Date().toISOString()
     };
 
     this.updateService.ArchiveEmployeeAsync(requestPayload).subscribe({

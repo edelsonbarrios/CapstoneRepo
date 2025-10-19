@@ -1,4 +1,7 @@
-﻿namespace PharmacyBackend.DTOs.EmployeeDTOs
+﻿using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.Models;
+
+namespace PharmacyBackend.DTOs.EmployeeDTOs
 {
     public class EmployeeDTO
     {
@@ -16,5 +19,6 @@
         public string Address { get; set; }
         public string RolePosition { get; set; }
         public string FullName { get; set; }
+        public AccountDTO Account { get; set; }
     }
 }

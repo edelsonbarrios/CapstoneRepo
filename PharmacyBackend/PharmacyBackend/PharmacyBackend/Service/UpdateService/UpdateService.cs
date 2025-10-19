@@ -109,6 +109,7 @@ namespace PharmacyBackend.Service.UpdateService
             if (employee is null)
                 return false;
             employee.IsActive = false;
+            employee.Account.IsActive = false;
 
             var updateEmployee = await _updateRepo.UpdateEmployeeAsync(employee);
             if (!updateEmployee)

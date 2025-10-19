@@ -25,7 +25,8 @@ namespace PharmacyBackend.Repository.UpdateRepository
         #region Employee
         public async Task<bool> UpdateEmployeeAsync(Employee request)
         {
-            _context.Update(request);
+            _context.Employees.Update(request);
+            _context.Accounts.Update(request.Account);
             await _context.SaveChangesAsync();
             return true;
         }

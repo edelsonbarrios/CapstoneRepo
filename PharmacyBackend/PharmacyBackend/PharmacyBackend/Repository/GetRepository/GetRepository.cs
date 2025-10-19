@@ -31,6 +31,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Accounts
                 .OrderByDescending(a => a.Id)
+                .Where(a => a.IsActive == true)
                 .ToListAsync();
         }
         public async Task<Account> SearchAccountByUsernameAsync(string userName)
@@ -44,6 +45,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Employees
                 .Include(e => e.Role)
+                .Include(e => e.Account)
                 .OrderBy(e => e.LastName)
                 .ThenBy(e => e.FirstName)
                 .Where(e => e.IsActive == true)
@@ -54,6 +56,7 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Employees
                 .Include(e => e.Role)
+                .Include(e => e.Account)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
         }

@@ -83,7 +83,14 @@ namespace PharmacyBackend.Service.GetService
                 PhoneNumber = e.PhoneNumber,
                 Address = e.Address,
                 FullName = e.FullName,
-                RolePosition = e.Role.RolePosition
+                RolePosition = e.Role.RolePosition,
+                Account = new AccountDTO
+                {
+                    Id = e.Account.Id,
+                    EmployeeId = e.Account.EmployeeId,
+                    Username = e.Account.Username,
+                    Password = e.Account.EncryptedPassword
+                }
             }).ToList();
             return modifEmployees;
         }
@@ -108,7 +115,14 @@ namespace PharmacyBackend.Service.GetService
                 PhoneNumber = employee.PhoneNumber,
                 Address = employee.Address,
                 FullName = employee.FullName,
-                RolePosition = employee.Role.RolePosition
+                RolePosition = employee.Role.RolePosition,
+                Account = new AccountDTO
+                {
+                    Id = employee.Account.Id,
+                    EmployeeId = employee.Account.EmployeeId,
+                    Username = employee.Account.Username,
+                    Password = employee.Account.EncryptedPassword
+                }
             };
             return modifEmployee;
         }
