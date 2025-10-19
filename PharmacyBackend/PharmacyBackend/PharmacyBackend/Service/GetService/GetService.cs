@@ -19,6 +19,7 @@ using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.ReportsDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -1537,6 +1538,181 @@ namespace PharmacyBackend.Service.GetService
         }
         #endregion
 
+        #region Reports
+        
+        //Sales-Reports
+
+        public async Task<SalesReportDto> GetSalesReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null)
+        {
+            var transactions = await _getRepo.GetSalesReportDataAsync(
+                startDate,
+                endDate,
+                employeeId,
+                paymentMethod);
+
+            var transactionDtos = transactions.Select(t => new SalesTransactionDto
+            {
+                Id = t.Id,
+                TransactionDate = t.TransactionDate,
+                InvoiceNumber = t.InvoiceNumber,
+                TotalAmount = t.TotalAmount,
+                DiscountAmount = t.DiscountAmount,
+                VATAmount = t.VATAmount,
+                NetAmount = t.NetAmount,
+                PaymentMethod = t.PaymentMethod,
+                AmountPaid = t.AmountPaid,
+                ChangeAmount = t.ChangeAmount,
+                DiscountId = t.DiscountId,
+                EmployeeID = t.EmployeeID,
+                VATId = t.VATId,
+                DiscountName = t.Discount?.DiscountName ?? string.Empty,
+                EmployeeName = t.Employee != null ? $"{t.Employee.FirstName} {t.Employee.LastName}" : string.Empty,
+                VATRate = t.VAT?.VATRate,
+                Items = t.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    SalesTransactionId = i.SalesTransactionId,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    UnitType = i.UnitType,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            }).ToList();
+
+            var summary = new SalesReportSummaryDto
+            {
+                TotalTransactions = transactionDtos.Count(),
+                NetRevenue = transactionDtos.Sum(t => t.NetAmount),
+                TotalItemsSold = transactionDtos.Sum(t => t.Items.Sum(i => i.Quantity)),
+                AverageTransaction = transactionDtos.Any()
+                    ? transactionDtos.Average(t => t.NetAmount)
+                    : 0
+            };
+
+            return new SalesReportDto
+            {
+                Summary = summary,
+                Transactions = transactionDtos
+            };
+        }
+
+        //Inventory-Reports
+
+        public async Task<InventoryReportDto> GetInventoryReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType = "all")
+        {
+            var inventories = await _getRepo.GetInventoryReportDataAsync(
+                startDate,
+                endDate,
+                filterType);
+
+            var inventoryDtos = inventories.Select(i => new InventoryDto
+            {
+                InventoryID = i.InventoryID,
+                ProductID = i.ProductID,
+                ProductName = i.Product?.ProductName ?? string.Empty,
+                BatchNumber = i.BatchNumber,
+                ManufacturingDate = i.ManufacturingDate,
+                ExpirationDate = i.ExpirationDate,
+                BoxQuantity = i.BoxQuantity,
+                SheetQuantity = i.SheetQuantity,
+                PieceQuantity = i.PieceQuantity,
+                SheetsPerBox = i.SheetsPerBox,
+                PiecesPerSheet = i.PiecesPerSheet,
+                ReorderLevel = i.ReorderLevel,
+                CostPrice = i.CostPrice,
+                BoxPrice = i.BoxPrice,
+                SheetPrice = i.SheetPrice,
+                PiecePrice = i.PiecePrice,
+                DateAdded = i.DateAdded,
+                IsActive = i.IsActive,
+                IsExpired = i.IsExpired,
+                IsNearExpiry = i.IsNearExpiry,
+                IsCriticalStock = i.IsCriticalStock,
+                IsMultiUnit = i.IsMultiUnit,
+                TotalPiecesAvailable = i.TotalPiecesAvailable,
+                Product = i.Product == null ? null : new ProductDto
+                {
+                    ProductID = i.Product.ProductID,
+                    ProductName = i.Product.ProductName,
+                    CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
+                    BrandName = i.Product.Brand?.BrandName ?? string.Empty,
+                    GenericName = i.Product.Generic?.GenericName ?? string.Empty,
+                    FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
+                    ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
+                    TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
+                }
+            }).ToList();
+
+            var summary = new InventoryReportSummaryDto
+            {
+                TotalProducts = inventoryDtos.Select(i => i.ProductID).Distinct().Count(),
+                TotalValue = inventoryDtos.Sum(i => i.TotalPiecesAvailable * i.PiecePrice),
+                CriticalStockCount = inventoryDtos.Count(i => i.IsCriticalStock),
+                NearExpiryCount = inventoryDtos.Count(i => i.IsNearExpiry && !i.IsExpired)
+            };
+
+            return new InventoryReportDto
+            {
+                Summary = summary,
+                InventoryItems = inventoryDtos
+            };
+        }
+
+        //Fast-Moving Products
+
+        public async Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int topN = 20)
+        {
+            var productsData = await _getRepo.GetFastMovingProductsDataAsync(
+                startDate,
+                endDate,
+                topN);
+
+            var products = productsData.Select((p, index) => new FastMovingProductDto
+            {
+                Rank = index + 1,
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                CategoryName = p.CategoryName,
+                QuantitySold = p.QuantitySold,
+                TransactionCount = p.TransactionCount,
+                Revenue = p.Revenue,
+                CurrentStock = p.CurrentStock,
+                Trend = DetermineTrend(p.QuantitySold, p.CurrentStock)
+            }).ToList();
+
+            return new FastMovingProductReportDto
+            {
+                TotalProductsSold = products.Count,
+                TotalQuantitySold = products.Sum(p => p.QuantitySold),
+                TotalRevenue = products.Sum(p => p.Revenue),
+                Products = products
+            };
+        }
+
+        private string DetermineTrend(int quantitySold, int currentStock)
+        {
+            if (currentStock == 0) return "Decreasing";
+
+            var ratio = (double)quantitySold / currentStock;
+
+            if (ratio > 2.0) return "Increasing";
+            if (ratio > 0.5) return "Stable";
+            return "Decreasing";
+        }
+
+        #endregion
     }
 }
 

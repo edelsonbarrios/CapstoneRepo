@@ -1,4 +1,5 @@
 ﻿using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
@@ -142,6 +143,27 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<StockMovement> GetStockMovementByIdAsync(int id);
         public Task<IEnumerable<StockMovement>> GetStockMovementByInventoryIdAsync(int inventoryId);
         public Task<IEnumerable<StockMovement>> GetStockMovementByProductIdAsync(int productId);
+        #endregion
+
+        #region Reports
+        // Sales Reports
+        Task<IEnumerable<SalesTransaction>> GetSalesReportDataAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null);
+
+        // Inventory Reports
+        Task<IEnumerable<Inventory>> GetInventoryReportDataAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType = "all");
+
+        // Fast-Moving Products
+        Task<IEnumerable<FastMovingProductDataDto>> GetFastMovingProductsDataAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int topN = 20);
         #endregion
     }
 }

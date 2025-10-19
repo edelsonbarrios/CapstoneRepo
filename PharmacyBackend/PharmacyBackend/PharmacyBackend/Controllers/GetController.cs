@@ -699,6 +699,174 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
+        #region Reports
+
+        //Sales - Reports
+
+        [HttpGet("reports/sales")]
+        public async Task<IActionResult> GetSalesReport(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int? employeeId = null,
+            [FromQuery] string paymentMethod = null)
+        {
+            try
+            {
+                // Convert to UTC
+                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+                var endDateUtc = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+
+                var report = await _getService.GetSalesReportAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    employeeId,
+                    paymentMethod);
+
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error generating sales report: {ex.Message}" });
+            }
+        }
+        /*
+        [HttpGet("reports/sales/export")]
+        public async Task<IActionResult> ExportSalesReport(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int? employeeId = null,
+            [FromQuery] string paymentMethod = null)
+        {
+            try
+            {
+                var excelData = await _getService.ExportSalesReportToExcelAsync(
+                    startDate,
+                    endDate,
+                    employeeId,
+                    paymentMethod);
+
+                var fileName = $"SalesReport_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error exporting sales report: {ex.Message}" });
+            }
+        }
+        */
+
+        //Inventory - Reports
+
+        [HttpGet("reports/inventory")]
+        public async Task<IActionResult> GetInventoryReport(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] string filterType = "all")
+        {
+            try
+            {
+                // Convert to UTC
+                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+                var endDateUtc = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+
+                var report = await _getService.GetInventoryReportAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    filterType);
+
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error generating inventory report: {ex.Message}" });
+            }
+        }
+
+        /*
+        [HttpGet("reports/inventory/export")]
+        public async Task<IActionResult> ExportInventoryReport(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] string filterType = "all")
+        {
+            try
+            {
+                var excelData = await _getService.ExportInventoryReportToExcelAsync(
+                    startDate,
+                    endDate,
+                    filterType);
+
+                var fileName = $"InventoryReport_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_{filterType}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error exporting inventory report: {ex.Message}" });
+            }
+        }
+        */
+        
+        //Fast-Moving Products
+
+        [HttpGet("reports/fast-moving-products")]
+        public async Task<IActionResult> GetFastMovingProductsReport(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int topN = 20)
+        {
+            try
+            {
+                // Convert to UTC
+                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
+                var endDateUtc = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+
+                var report = await _getService.GetFastMovingProductsReportAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    topN);
+
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error generating fast-moving products report: {ex.Message}" });
+            }
+        }
+
+        /*
+        [HttpGet("reports/fast-moving-products/export")]
+        public async Task<IActionResult> ExportFastMovingProductsReport(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int topN = 20)
+        {
+            try
+            {
+                var excelData = await _getService.ExportFastMovingProductsToExcelAsync(
+                    startDate,
+                    endDate,
+                    topN);
+
+                var fileName = $"FastMovingProducts_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_Top{topN}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error exporting fast-moving products report: {ex.Message}" });
+            }
+        }
+        */
+        #endregion
+
     }
 }
 
