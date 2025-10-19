@@ -3,6 +3,7 @@ using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.DailySaleDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
+using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -762,5 +763,237 @@ namespace PharmacyBackend.Repository.GET
         }
         #endregion
 
+        #region Reports
+
+        public async Task<IEnumerable<SalesTransaction>> GetSalesReportDataAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            int? employeeId,
+            string paymentMethod)
+        {
+            var query = _context.SalesTransaction
+                .Include(st => st.Employee)
+                .Include(st => st.Discount)
+                .Include(st => st.VAT)
+                .Include(st => st.Items)
+                    .ThenInclude(si => si.Product)
+                .AsQueryable();
+
+            // Apply date filter only if BOTH dates are provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(st => st.TransactionDate >= startDateUtc && st.TransactionDate <= endDateUtc);
+            }
+            // If no dates provided, show ALL transactions (no date filter)
+
+            if (employeeId.HasValue)
+            {
+                query = query.Where(st => st.EmployeeID == employeeId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
+            {
+                query = query.Where(st => st.PaymentMethod.ToLower() == paymentMethod.ToLower());
+            }
+
+            return await query
+                .OrderByDescending(st => st.TransactionDate)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Inventory>> GetInventoryReportDataAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            string filterType)
+        {
+            var now = DateTime.UtcNow.Date;
+
+            var query = _context.Inventory
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Generic)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Formulation)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Classification)
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.TypeModel)
+                .AsQueryable();
+
+            // Apply date filter only if dates are provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(i => i.DateAdded >= startDateUtc && i.DateAdded <= endDateUtc);
+            }
+
+            // Apply status filters
+            switch (filterType?.ToLower() ?? "all")
+            {
+                case "critical":
+                case "critical stock":
+                    query = query.Where(i => i.IsActive &&
+                        (i.BoxQuantity * i.SheetsPerBox * i.PiecesPerSheet +
+                         i.SheetQuantity * i.PiecesPerSheet +
+                         i.PieceQuantity) <= i.ReorderLevel);
+                    break;
+
+                case "near expiry":
+                case "nearexpiry":
+                    query = query.Where(i => i.IsActive &&
+                        i.ExpirationDate > now &&
+                        i.ExpirationDate <= now.AddDays(90));
+                    break;
+
+                case "expired":
+                    query = query.Where(i => i.IsActive &&
+                        i.ExpirationDate <= now);
+                    break;
+
+                case "all":
+                case "all inventory":
+                default:
+                    query = query.Where(i => i.IsActive);
+                    break;
+            }
+
+            return await query
+                .OrderBy(i => i.Product.ProductName)
+                .ThenBy(i => i.ExpirationDate)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<FastMovingProductDataDto>> GetFastMovingProductsDataAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            int topN)
+        {
+            // Step 1: Get sales data (with optional date filter)
+            var salesQuery = _context.SalesItem
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(si => si.SalesTransaction)
+                .AsQueryable();
+
+            // Apply date filter only if dates are provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                salesQuery = salesQuery.Where(si =>
+                    si.SalesTransaction.TransactionDate >= startDateUtc &&
+                    si.SalesTransaction.TransactionDate <= endDateUtc);
+            }
+
+            var salesData = await salesQuery
+                .GroupBy(si => new
+                {
+                    si.ProductId,
+                    si.Product.ProductName,
+                    CategoryName = si.Product.Category.CategoryName
+                })
+                .Select(g => new
+                {
+                    g.Key.ProductId,
+                    g.Key.ProductName,
+                    g.Key.CategoryName,
+                    QuantitySold = g.Sum(si => si.Quantity),
+                    TransactionCount = g.Select(si => si.SalesTransactionId).Distinct().Count(),
+                    Revenue = g.Sum(si => si.Subtotal)
+                })
+                .OrderByDescending(p => p.QuantitySold)
+                .ThenByDescending(p => p.TransactionCount)
+                .Take(topN)
+                .ToListAsync(); // Materialize here to avoid complex translation
+
+            // Step 2: Get product IDs
+            var productIds = salesData.Select(s => s.ProductId).ToList();
+
+            // Step 3: Fetch inventory data using ONLY database columns
+            var now = DateTime.UtcNow;
+
+            var inventoryData = await _context.Inventory
+                .Where(i => productIds.Contains(i.ProductID)
+                         && i.IsActive
+                         && i.ExpirationDate >= now) // Using actual DB column
+                .Select(i => new
+                {
+                    i.ProductID,
+                    i.BoxQuantity,
+                    i.SheetQuantity,
+                    i.PieceQuantity,
+                    i.SheetsPerBox,
+                    i.PiecesPerSheet,
+                    i.PiecePerBox
+                })
+                .ToListAsync(); // Materialize before calculating TotalPiecesAvailable
+
+            // Step 4: Calculate total pieces in memory (client-side)
+            var stockByProduct = inventoryData
+                .GroupBy(i => i.ProductID)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Sum(i => CalculateTotalPieces(
+                        i.BoxQuantity,
+                        i.SheetQuantity,
+                        i.PieceQuantity,
+                        i.SheetsPerBox,
+                        i.PiecesPerSheet,
+                        i.PiecePerBox
+                    ))
+                );
+
+            // Step 5: Combine results
+            var result = salesData.Select(s => new FastMovingProductDataDto
+            {
+                ProductId = s.ProductId,
+                ProductName = s.ProductName,
+                CategoryName = s.CategoryName,
+                QuantitySold = s.QuantitySold,
+                TransactionCount = s.TransactionCount,
+                Revenue = s.Revenue,
+                CurrentStock = stockByProduct.ContainsKey(s.ProductId)
+                    ? stockByProduct[s.ProductId]
+                    : 0
+            }).ToList();
+
+            return result;
+        }
+
+        // Helper method to calculate total pieces (same logic as your Inventory model)
+        private int CalculateTotalPieces(
+            int boxQuantity,
+            int sheetQuantity,
+            int pieceQuantity,
+            int? sheetsPerBox,
+            int? piecesPerSheet,
+            int? piecePerBox)
+        {
+            // Case 1: Multi-level (Box → Sheet → Piece)
+            if (sheetsPerBox.HasValue && piecesPerSheet.HasValue && piecesPerSheet.Value > 0)
+            {
+                return (boxQuantity * sheetsPerBox.Value * piecesPerSheet.Value)
+                     + (sheetQuantity * piecesPerSheet.Value)
+                     + pieceQuantity;
+            }
+            // Case 2: Dual-level (Box → Piece)
+            else if (piecePerBox.HasValue && (!piecesPerSheet.HasValue || piecesPerSheet.Value == 0))
+            {
+                return (boxQuantity * piecePerBox.Value) + pieceQuantity;
+            }
+            // Case 3: Single-level (Only pieces)
+            else
+            {
+                return pieceQuantity;
+            }
+        }
+
+        #endregion
     }
 }

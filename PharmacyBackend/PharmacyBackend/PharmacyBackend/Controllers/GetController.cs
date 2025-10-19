@@ -699,6 +699,216 @@ namespace PharmacyBackend.Controllers
         }
         #endregion
 
+        #region Reports
+
+        //Sales - Reports
+
+        [HttpGet("reports/sales")]
+        public async Task<IActionResult> GetSalesReport(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] int? employeeId = null,
+            [FromQuery] string paymentMethod = null)
+        {
+            try
+            {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
+                    : null;
+
+                var report = await _getService.GetSalesReportAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    employeeId,
+                    paymentMethod);
+
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error generating sales report: {ex.Message}" });
+            }
+        }
+        /*
+        [HttpGet("reports/sales/export")]
+        public async Task<IActionResult> ExportSalesReport(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] int? employeeId = null,
+            [FromQuery] string paymentMethod = null)
+        {
+            try
+            {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue 
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue 
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                    : null;
+
+                var excelData = await _getService.ExportSalesReportToExcelAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    employeeId,
+                    paymentMethod);
+
+                var fileName = startDate.HasValue && endDate.HasValue
+                    ? $"SalesReport_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}.xlsx"
+                    : $"SalesReport_AllTime_{DateTime.Now:yyyyMMdd}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error exporting sales report: {ex.Message}" });
+            }
+        }
+        */
+
+        //Inventory - Reports
+
+        [HttpGet("reports/inventory")]
+        public async Task<IActionResult> GetInventoryReport(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] string filterType = "all")
+        {
+            try
+            {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
+                    : null;
+
+                var report = await _getService.GetInventoryReportAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    filterType);
+
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error generating inventory report: {ex.Message}" });
+            }
+        }
+
+        /*
+        [HttpGet("reports/inventory/export")]
+        public async Task<IActionResult> ExportInventoryReport(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] string filterType = "all")
+        {
+            try
+            {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue 
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue 
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                    : null;
+
+                var excelData = await _getService.ExportInventoryReportToExcelAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    filterType);
+
+                var fileName = startDate.HasValue && endDate.HasValue
+                    ? $"InventoryReport_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}_{filterType}.xlsx"
+                    : $"InventoryReport_AllTime_{filterType}_{DateTime.Now:yyyyMMdd}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error exporting inventory report: {ex.Message}" });
+            }
+        }
+        */
+
+        //Fast-Moving Products
+
+        [HttpGet("reports/fast-moving-products")]
+        public async Task<IActionResult> GetFastMovingProductsReport(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] int topN = 20)
+        {
+            try
+            {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
+                    : null;
+
+                var report = await _getService.GetFastMovingProductsReportAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    topN);
+
+                return Ok(report);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error generating fast-moving products report: {ex.Message}" });
+            }
+        }
+
+        /*
+        [HttpGet("reports/fast-moving-products/export")]
+        public async Task<IActionResult> ExportFastMovingProductsReport(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] int topN = 20)
+        {
+            try
+            {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue 
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue 
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                    : null;
+
+                var excelData = await _getService.ExportFastMovingProductsToExcelAsync(
+                    startDateUtc,
+                    endDateUtc,
+                    topN);
+
+                var fileName = startDate.HasValue && endDate.HasValue
+                    ? $"FastMovingProducts_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}_Top{topN}.xlsx"
+                    : $"FastMovingProducts_AllTime_Top{topN}_{DateTime.Now:yyyyMMdd}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Error exporting fast-moving products report: {ex.Message}" });
+            }
+        }
+        */
+        #endregion
+
     }
 }
 

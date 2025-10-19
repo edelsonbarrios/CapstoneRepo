@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
+    <Compile Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <Content Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
+    <Content Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <EmbeddedResource Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
+    <EmbeddedResource Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <None Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
+    <None Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="8.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">

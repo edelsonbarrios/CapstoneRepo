@@ -116,10 +116,13 @@ namespace PharmacyBackend.Repository.POST
                 if (employee == null)
                     throw new ArgumentException($"Employee with ID {salesTransaction.EmployeeID} not found");
 
-                var discount = await _context.Discounts.FindAsync(salesTransaction.DiscountId);
-                if (discount == null)
-                    throw new ArgumentException($"Discount with ID {salesTransaction.DiscountId} not found");
-
+                if (salesTransaction.DiscountId > 0)
+                {
+                    var discount = await _context.Discounts.FindAsync(salesTransaction.DiscountId);
+                    if (discount == null)
+                        throw new ArgumentException($"Discount with ID {salesTransaction.DiscountId} not found");
+                }
+                
                 if (salesTransaction.VATId.HasValue)
                 {
                     var vat = await _context.VAT.FindAsync(salesTransaction.VATId.Value);

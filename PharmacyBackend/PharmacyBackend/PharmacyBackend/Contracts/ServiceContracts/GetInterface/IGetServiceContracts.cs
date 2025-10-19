@@ -17,6 +17,7 @@ using PharmacyBackend.Models.CashierViewModel;
 using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
 using System.Runtime.CompilerServices;
+using PharmacyBackend.DTOs.ReportsDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -153,6 +154,43 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<StockMovementDto> GetStockMovementByIdAsync(int id);
         public Task<IEnumerable<StockMovementDto>> GetStockMovementByInventoryIdAsync(int inventoryId);
         public Task<IEnumerable<StockMovementDto>> GetStockMovementByProductIdAsync(int productId);
+        #endregion
+
+        #region Reports
+        // Sales Reports
+        Task<SalesReportDto> GetSalesReportAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            int? employeeId = null,
+            string paymentMethod = null);
+
+        /*Task<byte[]> ExportSalesReportToExcelAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int? employeeId = null,
+            string paymentMethod = null);*/
+
+        // Inventory Reports
+        Task<InventoryReportDto> GetInventoryReportAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            string filterType = "all");
+
+        /*Task<byte[]> ExportInventoryReportToExcelAsync(
+            DateTime startDate,
+            DateTime endDate,
+            string filterType = "all");*/
+
+        // Fast-Moving Products
+        Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            int topN = 20);
+
+        /*Task<byte[]> ExportFastMovingProductsToExcelAsync(
+            DateTime startDate,
+            DateTime endDate,
+            int topN = 20);*/
         #endregion
     }
 }
