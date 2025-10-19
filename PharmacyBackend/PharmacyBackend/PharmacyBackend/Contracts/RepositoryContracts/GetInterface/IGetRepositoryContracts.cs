@@ -148,22 +148,20 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #region Reports
         // Sales Reports
         Task<IEnumerable<SalesTransaction>> GetSalesReportDataAsync(
-            DateTime startDate,
-            DateTime endDate,
-            int? employeeId = null,
-            string paymentMethod = null);
+            DateTime? startDate,
+            DateTime? endDate,
+            int? employeeId,
+            string paymentMethod);
 
-        // Inventory Reports
         Task<IEnumerable<Inventory>> GetInventoryReportDataAsync(
-            DateTime startDate,
-            DateTime endDate,
-            string filterType = "all");
+            DateTime? startDate,
+            DateTime? endDate,
+            string filterType);
 
-        // Fast-Moving Products
         Task<IEnumerable<FastMovingProductDataDto>> GetFastMovingProductsDataAsync(
-            DateTime startDate,
-            DateTime endDate,
-            int topN = 20);
+            DateTime? startDate,
+            DateTime? endDate,
+            int topN);
         #endregion
     }
 }

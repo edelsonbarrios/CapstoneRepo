@@ -764,21 +764,27 @@ namespace PharmacyBackend.Repository.GET
         #region Reports
 
         public async Task<IEnumerable<SalesTransaction>> GetSalesReportDataAsync(
-            DateTime startDate,
-            DateTime endDate,
-            int? employeeId = null,
-            string paymentMethod = null)
+            DateTime? startDate,
+            DateTime? endDate,
+            int? employeeId,
+            string paymentMethod)
         {
-            var startDateUtc = startDate.Date;
-            var endDateUtc = endDate.Date.AddDays(1).AddTicks(-1);
-
             var query = _context.SalesTransaction
                 .Include(st => st.Employee)
                 .Include(st => st.Discount)
                 .Include(st => st.VAT)
                 .Include(st => st.Items)
                     .ThenInclude(si => si.Product)
-                .Where(st => st.TransactionDate >= startDateUtc && st.TransactionDate <= endDateUtc);
+                .AsQueryable();
+
+            // Apply date filter only if BOTH dates are provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(st => st.TransactionDate >= startDateUtc && st.TransactionDate <= endDateUtc);
+            }
+            // If no dates provided, show ALL transactions (no date filter)
 
             if (employeeId.HasValue)
             {
@@ -796,14 +802,10 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<Inventory>> GetInventoryReportDataAsync(
-            DateTime startDate,
-            DateTime endDate,
-            string filterType = "all")
+            DateTime? startDate,
+            DateTime? endDate,
+            string filterType)
         {
-            
-
-            var startDateUtc = startDate.Date;
-            var endDateUtc = endDate.Date.AddDays(1).AddTicks(-1);
             var now = DateTime.UtcNow.Date;
 
             var query = _context.Inventory
@@ -819,9 +821,18 @@ namespace PharmacyBackend.Repository.GET
                     .ThenInclude(p => p.Classification)
                 .Include(i => i.Product)
                     .ThenInclude(p => p.TypeModel)
-                .Where(i => i.DateAdded >= startDateUtc && i.DateAdded <= endDateUtc);
+                .AsQueryable();
 
-            switch (filterType.ToLower())
+            // Apply date filter only if dates are provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                query = query.Where(i => i.DateAdded >= startDateUtc && i.DateAdded <= endDateUtc);
+            }
+
+            // Apply status filters
+            switch (filterType?.ToLower() ?? "all")
             {
                 case "critical":
                 case "critical stock":
@@ -839,7 +850,6 @@ namespace PharmacyBackend.Repository.GET
                     break;
 
                 case "expired":
-                    // Remove HasValue and Value
                     query = query.Where(i => i.IsActive &&
                         i.ExpirationDate <= now);
                     break;
@@ -858,20 +868,28 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<FastMovingProductDataDto>> GetFastMovingProductsDataAsync(
-    DateTime startDate,
-    DateTime endDate,
-    int topN = 20)
+            DateTime? startDate,
+            DateTime? endDate,
+            int topN)
         {
-            var startDateUtc = startDate.Date;
-            var endDateUtc = endDate.Date.AddDays(1).AddTicks(-1);
-
-            // Step 1: Get sales data (no inventory yet)
-            var salesData = await _context.SalesItem
+            // Step 1: Get sales data (with optional date filter)
+            var salesQuery = _context.SalesItem
                 .Include(si => si.Product)
                     .ThenInclude(p => p.Category)
                 .Include(si => si.SalesTransaction)
-                .Where(si => si.SalesTransaction.TransactionDate >= startDateUtc &&
-                             si.SalesTransaction.TransactionDate <= endDateUtc)
+                .AsQueryable();
+
+            // Apply date filter only if dates are provided
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+                salesQuery = salesQuery.Where(si =>
+                    si.SalesTransaction.TransactionDate >= startDateUtc &&
+                    si.SalesTransaction.TransactionDate <= endDateUtc);
+            }
+
+            var salesData = await salesQuery
                 .GroupBy(si => new
                 {
                     si.ProductId,

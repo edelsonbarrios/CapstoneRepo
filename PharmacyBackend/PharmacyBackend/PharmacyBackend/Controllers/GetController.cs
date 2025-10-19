@@ -705,16 +705,20 @@ namespace PharmacyBackend.Controllers
 
         [HttpGet("reports/sales")]
         public async Task<IActionResult> GetSalesReport(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int? employeeId = null,
             [FromQuery] string paymentMethod = null)
         {
             try
             {
-                // Convert to UTC
-                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-                var endDateUtc = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
+                    : null;
 
                 var report = await _getService.GetSalesReportAsync(
                     startDateUtc,
@@ -732,20 +736,30 @@ namespace PharmacyBackend.Controllers
         /*
         [HttpGet("reports/sales/export")]
         public async Task<IActionResult> ExportSalesReport(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int? employeeId = null,
             [FromQuery] string paymentMethod = null)
         {
             try
             {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue 
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue 
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                    : null;
+
                 var excelData = await _getService.ExportSalesReportToExcelAsync(
-                    startDate,
-                    endDate,
+                    startDateUtc,
+                    endDateUtc,
                     employeeId,
                     paymentMethod);
 
-                var fileName = $"SalesReport_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}.xlsx";
+                var fileName = startDate.HasValue && endDate.HasValue
+                    ? $"SalesReport_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}.xlsx"
+                    : $"SalesReport_AllTime_{DateTime.Now:yyyyMMdd}.xlsx";
 
                 return File(excelData,
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -762,15 +776,19 @@ namespace PharmacyBackend.Controllers
 
         [HttpGet("reports/inventory")]
         public async Task<IActionResult> GetInventoryReport(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] string filterType = "all")
         {
             try
             {
-                // Convert to UTC
-                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-                var endDateUtc = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
+                    : null;
 
                 var report = await _getService.GetInventoryReportAsync(
                     startDateUtc,
@@ -788,18 +806,28 @@ namespace PharmacyBackend.Controllers
         /*
         [HttpGet("reports/inventory/export")]
         public async Task<IActionResult> ExportInventoryReport(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] string filterType = "all")
         {
             try
             {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue 
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue 
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                    : null;
+
                 var excelData = await _getService.ExportInventoryReportToExcelAsync(
-                    startDate,
-                    endDate,
+                    startDateUtc,
+                    endDateUtc,
                     filterType);
 
-                var fileName = $"InventoryReport_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_{filterType}.xlsx";
+                var fileName = startDate.HasValue && endDate.HasValue
+                    ? $"InventoryReport_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}_{filterType}.xlsx"
+                    : $"InventoryReport_AllTime_{filterType}_{DateTime.Now:yyyyMMdd}.xlsx";
 
                 return File(excelData,
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -811,20 +839,24 @@ namespace PharmacyBackend.Controllers
             }
         }
         */
-        
+
         //Fast-Moving Products
 
         [HttpGet("reports/fast-moving-products")]
         public async Task<IActionResult> GetFastMovingProductsReport(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int topN = 20)
         {
             try
             {
-                // Convert to UTC
-                var startDateUtc = DateTime.SpecifyKind(startDate, DateTimeKind.Utc);
-                var endDateUtc = DateTime.SpecifyKind(endDate, DateTimeKind.Utc);
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
+                    : null;
 
                 var report = await _getService.GetFastMovingProductsReportAsync(
                     startDateUtc,
@@ -842,18 +874,28 @@ namespace PharmacyBackend.Controllers
         /*
         [HttpGet("reports/fast-moving-products/export")]
         public async Task<IActionResult> ExportFastMovingProductsReport(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
             [FromQuery] int topN = 20)
         {
             try
             {
+                // Convert to UTC only if dates are provided
+                DateTime? startDateUtc = startDate.HasValue 
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                    : null;
+                DateTime? endDateUtc = endDate.HasValue 
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                    : null;
+
                 var excelData = await _getService.ExportFastMovingProductsToExcelAsync(
-                    startDate,
-                    endDate,
+                    startDateUtc,
+                    endDateUtc,
                     topN);
 
-                var fileName = $"FastMovingProducts_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}_Top{topN}.xlsx";
+                var fileName = startDate.HasValue && endDate.HasValue
+                    ? $"FastMovingProducts_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}_Top{topN}.xlsx"
+                    : $"FastMovingProducts_AllTime_Top{topN}_{DateTime.Now:yyyyMMdd}.xlsx";
 
                 return File(excelData,
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

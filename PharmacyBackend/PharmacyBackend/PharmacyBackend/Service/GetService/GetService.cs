@@ -1539,14 +1539,12 @@ namespace PharmacyBackend.Service.GetService
         #endregion
 
         #region Reports
-        
-        //Sales-Reports
 
         public async Task<SalesReportDto> GetSalesReportAsync(
-            DateTime startDate,
-            DateTime endDate,
-            int? employeeId = null,
-            string paymentMethod = null)
+             DateTime? startDate = null,
+             DateTime? endDate = null,
+             int? employeeId = null,
+             string paymentMethod = null)
         {
             var transactions = await _getRepo.GetSalesReportDataAsync(
                 startDate,
@@ -1605,8 +1603,8 @@ namespace PharmacyBackend.Service.GetService
         //Inventory-Reports
 
         public async Task<InventoryReportDto> GetInventoryReportAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             string filterType = "all")
         {
             var inventories = await _getRepo.GetInventoryReportDataAsync(
@@ -1670,8 +1668,8 @@ namespace PharmacyBackend.Service.GetService
         //Fast-Moving Products
 
         public async Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             int topN = 20)
         {
             var productsData = await _getRepo.GetFastMovingProductsDataAsync(

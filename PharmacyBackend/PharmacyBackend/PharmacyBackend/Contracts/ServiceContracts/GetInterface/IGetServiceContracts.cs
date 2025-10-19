@@ -159,8 +159,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #region Reports
         // Sales Reports
         Task<SalesReportDto> GetSalesReportAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             int? employeeId = null,
             string paymentMethod = null);
 
@@ -172,8 +172,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 
         // Inventory Reports
         Task<InventoryReportDto> GetInventoryReportAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             string filterType = "all");
 
         /*Task<byte[]> ExportInventoryReportToExcelAsync(
@@ -183,8 +183,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 
         // Fast-Moving Products
         Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
-            DateTime startDate,
-            DateTime endDate,
+            DateTime? startDate = null,
+            DateTime? endDate = null,
             int topN = 20);
 
         /*Task<byte[]> ExportFastMovingProductsToExcelAsync(
