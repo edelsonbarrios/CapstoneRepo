@@ -35,6 +35,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   selectedSupplier: Supplier = new Supplier();
   purchaseOrderNumber: string = '';
   showSuccessAlert: boolean = false;
+  selectSupplier: boolean = false;
 
   // Search filter
   searchQuery: string = '';
@@ -96,7 +97,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   openProductsForm() {
     if (!this.selectedSupplier || !this.selectedSupplier.products?.length) {
-      alert('Please select a supplier with available products first.');
+      this.selectSupplier = true;
       return;
     }
     this.openProductForm = true;
@@ -272,5 +273,9 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   closeSuccessAlert() {
     this.showSuccessAlert = false;
+  }
+
+  closeSelectSupplierForm() {
+    this.selectSupplier = false;
   }
 }

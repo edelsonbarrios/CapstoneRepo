@@ -153,6 +153,16 @@
   ></app-purchase-order-products>
 </div>
 
+<div class="success-overlay" *ngIf="selectSupplier">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Please select a supplier first.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSelectSupplierForm()">OK</button>
+    </div>
+  </div>
+</div>
+
 <!-- Success Alert Modal -->
 <div class="success-overlay" *ngIf="showSuccessAlert">
   <div class="success-alert">
