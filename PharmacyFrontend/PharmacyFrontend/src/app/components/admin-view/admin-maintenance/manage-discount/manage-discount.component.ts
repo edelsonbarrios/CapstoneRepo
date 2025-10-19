@@ -8,11 +8,12 @@ import { NgFor, NgIf } from '@angular/common';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { Product } from '../../../../models/product-models/product';
 import { EditDiscountComponent } from '../edit-discount/edit-discount.component';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 
 @Component({
   selector: 'app-manage-discount',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, EditDiscountComponent],
+  imports: [FormsModule, NgFor, NgIf, EditDiscountComponent, ArchiveConfirmationComponent],
   templateUrl: './manage-discount.component.html',
   styleUrl: './manage-discount.component.scss',
 })
@@ -24,6 +25,7 @@ export class ManageDiscountComponent implements OnInit {
   editDiscount?: Product | null;
   showSuccessAlert: boolean = false;
   successMessage: string = '';
+  showArchiveForm: number = 0;
 
   // Pagination properties
   currentPage: number = 1;
@@ -38,6 +40,14 @@ export class ManageDiscountComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllDiscount();
+  }
+
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
   }
 
   getAllDiscount() {
@@ -93,12 +103,11 @@ export class ManageDiscountComponent implements OnInit {
     });
   }
 
-  archiveDiscount(discount: Discount) {
-    if (!discount) return;
-    this.updateService.archiveDiscountAsync(discount.id).subscribe({
+  archiveDiscount() {
+    this.updateService.archiveDiscountAsync(this.showArchiveForm).subscribe({
       next: mes => {
-        this.successMessage = 'Discount has been Archived Successfully';
-        this.showSuccessAlert = true;
+        this.showArchiveForm = 0;
+        this.getAllDiscount();
       },
       error: err => {
         alert(`${err.error.message}`);

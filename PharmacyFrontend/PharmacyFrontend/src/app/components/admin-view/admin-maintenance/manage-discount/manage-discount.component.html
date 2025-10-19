@@ -7,7 +7,6 @@
       <input type="text" id="discount-name" name="discount-name" placeholder="Discount Name"
         [(ngModel)]="newDiscount.discountName">
       <input type="text" id="value" name="value" placeholder="Value" [(ngModel)]="newDiscount.discountRate">
-      <input type="date" id="ddate" name="ddate">
     </div>
     <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
     <button class="btn-save" (click)="createNewDiscount()">Save Discount</button>
@@ -36,7 +35,7 @@
           <td>Active</td>
           <td>
             <button class="btn-edit" (click)="openEditDiscountForm()">Edit</button>
-            <button class="btn-archive" (click)="archiveDiscount(d)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveForm(d.id)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -64,4 +63,16 @@
       <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'Discount successfully deleted.'"
+  [message]="'Do you really want to delete this discount?'"
+
+  (onArchive)="archiveDiscount()"
+  (onCancel)="closeArchiveForm()"
+  ></app-archive-confirmation>
 </div>

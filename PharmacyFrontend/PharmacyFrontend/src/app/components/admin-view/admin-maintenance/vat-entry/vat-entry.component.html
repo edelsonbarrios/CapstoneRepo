@@ -6,7 +6,6 @@
     <div class="vat-control" [class.error]="vatError">
       <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name" [(ngModel)]="createdVat.vatName">
       <input type="text" id="rate" name="rate" placeholder="Rate (%)" [(ngModel)]="createdVat.vatRate">
-      <input type="date" id="vdate" name="vdate" [(ngModel)]="createdVat.dateCreated">
     </div>
     <p class="error-message" *ngIf="vatError">{{ vatError }}</p>
     <button class="btn-save" (click)="createNewVat()">Save VAT</button>
@@ -33,7 +32,7 @@
           <td>{{v.dateCreated | date: 'dd-MM-yyyy'}}</td>
           <td>
             <button class="btn-edit" (click)="openEditVatForm()">Edit</button>
-            <button class="btn-archive" (click)="archiveVat(v)">Archive</button>
+            <button class="btn-archive" (click)="openArchiveForm(v.vatid)">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -61,4 +60,16 @@
       <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showArchiveForm">
+  <app-archive-confirmation
+  *ngIf="showArchiveForm"
+  [id]="showArchiveForm"
+  [alertMessage]="'VAT successfully deleted.'"
+  [message]="'Do you really want to delete this VAT?'"
+
+  (onArchive)="archiveVat()"
+  (onCancel)="closeArchiveForm()"
+  ></app-archive-confirmation>
 </div>

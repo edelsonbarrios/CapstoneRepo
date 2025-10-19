@@ -9,11 +9,19 @@ import { Discount } from '../../../../models/discount-models/discount';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { Product } from '../../../../models/product-models/product';
 import { EditVatComponent } from '../edit-vat/edit-vat.component';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 
 @Component({
   selector: 'app-vat-entry',
   standalone: true,
-  imports: [FormsModule, NgForOf, DatePipe, NgIf, EditVatComponent],
+  imports: [
+    FormsModule, 
+    NgForOf, 
+    DatePipe, 
+    NgIf, 
+    EditVatComponent,
+    ArchiveConfirmationComponent
+  ],
   templateUrl: './vat-entry.component.html',
   styleUrl: './vat-entry.component.scss'
 })
@@ -25,6 +33,7 @@ export class VatEntryComponent implements OnInit{
   editVat ?: Product | null;
   showSuccessAlert: boolean = false;
   successMessage: string = '';
+  showArchiveForm: number = 0;
   
   // Pagination properties
   currentPage: number = 1;
@@ -95,12 +104,20 @@ export class VatEntryComponent implements OnInit{
     });
   }
 
-  archiveVat(vat : VAT) {
-    if(!vat) return;
-    this.updateService.archiveVatAsync(vat.vatid).subscribe({
+  openArchiveForm(id: number) {
+    this.showArchiveForm = id;
+  }
+
+  closeArchiveForm() {
+    this.showArchiveForm = 0;
+  }
+
+  archiveVat() {
+    this.updateService.archiveVatAsync(this.showArchiveForm).subscribe({
       next: mes => {
         this.successMessage = 'VAT has been Archived Successfully';
-        this.showSuccessAlert = true;
+        this.showArchiveForm = 0;
+        this.getAllVat();
       },
       error: err => {
         alert(`${err.error.message}`);
