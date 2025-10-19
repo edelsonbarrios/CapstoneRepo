@@ -1,88 +1,110 @@
-.container {
+.wrapper {
   display: grid;
+  grid-template-rows: auto auto 1fr;
+  height: 100%;
   padding: 1rem;
   gap: 10px;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas: 
-  "total-sales top-selling"
-  "transaction transaction";
 
-  .total-sales {
-    grid-area: total-sales;
-  }
-
-  .top-selling {
-    grid-area: top-selling;
-  }
-
-  .transaction {
-    grid-area: transaction;
-  }
-
-  .grid-items {
+  .container {
     background: white;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 0.8rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #f1f5f9;
-    
+  }
 
-    .total-header {
+  .upper-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    .sub-container {
+      border: 1px solid red;
+      background: white;
+      border-radius: 12px;
+      padding: 0.8rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #f1f5f9;
+      flex: 1;
+
+      .content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        h3 {
+          font-size: 1.1rem;
+          font-weight: 600;
+        }
+
+        p {
+          font-size: 1.7rem;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .cntr-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .control {
       display: flex;
-      justify-content: space-between;
-      
-      span {
-        color: #3a76ca;
+      flex-direction: column;
+      flex: 1;
+      margin-top: 10px;
+
+      label {
+        font-size: 1rem;
       }
 
+      input,
       select {
-        border: 1px solid #3a76ca;
-        padding: 0.3rem;
-        border-radius: 10px;
-        color: #3a76ca;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        outline: none;
+        margin-right: 8px;
+
+        &:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
       }
     }
+  }
 
-    .total {
-      font-size: 3rem;
-      font-weight: 540; 
+  button {
+    background-color: rgb(17, 177, 17);
+    color: white;
+    margin-top: 10px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: rgb(14, 156, 14);
     }
 
-    h4 {
-      font-weight: 400;
-      color: rgb(107, 105, 105);
+    &:active {
+      opacity: 0.8;
     }
+  }
 
-    p {
-      font-size: 1.9rem;
-      font-weight: 500;
-    }
-
-    .growth-count {
-
-      p {
-        font-size: 1rem;
-        color: green;
-      }
-
-      span {
-        color: rgb(107, 105, 105);
-      }
-    }
-
-    .top-meds-table {
-      width: 100%;
-      border-collapse: collapse;
-
-      td {
-        font-size: 1rem;
-        font-weight: 300;
-        padding: 0.3rem;
-      }
-    }
-
-    .transaction-table {
+  .transaction-table {
       width: 100%;
       border-collapse: collapse;
 
@@ -103,5 +125,4 @@
         font-weight: 300;
       }
     }
-  }
 }

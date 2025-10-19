@@ -1,59 +1,71 @@
-<div class="container">
-  <!-- Inventory Summary Container -->
-  <div class="grid-items inventory-summary">
-    <div class="titles">Total Sales</div>
-    <div class="inv-wrapper">
+<main class="wrapper">
 
-      <!-- 1st grid sub container -->
-      <div class="sub-container">
-        <div class="sub-items item-code">
-          <div class="label">Item Code Tracked</div>
-          <div class="value">120</div>
-        </div>
-        <div class="sub-items units-onhand">
-          <div class="label">Units On Hand</div>
-          <div class="value">8,500</div>
-        </div>
-        <div class="sub-items stock-value">
-          <div class="label">Stock Value</div>
-          <div class="value">&#8369;250,000</div>
-        </div>
+  <div class="upper-container">
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Products</label>
+        <p>120</p>
       </div>
+    </div>
 
-        <!-- 2nd grid sub container -->
-      <div class="date-controls">
-        <div class="date-items">
-          <div class="date-label">Starting Date</div>
-          <input type="date" class="date-input" placeholder="mm/dd/yy">
-        </div>
-        <div class="date-items">
-          <div class="date-label">Ending Date</div>
-          <input type="date" class="date-input" placeholder="mm/dd/yy">
-        </div>
-        <div class="condition-items">
-          <div class="con-label">Condition</div>
-          <select class="condition-select">
-            <option value="all">All</option>
-            <option value="good">Good</option>
-            <option value="fair">Fair</option>
-            <option value="poor">Poor</option>
-          </select>
-        </div>
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Value</label>
+        <p>120</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Products</label>
+        <p>&#8369;500,000.00</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Critical Stock</label>
+        <p>15</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Near Expiry</label>
+        <p>8</p>
       </div>
     </div>
   </div>
 
-  <!-- Total Sales Container -->
-  <div class="grid-items total-sales">
-    <div class="titles">
-      Total Sales
+  <div class="middle container">
+    <h2>Inventory Report</h2>
+
+    <div class="cntr-control">
+      <div class="control">
+        <label>Start Date</label>
+        <input type="date" />
+      </div>
+    
+      <div class="control">
+        <label>End Date</label>
+        <input type="date" />
+      </div>
+    
+      <div class="control">
+        <label>Filter Type</label>
+        <select id="filter">
+          <option value="">All Inventory</option>
+        </select>
+      </div>
     </div>
+
+    <button>Export Excel</button>
   </div>
 
-  <!-- Inventory Details Container -->
-  <div class="grid-items inventory-details">
-    <div class="titles">Inventory Details</div>
-    <table class="detail-table">
+  <div class="lower container">
+    <h2>Inventory Details</h2>
+
+    <table class="inventory-table">
       <thead>
         <tr>
           <th>Product</th>
@@ -89,15 +101,7 @@
           <td>200</td>
           <td>Overstock</td>
         </tr>
-        <tr>
-          <td>Bioflu 500mg</td>
-          <td>BIOF-500</td>
-          <td>Cold & Flu</td>
-          <td>900</td>
-          <td>200</td>
-          <td>Overstock</td>
-        </tr>
       </tbody>
     </table>
   </div>
-</div>
+</main>

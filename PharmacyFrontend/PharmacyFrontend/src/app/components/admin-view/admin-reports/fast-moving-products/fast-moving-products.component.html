@@ -1,65 +1,97 @@
 <main class="wrapper">
-  <div class="fast-moving-products">
-    <h1>Fast Moving Product <span>(August)</span></h1>
 
-    <!-- FAST MOVING PRODUCT CONTROLS -->
-    <div class="control">
-      <div class="date">
-        <div class="starting-date">
-          <label>Starting Date</label>
-          <input type="date">
-        </div>
-
-        <div class="ending-date">
-          <label>Ending Date</label>
-          <input type="date">
-        </div>
+  <div class="upper-container">
+    <div class="sub-container">
+      <div class="content">
+        <label>Produc Sold</label>
+        <p>89</p>
       </div>
+    </div>
 
-      <div class="show-top">
-        <label>Show Top</label>
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Quantity</label>
+        <p>150</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Revenue</label>
+        <p>&#8369;125,000.00</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="middle container">
+    <h2>Fast-Moving Product Report</h2>
+
+    <div class="cntr-control">
+      <div class="control">
+        <label>Start Date</label>
+        <input type="date" />
+      </div>
+    
+      <div class="control">
+        <label>End Date</label>
+        <input type="date" />
+      </div>
+    
+      <div class="control">
+        <label>Top N Products</label>
         <select id="top">
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-          <option>6</option>
-          <option>7</option>
-          <option>8</option>
-          <option>9</option>
-          <option>10</option>
+          <option value="">Top Products</option>
+          <option value="top-10">Top 10</option>
+          <option value="top-20">Top 20</option>
+          <option value="top-50">Top 50</option>
+          <option value="top-100">Top 1000</option>
         </select>
       </div>
     </div>
 
-    <!-- FAST MOVING PRODUCT FLEX TABLE-->
-    <div class="container">
-      <div class="meds">
-        <p>Biogesic 500mg</p>
-        <p>Cecon 500mg</p>
-        <p>Bioflu 500mg</p>
-        <p>Amoxicillin 500mg</p>
-        <p>Cetirizine 10mg</p>
-        <p>Paracetamol 250mg</p>
-        <p>Vitamin D3 1000IU</p>
-        <p>Loperamide 2mg</p>
-        <p>Mefenamic Acid</p>
-        <p>Omeprazole 20mg</p>
-      </div>
+    <button>Export Excel</button>
+  </div>
 
-      <div class="solds">
-        <p>500 sold</p>
-        <p>450 sold</p>
-        <p>400 sold</p>
-        <p>350 sold</p>
-        <p>300 sold</p>
-        <p>250 sold</p>
-        <p>200 sold</p>
-        <p>150 sold</p>
-        <p>100 sold</p>
-        <p>50 sold</p>
-      </div>
-    </div>
+  <div class="lower container">
+    <h2>Product Ranking</h2>
+
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Qty Sold</th>
+          <th>Revenue</th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Biogesic 500mg</td>
+          <td>BIO-500</td>
+          <td>Pain Relief</td>
+          <td>320</td>
+          <td>150</td>
+          <td><span>Ok</span></td>
+        </tr>
+        <tr>
+          <td>Cecon 500mg</td>
+          <td>CEC-500</td>
+          <td>Vitamins</td>
+          <td>60</td>
+          <td>80</td>
+          <td>Critical</td>
+        </tr>
+        <tr>
+          <td>Bioflu 500mg</td>
+          <td>BIOF-500</td>
+          <td>Cold & Flu</td>
+          <td>900</td>
+          <td>200</td>
+          <td>Overstock</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </main>
