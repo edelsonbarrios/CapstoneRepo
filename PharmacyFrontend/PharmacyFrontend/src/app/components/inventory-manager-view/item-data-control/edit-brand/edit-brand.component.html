@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!showSuccessAlert">
   <!-- EDIT BRAND HEADER -->
   <div class="modal-header">
     <h2>Edit Brand Name</h2>
@@ -14,5 +14,14 @@
   <div class="modal-footer">
     <button class="btn-save" (click)="updateBrand()">Update</button>
     <button class="btn-cancel" (click)="closeEditBrandForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-alert" *ngIf="showSuccessAlert">
+  <div class="alert-icon">✓</div>
+  <p class="alert-message">Item has been Updated</p>
+  <div class="alert-footer">
+    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>

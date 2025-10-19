@@ -17,6 +17,7 @@ export class EditClassificationComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   classificationNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService : UpdateService
@@ -34,14 +35,18 @@ export class EditClassificationComponent {
 
     this.updateService.updateClassificationAsync(this.editClassification.classificationID, this.editClassification).subscribe({
       next: res => {
-        alert(`Classification successfully updated.`);
-        this.closeEditClassificationForm();
+        this.showSuccessAlert = true;
       },
       error : err => {
         console.log(`${err.error}`);
         this.editClassification.classificationName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeEditClassificationForm();
   }
 
   closeEditClassificationForm() {

@@ -18,6 +18,7 @@ export class EditTypeComponent {
   @Output() closeForm = new EventEmitter<void>();
   
   typeNameError: string = '';
+  showSuccessAlert: boolean = false;
 
   constructor(
     private updateService : UpdateService
@@ -36,14 +37,18 @@ export class EditTypeComponent {
     if(!this.editType) return;
     this.updateService.updateTypeAsync(this.editType.typeID, this.editType).subscribe({
       next: res => {
-        alert(`Type successfully updated.`);
-        this.closeEditTypeForm();
+        this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
         this.editType.typeName = '';
       }
     });
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+    this.closeEditTypeForm();
   }
 
   closeEditTypeForm() {
