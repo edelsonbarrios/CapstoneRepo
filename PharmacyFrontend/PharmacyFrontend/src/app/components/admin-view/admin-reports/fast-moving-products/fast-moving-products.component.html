@@ -67,31 +67,27 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Biogesic 500mg</td>
-          <td>BIO-500</td>
-          <td>Pain Relief</td>
-          <td>320</td>
-          <td>150</td>
-          <td><span>Ok</span></td>
+        <tr *ngIf="products.length === 0">
+          <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
+            No recent data
+          </td>
         </tr>
-        <tr>
-          <td>Cecon 500mg</td>
-          <td>CEC-500</td>
-          <td>Vitamins</td>
-          <td>60</td>
-          <td>80</td>
-          <td>Critical</td>
-        </tr>
-        <tr>
-          <td>Bioflu 500mg</td>
-          <td>BIOF-500</td>
-          <td>Cold & Flu</td>
-          <td>900</td>
-          <td>200</td>
-          <td>Overstock</td>
+        <tr *ngFor="let p of paginatedProducts">
+          <td>{{p.rank}}</td>
+          <td>{{p.product}}</td>
+          <td>{{p.category}}</td>
+          <td>{{p.qtySold}}</td>
+          <td>{{p.revenue}}</td>
+          <td><span>{{p.stock}}</span></td>
         </tr>
       </tbody>
     </table>
+
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="products.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </div>
 </main>
