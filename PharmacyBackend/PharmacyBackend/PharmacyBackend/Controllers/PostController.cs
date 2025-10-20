@@ -143,7 +143,9 @@ namespace PharmacyBackend.Controllers
 
             if (dto == null)
                 return BadRequest("Discount data is required.");
-
+            var validation = await _postService.ValidateDiscountNameAsync(dto.DiscountName);
+            if (!validation)
+                return BadRequest("Discount already exist.");
             try
             {
                 var result = await _postService.CreateDiscountAsync(dto);

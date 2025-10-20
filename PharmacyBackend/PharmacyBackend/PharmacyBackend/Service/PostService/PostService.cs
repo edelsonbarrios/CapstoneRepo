@@ -235,8 +235,11 @@ namespace PharmacyBackend.Service.PostService
         #endregion
 
         #region Discount
-        public async Task<DiscountDto> CreateDiscountAsync(CreateDiscountDto dto)
+        public async Task<bool> CreateDiscountAsync(CreateDiscountDto dto)
         {
+            var validation = await _postRepo.ValidateDiscountNameAsync(dto.DiscountName);
+            if (!validation)
+                return false;
             var discount = new Discount
             {
                 DiscountName = dto.DiscountName,
@@ -245,12 +248,16 @@ namespace PharmacyBackend.Service.PostService
             };
 
             var result = await _postRepo.CreateDiscountAsync(discount);
-            return new DiscountDto
-            {
-                Id = result.Id,
-                DiscountName = result.DiscountName,
-                DiscountRate = result.DiscountRate
-            };
+            return true;
+        }
+        public async Task<bool> ValidateDiscountNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return false;
+            var validation = await _postRepo.ValidateDiscountNameAsync(name);
+            if (!validation)
+                return false;
+            return validation;
         }
         #endregion
 

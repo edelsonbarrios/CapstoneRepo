@@ -435,11 +435,18 @@ namespace PharmacyBackend.Repository.POST
         #endregion
 
         #region Discount
-        public async Task<Discount> CreateDiscountAsync(Discount discount)
+        public async Task<bool> CreateDiscountAsync(Discount discount)
         {
             await _context.Discounts.AddAsync(discount);
             await _context.SaveChangesAsync();
-            return discount;
+            return true;
+        }
+        public async Task<bool> ValidateDiscountNameAsync(string name)
+        {
+            var validation = await _context.Discounts.AnyAsync(d => d.DiscountName.Equals(name) && d.IsActive);
+            if (validation)
+                return false;
+            return true;
         }
         #endregion
 
@@ -570,7 +577,7 @@ namespace PharmacyBackend.Repository.POST
         public async Task<bool> VatNameValidationAsync(string name)
         {
             if (string.IsNullOrEmpty(name)) return false;
-            var vatNameValidation = await _context.VAT.AnyAsync(v => v.VATName.Equals(name));
+            var vatNameValidation = await _context.VAT.AnyAsync(v => v.VATName.Equals(name) && v.IsActive == true);
             if (vatNameValidation)
                 return false;
             return true;

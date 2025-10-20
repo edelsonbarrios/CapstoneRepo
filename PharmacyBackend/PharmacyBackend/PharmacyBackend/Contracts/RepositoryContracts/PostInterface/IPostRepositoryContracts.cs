@@ -30,7 +30,8 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         #endregion
 
         #region Discount
-        public Task<Discount> CreateDiscountAsync(Discount discount);
+        public Task<bool> CreateDiscountAsync(Discount discount);
+        public Task<bool> ValidateDiscountNameAsync(string name);
         #endregion
 
         #region Product
