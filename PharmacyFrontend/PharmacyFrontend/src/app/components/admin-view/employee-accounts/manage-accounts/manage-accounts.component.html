@@ -24,7 +24,7 @@
           <td>{{a.username}}</td>
           <td>{{a.password}}</td>
           <td>
-            <button class="btn details">Reset Password</button>
+            <button class="btn details" (click)="resetPassword(a.id)">Reset Password</button>
           </td>
         </tr>
       </tbody>
@@ -39,10 +39,10 @@
   </div>
 </div>
 
-<div class="success-overlay" *ngIf="showSuccessMessage">
+<div class="modal-overlay" *ngIf="showSuccessMessage">
   <div class="success-alert">
     <div class="alert-icon">✓</div>
-    <p class="alert-message">Please select a supplier first.</p>
+    <p class="alert-message">{{showSuccessMessage}}</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeResetPasswordMessage()">OK</button>
     </div>
