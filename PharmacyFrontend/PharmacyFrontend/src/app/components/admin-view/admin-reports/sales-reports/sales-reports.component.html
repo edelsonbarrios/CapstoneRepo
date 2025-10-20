@@ -3,36 +3,29 @@
   <div class="upper-container">
     <div class="sub-container">
       <div class="content">
-        <label>Total Products</label>
-        <p>120</p>
+        <label>Total Transactions</label>
+        <p>{{ salesReport?.summary?.totalTransactions }}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
-        <label>Total Value</label>
-        <p>120</p>
+        <label>Net Revenue</label>
+        <p>{{ salesReport?.summary?.netRevenue | currency:'PHP':'symbol-narrow' }}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
-        <label>Total Products</label>
-        <p>&#8369;500,000.00</p>
+        <label>Total Items Sold</label>
+        <p>{{ salesReport?.summary?.totalItemsSold }}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
-        <label>Critical Stock</label>
-        <p>15</p>
-      </div>
-    </div>
-
-    <div class="sub-container">
-      <div class="content">
-        <label>Near Expiry</label>
-        <p>8</p>
+        <label>Average Transactions</label>
+        <p>{{ salesReport?.summary?.averageTransaction | currency:'PHP':'symbol-narrow' }}</p>
       </div>
     </div>
   </div>
@@ -43,62 +36,75 @@
     <div class="cntr-control">
       <div class="control">
         <label>Start Date</label>
-        <input type="date" />
+        <input 
+          type="date" 
+          [(ngModel)]="startDate" 
+          (change)="onFilterChange()"
+        />
       </div>
     
       <div class="control">
         <label>End Date</label>
-        <input type="date" />
+        <input 
+          type="date" 
+          [(ngModel)]="endDate" 
+          (change)="onFilterChange()"
+        />
       </div>
     
       <div class="control">
         <label>Employee</label>
-        <select id="employee">
-          <option value="">All Employee</option>
+        <select 
+          [(ngModel)]="selectedEmployeeId" 
+          (change)="onFilterChange()"
+        >
+          <option [value]="null">All Employee</option>
+          <option *ngFor="let emp of cashiers" [ngValue]="emp.id">
+            {{ emp.fullName }}
+          </option>
         </select>
       </div>
 
       <div class="control">
         <label>Payment Method</label>
-        <select id="payment">
+        <select 
+          [(ngModel)]="selectedPaymentMethod" 
+          (change)="onFilterChange()"
+        >
           <option value="">All Method</option>
+          <option *ngFor="let method of paymentMethods" [value]="method">
+            {{ method }}
+          </option>
         </select>
       </div>
     </div>
 
-    <button>Export Excel</button>
+    <button (click)="exportToExcel()">Export Excel</button>
+    <button (click)="resetFilterValues()">Reset</button>
   </div>
 
   <div class="lower container">
     <h2>Transaction Details</h2>
 
-    <table class="transaction-table">
+    <div *ngIf="loading" class="loading">Loading...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <table class="transaction-table" *ngIf="!loading && salesReport">
       <thead>
         <tr>
           <th>Date</th>
           <th>Order #</th>
           <th>Total</th>
-          <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>2025&ndash;06&ndash;10</td>
-          <td>SO&ndash;1000</td>
-          <td>&#8369;1,500</td>
-          <td>Pending</td>
+        <tr *ngFor="let transaction of salesReport.transactions">
+          <td>{{ transaction.transactionDate | date:'yyyy-MM-dd' }}</td>
+          <td>{{ transaction.invoiceNumber }}</td>
+          <td>{{ transaction.totalAmount | currency:'PHP':'symbol-narrow' }}</td>
         </tr>
-        <tr>
-          <td>2025&ndash;06&ndash;11</td>
-          <td>SO&ndash;1001</td>
-          <td>&#8369;2,000</td>
-          <td>Paid</td>
-        </tr>
-        <tr>
-          <td>2025&ndash;06&ndash;12</td>
-          <td>SO&ndash;1002</td>
-          <td>&#8369;2,500</td>
-          <td>Pending</td>
+        <tr *ngIf="salesReport.transactions.length === 0">
+          <td colspan="4" style="text-align: center;">No transactions found</td>
         </tr>
       </tbody>
     </table>

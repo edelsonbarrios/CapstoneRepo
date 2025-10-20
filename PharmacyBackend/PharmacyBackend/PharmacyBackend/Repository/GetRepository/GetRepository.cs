@@ -780,6 +780,12 @@ namespace PharmacyBackend.Repository.GET
                 .AsQueryable();
 
             // Apply date filter only if BOTH dates are provided
+            if(startDate.HasValue && !endDate.HasValue)
+            {
+                var startDateUtc = startDate.Value.Date;
+                query = query.Where(st => st.TransactionDate.Date >= startDateUtc);
+            }
+
             if (startDate.HasValue && endDate.HasValue)
             {
                 var startDateUtc = startDate.Value.Date;

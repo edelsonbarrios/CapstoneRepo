@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { last, Observable, ObservedValueOf } from 'rxjs';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
@@ -19,149 +19,207 @@ import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order
 import { Inventory } from '../../models/inventory-module-models/inventory';
 import { SalesTransaction } from '../../models/sales-transaction-models/sales-transaction';
 import { DailySalesSummary } from '../../models/sales-transaction-models/daily-sales-summary';
+import { SalesReport } from '../../models/report-models/sales-report';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GetService {
   apiUrl = `${BaseApiUrl}`;
-  constructor(
-    private httpClient : HttpClient
-  ) { } 
+  constructor(private httpClient: HttpClient) {}
 
   //Employees Service
-  GetAllEmployees() : Observable<Employee[]> {
+  GetAllEmployees(): Observable<Employee[]> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeAll`);
   }
 
-  GetEmployeeById(employeeId : number) : Observable<Employee> {
-    return this.httpClient.get<Employee>(`${this.apiUrl}/Get/Employee?id=${employeeId}`);
+  GetEmployeeById(employeeId: number): Observable<Employee> {
+    return this.httpClient.get<Employee>(
+      `${this.apiUrl}/Get/Employee?id=${employeeId}`
+    );
   }
 
-  GetEmployeesByLastName(lastName: string) : Observable<Employee[]>{
-    return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/EmployeeLastName?lastName=${lastName}`);
+  GetEmployeesByLastName(lastName: string): Observable<Employee[]> {
+    return this.httpClient.get<Employee[]>(
+      `${this.apiUrl}/Get/EmployeeLastName?lastName=${lastName}`
+    );
   }
 
-  GetDisplayEmployees() : Observable<Employee[]> {
-    return this.httpClient.get<Employee[]>(`${this.apiUrl}/Get/DisplayEmployees`);
+  GetDisplayEmployees(): Observable<Employee[]> {
+    return this.httpClient.get<Employee[]>(
+      `${this.apiUrl}/Get/DisplayEmployees`
+    );
   }
   //Employee Service End
 
-
   //Accounts Service
-  GetAllAccounts() : Observable<Account[]> {
+  GetAllAccounts(): Observable<Account[]> {
     return this.httpClient.get<Account[]>(`${this.apiUrl}/Get/AccountAll`);
   }
 
-  SearchAccountByUserName(userName: string) : Observable<Account>{
-    return this.httpClient.get<Account>(`${this.apiUrl}/Get/SearchAccount?userName=${userName}`);
+  SearchAccountByUserName(userName: string): Observable<Account> {
+    return this.httpClient.get<Account>(
+      `${this.apiUrl}/Get/SearchAccount?userName=${userName}`
+    );
   }
   //Account Service End
 
   //VAT Service
-  getAllVatAsync() : Observable<VAT[]> {
+  getAllVatAsync(): Observable<VAT[]> {
     return this.httpClient.get<VAT[]>(`${this.apiUrl}/Get/VATAll`);
   }
   //VAT Service End
 
   //Discount Service
-  getAllDiscountAsync() : Observable<Discount[]> {
+  getAllDiscountAsync(): Observable<Discount[]> {
     return this.httpClient.get<Discount[]>(`${this.apiUrl}/Get/DiscountAll`);
   }
   //Discount Service End
-  //Employee History Service 
-  getAllEmployeeHistoriesAsync() : Observable<EmployeeHistory[]> {
-    return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryAll`);
+  //Employee History Service
+  getAllEmployeeHistoriesAsync(): Observable<EmployeeHistory[]> {
+    return this.httpClient.get<EmployeeHistory[]>(
+      `${this.apiUrl}/Get/EmployeeHistoryAll`
+    );
   }
-  
-  getDisplayEmployeeHistoriesAsync() : Observable<EmployeeHistory[]>{
-    return this.httpClient.get<EmployeeHistory[]>(`${this.apiUrl}/Get/EmployeeHistoryDisplay`);
+
+  getDisplayEmployeeHistoriesAsync(): Observable<EmployeeHistory[]> {
+    return this.httpClient.get<EmployeeHistory[]>(
+      `${this.apiUrl}/Get/EmployeeHistoryDisplay`
+    );
   }
   //Employee History Service End
 
   //Category Service
-  getAllCategoriesAsync() : Observable<Category[]> {
+  getAllCategoriesAsync(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(`${this.apiUrl}/Get/CategoryAll`);
   }
-  //CategoryService End 
+  //CategoryService End
 
   //Brand Service
-  getAllBrandsAsync() : Observable<Brand[]> {
+  getAllBrandsAsync(): Observable<Brand[]> {
     return this.httpClient.get<Brand[]>(`${this.apiUrl}/Get/BrandAll`);
   }
   //Brand Service End
 
   //Generic Service
-  getAllGenericsAsync() : Observable<Generic[]> {
+  getAllGenericsAsync(): Observable<Generic[]> {
     return this.httpClient.get<Generic[]>(`${this.apiUrl}/Get/GenericAll`);
   }
   //Generic Service End
 
   //Type Service
-  getAllTypesAsync() : Observable<TypeModel[]> {
+  getAllTypesAsync(): Observable<TypeModel[]> {
     return this.httpClient.get<TypeModel[]>(`${this.apiUrl}/Get/TypeAll`);
   }
   //Type Service End
 
   //Formulation Service
-  getAllFormulationsAsync() : Observable<Formulation[]> {
-    return this.httpClient.get<Formulation[]>(`${this.apiUrl}/Get/FormulationAll`);
+  getAllFormulationsAsync(): Observable<Formulation[]> {
+    return this.httpClient.get<Formulation[]>(
+      `${this.apiUrl}/Get/FormulationAll`
+    );
   }
   //FormulationS Service End
 
   //Classification Service
-  getAllClassificationAsync() : Observable<Classification[]> {
-    return this.httpClient.get<Classification[]>(`${this.apiUrl}/Get/ClassificationAll`);
+  getAllClassificationAsync(): Observable<Classification[]> {
+    return this.httpClient.get<Classification[]>(
+      `${this.apiUrl}/Get/ClassificationAll`
+    );
   }
   //Classification Service End
 
   //Supplier Service
-  getAllSuppliersAsync() : Observable<Supplier[]> {
+  getAllSuppliersAsync(): Observable<Supplier[]> {
     return this.httpClient.get<Supplier[]>(`${this.apiUrl}/Get/SupplierAll`);
   }
-  getSupplierByIdAsync(id: number) : Observable<Supplier> {
+  getSupplierByIdAsync(id: number): Observable<Supplier> {
     return this.httpClient.get<Supplier>(`${this.apiUrl}/Get/SupplierId`);
   }
   //Supplier Service End
 
   //Product Service
-  getAllProductsAsync() : Observable<Product[]>{
+  getAllProductsAsync(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${this.apiUrl}/Get/ProductAll`);
   }
   //Product Service End
 
   //Purchase Order Service
-  getAllPendingPurchaseOrdersAsync() : Observable<PurchaseOrder[]> {
-    return this.httpClient.get<PurchaseOrder[]>(`${this.apiUrl}/Get/PurchaseOrderPendings`);
+  getAllPendingPurchaseOrdersAsync(): Observable<PurchaseOrder[]> {
+    return this.httpClient.get<PurchaseOrder[]>(
+      `${this.apiUrl}/Get/PurchaseOrderPendings`
+    );
   }
   //Purchase Order Service End
 
   //Inventory Service
-  getAllInventoriesAsync() : Observable<any>{ 
+  getAllInventoriesAsync(): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryAll`);
   }
-  getAllAvailableInventoriesAsync() : Observable<Inventory[]> {
-    return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoryAvailable`);
+  getAllAvailableInventoriesAsync(): Observable<Inventory[]> {
+    return this.httpClient.get<Inventory[]>(
+      `${this.apiUrl}/Get/InventoryAvailable`
+    );
   }
-  getInventoryDashboardValues() : Observable<any> {
+  getInventoryDashboardValues(): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryDashboard`);
   }
   //Inventory Service End
 
   //Stock Movement Service
-  getAllStockMovementsAsync() : Observable<any> {
+  getAllStockMovementsAsync(): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/Get/StockMovementAll`);
   }
   //Stock Movement Service End
 
   //Transaction Service
-  getAllSalesTransactionsAsync() : Observable<SalesTransaction[]> {
-    return this.httpClient.get<SalesTransaction[]>(`${this.apiUrl}/Get/TransactionAll`);
+  getAllSalesTransactionsAsync(): Observable<SalesTransaction[]> {
+    return this.httpClient.get<SalesTransaction[]>(
+      `${this.apiUrl}/Get/TransactionAll`
+    );
   }
-  getDailySalesSummaryAsync() : Observable<DailySalesSummary> {
-    return this.httpClient.get<DailySalesSummary>(`${this.apiUrl}/Get/daily-sales/summary`);
+  getDailySalesSummaryAsync(): Observable<DailySalesSummary> {
+    return this.httpClient.get<DailySalesSummary>(
+      `${this.apiUrl}/Get/daily-sales/summary`
+    );
   }
-  getSummarySalesForTodayAsync() : Observable<DailySalesSummary> {
-    return this.httpClient.get<DailySalesSummary>(`${this.apiUrl}/Get/DailySalesSummary`);
+  getSummarySalesForTodayAsync(): Observable<DailySalesSummary> {
+    return this.httpClient.get<DailySalesSummary>(
+      `${this.apiUrl}/Get/DailySalesSummary`
+    );
   }
-  //Transaction Service End 
+  //Transaction Service End
+
+  //Sales Report Service
+  getSalesReport(
+    startDate?: Date | string,
+    endDate?: Date | string,
+    employeeId?: number,
+    paymentMethod?: string
+  ): Observable<SalesReport> {
+    let params = new HttpParams();
+
+    if (startDate) {
+      const dateStr =
+        startDate instanceof Date ? startDate.toISOString() : startDate;
+      params = params.append('startDate', dateStr);
+    }
+
+    if (endDate) {
+      const dateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+      params = params.append('endDate', dateStr);
+    }
+
+    if (employeeId !== undefined && employeeId !== null) {
+      params = params.append('employeeId', employeeId.toString());
+    }
+
+    if (paymentMethod) {
+      params = params.append('paymentMethod', paymentMethod);
+    }
+
+    const url = `${this.apiUrl}/Get/reports/sales`;
+
+    return this.httpClient.get<SalesReport>(url, { params });
+  }
+  //Sales Report Service End
 }
