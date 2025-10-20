@@ -76,3 +76,13 @@
   (onCancel)="closeArchiveForm()"
   ></app-archive-confirmation>
 </div>
+
+<div class="modal-overlay" *ngIf="showErrorMessage">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">{{showErrorMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeValidationMessage()">OK</button>
+    </div>
+  </div>
+</div>

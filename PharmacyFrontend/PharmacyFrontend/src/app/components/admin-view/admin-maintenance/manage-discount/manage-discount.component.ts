@@ -26,6 +26,7 @@ export class ManageDiscountComponent implements OnInit {
   showSuccessAlert: boolean = false;
   successMessage: string = '';
   showArchiveForm: number = 0;
+  showErrorMessage: string = '';
 
   // Pagination properties
   currentPage: number = 1;
@@ -97,10 +98,16 @@ export class ManageDiscountComponent implements OnInit {
         this.showSuccessAlert = true;
       },
       error: (err) => {
-        alert(`${err.error}`);
+        this.showErrorMessage = err.error;
         this.errorMessage = err.error;
+        this.newDiscount.discountName = '';
+        this.newDiscount.discountRate = 0;
       },
     });
+  }
+
+  closeValidationMessage() {
+    this.showErrorMessage = '';
   }
 
   archiveDiscount() {
