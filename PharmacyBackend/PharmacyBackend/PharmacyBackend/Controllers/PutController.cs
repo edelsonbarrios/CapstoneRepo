@@ -69,6 +69,16 @@ namespace PharmacyBackend.Controllers
 
             return Ok(new UpdateAccountResponse { Message = "Account successfully updated." });
         }
+        [HttpPut("ResetAccountPassword")]
+        public async Task<ActionResult<object>> ResetAccountPasswordAsync(int accountId)
+        {
+            if (accountId == 0)
+                return NotFound(new { Message = "Account does not exist." });
+            var resetPassword = await _updateService.ResetAccountPasswordAsync(accountId);
+            if (!resetPassword)
+                return BadRequest(new { Message = "Password cannot be resetted." });
+            return Ok(new { Message = "Account successfully resetted." });
+        }
         #endregion
 
         #region Sale

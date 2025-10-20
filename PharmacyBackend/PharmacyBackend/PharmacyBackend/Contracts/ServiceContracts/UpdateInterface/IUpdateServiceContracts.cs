@@ -23,6 +23,10 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         public Task<bool> ArchiveEmployeeByIdAsync(ArchiveEmployeeHistoryRequest request);
         #endregion
 
+        #region Account
+        public Task<bool> ResetAccountPasswordAsync(int accountId);
+        #endregion
+
         #region Sales
         public Task<bool> UpdateSalesTransactionAsync(int id, UpdateSalesTransactionDto dto);
         #endregion

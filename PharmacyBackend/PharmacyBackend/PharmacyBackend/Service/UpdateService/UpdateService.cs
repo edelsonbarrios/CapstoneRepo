@@ -18,6 +18,8 @@ using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
 using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.DataContext;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Identity;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -57,6 +59,35 @@ namespace PharmacyBackend.Service.UpdateService
             if (!updateAccount)
                 return false;
             return true;
+        }
+        public async Task<bool> ResetAccountPasswordAsync(int accountId)
+        {
+            if (accountId == 0) return false;
+
+            var account = await _getRepo.GetAccountByIdAsync(accountId);
+            if (account is null)
+                return false;
+            var rolePosition = account.Employee.Role.RolePosition;
+            string password;
+            switch(rolePosition)
+            {
+                case "Administrator":
+                    password = AesHelper.Encrypt("admin");
+                    account.EncryptedPassword = password;
+                    break;
+                case "Inventory Manager":
+                    password = AesHelper.Encrypt("inventory");
+                    account.EncryptedPassword = password;
+                    break;
+                case "Cashier":
+                    password = AesHelper.Encrypt("cashier");
+                    account.EncryptedPassword = password;
+                    break;
+            }
+            var resetPassowrd = await _updateRepo.UpdateAccountAsync(account);
+            if (!resetPassowrd)
+                return false;
+            return resetPassowrd;
         }
         #endregion
 

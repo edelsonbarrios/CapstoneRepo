@@ -24,7 +24,7 @@
           <td>{{a.username}}</td>
           <td>{{a.password}}</td>
           <td>
-            <button class="btn details">See Details</button>
+            <button class="btn details">Reset Password</button>
           </td>
         </tr>
       </tbody>
@@ -35,6 +35,16 @@
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" *ngIf="showSuccessMessage">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Please select a supplier first.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeResetPasswordMessage()">OK</button>
     </div>
   </div>
 </div>

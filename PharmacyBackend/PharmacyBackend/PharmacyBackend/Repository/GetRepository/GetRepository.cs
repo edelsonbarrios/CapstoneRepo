@@ -25,7 +25,10 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<Account> GetAccountByIdAsync(int id)
         {
-            return await _context.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.Accounts
+                .Include(a => a.Employee)
+                .ThenInclude(e => e.Role)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<List<Account>> GetAllAccountsAsync()

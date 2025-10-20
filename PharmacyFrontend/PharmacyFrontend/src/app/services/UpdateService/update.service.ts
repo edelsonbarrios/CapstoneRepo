@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ArchiveEmployeeRequest } from '../../models/employee-models/archiveEmployeeRequest';
 import { Observable } from 'rxjs';
 import { Employee } from '../../models/employee-models/employee';
@@ -42,6 +42,16 @@ export class UpdateService {
     );
   }
   //Employee Service End
+
+  //Account Service
+  resetAccountPasswordAsync(accountId: number) : Observable<{message: string}> {
+    let params = new HttpParams();
+    if(accountId){
+      params = params.set('accountId', accountId);
+    }
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ResetAccountPassword`,{}, {params});
+  }
+  //Account Service End
 
   //Discount Service
   archiveDiscountAsync(discountId: number): Observable<{ message: string }> {

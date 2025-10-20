@@ -115,8 +115,10 @@ export class CashierDashboardComponent implements OnInit {
     if(!product) return [];
     if(product.unitMeasurement == 'Multi-Level') {
       return ['Piece','Sheet','Box'];
-    }else {
+    }else if(product.unitMeasurement == 'Dual-Level'){
       return ['Piece', 'Box']
+    }else {
+      return ['Piece']
     }
   }
 

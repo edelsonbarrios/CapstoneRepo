@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { GetService } from '../../../../services/GetService/get.service';
-import { NgFor, NgForOf } from '@angular/common';
+import { NgFor, NgForOf, NgIf } from '@angular/common';
 import { Account } from '../../../../models/account';
 import { FormsModule } from '@angular/forms';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-accounts',
   standalone: true,
-  imports: [NgForOf, FormsModule],
+  imports: [NgForOf, FormsModule, NgIf],
   templateUrl: './manage-accounts.component.html',
   styleUrl: './manage-accounts.component.scss'
 })
@@ -15,6 +16,7 @@ export class ManageAccountsComponent implements OnInit{
   accounts: Account[] = [];
   paginatedAccounts: Account[] = [];
   searchUsername: string = '';
+  showSuccessMessage: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -22,7 +24,8 @@ export class ManageAccountsComponent implements OnInit{
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService
+    private getService : GetService,
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -70,5 +73,17 @@ export class ManageAccountsComponent implements OnInit{
       this.currentPage = page;
       this.updatePagination();
     }
+  }
+
+  resetPassword(id: number) {
+    this.updateService.resetAccountPasswordAsync(id).subscribe({
+      next: res => {
+        this.showSuccessMessage = res.message;
+      }
+    })
+  }
+
+  closeResetPasswordMessage() {
+    this.showSuccessMessage = '';
   }
 }
