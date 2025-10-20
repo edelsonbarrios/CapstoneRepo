@@ -30,7 +30,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 3;
+  itemsPerPage: number = 2;
   totalPages: number = 0;
 
   constructor(
