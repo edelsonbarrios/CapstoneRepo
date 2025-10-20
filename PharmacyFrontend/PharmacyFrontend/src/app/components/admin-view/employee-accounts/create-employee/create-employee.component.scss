@@ -74,6 +74,14 @@
         }
       }
 
+      input {
+
+        &::-webkit-inner-spin-button,
+        *::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+        }
+        
+      }
       input,
       select {
         padding: 8px 10px;

@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PharmacyBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitMigration : Migration
+    public partial class TableRedesign : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -272,7 +272,8 @@ namespace PharmacyBackend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Username = table.Column<string>(type: "text", nullable: true),
                     EncryptedPassword = table.Column<string>(type: "text", nullable: true),
-                    EmployeeId = table.Column<int>(type: "integer", nullable: false)
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -577,8 +578,8 @@ namespace PharmacyBackend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Accounts",
-                columns: new[] { "Id", "EmployeeId", "EncryptedPassword", "Username" },
-                values: new object[] { 1, 1, "Gs1jr+Z19Y22IXBRoh0ZOg==", "admin" });
+                columns: new[] { "Id", "EmployeeId", "EncryptedPassword", "IsActive", "Username" },
+                values: new object[] { 1, 1, "Gs1jr+Z19Y22IXBRoh0ZOg==", true, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_EmployeeId",

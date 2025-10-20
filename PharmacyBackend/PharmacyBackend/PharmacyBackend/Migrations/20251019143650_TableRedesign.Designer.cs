@@ -12,8 +12,8 @@ using PharmacyBackend.DataContext;
 namespace PharmacyBackend.Migrations
 {
     [DbContext(typeof(PharmacyContext))]
-    [Migration("20251019115249_Adding IsActive to Account Entity")]
-    partial class AddingIsActivetoAccountEntity
+    [Migration("20251019143650_TableRedesign")]
+    partial class TableRedesign
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
