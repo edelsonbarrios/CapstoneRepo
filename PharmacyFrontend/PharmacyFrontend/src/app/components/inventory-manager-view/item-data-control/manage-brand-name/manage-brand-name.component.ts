@@ -6,6 +6,7 @@ import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmati
 import { GetService } from '../../../../services/GetService/get.service';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { Brand } from '../../../../models/brand-models/brand';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-brand-name',
@@ -16,6 +17,7 @@ import { Brand } from '../../../../models/brand-models/brand';
     AddBrandComponent,
     EditBrandComponent,
     ArchiveConfirmationComponent,
+    FormsModule
   ],
   templateUrl: './manage-brand-name.component.html',
   styleUrl: './manage-brand-name.component.scss',
@@ -49,7 +51,7 @@ export class ManageBrandNameComponent implements OnInit {
     this.getService.getAllBrandsAsync().subscribe({
       next: (res) => {
         this.brands = res;
-        this.filteredBrands = [...this.brands]; // keep unfiltered copy
+        this.filteredBrands = [...this.brands];
         this.updatePagination();
       },
       error: (err) => {
@@ -58,16 +60,15 @@ export class ManageBrandNameComponent implements OnInit {
     });
   }
 
-  // 🔍 Search functionality
   onSearchChange(): void {
     const query = this.searchQuery.trim().toLowerCase();
 
     if (query === '') {
       this.filteredBrands = [...this.brands];
     } else {
-      this.filteredBrands = this.brands.filter(
-        (b) =>
-          b.brandName.toLowerCase().includes(query));
+      this.filteredBrands = this.brands.filter((b) =>
+        b.brandName.toLowerCase().includes(query)
+      );
     }
 
     this.currentPage = 1;

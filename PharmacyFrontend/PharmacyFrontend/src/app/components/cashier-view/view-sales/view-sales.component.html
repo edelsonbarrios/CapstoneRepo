@@ -7,24 +7,24 @@
 
   <div class="grid-container">
     <div class="transaction-info">
-    <label>Invoice Number:</label>
-    <p>Sample Number</p>
-  </div>
+      <label>Invoice Number:</label>
+      <p>Sample Number</p>
+    </div>
 
-  <div class="transaction-info">
-    <label>Date:</label>
-    <p>Sample Date</p>
-  </div>
+    <div class="transaction-info">
+      <label>Date:</label>
+      <p>Sample Date</p>
+    </div>
 
-  <div class="transaction-info">
-    <label>Cashier:</label>
-    <p>Sample Cashier</p>
-  </div>
+    <div class="transaction-info">
+      <label>Cashier:</label>
+      <p>Sample Cashier</p>
+    </div>
 
-  <div class="transaction-info">
-    <label>Payment Method:</label>
-    <p>Sample Method</p>
-  </div>
+    <div class="transaction-info">
+      <label>Payment Method:</label>
+      <p>Sample Method</p>
+    </div>
   </div>
 
   <h2>Items:</h2>
@@ -39,15 +39,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Sample Product</td>
-        <td>Sample Unit</td>
-        <td>Sample Qty</td>
-        <td>Sample Price</td>
-        <td>Sample Subtotal</td>
+      <tr *ngIf="items.length === 0">
+        <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">
+          No recent data
+        </td>
+      </tr>
+      <tr *ngFor="let item of paginatedItems">
+        <td>{{item.product}}</td>
+        <td>{{item.unit}}</td>
+        <td>{{item.qty}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.subtotal}}</td>
       </tr>
     </tbody>
   </table>
+
+  <!-- PAGINATION CONTROLS -->
+  <div class="pagination-controls" *ngIf="items.length > 0">
+    <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+    <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+    <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+  </div>
 
   <div class="final-info">
     <label>Total:</label>

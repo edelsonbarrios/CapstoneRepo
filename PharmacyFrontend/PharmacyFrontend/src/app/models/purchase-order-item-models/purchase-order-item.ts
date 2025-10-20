@@ -20,4 +20,7 @@ export class PurchaseOrderItem {
   category: string = '';
   type: string = '';
   classification: string = '';
+
+  mfgDateError?: string;
+  expDateError?: string;
 }

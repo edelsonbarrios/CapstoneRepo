@@ -82,12 +82,36 @@ export class CreateStockComponent implements OnInit{
     if (!this.createStock.manufacturingDate) {
       this.manufacturingDateError = 'Manufacturing date is required';
       isValid = false;
+    } else {
+      const mfgDate = new Date(this.createStock.manufacturingDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const fiveYearsAgo = new Date(today);
+      fiveYearsAgo.setFullYear(today.getFullYear() - 5);
+
+      if (mfgDate > today) {
+        this.manufacturingDateError = 'Invalid Date';
+        isValid = false;
+      } else if (mfgDate < fiveYearsAgo) {
+        this.manufacturingDateError = 'Invalid Date';
+        isValid = false;
+      }
     }
 
     // Validate expiration date
     if (!this.createStock.expirationDate) {
       this.expirationDateError = 'Expiration date is required';
       isValid = false;
+    } else {
+      const expDate = new Date(this.createStock.expirationDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (expDate <= today) {
+        this.expirationDateError = 'Invalid Date';
+        isValid = false;
+      }
     }
 
     // Validate cost price

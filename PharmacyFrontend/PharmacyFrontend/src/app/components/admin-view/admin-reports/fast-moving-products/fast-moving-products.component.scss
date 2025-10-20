@@ -125,4 +125,41 @@
         font-weight: 300;
       }
     }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .btn-page {
+      padding: 0.5rem 1rem;
+      border-radius: 0.4rem;
+      border: 1px solid #3498ff;
+      background-color: white;
+      color: #3498ff;
+      cursor: pointer;
+      transition: opacity 0.15s, background-color 0.15s;
+
+      &:hover:not(:disabled) {
+        background-color: #3498ff;
+        color: white;
+      }
+
+      &:active:not(:disabled) {
+        opacity: 0.8;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .page-info {
+      font-weight: 600;
+      color: #1e2f47;
+    }
+  }
 }

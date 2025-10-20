@@ -51,33 +51,26 @@
       <!-- TSM TABLE-->
       <table class="top-meds-table">
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Biogesic 500mg</td>
-            <td>320 sold</td>
+          <tr *ngIf="topSellingMedicines.length === 0">
+            <td colspan="3" style="text-align: center; color: #94a3b8; padding: 2rem;">
+              No recent data
+            </td>
           </tr>
-          <tr>
-            <td>2</td>
-            <td>Cecon 500mg</td>
-            <td>280 sold</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Bioflu 500mg</td>
-            <td>250 sold</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Amoxicillin 500mg</td>
-            <td>200 sold</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Cetirizine 10mg</td>
-            <td>180 sold</td>
+          <tr *ngFor="let med of paginatedTopMeds">
+            <td>{{med.rank}}</td>
+            <td>{{med.productName}}</td>
+            <td>{{med.soldCount}}</td>
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS FOR TOP MEDS -->
+      <div class="pagination-controls" *ngIf="topSellingMedicines.length > 0">
+        <button class="btn-page" [disabled]="topMedsCurrentPage === 1" (click)="goToTopMedsPage(topMedsCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{topMedsCurrentPage}} of {{topMedsTotalPages}}</span>
+        <button class="btn-page" [disabled]="topMedsCurrentPage === topMedsTotalPages" (click)="goToTopMedsPage(topMedsCurrentPage + 1)">Next</button>
+      </div>
+
       <a class="interact view-report" routerLink="/admin-main/admin-reports-main">See more &gt;</a>
     </div>
 
@@ -94,30 +87,25 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>AMOX&ndash;091523&ndash;A</td>
-            <td>Amoxicillin 500mg</td>
-            <td>Sep 28, 2025</td>
+          <tr *ngIf="expiringProducts.length === 0">
+            <td colspan="3" style="text-align: center; color: #94a3b8; padding: 2rem;">
+              No recent data
+            </td>
           </tr>
-          <tr>
-            <td>BFL-100823-B</td>
-            <td>Bioflu 500mg</td>
-            <td>Oct 10, 2025</td>
-          </tr>
-          <tr>
-            <td>BIO-101323-01</td>
-            <td>Biogesic 500mg</td>
-            <td>Oct 15, 2025</td>
-          </tr>
-          <tr>
-            <td>CET-102223-03</td>
-            <td>Cetirizine 10mg</td>
-            <td>Oct 25, 2025</td>
+          <tr *ngFor="let product of paginatedExpiringProducts">
+            <td>{{product.batchNo}}</td>
+            <td>{{product.product}}</td>
+            <td>{{product.expiry}}</td>
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS FOR EXPIRING SOON -->
+      <div class="pagination-controls" *ngIf="expiringProducts.length > 0">
+        <button class="btn-page" [disabled]="expiryCurrentPage === 1" (click)="goToExpiryPage(expiryCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{expiryCurrentPage}} of {{expiryTotalPages}}</span>
+        <button class="btn-page" [disabled]="expiryCurrentPage === expiryTotalPages" (click)="goToExpiryPage(expiryCurrentPage + 1)">Next</button>
+      </div>
     </div>
   </div>
 </main>
-
-<!--ADMIN DASHBOARD HTML-->

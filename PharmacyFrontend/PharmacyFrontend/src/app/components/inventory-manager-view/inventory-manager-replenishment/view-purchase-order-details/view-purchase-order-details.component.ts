@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { PurchaseOrder } from '../../../../models/purchase-order-models/purchase-order';
 import {
   CurrencyPipe,
@@ -21,11 +21,17 @@ import { GetService } from '../../../../services/GetService/get.service';
   templateUrl: './view-purchase-order-details.component.html',
   styleUrl: './view-purchase-order-details.component.scss',
 })
-export class ViewPurchaseOrderDetailsComponent implements OnInit {
+export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   @Input() purchaseOrder: PurchaseOrder = new PurchaseOrder();
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
   receiptNumber: string = '';
+  paginatedItems: any[] = [];
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 3;
+  totalPages: number = 0;
 
   constructor(
     private updateService: UpdateService,
@@ -34,6 +40,74 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLoggedInEmployee();
+    this.updatePagination();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['purchaseOrder']) {
+      this.currentPage = 1;
+      this.updatePagination();
+    }
+  }
+
+  updatePagination() {
+    if (!this.purchaseOrder.purchaseOrderItems) {
+      this.paginatedItems = [];
+      this.totalPages = 1;
+      return;
+    }
+    
+    this.totalPages = Math.ceil(this.purchaseOrder.purchaseOrderItems.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedItems = this.purchaseOrder.purchaseOrderItems.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
+
+  validateMfgDate(item: any) {
+    if (!item.manufacturingDate) {
+      item.mfgDateError = '';
+      return;
+    }
+
+    const mfgDate = new Date(item.manufacturingDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const YearsAgo = new Date(today);
+    YearsAgo.setFullYear(today.getFullYear() - 5);
+
+    if (mfgDate > today) {
+      item.mfgDateError = 'Invalid Date';
+    } else if (mfgDate < YearsAgo) {
+      item.mfgDateError = 'Invalid Date';
+    } else {
+      item.mfgDateError = '';
+    }
+  }
+
+  validateExpDate(item: any) {
+    if (!item.expirationDate) {
+      item.expDateError = '';
+      return;
+    }
+
+    const expDate = new Date(item.expirationDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (expDate <= today) {
+      item.expDateError = 'Invalid Date';
+    } else {
+      item.expDateError = '';
+    }
   }
 
   updateItemTotal(item: any) {
@@ -60,6 +134,28 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
   }
 
   markAsReceived() {
+    // Clear previous errors
+    this.purchaseOrder.purchaseOrderItems.forEach(item => {
+      item.mfgDateError = '';
+      item.expDateError = '';
+    });
+
+    let isValid = true;
+
+    // Validate all items
+    this.purchaseOrder.purchaseOrderItems.forEach(item => {
+      this.validateMfgDate(item);
+      this.validateExpDate(item);
+
+      if (item.mfgDateError || item.expDateError) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      return;
+    }
+
     const requestPayload: PurchaseOrderReceivedRequest = {
       purchaseOrderId: this.purchaseOrder.id,
       totalAmount: this.purchaseOrder.totalAmount,
