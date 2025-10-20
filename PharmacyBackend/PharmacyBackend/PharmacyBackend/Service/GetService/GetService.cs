@@ -20,6 +20,9 @@ using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.DTOs.DailySaleDTOs;
 using PharmacyBackend.DTOs.ReportsDTOs;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System.Drawing;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -1724,6 +1727,354 @@ namespace PharmacyBackend.Service.GetService
             return "Decreasing";
         }
 
+        #endregion
+
+        #region Reports Exports In excell
+
+        //SALES REPORTS
+
+        public async Task<byte[]> ExportSalesReportToExcelAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            int? employeeId = null,
+            string paymentMethod = null)
+        {
+            var report = await GetSalesReportAsync(startDate, endDate, employeeId, paymentMethod);
+
+            using (var package = new ExcelPackage())
+            {
+                // Summary Sheet
+                var summarySheet = package.Workbook.Worksheets.Add("Summary");
+
+                summarySheet.Cells["A1"].Value = "Sales Report Summary";
+                summarySheet.Cells["A1:B1"].Merge = true;
+                summarySheet.Cells["A1:B1"].Style.Font.Bold = true;
+                summarySheet.Cells["A1:B1"].Style.Font.Size = 16;
+                summarySheet.Cells["A1:B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                summarySheet.Cells["A3"].Value = "Period:";
+                summarySheet.Cells["B3"].Value = $"{startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}";
+
+                if (employeeId.HasValue)
+                {
+                    var employee = await GetEmployeeByIdAsync(employeeId.Value);
+                    summarySheet.Cells["A4"].Value = "Employee:";
+                    summarySheet.Cells["B4"].Value = employee?.FullName ?? "N/A";
+                }
+
+                if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
+                {
+                    summarySheet.Cells["A5"].Value = "Payment Method:";
+                    summarySheet.Cells["B5"].Value = paymentMethod;
+                }
+
+                int summaryRow = 7;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Transactions";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.TotalTransactions;
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Net Revenue";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.NetRevenue;
+                summarySheet.Cells[$"B{summaryRow}"].Style.Numberformat.Format = "₱#,##0.00";
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Items Sold";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.TotalItemsSold;
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Average Transaction";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.AverageTransaction;
+                summarySheet.Cells[$"B{summaryRow}"].Style.Numberformat.Format = "₱#,##0.00";
+
+                summarySheet.Cells["A7:A10"].Style.Font.Bold = true;
+                summarySheet.Cells["A1:B10"].AutoFitColumns();
+
+                // Transactions Sheet
+                var transactionsSheet = package.Workbook.Worksheets.Add("Transactions");
+
+                // Headers
+                transactionsSheet.Cells["A1"].Value = "Invoice";
+                transactionsSheet.Cells["B1"].Value = "Date";
+                transactionsSheet.Cells["C1"].Value = "Employee";
+                transactionsSheet.Cells["D1"].Value = "Items";
+                transactionsSheet.Cells["E1"].Value = "Total";
+                transactionsSheet.Cells["F1"].Value = "Payment";
+
+                // Style headers
+                using (var range = transactionsSheet.Cells["A1:F1"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(79, 129, 189));
+                    range.Style.Font.Color.SetColor(Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                // Data
+                int row = 2;
+                foreach (var transaction in report.Transactions)
+                {
+                    transactionsSheet.Cells[row, 1].Value = transaction.InvoiceNumber;
+                    transactionsSheet.Cells[row, 2].Value = transaction.TransactionDate;
+                    transactionsSheet.Cells[row, 2].Style.Numberformat.Format = "yyyy-mm-dd hh:mm AM/PM";
+                    transactionsSheet.Cells[row, 3].Value = transaction.EmployeeName;
+                    transactionsSheet.Cells[row, 4].Value = transaction.Items.Sum(i => i.Quantity);
+                    transactionsSheet.Cells[row, 5].Value = transaction.NetAmount;
+                    transactionsSheet.Cells[row, 5].Style.Numberformat.Format = "₱#,##0.00";
+                    transactionsSheet.Cells[row, 6].Value = transaction.PaymentMethod;
+                    row++;
+                }
+
+                // Add borders
+                using (var range = transactionsSheet.Cells[1, 1, row - 1, 6])
+                {
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                }
+
+                transactionsSheet.Cells[transactionsSheet.Dimension.Address].AutoFitColumns();
+
+                return package.GetAsByteArray();
+            }
+        }
+
+        //INVENTORY REPORTS
+
+        public async Task<byte[]> ExportInventoryReportToExcelAsync(
+            DateTime? startDate =null,
+            DateTime? endDate = null,
+            string filterType = "all")
+        {
+            var report = await GetInventoryReportAsync(startDate, endDate, filterType);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage())
+            {
+                // Summary Sheet
+                var summarySheet = package.Workbook.Worksheets.Add("Summary");
+
+                summarySheet.Cells["A1"].Value = "Inventory Report Summary";
+                summarySheet.Cells["A1:B1"].Merge = true;
+                summarySheet.Cells["A1:B1"].Style.Font.Bold = true;
+                summarySheet.Cells["A1:B1"].Style.Font.Size = 16;
+                summarySheet.Cells["A1:B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                summarySheet.Cells["A3"].Value = "Period:";
+                summarySheet.Cells["B3"].Value = $"{startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}";
+
+                summarySheet.Cells["A4"].Value = "Filter Type:";
+                summarySheet.Cells["B4"].Value = filterType;
+
+                int summaryRow = 6;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Products";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.TotalProducts;
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Value";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.TotalValue;
+                summarySheet.Cells[$"B{summaryRow}"].Style.Numberformat.Format = "₱#,##0.00";
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Critical Stock Count";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.CriticalStockCount;
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Near Expiry Count";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.Summary.NearExpiryCount;
+
+                summarySheet.Cells["A6:A9"].Style.Font.Bold = true;
+                summarySheet.Cells["A1:B9"].AutoFitColumns();
+
+                // Inventory Details Sheet
+                var detailsSheet = package.Workbook.Worksheets.Add("Inventory Details");
+
+                // Headers
+                detailsSheet.Cells["A1"].Value = "Product";
+                detailsSheet.Cells["B1"].Value = "Category";
+                detailsSheet.Cells["C1"].Value = "Batch";
+                detailsSheet.Cells["D1"].Value = "Stock";
+                detailsSheet.Cells["E1"].Value = "Expiry Date";
+                detailsSheet.Cells["F1"].Value = "Status";
+
+                // Style headers
+                using (var range = detailsSheet.Cells["A1:F1"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(79, 129, 189));
+                    range.Style.Font.Color.SetColor(Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                // Data
+                int row = 2;
+                foreach (var inventory in report.InventoryItems)
+                {
+                    detailsSheet.Cells[row, 1].Value = inventory.ProductName;
+                    detailsSheet.Cells[row, 2].Value = inventory.Product?.CategoryName ?? "N/A";
+                    detailsSheet.Cells[row, 3].Value = inventory.BatchNumber;
+
+                    // Display stock based on unit type
+                    string stockDisplay = "";
+                    if (inventory.BoxQuantity > 0)
+                        stockDisplay += $"{inventory.BoxQuantity} boxes ";
+                    if (inventory.SheetQuantity > 0)
+                        stockDisplay += $"{inventory.SheetQuantity} sheets ";
+                    if (inventory.PieceQuantity > 0)
+                        stockDisplay += $"{inventory.PieceQuantity} pieces";
+
+                    detailsSheet.Cells[row, 4].Value = stockDisplay.Trim();
+                    detailsSheet.Cells[row, 5].Value = inventory.ExpirationDate;
+                    detailsSheet.Cells[row, 5].Style.Numberformat.Format = "yyyy-mm-dd";
+
+                    // Status
+                    string status = "Active";
+                    if (inventory.IsExpired)
+                    {
+                        status = "Expired";
+                        detailsSheet.Cells[row, 6].Style.Font.Color.SetColor(Color.Red);
+                    }
+                    else if (inventory.IsNearExpiry)
+                    {
+                        status = "Near Expiry";
+                        detailsSheet.Cells[row, 6].Style.Font.Color.SetColor(Color.Orange);
+                    }
+                    else if (inventory.IsCriticalStock)
+                    {
+                        status = "Critical Stock";
+                        detailsSheet.Cells[row, 6].Style.Font.Color.SetColor(Color.DarkOrange);
+                    }
+
+                    detailsSheet.Cells[row, 6].Value = status;
+                    row++;
+                }
+
+                // Add borders
+                using (var range = detailsSheet.Cells[1, 1, row - 1, 6])
+                {
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                }
+
+                detailsSheet.Cells[detailsSheet.Dimension.Address].AutoFitColumns();
+
+                return package.GetAsByteArray();
+            }
+        }
+
+        public async Task<byte[]> ExportFastMovingProductsToExcelAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            int topN = 20)
+        {
+            var report = await GetFastMovingProductsReportAsync(startDate, endDate, topN);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage())
+            {
+                // Summary Sheet
+                var summarySheet = package.Workbook.Worksheets.Add("Summary");
+
+                summarySheet.Cells["A1"].Value = "Fast-Moving Products Report";
+                summarySheet.Cells["A1:B1"].Merge = true;
+                summarySheet.Cells["A1:B1"].Style.Font.Bold = true;
+                summarySheet.Cells["A1:B1"].Style.Font.Size = 16;
+                summarySheet.Cells["A1:B1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                summarySheet.Cells["A3"].Value = "Period:";
+                summarySheet.Cells["B3"].Value = $"{startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd}";
+
+                summarySheet.Cells["A4"].Value = "Top N Products:";
+                summarySheet.Cells["B4"].Value = topN;
+
+                int summaryRow = 6;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Products Sold";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.TotalProductsSold;
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Quantity Sold";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.TotalQuantitySold;
+
+                summaryRow++;
+                summarySheet.Cells[$"A{summaryRow}"].Value = "Total Revenue";
+                summarySheet.Cells[$"B{summaryRow}"].Value = report.TotalRevenue;
+                summarySheet.Cells[$"B{summaryRow}"].Style.Numberformat.Format = "₱#,##0.00";
+
+                summarySheet.Cells["A6:A8"].Style.Font.Bold = true;
+                summarySheet.Cells["A1:B8"].AutoFitColumns();
+
+                // Product Rankings Sheet
+                var rankingsSheet = package.Workbook.Worksheets.Add("Product Rankings");
+
+                // Headers
+                rankingsSheet.Cells["A1"].Value = "Rank";
+                rankingsSheet.Cells["B1"].Value = "Product";
+                rankingsSheet.Cells["C1"].Value = "Category";
+                rankingsSheet.Cells["D1"].Value = "Qty Sold";
+                rankingsSheet.Cells["E1"].Value = "Revenue";
+                rankingsSheet.Cells["F1"].Value = "Stock";
+                rankingsSheet.Cells["G1"].Value = "Trend";
+
+                // Style headers
+                using (var range = rankingsSheet.Cells["A1:G1"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(79, 129, 189));
+                    range.Style.Font.Color.SetColor(Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                // Data
+                int row = 2;
+                foreach (var product in report.Products)
+                {
+                    rankingsSheet.Cells[row, 1].Value = product.Rank;
+                    rankingsSheet.Cells[row, 2].Value = product.ProductName;
+                    rankingsSheet.Cells[row, 3].Value = product.CategoryName;
+                    rankingsSheet.Cells[row, 4].Value = product.QuantitySold;
+                    rankingsSheet.Cells[row, 5].Value = product.Revenue;
+                    rankingsSheet.Cells[row, 5].Style.Numberformat.Format = "₱#,##0.00";
+                    rankingsSheet.Cells[row, 6].Value = product.CurrentStock;
+                    rankingsSheet.Cells[row, 7].Value = product.Trend;
+
+                    // Color code trend
+                    switch (product.Trend.ToLower())
+                    {
+                        case "increasing":
+                            rankingsSheet.Cells[row, 7].Style.Font.Color.SetColor(Color.Green);
+                            break;
+                        case "stable":
+                            rankingsSheet.Cells[row, 7].Style.Font.Color.SetColor(Color.Blue);
+                            break;
+                        case "decreasing":
+                            rankingsSheet.Cells[row, 7].Style.Font.Color.SetColor(Color.Red);
+                            break;
+                    }
+
+                    row++;
+                }
+
+                // Add borders
+                using (var range = rankingsSheet.Cells[1, 1, row - 1, 7])
+                {
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                }
+
+                rankingsSheet.Cells[rankingsSheet.Dimension.Address].AutoFitColumns();
+
+                return package.GetAsByteArray();
+            }
+        }
         #endregion
     }
 }
