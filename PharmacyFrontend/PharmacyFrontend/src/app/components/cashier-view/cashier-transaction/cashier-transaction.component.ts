@@ -1,3 +1,4 @@
+// cashier-transaction.component.ts
 import { Component, OnInit } from '@angular/core';
 import { GetService } from '../../../services/GetService/get.service';
 import { Employee } from '../../../models/employee-models/employee';
@@ -25,6 +26,18 @@ export class CashierTransactionComponent implements OnInit {
   transactions: SalesTransaction[] = [];
   dailySalesSummary : DailySalesSummary = new DailySalesSummary();
 
+  // Pagination for products table
+  paginatedProducts: any[] = [];
+  currentProductPage: number = 1;
+  itemsPerProductPage: number = 5;
+  totalProductPages: number = 0;
+
+  // Pagination for sales table
+  paginatedTransactions: SalesTransaction[] = [];
+  currentSalesPage: number = 1;
+  itemsPerSalesPage: number = 5;
+  totalSalesPages: number = 0;
+
   constructor(
     private getService: GetService,
     private postService: PostService
@@ -33,12 +46,14 @@ export class CashierTransactionComponent implements OnInit {
   ngOnInit(): void {
     this.getAllSalesTransactions();
     this.getSummarySalesForToday();
+    this.updateProductPagination();
   }
 
   getAllSalesTransactions() {
     this.getService.getAllSalesTransactionsAsync().subscribe({
       next: res => {
         this.transactions = res;
+        this.updateSalesPagination();
       },
       error: err => {
         console.log(`${err.error}`);
@@ -68,8 +83,38 @@ export class CashierTransactionComponent implements OnInit {
     });
   }
 
+  updateProductPagination() {
+    // This will work with dynamic product data when you add it later
+    this.totalProductPages = Math.ceil(this.products.length / this.itemsPerProductPage);
+    if (this.totalProductPages === 0) this.totalProductPages = 1;
+    const startIndex = (this.currentProductPage - 1) * this.itemsPerProductPage;
+    const endIndex = startIndex + this.itemsPerProductPage;
+    this.paginatedProducts = this.products.slice(startIndex, endIndex);
+  }
+
+  goToProductPage(page: number) {
+    if (page >= 1 && page <= this.totalProductPages) {
+      this.currentProductPage = page;
+      this.updateProductPagination();
+    }
+  }
+
+  updateSalesPagination() {
+    this.totalSalesPages = Math.ceil(this.transactions.length / this.itemsPerSalesPage);
+    if (this.totalSalesPages === 0) this.totalSalesPages = 1;
+    const startIndex = (this.currentSalesPage - 1) * this.itemsPerSalesPage;
+    const endIndex = startIndex + this.itemsPerSalesPage;
+    this.paginatedTransactions = this.transactions.slice(startIndex, endIndex);
+  }
+
+  goToSalesPage(page: number) {
+    if (page >= 1 && page <= this.totalSalesPages) {
+      this.currentSalesPage = page;
+      this.updateSalesPagination();
+    }
+  }
+
   openViewSalesForm(){
     this.viewSales = new Product();
   }
-
 }

@@ -1,3 +1,4 @@
+<!-- cashier-transaction.component.html -->
 <main class="wrapper">
   <div class="container">
 
@@ -104,6 +105,13 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS FOR PRODUCTS -->
+      <div class="pagination-controls">
+        <button class="btn-page" [disabled]="currentProductPage === 1" (click)="goToProductPage(currentProductPage - 1)">Previous</button>
+        <span class="page-info">Page {{currentProductPage}} of {{totalProductPages}}</span>
+        <button class="btn-page" [disabled]="currentProductPage === totalProductPages" (click)="goToProductPage(currentProductPage + 1)">Next</button>
+      </div>
     </div>
 
     <div class="grid-items table-container">
@@ -121,7 +129,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let st of transactions">
+          <tr *ngIf="transactions.length === 0">
+            <td colspan="8" style="text-align: center; color: #3c424b; padding: 2rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let st of paginatedTransactions">
             <td>{{st.invoiceNumber}}</td>
             <td>{{st.transactionDate | date: 'dd-MM-yyy'}}</td>
             <td>{{st.totalAmount}}</td>
@@ -135,6 +148,13 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- PAGINATION CONTROLS FOR SALES -->
+      <div class="pagination-controls" *ngIf="transactions.length > 0">
+        <button class="btn-page" [disabled]="currentSalesPage === 1" (click)="goToSalesPage(currentSalesPage - 1)">Previous</button>
+        <span class="page-info">Page {{currentSalesPage}} of {{totalSalesPages}}</span>
+        <button class="btn-page" [disabled]="currentSalesPage === totalSalesPages" (click)="goToSalesPage(currentSalesPage + 1)">Next</button>
+      </div>
     </div>
 
   </div>
