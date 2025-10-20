@@ -50,12 +50,12 @@ export class AdminDashboardComponent implements OnInit {
 
   // Pagination properties for Top Selling Medicines
   topMedsCurrentPage: number = 1;
-  topMedsItemsPerPage: number = 4;
+  topMedsItemsPerPage: number = 2;
   topMedsTotalPages: number = 0;
 
   // Pagination properties for Expiring Soon
   expiryCurrentPage: number = 1;
-  expiryItemsPerPage: number = 4;
+  expiryItemsPerPage: number = 3;
   expiryTotalPages: number = 0;
 
   ngOnInit(): void {
