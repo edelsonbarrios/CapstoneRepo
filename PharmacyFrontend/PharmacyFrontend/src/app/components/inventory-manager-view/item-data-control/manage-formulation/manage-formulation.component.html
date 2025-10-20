@@ -3,10 +3,10 @@
 
     <!-- FORMULATION CONTROLS/HEADER -->
     <div class="formulation-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand..."
-        [(ngModel)]="searchQuery"
-        (input)="onSearchChange()">
+      <div class="search-wrapper">
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          placeholder="🔍 Search by Item Code, Brand..." [(ngModel)]="searchQuery" (input)="onSearchChange()">
+      </div>
       <button class="btn-formulation" (click)="openAddFormulationForm()">&#43; Add Formulation</button>
     </div>
 
@@ -44,28 +44,16 @@
 </div>
 
 <div class="modal-overlay" *ngIf="addFormulation">
-  <app-add-formulation 
-  *ngIf="addFormulation"
-  (closeForm)="closeAddFormulationForm()"
-  ></app-add-formulation>
+  <app-add-formulation *ngIf="addFormulation" (closeForm)="closeAddFormulationForm()"></app-add-formulation>
 </div>
 
 <div class="modal-overlay" *ngIf="editFormulation">
-  <app-edit-formulation 
-  *ngIf="editFormulation"
-  [editFormulation]="editFormulation"
-  (closeForm)="closeEditFormulationForm()"
-  ></app-edit-formulation>
+  <app-edit-formulation *ngIf="editFormulation" [editFormulation]="editFormulation"
+    (closeForm)="closeEditFormulationForm()"></app-edit-formulation>
 </div>
 
 <div class="modal-overlay" *ngIf="showArchiveForm">
-  <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [alertMessage]="'Formulation sucessfully deleted.'"
-  [message]="'Do you really want to delete this formulation?'"
-
-  (onArchive)="archiveFormulation()"
-  (onCancel)="closeArchiveForm()"
-  ></app-archive-confirmation>
+  <app-archive-confirmation *ngIf="showArchiveForm" [id]="showArchiveForm"
+    [alertMessage]="'Formulation sucessfully deleted.'" [message]="'Do you really want to delete this formulation?'"
+    (onArchive)="archiveFormulation()" (onCancel)="closeArchiveForm()"></app-archive-confirmation>
 </div>

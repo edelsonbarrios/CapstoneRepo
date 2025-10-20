@@ -3,10 +3,12 @@
 
     <!-- CLASSIFICATION CONTROLS/HEADER -->
     <div class="class-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
+      <div class="search-wrapper">
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand..."
         [(ngModel)]="searchQuery"
         (input)="onSearchChange()">
+      </div>
       <button class="btn-class" (click)="openAddClassificationForm()">&#43; Add Clasification</button>
     </div>
 

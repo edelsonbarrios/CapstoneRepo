@@ -3,10 +3,10 @@
 
     <!-- TYPE CONTROLS/HEADER -->
     <div class="type-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand..."
-        [(ngModel)]="searchQuery"
-        (input)="onSearchChange()">
+      <div class="search-wrapper">
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          placeholder="🔍 Search by Item Code, Brand..." [(ngModel)]="searchQuery" (input)="onSearchChange()">
+      </div>
       <button class="btn-type" (click)="openAddTypeForm()">&#43; Add Type</button>
     </div>
 
@@ -44,29 +44,16 @@
 </div>
 
 <div class="modal-overlay" *ngIf="addType">
-  <app-add-type 
-  *ngIf="addType"
-  (closeForm)="closeAddTypeForm()"
-  ></app-add-type>
+  <app-add-type *ngIf="addType" (closeForm)="closeAddTypeForm()"></app-add-type>
 </div>
 
 <div class="modal-overlay" *ngIf="editType">
-  <app-edit-type 
-  *ngIf="editType"
-  [editType]="editType"
-  (closeForm)="closeEditTypeForm()"
-  ></app-edit-type>
+  <app-edit-type *ngIf="editType" [editType]="editType" (closeForm)="closeEditTypeForm()"></app-edit-type>
 </div>
 
 <div class="modal-overlay" *ngIf="showArchiveForm">
-  <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [message]="'Do you really want to delete this type?'"
-  [alertMessage]="'Type successfully deleted.'"
-
-  (onArchive)="archiveType()"
-  (onCancel)="closeArchiveConfirmationForm()"
-  ></app-archive-confirmation>
+  <app-archive-confirmation *ngIf="showArchiveForm" [id]="showArchiveForm"
+    [message]="'Do you really want to delete this type?'" [alertMessage]="'Type successfully deleted.'"
+    (onArchive)="archiveType()" (onCancel)="closeArchiveConfirmationForm()"></app-archive-confirmation>
 
 </div>

@@ -3,10 +3,10 @@
 
     <!-- BRAND NAME CONTROLS/HEADER -->
     <div class="brand-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand..."
-        [(ngModel)]="searchQuery"
-        (input)="onSearchChange()">
+      <div class="search-wrapper">
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          placeholder="🔍 Search by Item Code, Brand..." [(ngModel)]="searchQuery" (input)="onSearchChange()">
+      </div>
       <button class="btn-brand" (click)="openAddBrandForm()">&#43; Add Brand</button>
     </div>
 
@@ -44,28 +44,15 @@
 </div>
 
 <div class="modal-overlay" *ngIf="addBrand">
-  <app-add-brand 
-  *ngIf="addBrand"
-  (closeForm)="closeAddBrandForm()"
-  ></app-add-brand>
+  <app-add-brand *ngIf="addBrand" (closeForm)="closeAddBrandForm()"></app-add-brand>
 </div>
 
 <div class="modal-overlay" *ngIf="editBrand">
-  <app-edit-brand 
-  *ngIf="editBrand"
-  [editBrand]="editBrand"
-  (closeForm)="closeEditBrandForm()"
-  ></app-edit-brand>
+  <app-edit-brand *ngIf="editBrand" [editBrand]="editBrand" (closeForm)="closeEditBrandForm()"></app-edit-brand>
 </div>
 
 <div class="modal-overlay" *ngIf="showArchiveForm">
-  <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [alertMessage]="'Brand successfully deleted.'"
-  [message]="'Do you really want to delete this brand?'"
-  
-  (onArchive)="archiveBrand()"
-  (onCancel)="closeArchiveForm()"
-  ></app-archive-confirmation>
+  <app-archive-confirmation *ngIf="showArchiveForm" [id]="showArchiveForm"
+    [alertMessage]="'Brand successfully deleted.'" [message]="'Do you really want to delete this brand?'"
+    (onArchive)="archiveBrand()" (onCancel)="closeArchiveForm()"></app-archive-confirmation>
 </div>

@@ -3,10 +3,12 @@
 
     <!-- GENERIC NAME CONTROLS/HEADER -->
     <div class="generic-control">
-      <input type="text" name="searchbar" id="searchbar" class="searchbar"
+      <div class="search-wrapper">
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
         placeholder="🔍 Search by Item Code, Brand..."
         [(ngModel)]="searchQuery"
         (input)="onSearchChange()">
+      </div>
       <button class="btn-generic" (click)="openAddGenericForm()">&#43; Add Generic</button>
     </div>
 
