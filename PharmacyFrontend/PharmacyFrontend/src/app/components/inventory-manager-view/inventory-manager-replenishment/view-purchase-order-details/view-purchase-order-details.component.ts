@@ -36,6 +36,45 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
     this.getLoggedInEmployee();
   }
 
+  validateMfgDate(item: any) {
+    if (!item.manufacturingDate) {
+      item.mfgDateError = '';
+      return;
+    }
+
+    const mfgDate = new Date(item.manufacturingDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const YearsAgo = new Date(today);
+    YearsAgo.setFullYear(today.getFullYear() - 5);
+
+    if (mfgDate > today) {
+      item.mfgDateError = 'Invalid Date';
+    } else if (mfgDate < YearsAgo) {
+      item.mfgDateError = 'Invalid Date';
+    } else {
+      item.mfgDateError = '';
+    }
+  }
+
+  validateExpDate(item: any) {
+    if (!item.expirationDate) {
+      item.expDateError = '';
+      return;
+    }
+
+    const expDate = new Date(item.expirationDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (expDate <= today) {
+      item.expDateError = 'Invalid Date';
+    } else {
+      item.expDateError = '';
+    }
+  }
+
   updateItemTotal(item: any) {
     const boxTotal = (item.boxQuantityReceived || 0) * (item.boxPrice || 0);
     const sheetTotal =
@@ -60,6 +99,28 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
   }
 
   markAsReceived() {
+    // Clear previous errors
+    this.purchaseOrder.purchaseOrderItems.forEach(item => {
+      item.mfgDateError = '';
+      item.expDateError = '';
+    });
+
+    let isValid = true;
+
+    // Validate all items
+    this.purchaseOrder.purchaseOrderItems.forEach(item => {
+      this.validateMfgDate(item);
+      this.validateExpDate(item);
+
+      if (item.mfgDateError || item.expDateError) {
+        isValid = false;
+      }
+    });
+
+    if (!isValid) {
+      return;
+    }
+
     const requestPayload: PurchaseOrderReceivedRequest = {
       purchaseOrderId: this.purchaseOrder.id,
       totalAmount: this.purchaseOrder.totalAmount,
