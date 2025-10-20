@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { PurchaseOrder } from '../../../../models/purchase-order-models/purchase-order';
 import {
   CurrencyPipe,
@@ -21,11 +21,17 @@ import { GetService } from '../../../../services/GetService/get.service';
   templateUrl: './view-purchase-order-details.component.html',
   styleUrl: './view-purchase-order-details.component.scss',
 })
-export class ViewPurchaseOrderDetailsComponent implements OnInit {
+export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   @Input() purchaseOrder: PurchaseOrder = new PurchaseOrder();
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
   receiptNumber: string = '';
+  paginatedItems: any[] = [];
+  
+  // Pagination properties
+  currentPage: number = 1;
+  itemsPerPage: number = 3;
+  totalPages: number = 0;
 
   constructor(
     private updateService: UpdateService,
@@ -34,6 +40,35 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLoggedInEmployee();
+    this.updatePagination();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['purchaseOrder']) {
+      this.currentPage = 1;
+      this.updatePagination();
+    }
+  }
+
+  updatePagination() {
+    if (!this.purchaseOrder.purchaseOrderItems) {
+      this.paginatedItems = [];
+      this.totalPages = 1;
+      return;
+    }
+    
+    this.totalPages = Math.ceil(this.purchaseOrder.purchaseOrderItems.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedItems = this.purchaseOrder.purchaseOrderItems.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   validateMfgDate(item: any) {

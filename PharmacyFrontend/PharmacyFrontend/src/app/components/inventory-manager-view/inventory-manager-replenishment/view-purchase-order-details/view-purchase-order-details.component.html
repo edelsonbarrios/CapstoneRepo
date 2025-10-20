@@ -58,7 +58,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of purchaseOrder.purchaseOrderItems">
+        <tr *ngIf="purchaseOrder.purchaseOrderItems.length === 0">
+          <td colspan="8" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            No recent data
+          </td>
+        </tr>
+        <tr *ngFor="let item of paginatedItems">
           <td>{{ item.productName }}</td>
           <td><input type="text" [(ngModel)]="item.batchNumber" placeholder="Batch No." /></td>
           <td class="date-cell" [class.error]="item.mfgDateError">
@@ -85,6 +90,13 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="purchaseOrder.purchaseOrderItems.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </section>
 
   <!-- Footer -->
