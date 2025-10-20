@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OfficeOpenXml;
 using PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
@@ -25,7 +26,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 // Add services to the container.
 
 builder.Services.AddControllers();

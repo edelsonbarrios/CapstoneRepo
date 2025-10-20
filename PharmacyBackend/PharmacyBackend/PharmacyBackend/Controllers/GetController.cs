@@ -733,7 +733,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error generating sales report: {ex.Message}" });
             }
         }
-        /*
+        
         [HttpGet("reports/sales/export")]
         public async Task<IActionResult> ExportSalesReport(
             [FromQuery] DateTime? startDate = null,
@@ -770,7 +770,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting sales report: {ex.Message}" });
             }
         }
-        */
+        
 
         //Inventory - Reports
 
@@ -803,7 +803,7 @@ namespace PharmacyBackend.Controllers
             }
         }
 
-        /*
+        
         [HttpGet("reports/inventory/export")]
         public async Task<IActionResult> ExportInventoryReport(
             [FromQuery] DateTime? startDate = null,
@@ -838,7 +838,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting inventory report: {ex.Message}" });
             }
         }
-        */
+        
 
         //Fast-Moving Products
 
@@ -871,7 +871,7 @@ namespace PharmacyBackend.Controllers
             }
         }
 
-        /*
+        
         [HttpGet("reports/fast-moving-products/export")]
         public async Task<IActionResult> ExportFastMovingProductsReport(
             [FromQuery] DateTime? startDate = null,
@@ -906,7 +906,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting fast-moving products report: {ex.Message}" });
             }
         }
-        */
+        
         #endregion
 
     }
