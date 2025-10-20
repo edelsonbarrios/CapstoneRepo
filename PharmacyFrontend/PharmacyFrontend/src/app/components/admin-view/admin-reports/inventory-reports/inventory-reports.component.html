@@ -4,35 +4,35 @@
     <div class="sub-container">
       <div class="content">
         <label>Total Products</label>
-        <p>120</p>
+        <p>{{inventoryReport.summary.totalProducts}}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
         <label>Total Value</label>
-        <p>120</p>
+        <p>{{inventoryReport.summary.totalValue}}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
         <label>Total Products</label>
-        <p>&#8369;500,000.00</p>
+        <p>&#8369;{{inventoryReport.summary.totalProducts}}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
         <label>Critical Stock</label>
-        <p>15</p>
+        <p>{{inventoryReport.summary.criticalStockCount}}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
         <label>Near Expiry</label>
-        <p>8</p>
+        <p>{{inventoryReport.summary.nearExpiryCount}}</p>
       </div>
     </div>
   </div>
@@ -43,18 +43,19 @@
     <div class="cntr-control">
       <div class="control">
         <label>Start Date</label>
-        <input type="date" />
+        <input type="date" [(ngModel)]="startDate" (change)="onFilterChange()">
       </div>
     
       <div class="control">
         <label>End Date</label>
-        <input type="date" />
+        <input type="date" [(ngModel)]="endDate" (change)="onFilterChange()">
       </div>
     
       <div class="control">
         <label>Filter Type</label>
-        <select id="filter">
+        <select id="filter" [(ngModel)]="selectedFilterType" (change)="onFilterChange()">
           <option value="">All Inventory</option>
+          <option *ngFor="let ft of filterTypes" [value]="ft">{{ft}}</option>
         </select>
       </div>
     </div>
@@ -66,42 +67,39 @@
     <h2>Inventory Details</h2>
 
     <table class="inventory-table">
+      <div *ngIf="loading">Loading...</div>
+      <div *ngIf="error">{{error}}</div>
       <thead>
         <tr>
           <th>Product</th>
-          <th>ItemCode</th>
           <th>Category</th>
-          <th>On Hand</th>
+          <th>Box On Hand</th>
           <th>Recorder Level</th>
-          <th>Status</th>
+          <th>Date Added</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Biogesic 500mg</td>
-          <td>BIO-500</td>
-          <td>Pain Relief</td>
-          <td>320</td>
-          <td>150</td>
-          <td><span>Ok</span></td>
+        <tr *ngIf="paginatedInventory.length === 0">
+          <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
+            No inventory data
+          </td>
         </tr>
-        <tr>
-          <td>Cecon 500mg</td>
-          <td>CEC-500</td>
-          <td>Vitamins</td>
-          <td>60</td>
-          <td>80</td>
-          <td>Critical</td>
-        </tr>
-        <tr>
-          <td>Bioflu 500mg</td>
-          <td>BIOF-500</td>
-          <td>Cold & Flu</td>
-          <td>900</td>
-          <td>200</td>
-          <td>Overstock</td>
+
+        <tr *ngFor="let inv of paginatedInventory">
+          <td>{{inv.productName}}</td>
+          <td>{{inv.productName}}</td>
+          <td>{{inv.boxQuantity}}</td>
+          <td>{{inv.reorderLevel}}</td>
+          <td><span>{{inv.dateAdded | date: 'dd-MM-yyyy'}}</span></td>
         </tr>
       </tbody>
     </table>
+
+    <!-- ✅ PAGINATION CONTROLS (same as Supplier component) -->
+    <div class="pagination-controls" *ngIf="inventoryReport.inventoryItems.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </div>
 </main>

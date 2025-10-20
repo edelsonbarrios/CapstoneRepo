@@ -4,69 +4,71 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { NgFor, NgIf } from '@angular/common';
 import { CreateSupplierComponent } from '../create-supplier/create-supplier.component';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
-import { AssignProductsSupplierComponent } from "../assign-products-supplier/assign-products-supplier.component";
-import { ViewSupplierComponent } from "../view-supplier/view-supplier.component";
-import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmation/archive-confirmation.component";
+import { AssignProductsSupplierComponent } from '../assign-products-supplier/assign-products-supplier.component';
+import { ViewSupplierComponent } from '../view-supplier/view-supplier.component';
+import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-supplier',
   standalone: true,
   imports: [
-    NgFor, 
-    CreateSupplierComponent, 
-    NgIf, 
-    AssignProductsSupplierComponent, 
-    ViewSupplierComponent, 
+    NgFor,
+    CreateSupplierComponent,
+    NgIf,
+    AssignProductsSupplierComponent,
+    ViewSupplierComponent,
     ArchiveConfirmationComponent,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './admin-supplier.component.html',
-  styleUrl: './admin-supplier.component.scss'
+  styleUrl: './admin-supplier.component.scss',
 })
-export class AdminSupplierComponent implements OnInit{
+export class AdminSupplierComponent implements OnInit {
   suppliers: Supplier[] = [];
   paginatedSuppliers: Supplier[] = [];
-  newSupplier ?: Supplier | null;
+  newSupplier?: Supplier | null;
   assignSupplier?: Supplier | null;
   viewSupplier?: Supplier | null;
   showSuccessAlert: boolean = false;
-  showArchiveForm : number = 0;
+  showArchiveForm: number = 0;
   supplierToArchive: Supplier = new Supplier();
   searchQuery: string = '';
-  
+
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
 
   constructor(
-    private getService : GetService,
-    private updateService : UpdateService
-  ){}
+    private getService: GetService,
+    private updateService: UpdateService
+  ) {}
 
   ngOnInit(): void {
-      this.getAllSuppliers();
+    this.getAllSuppliers();
   }
 
   getAllSuppliers() {
     this.getService.getAllSuppliersAsync().subscribe({
-      next: res => {
+      next: (res) => {
         this.suppliers = res;
         this.updatePagination();
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
+      },
     });
   }
 
-  get getFilteredSuppliers() : Supplier[] {
-    if(!this.searchQuery.trim()) {
+  get getFilteredSuppliers(): Supplier[] {
+    if (!this.searchQuery.trim()) {
       return this.suppliers;
     }
     const query = this.searchQuery.toLowerCase();
-    return this.suppliers.filter(s => s.supplierName.toLowerCase().includes(query))
+    return this.suppliers.filter((s) =>
+      s.supplierName.toLowerCase().includes(query)
+    );
   }
 
   updatePagination() {
@@ -86,9 +88,9 @@ export class AdminSupplierComponent implements OnInit{
   }
 
   onSearchChange() {
-  this.currentPage = 1;
-  this.updatePagination();
-}
+    this.currentPage = 1;
+    this.updatePagination();
+  }
 
   openCreateSupplierForm() {
     this.newSupplier = new Supplier();
@@ -102,13 +104,13 @@ export class AdminSupplierComponent implements OnInit{
   openAssignProductSupplierForm(supplier: Supplier) {
     this.assignSupplier = supplier;
   }
-  
+
   closeAssignProductSupplierForm() {
     this.assignSupplier = null;
     this.getAllSuppliers();
   }
-  
-  openViewSupplierForm(supplier : Supplier) {
+
+  openViewSupplierForm(supplier: Supplier) {
     this.viewSupplier = supplier;
   }
 
@@ -124,28 +126,28 @@ export class AdminSupplierComponent implements OnInit{
     this.showArchiveForm = 0;
   }
 
-  getSupplierById(id: number) : Supplier{
+  getSupplierById(id: number): Supplier {
     this.getService.getSupplierByIdAsync(id).subscribe({
-      next: res => {
+      next: (res) => {
         return res;
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
         return null;
-      }
+      },
     });
     return new Supplier();
   }
 
   archiveSupplier() {
     this.updateService.archiveSupplierAsync(this.showArchiveForm).subscribe({
-      next: res => {
+      next: (res) => {
         this.showArchiveForm = 0;
         this.getAllSuppliers();
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error.message}`);
-      }
+      },
     });
   }
 

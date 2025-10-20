@@ -1,7 +1,7 @@
 import { Injectable, Type } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { last, Observable, ObservedValueOf } from 'rxjs';
+import { filter, last, Observable, ObservedValueOf } from 'rxjs';
 import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
 import { VAT } from '../../models/vat-models/vat';
@@ -20,6 +20,7 @@ import { Inventory } from '../../models/inventory-module-models/inventory';
 import { SalesTransaction } from '../../models/sales-transaction-models/sales-transaction';
 import { DailySalesSummary } from '../../models/sales-transaction-models/daily-sales-summary';
 import { SalesReport } from '../../models/report-models/sales-report';
+import { InventoryReport } from '../../models/report-models/inventory-report';
 @Injectable({
   providedIn: 'root',
 })
@@ -222,4 +223,33 @@ export class GetService {
     return this.httpClient.get<SalesReport>(url, { params });
   }
   //Sales Report Service End
+
+  //Inventory Report Service
+  getInventoryReportsAsync(
+    startDate?: Date | string,
+    endDate?: Date | string,
+    filterType?: string
+  ): Observable<InventoryReport> {
+    let params = new HttpParams();
+
+    if (startDate) {
+      const dateStr =
+        startDate instanceof Date ? startDate.toISOString() : startDate;
+      params = params.append('startDate', dateStr);
+    }
+
+    if (endDate) {
+      const dateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+      params = params.append('endDate', dateStr);
+    }
+    if (filterType) {
+      params = params.set('filterType', filterType);
+    }
+
+    return this.httpClient.get<InventoryReport>(
+      `${this.apiUrl}/Get/reports/inventory`,
+      { params }
+    );
+  }
+  //Inventory Report Service End
 }

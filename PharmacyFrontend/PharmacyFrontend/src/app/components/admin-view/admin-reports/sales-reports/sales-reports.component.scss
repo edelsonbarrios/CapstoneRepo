@@ -20,7 +20,6 @@
     gap: 10px;
 
     .sub-container {
-      border: 1px solid red;
       background: white;
       border-radius: 12px;
       padding: 0.8rem;
@@ -33,9 +32,8 @@
         align-items: center;
         flex-direction: column;
 
-        h3 {
-          font-size: 1.1rem;
-          font-weight: 600;
+        label {
+          font-size: 1rem;
         }
 
         p {
@@ -106,24 +104,62 @@
   }
 
   .transaction-table {
-      width: 100%;
-      border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 
-      th,
-      td {
-        padding: 0.5rem;
-        text-align: left;
-        border-bottom: 1px solid #63a8e9;
+    th,
+    td {
+      padding: 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid #63a8e9;
+    }
+
+    th {
+      font-weight: 500;
+      font-size: large;
+    }
+
+    td {
+      font-size: large;
+      font-weight: 300;
+    }
+  }
+
+  /* ✅ Pagination Controls (same as Inventory Reports) */
+  .pagination-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .btn-page {
+      padding: 0.5rem 1rem;
+      border-radius: 0.4rem;
+      border: 1px solid #3498ff;
+      background-color: white;
+      color: #3498ff;
+      cursor: pointer;
+      transition: opacity 0.15s, background-color 0.15s;
+
+      &:hover:not(:disabled) {
+        background-color: #3498ff;
+        color: white;
       }
 
-      th {
-        font-weight: 500;
-        font-size: large;
+      &:active:not(:disabled) {
+        opacity: 0.8;
       }
 
-      td {
-        font-size: large;
-        font-weight: 300;
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
+
+    .page-info {
+      font-weight: 600;
+      color: #1e2f47;
+    }
+  }
 }

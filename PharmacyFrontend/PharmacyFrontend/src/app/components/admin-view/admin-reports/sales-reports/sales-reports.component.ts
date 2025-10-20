@@ -13,7 +13,7 @@ import { Employee } from '../../../../models/employee-models/employee';
   styleUrl: './sales-reports.component.scss'
 })
 export class SalesReportsComponent implements OnInit {
-  // Filter controls
+  // Filters
   startDate: string = '';
   endDate: string = '';
   selectedEmployeeId: number | null = null;
@@ -21,14 +21,19 @@ export class SalesReportsComponent implements OnInit {
   cashiers: Employee[] = [];
   selectedCashier: Employee = new Employee();
 
-  // Report data
+  // Data
   salesReport: SalesReport | null = null;
+  paginatedTransactions: any[] = [];
   loading: boolean = false;
   error: string | null = null;
 
-  // Dropdown options
-  employees: any[] = [];
+  // Dropdowns
   paymentMethods: string[] = ['Cash', 'Credit Card', 'Debit Card', 'GCash'];
+
+  // Pagination
+  currentPage: number = 1;
+  itemsPerPage: number = 4;
+  totalPages: number = 0;
 
   constructor(private getService: GetService) {}
 
@@ -47,27 +52,46 @@ export class SalesReportsComponent implements OnInit {
     const payment = this.selectedPaymentMethod || undefined;
 
     this.getService.getSalesReport(start, end, empId, payment).subscribe({
-      next: (report) => {  
+      next: (report) => {
         this.salesReport = report;
         this.loading = false;
+        this.currentPage = 1;
+        this.setupPagination();
       },
-      error: (err) => {        
-        console.log(`${err.error}`);
+      error: (err) => {
         this.loading = false;
+        this.error = err.error;
       }
     });
   }
 
-  onFilterChange(): void {
-    this.loadSalesReport();
+  setupPagination(): void {
+    if (!this.salesReport) return;
+    const transactions = this.salesReport.transactions || [];
+    this.totalPages = Math.ceil(transactions.length / this.itemsPerPage);
+    if (this.totalPages === 0) this.totalPages = 1;
+    this.updatePaginatedData();
   }
 
-  clearFilters(): void {
-    this.startDate = '';
-    this.endDate = '';
-    this.selectedEmployeeId = null;
-    this.selectedPaymentMethod = '';
+  updatePaginatedData(): void {
+    if (!this.salesReport) return;
+    const transactions = this.salesReport.transactions || [];
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedTransactions = transactions.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedData();
+    }
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 1;
     this.loadSalesReport();
+    this.updatePaginatedData();
   }
 
   exportToExcel(): void {
@@ -85,7 +109,7 @@ export class SalesReportsComponent implements OnInit {
   getAllCashiers() {
     this.getService.GetAllEmployees().subscribe({
       next: res => {
-        const cashiers = res.filter(e => e.rolePosition == 'Cashier');
+        const cashiers = res.filter(e => e.rolePosition === 'Cashier');
         this.cashiers = cashiers;
       },
       error: err => {

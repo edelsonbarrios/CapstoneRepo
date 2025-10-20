@@ -1,5 +1,4 @@
 <main class="wrapper">
-
   <div class="upper-container">
     <div class="sub-container">
       <div class="content">
@@ -98,15 +97,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let transaction of salesReport.transactions">
+        <tr *ngFor="let transaction of paginatedTransactions">
           <td>{{ transaction.transactionDate | date:'yyyy-MM-dd' }}</td>
           <td>{{ transaction.invoiceNumber }}</td>
           <td>{{ transaction.totalAmount | currency:'PHP':'symbol-narrow' }}</td>
         </tr>
-        <tr *ngIf="salesReport.transactions.length === 0">
+        <tr *ngIf="paginatedTransactions.length === 0">
           <td colspan="4" style="text-align: center;">No transactions found</td>
         </tr>
       </tbody>
     </table>
+
+    <!-- ✅ Pagination Controls (same design as Inventory Reports) -->
+    <div class="pagination-controls" *ngIf="salesReport && salesReport.transactions.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </div>
 </main>
