@@ -8,11 +8,12 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { NgForOf } from "../../../../../../node_modules/@angular/common/index";
 import { ArchiveConfirmationComponent } from "../../../shared/archive-confirmation/archive-confirmation.component";
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-type',
   standalone: true,
-  imports: [NgIf, AddTypeComponent, EditTypeComponent, NgFor, ArchiveConfirmationComponent],
+  imports: [NgIf, AddTypeComponent, EditTypeComponent, NgFor, ArchiveConfirmationComponent, FormsModule],
   templateUrl: './manage-type.component.html',
   styleUrl: './manage-type.component.scss'
 })
@@ -20,6 +21,7 @@ export class ManageTypeComponent implements OnInit{
   addType ?: TypeModel | null;
   editType ?: TypeModel | null;
   types : TypeModel[] = [];
+  filteredTypes: TypeModel[] = [];
   paginatedTypes: TypeModel[] = [];
   showArchiveForm: number = 0;
 
@@ -27,6 +29,9 @@ export class ManageTypeComponent implements OnInit{
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
+
+  // Search property
+  searchQuery: string = '';
 
   constructor(
     private getService : GetService,
@@ -41,12 +46,28 @@ export class ManageTypeComponent implements OnInit{
     this.getService.getAllTypesAsync().subscribe({
       next: res => {
         this.types = res;
+        this.filteredTypes = [...this.types];
         this.updatePagination();
       },
       error : err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (query === '') {
+      this.filteredTypes = [...this.types];
+    } else {
+      this.filteredTypes = this.types.filter((t) =>
+        t.typeName.toLowerCase().includes(query)
+      );
+    }
+
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   openArchiveConfirmationForm(id: number) {
@@ -70,11 +91,11 @@ export class ManageTypeComponent implements OnInit{
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.types.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.filteredTypes.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedTypes = this.types.slice(startIndex, endIndex);
+    this.paginatedTypes = this.filteredTypes.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {

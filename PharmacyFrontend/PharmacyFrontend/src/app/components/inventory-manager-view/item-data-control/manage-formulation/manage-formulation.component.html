@@ -4,7 +4,9 @@
     <!-- FORMULATION CONTROLS/HEADER -->
     <div class="formulation-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand...">
+        placeholder="🔍 Search by Item Code, Brand..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()">
       <button class="btn-formulation" (click)="openAddFormulationForm()">&#43; Add Formulation</button>
     </div>
 

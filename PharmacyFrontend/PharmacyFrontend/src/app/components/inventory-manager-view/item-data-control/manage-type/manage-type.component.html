@@ -4,7 +4,9 @@
     <!-- TYPE CONTROLS/HEADER -->
     <div class="type-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand...">
+        placeholder="🔍 Search by Item Code, Brand..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()">
       <button class="btn-type" (click)="openAddTypeForm()">&#43; Add Type</button>
     </div>
 

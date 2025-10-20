@@ -7,6 +7,7 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { Formulation } from '../../../../models/formulation-models/formulation';
 import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-formulation',
@@ -16,7 +17,8 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
     AddFormulationComponent,
     EditFormulationComponent, 
     NgFor,
-    ArchiveConfirmationComponent
+    ArchiveConfirmationComponent,
+    FormsModule
   ],
   templateUrl: './manage-formulation.component.html',
   styleUrl: './manage-formulation.component.scss'
@@ -25,6 +27,7 @@ export class ManageFormulationComponent implements OnInit{
   addFormulation ?: Formulation | null;
   editFormulation ?: Formulation | null;
   formulations: Formulation[] = [];
+  filteredFormulations: Formulation[] = [];
   paginatedFormulations: Formulation[] = [];
   showArchiveForm: number = 0;
   alertMessage : string = '';
@@ -34,6 +37,9 @@ export class ManageFormulationComponent implements OnInit{
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
+
+  // Search property
+  searchQuery: string = '';
 
   constructor(
     private getService : GetService,
@@ -48,12 +54,28 @@ export class ManageFormulationComponent implements OnInit{
     this.getService.getAllFormulationsAsync().subscribe({
       next: res => {
         this.formulations = res;
+        this.filteredFormulations = [...this.formulations];
         this.updatePagination();
       },
       error: err => {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (query === '') {
+      this.filteredFormulations = [...this.formulations];
+    } else {
+      this.filteredFormulations = this.formulations.filter((f) =>
+        f.formulationName.toLowerCase().includes(query)
+      );
+    }
+
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   openArchiveForm(id: number) {
@@ -76,11 +98,11 @@ export class ManageFormulationComponent implements OnInit{
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.formulations.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.filteredFormulations.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedFormulations = this.formulations.slice(startIndex, endIndex);
+    this.paginatedFormulations = this.filteredFormulations.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {

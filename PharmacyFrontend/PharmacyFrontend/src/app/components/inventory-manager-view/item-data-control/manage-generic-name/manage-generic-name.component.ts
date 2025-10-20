@@ -27,6 +27,7 @@ export class ManageGenericNameComponent implements OnInit {
   addGeneric?: Generic | null;
   editGeneric?: Generic | null;
   generics: Generic[] = [];
+  filteredGenerics: Generic[] = [];
   paginatedGenerics: Generic[] = [];
   showArchiveForm : number = 0;
 
@@ -34,6 +35,9 @@ export class ManageGenericNameComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
+
+  // Search property
+  searchQuery: string = '';
 
   constructor(
     private getService: GetService,
@@ -48,12 +52,28 @@ export class ManageGenericNameComponent implements OnInit {
     this.getService.getAllGenericsAsync().subscribe({
       next: (res) => {
         this.generics = res;
+        this.filteredGenerics = [...this.generics];
         this.updatePagination();
       },
       error: (err) => {
         console.log(`${err.error}`);
       },
     });
+  }
+
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (query === '') {
+      this.filteredGenerics = [...this.generics];
+    } else {
+      this.filteredGenerics = this.generics.filter((g) =>
+        g.genericName.toLowerCase().includes(query)
+      );
+    }
+
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   openArchiveConfirmationForm(id: number) {
@@ -78,11 +98,11 @@ export class ManageGenericNameComponent implements OnInit {
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.generics.length / this.itemsPerPage);
+    this.totalPages = Math.ceil(this.filteredGenerics.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedGenerics = this.generics.slice(startIndex, endIndex);
+    this.paginatedGenerics = this.filteredGenerics.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {

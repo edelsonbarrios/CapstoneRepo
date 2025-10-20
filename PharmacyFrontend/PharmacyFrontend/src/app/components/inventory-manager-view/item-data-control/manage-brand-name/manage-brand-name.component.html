@@ -4,7 +4,9 @@
     <!-- BRAND NAME CONTROLS/HEADER -->
     <div class="brand-control">
       <input type="text" name="searchbar" id="searchbar" class="searchbar"
-        placeholder="🔍 Search by Item Code, Brand...">
+        placeholder="🔍 Search by Item Code, Brand..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()">
       <button class="btn-brand" (click)="openAddBrandForm()">&#43; Add Brand</button>
     </div>
 
