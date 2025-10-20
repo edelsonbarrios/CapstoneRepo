@@ -1,4 +1,4 @@
-$light-blue-color: #006dba;
+  $light-blue-color: #006dba;
 $grey-color: #615e5e;
 
 html {
@@ -19,6 +19,13 @@ body {
 
   main {
     font-family: var(--ff-inter);
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      margin-top: 100px;
+      margin-bottom: 10px;
+    }
 
 
     h1 {
