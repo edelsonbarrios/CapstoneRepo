@@ -34,6 +34,7 @@ export class VatEntryComponent implements OnInit{
   showSuccessAlert: boolean = false;
   successMessage: string = '';
   showArchiveForm: number = 0;
+  errorMessage: string = '';
   
   // Pagination properties
   currentPage: number = 1;
@@ -58,6 +59,7 @@ export class VatEntryComponent implements OnInit{
       },
       error: err => {
         console.log(`${err.error}`);
+        this.errorMessage = err.error;
       }
     });
   }
@@ -97,11 +99,15 @@ export class VatEntryComponent implements OnInit{
         this.showSuccessAlert = true;
       },
       error: err => {
-        alert(`${err.error}`);
         this.createdVat.vatName = ''
         this.createdVat.vatRate = 0;
+        this.errorMessage = err.error;
       }
     });
+  }
+
+  closeErrrMessage() {
+    this.errorMessage = '';
   }
 
   openArchiveForm(id: number) {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.IdentityModel.Tokens.Experimental;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using Npgsql.PostgresTypes;
 using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
@@ -423,7 +424,9 @@ namespace PharmacyBackend.Controllers
 
             if (dto == null)
                 return BadRequest("VAT data is required.");
-
+            var validation = await _postService.VatNameValidationAsync(dto.VATName);
+            if (!validation)
+                return BadRequest("VAT already exist.");
             try
             {
                 var result = await _postService.CreateVATAsync(dto);

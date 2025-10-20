@@ -70,7 +70,8 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
         #endregion
 
         #region VAT
-        public Task<VAT> CreateVATAsync(VAT vat);
+        public Task<bool> CreateVATAsync(VAT vat);
+        public Task<bool> VatNameValidationAsync(string name);
         #endregion
 
         #region PurchaseOrder

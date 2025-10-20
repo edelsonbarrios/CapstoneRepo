@@ -561,11 +561,19 @@ namespace PharmacyBackend.Repository.POST
         #endregion
 
         #region VAT
-        public async Task<VAT> CreateVATAsync(VAT vat)
+        public async Task<bool> CreateVATAsync(VAT vat)
         {
             await _context.VAT.AddAsync(vat);
             await _context.SaveChangesAsync();
-            return vat;
+            return true;
+        }
+        public async Task<bool> VatNameValidationAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var vatNameValidation = await _context.VAT.AnyAsync(v => v.VATName.Equals(name));
+            if (vatNameValidation)
+                return false;
+            return true;
         }
         #endregion
 

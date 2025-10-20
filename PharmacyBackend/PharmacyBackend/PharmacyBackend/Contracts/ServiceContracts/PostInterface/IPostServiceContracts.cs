@@ -79,7 +79,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         #endregion
 
         #region VAT
-        public Task<VatDto> CreateVATAsync(CreateVATDto dto);
+        public Task<bool> CreateVATAsync(CreateVATDto dto);
+        public Task<bool> VatNameValidationAsync(string name);
         #endregion
 
         #region PurchaseOrder

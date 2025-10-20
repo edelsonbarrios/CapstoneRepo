@@ -802,8 +802,11 @@ namespace PharmacyBackend.Service.PostService
         #endregion
 
         #region VAT
-        public async Task<VatDto> CreateVATAsync(CreateVATDto dto)
+        public async Task<bool> CreateVATAsync(CreateVATDto dto)
         {
+            var validation = await _postRepo.VatNameValidationAsync(dto.VATName);
+            if (!validation)
+                return false;
             var vat = new VAT
             {
                 VATName = dto.VATName,
@@ -813,14 +816,13 @@ namespace PharmacyBackend.Service.PostService
 
             var created = await _postRepo.CreateVATAsync(vat);
 
-            return new VatDto
-            {
-                VATID = created.VATID,
-                VATName = created.VATName,
-                VATRate = created.VATRate,
-                IsActive = created.IsActive,
-                DateCreated = created.DateCreated
-            };
+            return true;
+        }
+        public async Task<bool> VatNameValidationAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.VatNameValidationAsync(name);
+            return validation;
         }
         #endregion
 
