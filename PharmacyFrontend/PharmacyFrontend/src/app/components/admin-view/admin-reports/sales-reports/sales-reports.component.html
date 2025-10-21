@@ -91,19 +91,25 @@
     <table class="transaction-table" *ngIf="!loading && salesReport">
       <thead>
         <tr>
+          <th>invoice</th>
           <th>Date</th>
-          <th>Order #</th>
+          <th>Employee</th>
+          <th>Items</th>
           <th>Total</th>
+          <th>Payment</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let transaction of paginatedTransactions">
-          <td>{{ transaction.transactionDate | date:'yyyy-MM-dd' }}</td>
           <td>{{ transaction.invoiceNumber }}</td>
+          <td>{{ transaction.transactionDate | date:'yyyy-MM-dd' }}</td>
+          <td>{{ transaction.employeeName }}</td>
+          <td>{{ transaction.items?.length || 0 }}</td>
           <td>{{ transaction.totalAmount | currency:'PHP':'symbol-narrow' }}</td>
+          <td>{{ transaction.paymentMethod }}</td>
         </tr>
         <tr *ngIf="paginatedTransactions.length === 0">
-          <td colspan="4" style="text-align: center;">No transactions found</td>
+          <td colspan="6" style="text-align: center;">No transactions found</td>
         </tr>
       </tbody>
     </table>

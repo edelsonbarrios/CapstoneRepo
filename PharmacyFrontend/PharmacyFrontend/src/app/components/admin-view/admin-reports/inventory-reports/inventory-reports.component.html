@@ -60,37 +60,36 @@
       </div>
     </div>
 
-    <button>Export Excel</button>
+    <button (click)="exportToExcel()">Export Excel</button>
   </div>
 
   <div class="lower container">
     <h2>Inventory Details</h2>
 
-    <table class="inventory-table">
-      <div *ngIf="loading">Loading...</div>
-      <div *ngIf="error">{{error}}</div>
+    <table class="inventory-table" *ngIf="!loading && inventoryReport">
       <thead>
         <tr>
           <th>Product</th>
           <th>Category</th>
+          <th>Batch</th>
           <th>Box On Hand</th>
-          <th>Recorder Level</th>
+          <th>Reorder Level</th>
           <th>Date Added</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="paginatedInventory.length === 0">
-          <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
-            No inventory data
-          </td>
-        </tr>
-
         <tr *ngFor="let inv of paginatedInventory">
-          <td>{{inv.productName}}</td>
-          <td>{{inv.productName}}</td>
-          <td>{{inv.boxQuantity}}</td>
-          <td>{{inv.reorderLevel}}</td>
-          <td><span>{{inv.dateAdded | date: 'dd-MM-yyyy'}}</span></td>
+          <td>{{ inv.productName }}</td>
+          <td>{{ inv.product?.categoryName || 'N/A' }}</td>
+          <td>{{ inv.batchNumber }}</td>
+          <td>{{ inv.boxQuantity }}</td>
+          <td>{{ inv.reorderLevel }}</td>
+          <td>{{ inv.dateAdded | date:'dd-MM-yyyy' }}</td>
+          <td>{{ getInventoryStatus(inv) }}</td>
+        </tr>
+        <tr *ngIf="paginatedInventory.length === 0">
+          <td colspan="7" style="text-align: center;">No inventory items found</td>
         </tr>
       </tbody>
     </table>
