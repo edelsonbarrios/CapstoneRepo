@@ -7,25 +7,49 @@
       </div>
     </div>
     <div class="user-info">
-      <div>
+      <div class="avatar">
+        <span>{{ getInitials(employee.fullName) }}</span>
+      </div>
+      <div class="details">
         <div class="name">{{ employee.fullName }}</div>
-        <div class="email">{{ employee.rolePosition }}</div>
+        <div class="role">{{ employee.rolePosition }}</div>
       </div>
     </div>
   </div>
 
   <!-- MAIN NAVIGATION -->
   <nav class="nav">
-    <a routerLink="/admin-main/admin-dashboard">📊 Dashboard</a>
-    <a routerLink="/admin-main/admin-reports-main">📈 Reports</a>
-    <a routerLink="/admin-main/admin-maintenance-main">🛠️ Maintenance</a>
-    <a routerLink="/admin-main/admin-supplier">📦Supplier</a>
-    <a routerLink="/admin-main/employee-accounts-main">👤 Employee Accounts</a>
-    <a routerLink="/admin-main/your-account">Your Account</a>
+    <a routerLink="/admin-main/admin-dashboard" routerLinkActive="active" class="nav-item">
+      <span class="icon">📊</span>
+      <span class="label">Dashboard</span>
+    </a>
+    <a routerLink="/admin-main/admin-reports-main" routerLinkActive="active" class="nav-item">
+      <span class="icon">📈</span>
+      <span class="label">Reports</span>
+    </a>
+    <a routerLink="/admin-main/admin-maintenance-main" routerLinkActive="active" class="nav-item">
+      <span class="icon">🛠️</span>
+      <span class="label">Maintenance</span>
+    </a>
+    <a routerLink="/admin-main/admin-supplier" routerLinkActive="active" class="nav-item">
+      <span class="icon">📦</span>
+      <span class="label">Supplier</span>
+    </a>
+    <a routerLink="/admin-main/employee-accounts-main" routerLinkActive="active" class="nav-item">
+      <span class="icon">👤</span>
+      <span class="label">Employee Accounts</span>
+    </a>
+    <a routerLink="/admin-main/your-account" routerLinkActive="active" class="nav-item">
+      <span class="icon">⚙️</span>
+      <span class="label">Your Account</span>
+    </a>
   </nav>
 
   <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav">
-    <a (click)="logOut()">↩️ Logout</a>
+    <button class="logout-btn" (click)="logOut()">
+      <span class="icon">↩️</span>
+      <span class="label">Logout</span>
+    </button>
   </div>
 </div>
