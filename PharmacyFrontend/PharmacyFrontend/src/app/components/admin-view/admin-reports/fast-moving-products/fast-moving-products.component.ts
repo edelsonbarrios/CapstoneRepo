@@ -17,6 +17,9 @@ export class FastMovingProductsComponent implements OnInit {
   itemsPerPage: number = 3;
   totalPages: number = 0;
 
+  // Modal
+  showExportModal: boolean = false;
+
   ngOnInit(): void {
     // Call your method to populate products array here
     // Example: this.getAllProducts();
@@ -36,5 +39,24 @@ export class FastMovingProductsComponent implements OnInit {
       this.currentPage = page;
       this.updatePagination();
     }
+  }
+
+  showExportConfirmation(): void {
+    this.showExportModal = true;
+  }
+
+  confirmExport(): void {
+    this.showExportModal = false;
+    this.exportToExcel();
+  }
+
+  cancelExport(): void {
+    this.showExportModal = false;
+  }
+
+  exportToExcel(): void {
+    // TODO: Implement export logic here
+    console.log('Export to Excel functionality to be implemented');
+    alert('Export functionality will be implemented here');
   }
 }

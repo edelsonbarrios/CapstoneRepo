@@ -36,6 +36,9 @@ export class SalesReportsComponent implements OnInit {
   itemsPerPage: number = 4;
   totalPages: number = 0;
 
+  // Modal
+  showExportModal: boolean = false;
+
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
@@ -65,6 +68,7 @@ export class SalesReportsComponent implements OnInit {
       }
     });
   }
+
   setupPagination(): void {
     if (!this.salesReport) return;
     const transactions = this.salesReport.transactions || [];
@@ -92,6 +96,19 @@ export class SalesReportsComponent implements OnInit {
     this.currentPage = 1;
     this.loadSalesReport();
     this.updatePaginatedData();
+  }
+
+  showExportConfirmation(): void {
+    this.showExportModal = true;
+  }
+
+  confirmExport(): void {
+    this.showExportModal = false;
+    this.exportToExcel();
+  }
+
+  cancelExport(): void {
+    this.showExportModal = false;
   }
 
   exportToExcel(): void {
