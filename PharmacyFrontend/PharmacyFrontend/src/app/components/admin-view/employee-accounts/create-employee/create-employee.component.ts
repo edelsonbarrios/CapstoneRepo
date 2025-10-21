@@ -146,6 +146,7 @@ export class CreateEmployeeComponent implements OnInit{
         this.clearFields();
       },
       error: err => {
+        alert(`${JSON.stringify(err.error)}`);
         console.log(`${err.error}`);
       }
     });

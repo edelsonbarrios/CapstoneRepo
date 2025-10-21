@@ -155,7 +155,8 @@ namespace PharmacyBackend.Service.PostService
                         Quantity = i.Quantity,
                         UnitPrice = i.UnitPrice,
                         Subtotal = i.Quantity * i.UnitPrice
-                    }).ToList()
+                    }).ToList(),
+                    TotalAmount = dto.TotalAmount
                 };
 
                 // Repository will handle inventory deduction and stock movements

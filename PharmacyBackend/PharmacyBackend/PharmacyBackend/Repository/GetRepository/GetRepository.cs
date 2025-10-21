@@ -304,7 +304,6 @@ namespace PharmacyBackend.Repository.GET
                     .Include(st => st.Items)
                         .ThenInclude(si => si.Product)
                     .OrderByDescending(st => st.TransactionDate)
-                    .Take(5)
                     .ToListAsync();
             }
             catch (Exception ex)

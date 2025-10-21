@@ -6,25 +6,29 @@ import { PostService } from '../../../services/PostService/post.service';
 import { Product } from '../../../models/product-models/product';
 import { CreateSalesItemDto } from '../../../models/sales-transaction-models/create-sales-item';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
 import { ViewSalesComponent } from '../view-sales/view-sales.component';
 import { SalesTransaction } from '../../../models/sales-transaction-models/sales-transaction';
 import { DailySalesSummary } from '../../../models/sales-transaction-models/daily-sales-summary';
+import { ProductSalesSummary } from '../../../models/sales-transaction-models/product-sales-summary';
 
 @Component({
   selector: 'app-cashier-transaction',
   standalone: true,
-  imports: [FormsModule, NgIf, ViewSalesComponent, CommonModule, DatePipe],
+  imports: [FormsModule, NgIf, ViewSalesComponent, CommonModule, DatePipe, CurrencyPipe],
   templateUrl: './cashier-transaction.component.html',
   styleUrl: './cashier-transaction.component.scss',
 })
 export class CashierTransactionComponent implements OnInit {
   loggedInEmployee: Employee = new Employee();
-  products : Product[] = [];
-  selectedItems : CreateSalesItemDto[] = [];
-  viewSales ?: Product | null;
+  products: Product[] = [];
+  selectedItems: CreateSalesItemDto[] = [];
+  viewSales?: Product | null;
   transactions: SalesTransaction[] = [];
-  dailySalesSummary : DailySalesSummary = new DailySalesSummary();
+  dailySalesSummary: DailySalesSummary = new DailySalesSummary();
+  productSalesSummary: ProductSalesSummary[] = [];
+  startDate: string = '';
+  endDate: string = '';
 
   // Pagination for products table
   paginatedProducts: any[] = [];
@@ -51,41 +55,53 @@ export class CashierTransactionComponent implements OnInit {
 
   getAllSalesTransactions() {
     this.getService.getAllSalesTransactionsAsync().subscribe({
-      next: res => {
+      next: (res) => {
         this.transactions = res;
         this.updateSalesPagination();
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
+      },
+    });
+  }
+
+  getProductSalesSummary() {
+    this.getService.getProductSalesSummaryAsync(this.startDate, this.endDate).subscribe({
+      next: (res) => {
+        this.productSalesSummary = res;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
     });
   }
 
   getDailySalesSummary() {
     this.getService.getDailySalesSummaryAsync().subscribe({
-      next: res => {
+      next: (res) => {
         this.dailySalesSummary = res;
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
+      },
     });
   }
 
   getSummarySalesForToday() {
     this.getService.getSummarySalesForTodayAsync().subscribe({
-      next: res => {
+      next: (res) => {
         this.dailySalesSummary = res;
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
+      },
     });
   }
 
   updateProductPagination() {
-    // This will work with dynamic product data when you add it later
-    this.totalProductPages = Math.ceil(this.products.length / this.itemsPerProductPage);
+    this.totalProductPages = Math.ceil(
+      this.products.length / this.itemsPerProductPage
+    );
     if (this.totalProductPages === 0) this.totalProductPages = 1;
     const startIndex = (this.currentProductPage - 1) * this.itemsPerProductPage;
     const endIndex = startIndex + this.itemsPerProductPage;
@@ -100,7 +116,9 @@ export class CashierTransactionComponent implements OnInit {
   }
 
   updateSalesPagination() {
-    this.totalSalesPages = Math.ceil(this.transactions.length / this.itemsPerSalesPage);
+    this.totalSalesPages = Math.ceil(
+      this.transactions.length / this.itemsPerSalesPage
+    );
     if (this.totalSalesPages === 0) this.totalSalesPages = 1;
     const startIndex = (this.currentSalesPage - 1) * this.itemsPerSalesPage;
     const endIndex = startIndex + this.itemsPerSalesPage;
@@ -114,7 +132,7 @@ export class CashierTransactionComponent implements OnInit {
     }
   }
 
-  openViewSalesForm(){
+  openViewSalesForm() {
     this.viewSales = new Product();
   }
 }

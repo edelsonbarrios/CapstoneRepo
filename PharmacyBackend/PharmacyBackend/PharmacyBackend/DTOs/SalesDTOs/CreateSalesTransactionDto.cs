@@ -37,5 +37,7 @@ namespace PharmacyBackend.DTOs.SalesDTOs
         [Required]
         [MinLength(1)]
         public List<CreateSalesItemDto> Items { get; set; } = new List<CreateSalesItemDto>();
+        [Required]
+        public decimal TotalAmount { get; set; }
     }
 }

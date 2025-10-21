@@ -58,7 +58,7 @@
 
         <div class="form-group small" [class.error]="phoneNumberError">
           <label>Phone Number</label>
-          <input type="number" placeholder="Enter Phone No." [(ngModel)]="newEmployee.phoneNumber"/>
+          <input type="text" placeholder="Enter Phone No." [(ngModel)]="newEmployee.phoneNumber"/>
           <p class="error-message" *ngIf="phoneNumberError">{{ phoneNumberError }}</p>
         </div>
 

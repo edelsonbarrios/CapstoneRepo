@@ -34,9 +34,11 @@
 
 <!-- Success Alert Modal -->
 <div class="success-overlay" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Account has been successfully created</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Account successfully created.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeCreateAccountForm()">OK</button>
+    </div>
   </div>
 </div>

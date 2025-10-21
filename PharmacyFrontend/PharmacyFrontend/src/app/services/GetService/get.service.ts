@@ -21,6 +21,7 @@ import { SalesTransaction } from '../../models/sales-transaction-models/sales-tr
 import { DailySalesSummary } from '../../models/sales-transaction-models/daily-sales-summary';
 import { SalesReport } from '../../models/report-models/sales-report';
 import { InventoryReport } from '../../models/report-models/inventory-report';
+import { ProductSalesSummary } from '../../models/sales-transaction-models/product-sales-summary';
 @Injectable({
   providedIn: 'root',
 })
@@ -187,6 +188,23 @@ export class GetService {
     return this.httpClient.get<DailySalesSummary>(
       `${this.apiUrl}/Get/DailySalesSummary`
     );
+  }
+  getProductSalesSummaryAsync(
+    startDate?: Date | string,
+    endDate?: Date | string
+  ) {
+    let params = new HttpParams();
+    if (startDate) {
+      const dateStr =
+        startDate instanceof Date ? startDate.toISOString() : startDate;
+      params = params.append('startDate', dateStr);
+    }
+    if (endDate) {
+      const dateStr =
+        endDate instanceof Date ? endDate.toISOString() : endDate;
+      params = params.append('endDate', dateStr);
+    }
+    return this.httpClient.get<ProductSalesSummary[]>(`${this.apiUrl}/Get/daily-sales/products`, {params},);
   }
   //Transaction Service End
 

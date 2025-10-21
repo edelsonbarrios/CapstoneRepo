@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
 import { CommonModule, DatePipe } from '@angular/common';
 import { GetService } from '../../../../services/GetService/get.service';
@@ -13,8 +13,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class ViewAdjustmentComponent {
  @Input() viewAdjust: StockMovement = new StockMovement();
+ @Output() closeForm = new EventEmitter<void>();
 
  constructor(
   private getService: GetService
  ) {}
+
+ closeViewAdjustmentForm()  {
+  this.closeForm.emit();
+ }
 }

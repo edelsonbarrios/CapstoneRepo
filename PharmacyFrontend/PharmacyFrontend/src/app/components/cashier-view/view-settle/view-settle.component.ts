@@ -82,7 +82,7 @@ export class ViewSettleComponent implements OnInit {
       vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
       discountId: 1, // use actual discount ID from DB if available
       employeeID: this.loggedInEmployee.id, // pass logged-in user ID
-      vatId: null, // optional if you don’t track by table
+      vatId: this.selectedVat?.vatid, // optional if you don’t track by table
       items: this.cartItems.map((i) => ({
         productId: i.productID,
         quantity: i.quantity,
@@ -90,6 +90,7 @@ export class ViewSettleComponent implements OnInit {
         unitPrice: i.unitPrice,
         salesTransactionId: 0, // backend should ignore or set this
       })),
+      totalAmount: this.calculateTotals()
     };
 
     this.paymentConfirmed.emit(eventPayload);

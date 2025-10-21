@@ -48,13 +48,17 @@
 
         <div class="tab-container">
           <div class="text-item">Date</div>
-          <input type="date" class="text-item"/>  
+          <input type="date" class="text-item" 
+          (change)="getProductSalesSummary()"
+          [(ngModel)]="startDate">  
         </div>
 
         <p>&ndash; &ndash;</p>
 
         <div class="last-container">
-          <input type="date" class="text-item"/>  
+          <input type="date" class="text-item" 
+          (change)="getProductSalesSummary()"
+          [(ngModel)]="endDate">  
         </div>
       </div>
     </div>
@@ -73,35 +77,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Paracetamol (500mg)</td>
-            <td>20</td>
-            <td>50</td>
-            <td>&#8369;326.00</td>
-          </tr>
-          <tr>
-            <td>Ibuprofen (200mg)</td>
-            <td>26</td>
-            <td>41</td>
-            <td>&#8369;761.37</td>
-          </tr>
-          <tr>
-            <td>Vitamin C (500mg)</td>
-            <td>29</td>
-            <td>51</td>
-            <td>&#8369;848.26</td>
-          </tr>
-          <tr>
-            <td>Cetirizine (10mg)</td>
-            <td>18</td>
-            <td>82</td>
-            <td>₱235.13</td>
-          </tr>
-          <tr>
-            <td>Alcohol (70% sol.)</td>
-            <td>16</td>
-            <td>55</td>
-            <td>&#8369;195.96</td>
+          <tr *ngFor="let p of productSalesSummary">
+            <td>{{p.productName}}</td>
+            <td>{{p.quantitySold}}</td>
+            <td>{{p.availableStock}}</td>
+            <td>{{p.totalSales | currency: 'PHP'}}</td>
           </tr>
         </tbody>
       </table>

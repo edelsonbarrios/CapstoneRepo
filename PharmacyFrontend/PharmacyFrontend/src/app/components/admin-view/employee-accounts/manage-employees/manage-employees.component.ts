@@ -53,7 +53,7 @@ export class ManageEmployeesComponent implements OnInit{
   }
 
   getAllEmployees() {
-    this.getService.GetDisplayEmployees().subscribe({
+    this.getService.GetAllEmployees().subscribe({
       next: employees => {
         this.employees = employees;
         this.updatePagination();
@@ -161,6 +161,7 @@ export class ManageEmployeesComponent implements OnInit{
 
   closeCreateEmployeeForm() {
     this.newEmployee = null;
+    this.currentPage = 1;
     this.getAllEmployees();
   }
 
