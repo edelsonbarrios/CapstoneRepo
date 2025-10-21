@@ -240,6 +240,37 @@ export class GetService {
 
     return this.httpClient.get<SalesReport>(url, { params });
   }
+
+  exportSalesReport(
+    startDate?: Date | string,
+    endDate?: Date | string,
+    employeeId?: number,
+    paymentMethod?: string
+  ): Observable<Blob> {
+    let params = new HttpParams();
+
+    if (startDate) {
+      const dateStr =
+        startDate instanceof Date ? startDate.toISOString() : startDate;
+      params = params.append('startDate', dateStr);
+    }
+
+    if (endDate) {
+      const dateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+      params = params.append('endDate', dateStr);
+    }
+
+    if (employeeId !== undefined && employeeId !== null) {
+      params = params.append('employeeId', employeeId.toString());
+    }
+
+    if (paymentMethod && paymentMethod !== 'All Methods') {
+      params = params.append('paymentMethod', paymentMethod);
+    }
+
+    const url = `${this.apiUrl}/Get/reports/sales/export`;
+    return this.httpClient.get(url, { params, responseType: 'blob' });
+  }
   //Sales Report Service End
 
   //Inventory Report Service
@@ -269,5 +300,37 @@ export class GetService {
       { params }
     );
   }
+
+  exportInventoryReport(
+    startDate?: Date | string,
+    endDate?: Date | string,
+    filterType?: string
+  ): Observable<Blob> {
+    let params = new HttpParams();
+
+    if (startDate) {
+      const dateStr =
+        startDate instanceof Date ? startDate.toISOString() : startDate;
+      params = params.append('startDate', dateStr);
+    }
+
+    if (endDate) {
+      const dateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
+      params = params.append('endDate', dateStr);
+    }
+
+    if (filterType) {
+      params = params.append('filterType', filterType);
+    }
+
+    const url = `${this.apiUrl}/Get/reports/inventory/export`;
+    return this.httpClient.get(url, { params, responseType: 'blob' });
+  }
+
   //Inventory Report Service End
+
+
+
+
+
 }

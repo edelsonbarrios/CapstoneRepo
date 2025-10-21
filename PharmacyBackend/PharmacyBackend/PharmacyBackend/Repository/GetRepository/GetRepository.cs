@@ -846,10 +846,7 @@ namespace PharmacyBackend.Repository.GET
             {
                 case "critical":
                 case "critical stock":
-                    query = query.Where(i => i.IsActive &&
-                        (i.BoxQuantity * i.SheetsPerBox * i.PiecesPerSheet +
-                         i.SheetQuantity * i.PiecesPerSheet +
-                         i.PieceQuantity) <= i.ReorderLevel);
+                    query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel);
                     break;
 
                 case "near expiry":

@@ -21,6 +21,7 @@ export class InventoryReportsComponent implements OnInit {
 
   loading: boolean = false;
   error: string = '';
+  exporting: boolean = false;
 
   // Pagination
   currentPage: number = 1;
@@ -40,7 +41,7 @@ export class InventoryReportsComponent implements OnInit {
         ? new Date(this.startDate).toISOString()
         : undefined,
       endDate: this.endDate ? new Date(this.endDate).toISOString() : undefined,
-      filterType: this.selectedFilterType,
+      filterType: this.selectedFilterType || undefined,
     };
 
     this.loading = true;
@@ -88,4 +89,55 @@ export class InventoryReportsComponent implements OnInit {
       this.updatePaginatedData();
     }
   }
+
+  exportToExcel(): void {
+    if (this.exporting) return; // Prevent multiple clicks
+
+    this.exporting = true;
+
+    const start = this.startDate ? new Date(this.startDate) : undefined;
+    const end = this.endDate ? new Date(this.endDate) : undefined;
+    const filterType = this.selectedFilterType || undefined;
+
+    this.getService.exportInventoryReport(start, end, filterType).subscribe({
+      next: (blob) => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Generate filename
+        const filterSuffix = this.selectedFilterType ? `_${this.selectedFilterType}` : '';
+        const fileName = `InventoryReport_${this.startDate}_${this.endDate}${filterSuffix}.xlsx`;
+        link.download = fileName;
+        
+        // Trigger download
+        link.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        this.exporting = false;
+        
+        console.log('Inventory report exported successfully');
+      },
+      error: (err) => {
+        console.error('Error exporting inventory report:', err);
+        alert('Failed to export report. Please try again.');
+        this.exporting = false;
+      }
+    });
+  }
+
+  getInventoryStatus(inv: any): string {
+    if (inv.isExpired) {
+      return 'Expired';
+    } else if (inv.isNearExpiry) {
+      return 'Near Expiry';
+    } else if (inv.isCriticalStock) {
+      return 'Critical Stock';
+    } else {
+      return 'Normal';
+    }
+  }
+
 }

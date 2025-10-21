@@ -26,9 +26,10 @@ export class SalesReportsComponent implements OnInit {
   paginatedTransactions: any[] = [];
   loading: boolean = false;
   error: string | null = null;
+  exporting: boolean = false;
 
   // Dropdowns
-  paymentMethods: string[] = ['Cash', 'Credit Card', 'Debit Card', 'GCash'];
+  paymentMethods: string[] = ['Cash', 'Online'];
 
   // Pagination
   currentPage: number = 1;
@@ -64,7 +65,6 @@ export class SalesReportsComponent implements OnInit {
       }
     });
   }
-
   setupPagination(): void {
     if (!this.salesReport) return;
     const transactions = this.salesReport.transactions || [];
@@ -95,7 +95,41 @@ export class SalesReportsComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    console.log('Exporting to Excel...', this.salesReport);
+    if (this.exporting) return;
+
+    this.exporting = true;
+
+    const start = this.startDate ? new Date(this.startDate) : undefined;
+    const end = this.endDate ? new Date(this.endDate) : undefined;
+    const empId = this.selectedEmployeeId || undefined;
+    const payment = this.selectedPaymentMethod || undefined;
+
+    this.getService.exportSalesReport(start, end, empId, payment).subscribe({
+      next: (blob) => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Generate filename
+        const fileName = `SalesReport_${this.startDate}_${this.endDate}.xlsx`;
+        link.download = fileName;
+        
+        // Trigger download
+        link.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        this.exporting = false;
+        
+        console.log('Sales report exported successfully');
+      },
+      error: (err) => {
+        console.error('Error exporting sales report:', err);
+        alert('Failed to export report. Please try again.');
+        this.exporting = false;
+      }
+    });
   }
 
   resetFilterValues() {
