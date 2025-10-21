@@ -417,5 +417,55 @@ export class GetService {
 
     return this.httpClient.get<FastMovingProductReport>(url, { params });
   }
+
+  exportFastMovingProductReport(
+    startDate?: Date | string,
+    endDate?: Date | string,
+    topN?: number
+  ): Observable<Blob> {
+    let params = new HttpParams();
+
+    if (startDate) {
+      let dateStr: string;
+      if (startDate instanceof Date) {
+        dateStr = startDate.toISOString();
+      } else if (startDate.trim() !== '') {
+        const date = new Date(startDate);
+        dateStr = date.toISOString();
+      } else {
+        dateStr = '';
+      }
+
+      if (dateStr) {
+        params = params.append('startDate', dateStr);
+      }
+    }
+
+    if (endDate) {
+      let dateStr: string;
+      if (endDate instanceof Date) {
+        const date = new Date(endDate);
+        date.setHours(23, 59, 59, 999);
+        dateStr = date.toISOString();
+      } else if (endDate.trim() !== '') {
+        const date = new Date(endDate);
+        date.setHours(23, 59, 59, 999);
+        dateStr = date.toISOString();
+      } else {
+        dateStr = '';
+      }
+
+      if (dateStr) {
+        params = params.append('endDate', dateStr);
+      }
+    }
+
+    if (topN !== undefined && topN !== null) {
+      params = params.append('topN', topN.toString());
+    }
+
+    const url = `${this.apiUrl}/Get/reports/fast-moving-products/export`;
+    return this.httpClient.get(url, { params, responseType: 'blob' });
+  }
   //Fast Moving Product Report Service End
 }

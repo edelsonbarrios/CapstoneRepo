@@ -20,6 +20,7 @@ export class FastMovingProductsComponent implements OnInit {
 
   loading: boolean = false;
   error: string = '';
+  exportLoading: boolean = false;
 
   // Pagination properties
   paginatedProducts: FastMovingProduct[] = [];
@@ -140,8 +141,42 @@ export class FastMovingProductsComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    // TODO: Implement export logic here
-    console.log('Export to Excel functionality to be implemented');
-    alert('Export functionality will be implemented here');
+    this.exportLoading = true;
+    this.error = '';
+
+    const topN = this.selectedTopN ? parseInt(this.selectedTopN) : 20;
+    const start = this.startDate && this.startDate.trim() !== '' ? this.startDate : undefined;
+    const end = this.endDate && this.endDate.trim() !== '' ? this.endDate : undefined;
+
+    this.getService.exportFastMovingProductReport(
+      start,
+      end,
+      topN
+    ).subscribe({
+      next: (blob: Blob) => {
+        // Create a download link
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        
+        // Generate filename with date range
+        const startDateStr = this.startDate ? this.startDate.replace(/-/g, '') : 'all';
+        const endDateStr = this.endDate ? this.endDate.replace(/-/g, '') : 'all';
+        const filename = `FastMovingProducts_${startDateStr}_to_${endDateStr}.xlsx`;
+        
+        link.download = filename;
+        link.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        this.exportLoading = false;
+      },
+      error: (err: any) => {
+        console.error('Export Error:', err);
+        this.error = err.error?.message || 'Failed to export report';
+        this.exportLoading = false;
+        alert('Failed to export report. Please try again.');
+      }
+    });
   }
 }
