@@ -51,6 +51,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         #region Brand
         public Task<BrandDto> CreateBrandAsync(CreateBrandDto dto);
+
         #endregion
 
         #region Generic
