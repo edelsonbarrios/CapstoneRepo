@@ -29,6 +29,8 @@ export class CashierDashboardComponent implements OnInit {
   printReceipt?: Product | null;
   loggedInEmployee: Employee = new Employee();
   viewInventory: any;
+  finishedTransac: boolean = false;
+  receipt: any;
 
   products: (Product & {
     selected?: boolean;
@@ -78,6 +80,11 @@ export class CashierDashboardComponent implements OnInit {
     this.getService.getAllInventoriesAsync().subscribe(response => {
       this.products = response.message
     })
+  }
+  
+  closeTransactionMessage() {
+    this.finishedTransac = false;
+    this.openPrintReceiptForm();
   }
 
   getAllCategories() {
@@ -152,6 +159,10 @@ export class CashierDashboardComponent implements OnInit {
         (p.brandName || '').toLowerCase().includes(term)
       );
     });
+  }
+
+  closeReceiptForm() {
+    this.receipt = null;
   }
 
 
@@ -316,14 +327,11 @@ export class CashierDashboardComponent implements OnInit {
 
     this.postService.createSalesTransactionAsync(event).subscribe({
       next: () => {
-        alert('Transaction successful.');
-        this.openPrintReceiptForm();
+        this.receipt = event;
         this.getAllProducts();
       },
       error: (err) => {
         console.error('Error creating transaction:', err);
-        console.log(salesTransactionPayload);
-        alert('Failed to create transaction.');
       },
     });
 

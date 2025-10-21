@@ -132,9 +132,11 @@
   ></app-view-settle>
 </div>
 
-<div class="modal-overlay" *ngIf="printReceipt">
+<div class="modal-overlay" *ngIf="receipt">
   <app-print-receipt
-    *ngIf="printReceipt"
+    *ngIf="receipt"
+    [receiptData]="receipt"
+    (closeForm)="closeReceiptForm()"
   ></app-print-receipt>
 </div>
 
@@ -144,4 +146,14 @@
   [viewInventory]="viewInventory"
   (closeForm)="closeViewInventoryForm()"
   ></app-view-inventory>
+</div>
+
+<div class="success-overlay" *ngIf="finishedTransac">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Transaction successful.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeTransactionMessage()">OK</button>
+    </div>
+  </div>
 </div>

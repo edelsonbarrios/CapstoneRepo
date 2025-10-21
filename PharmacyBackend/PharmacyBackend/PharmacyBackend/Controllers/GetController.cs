@@ -136,14 +136,6 @@ namespace PharmacyBackend.Controllers
 
         #region Daily Sales Endpoints
 
-        /// <summary>
-        /// Get daily sales summary with optional filters
-        /// </summary>
-        /// <param name="startDate">Start date (required)</param>
-        /// <param name="endDate">End date (required)</param>
-        /// <param name="employeeId">Filter by employee/cashier (optional)</param>
-        /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
-        /// <returns>Summary containing total sales, transactions, items sold, and unique products</returns>
         [HttpGet("DailySalesSummary")]
         public async Task<ActionResult<DailySalesSummaryDto>> GetSummarySalesForToday()
         {
@@ -154,8 +146,8 @@ namespace PharmacyBackend.Controllers
         }
         [HttpGet("daily-sales/summary")]
         public async Task<IActionResult> GetDailySalesSummary(
-            [FromQuery] DateTime startDate,
-            [FromQuery] DateTime endDate,
+            [FromQuery] DateTime? startDate,
+            [FromQuery] DateTime? endDate,
             [FromQuery] int? employeeId = null,
             [FromQuery] string paymentMethod = null)
         {
@@ -182,12 +174,6 @@ namespace PharmacyBackend.Controllers
             }
         }
 
-        /// <summary>
-        /// Get product sales summary for date range
-        /// </summary>
-        /// <param name="startDate">Start date (required)</param>
-        /// <param name="endDate">End date (required)</param>
-        /// <returns>List of products with quantity sold, available stock, and total sales</returns>
         [HttpGet("daily-sales/products")]
         public async Task<IActionResult> GetProductSalesSummary(
             [FromQuery] DateTime startDate,
@@ -216,14 +202,6 @@ namespace PharmacyBackend.Controllers
             }
         }
 
-        /// <summary>
-        /// Get filtered sales transactions
-        /// </summary>
-        /// <param name="startDate">Start date (required)</param>
-        /// <param name="endDate">End date (required)</param>
-        /// <param name="employeeId">Filter by employee/cashier (optional)</param>
-        /// <param name="paymentMethod">Filter by payment method: Cash or Online (optional)</param>
-        /// <returns>List of sales transactions with items</returns>
         [HttpGet("daily-sales/transactions")]
         public async Task<IActionResult> GetFilteredSalesTransactions(
             [FromQuery] DateTime startDate,

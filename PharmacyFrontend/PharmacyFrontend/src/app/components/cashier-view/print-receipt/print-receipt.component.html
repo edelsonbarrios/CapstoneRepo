@@ -1,10 +1,64 @@
-<div class="modal">
-  <button class="btn-print">Print</button>
+<div class="wrapper">
+  <div class="receipt-card">
+    <button class="btn-print" (click)="printReceipt()">🖨️ Print Receipt</button>
 
-  <!-- RECEIPT HEADER -->
-  <div class="receipt-header">
-    <h1>Racquel Pharmacy</h1>
-    <h2>123</h2>
-    <h2>Amparo QC</h2>
+    <!-- Header -->
+    <div class="receipt-header">
+      <h1>Racquel Pharmacy</h1>
+      <h2>123 Amparo, Quezon City</h2>
+      <p><strong>Invoice #:</strong> {{ receiptData.invoiceNumber }}</p>
+      <p><strong>Date:</strong> {{ today | date: 'medium' }}</p>
+      <p><strong>Cashier ID:</strong> {{ receiptData.employeeID }}</p>
+      <p><strong>Payment Method:</strong> {{ receiptData.paymentMethod }}</p>
+    </div>
+
+    <!-- Items Table -->
+    <table class="receipt-table" *ngIf="receiptData?.items?.length">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Quantity</th>
+          <th>Unit Type</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of receiptData.items">
+          <td>{{ item.productId }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.unitType }}</td>
+          <td>{{ item.unitPrice | currency: 'PHP' }}</td>
+          <td>{{ item.quantity * item.unitPrice | currency: 'PHP' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Totals Section -->
+    <div class="receipt-summary">
+      <p>Discount: -{{ receiptData.discountAmount | currency: 'PHP' }}</p>
+      <p>VAT: {{ receiptData.vatAmount | currency: 'PHP' }}</p>
+      <p class="line"></p>
+      <h3>Total: {{ receiptData.totalAmount | currency: 'PHP' }}</h3>
+      <p>Amount Paid: {{ receiptData.amountPaid | currency: 'PHP' }}</p>
+      <p>Change: {{ receiptData.changeAmount | currency: 'PHP' }}</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="receipt-footer">
+      <p>Thank you for shopping with Racquel Pharmacy!</p>
+      <p>Please come again 😊</p>
+      <button (click)="finishedTransac = true">Finish</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" *ngIf="finishedTransac">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Transaction successful.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="close()">OK</button>
+    </div>
   </div>
 </div>

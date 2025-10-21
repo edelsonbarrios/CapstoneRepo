@@ -189,15 +189,23 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate)
+    DateTime startDate,
+    DateTime endDate)
         {
-            // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
-            // End of the day
+            // ✅ If no dates provided, default to current week (Monday → Sunday)
+            if (startDate == default || endDate == default)
+            {
+                var today = DateTime.UtcNow.Date;
+                int daysSinceMonday = ((int)today.DayOfWeek + 6) % 7; // Convert Sunday=0 → 6
+                startDate = today.AddDays(-daysSinceMonday); // Monday of current week
+                endDate = startDate.AddDays(6); // Sunday of current week
+            }
 
-            // Get sales items within date range
+            // Ensure date comparisons ignore time
+            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
+            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // end of day
+
+            // ✅ Fetch sales items within the range
             var salesData = await _context.SalesItem
                 .Include(si => si.SalesTransaction)
                 .Include(si => si.Product)
@@ -219,7 +227,7 @@ namespace PharmacyBackend.Repository.GET
                 })
                 .ToListAsync();
 
-            // Map to DTO and calculate available stock from current inventory
+            // ✅ Map to DTO
             var result = salesData.Select(sd => new ProductSalesSummaryDto
             {
                 ProductId = sd.ProductId,
@@ -233,6 +241,7 @@ namespace PharmacyBackend.Repository.GET
 
             return result;
         }
+
 
         public async Task<IEnumerable<SalesTransaction>> GetFilteredSalesTransactionsAsync(
             DateTime startDate,

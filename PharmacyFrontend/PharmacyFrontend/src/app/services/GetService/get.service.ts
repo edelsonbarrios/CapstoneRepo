@@ -213,11 +213,13 @@ export class GetService {
       { params }
     );
   }
+  
   getSummarySalesForTodayAsync(): Observable<DailySalesSummary> {
     return this.httpClient.get<DailySalesSummary>(
       `${this.apiUrl}/Get/DailySalesSummary`
     );
   }
+  
   getProductSalesSummaryAsync(
     startDate?: Date | string,
     endDate?: Date | string

@@ -24,6 +24,10 @@ export class ViewSettleComponent implements OnInit {
   loggedInEmployee: Employee = new Employee();
   selectedVat: VAT | null = null;
   selectedDiscount: Discount | null = null;
+  currentPage: number = 1;
+  totalPages: number = 0;
+  itemsPerPage: number = 2;
+  paginateItems: CartItem[] = [];
 
   @Output() paymentConfirmed = new EventEmitter<any>();
   @Output() modalClosed = new EventEmitter<void>();
@@ -37,6 +41,22 @@ export class ViewSettleComponent implements OnInit {
     this.getLoggedInUser();
     this.getAllDiscounts();
     this.getAllVAT();
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.cartItems.length / this.itemsPerPage);
+    if(this.totalPages == 0) this.totalPages = 1;
+    const startIndex = (this.currentPage -1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginateItems = this.cartItems.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
   }
 
   getAllDiscounts() {
@@ -63,7 +83,8 @@ export class ViewSettleComponent implements OnInit {
 
   calculateTotals() {
     const vatAmount = this.subtotal * ((this.selectedVat?.vatRate || 0) / 100);
-    const discountAmount = this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100);
+    const discountAmount =
+      this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100);
     return this.subtotal + vatAmount - discountAmount;
   }
 
@@ -78,7 +99,8 @@ export class ViewSettleComponent implements OnInit {
       paymentMethod: 'Cash', // or user selection
       amountPaid: this.payment,
       changeAmount: this.change,
-      discountAmount: this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
+      discountAmount:
+        this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
       vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
       discountId: 1, // use actual discount ID from DB if available
       employeeID: this.loggedInEmployee.id, // pass logged-in user ID
@@ -90,7 +112,7 @@ export class ViewSettleComponent implements OnInit {
         unitPrice: i.unitPrice,
         salesTransactionId: 0, // backend should ignore or set this
       })),
-      totalAmount: this.calculateTotals()
+      totalAmount: this.calculateTotals(),
     };
 
     this.paymentConfirmed.emit(eventPayload);

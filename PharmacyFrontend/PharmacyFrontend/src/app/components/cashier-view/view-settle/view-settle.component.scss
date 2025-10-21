@@ -47,6 +47,46 @@
   }
 }
 
+.pagination-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+
+  .btn-page {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    color: #475569;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .page-info {
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.875rem;
+  }
+}
+
 /* Summary */
 .summary {
   margin-bottom: 1.5rem;
