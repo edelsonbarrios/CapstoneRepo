@@ -37,7 +37,7 @@
 
       .table-wrapper {
         overflow-y: auto;
-        max-height: 400px;
+        max-height: 480px;
 
         &.scrollable {
           border: 1px solid #e5e7eb;
@@ -120,7 +120,7 @@
         border-radius: 8px;
         cursor: pointer;
         font-weight: 600;
-        margin-top: 0.5rem;
+        margin-top: 0.7rem;
 
         &:hover {
           background: #0060a8;
