@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { PurchaseOrder } from '../../../../models/purchase-order-models/purchase-order';
 import {
   CurrencyPipe,
@@ -27,7 +35,8 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   employee: Employee = new Employee();
   receiptNumber: string = '';
   paginatedItems: any[] = [];
-  
+  markReceivedError: string = '';
+
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 2;
@@ -35,7 +44,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
 
   constructor(
     private updateService: UpdateService,
-    private getService: GetService 
+    private getService: GetService
   ) {}
 
   ngOnInit(): void {
@@ -56,12 +65,17 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       this.totalPages = 1;
       return;
     }
-    
-    this.totalPages = Math.ceil(this.purchaseOrder.purchaseOrderItems.length / this.itemsPerPage);
+
+    this.totalPages = Math.ceil(
+      this.purchaseOrder.purchaseOrderItems.length / this.itemsPerPage
+    );
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedItems = this.purchaseOrder.purchaseOrderItems.slice(startIndex, endIndex);
+    this.paginatedItems = this.purchaseOrder.purchaseOrderItems.slice(
+      startIndex,
+      endIndex
+    );
   }
 
   goToPage(page: number) {
@@ -80,7 +94,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
     const mfgDate = new Date(item.manufacturingDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const YearsAgo = new Date(today);
     YearsAgo.setFullYear(today.getFullYear() - 5);
 
@@ -135,7 +149,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
 
   markAsReceived() {
     // Clear previous errors
-    this.purchaseOrder.purchaseOrderItems.forEach(item => {
+    this.purchaseOrder.purchaseOrderItems.forEach((item) => {
       item.mfgDateError = '';
       item.expDateError = '';
     });
@@ -143,7 +157,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
     let isValid = true;
 
     // Validate all items
-    this.purchaseOrder.purchaseOrderItems.forEach(item => {
+    this.purchaseOrder.purchaseOrderItems.forEach((item) => {
       this.validateMfgDate(item);
       this.validateExpDate(item);
 
@@ -154,6 +168,13 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
 
     if (!isValid) {
       return;
+    }
+
+    for(let item of this.purchaseOrder.purchaseOrderItems) {
+      if(item.boxQuantityReceived > item.boxQuantityOrdered) {
+        this.markReceivedError = `Received quantity of ${item.productName} is greater than ordered quantity`;
+        return;
+      }
     }
 
     const requestPayload: PurchaseOrderReceivedRequest = {
@@ -182,29 +203,33 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
           this.closeForm.emit();
         },
         error: (err) => {
-          alert(`${err.error}`);
+          this.markReceivedError = err.error;
           console.log(requestPayload);
         },
       });
   }
 
+  closeErrorMessage() {
+    this.markReceivedError = '';
+  }
+
   getLoggedInEmployee() {
-      const token = localStorage.getItem(LogInToken);
-      if (!token) {
-        console.log(`Token does not exist.`);
-        return;
-      }
-  
-      const employee: any = jwtDecode(token);
-      const employeeId = parseInt(employee.EmployeeId);
-  
-      this.getService.GetEmployeeById(employeeId).subscribe({
-        next: (employee) => {
-          this.employee = employee;
-        },
-        error: (err) => {
-          console.log(`${err.error}`);
-        },
-      });
+    const token = localStorage.getItem(LogInToken);
+    if (!token) {
+      console.log(`Token does not exist.`);
+      return;
     }
+
+    const employee: any = jwtDecode(token);
+    const employeeId = parseInt(employee.EmployeeId);
+
+    this.getService.GetEmployeeById(employeeId).subscribe({
+      next: (employee) => {
+        this.employee = employee;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
+  }
 }

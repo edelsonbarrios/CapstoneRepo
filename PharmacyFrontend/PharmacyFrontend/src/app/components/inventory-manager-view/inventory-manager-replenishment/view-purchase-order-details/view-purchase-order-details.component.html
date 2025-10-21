@@ -110,3 +110,13 @@
     </div>
   </footer>
 </div>
+
+<div class="success-overlay" *ngIf="markReceivedError">
+  <div class="success-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">{{markReceivedError}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeErrorMessage()">OK</button>
+    </div>
+  </div>
+</div>

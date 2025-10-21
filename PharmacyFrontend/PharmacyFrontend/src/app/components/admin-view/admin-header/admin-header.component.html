@@ -1,24 +1,29 @@
 <div class="wrapper">
+  <!-- PROFILE SECTION -->
   <div class="profile">
     <div class="logo">
-      <img src="logo.png" alt="logo" width="100%" height="90px">
+      <div class="logo-container">
+        <img src="logo.png" alt="logo" />
+      </div>
     </div>
     <div class="user-info">
       <div>
-        <div class="name">{{employee.fullName}}</div>
-        <div class="email">{{employee.rolePosition}}</div>
+        <div class="name">{{ employee.fullName }}</div>
+        <div class="email">{{ employee.rolePosition }}</div>
       </div>
     </div>
   </div>
 
+  <!-- MAIN NAVIGATION -->
   <nav class="nav">
-    <a routerLink="/admin-main/admin-dashboard">📊 Dashboard</a>
-    <a routerLink="/admin-main/admin-reports-main">📈 Reports</a>
-    <a routerLink="/admin-main/admin-maintenance-main">🛠️ Maintenance</a>
-    <a routerLink="/admin-main/admin-supplier">📦Supplier</a>
-    <a routerLink="/admin-main/employee-accounts-main">👤 Employee Accounts</a>
+    <a routerLink="/admin-main/admin-dashboard" routerLinkActive="active">📊 Dashboard</a>
+    <a routerLink="/admin-main/admin-reports-main" routerLinkActive="active">📈 Reports</a>
+    <a routerLink="/admin-main/admin-maintenance-main" routerLinkActive="active">🛠️ Maintenance</a>
+    <a routerLink="/admin-main/admin-supplier" routerLinkActive="active">📦 Supplier</a>
+    <a routerLink="/admin-main/employee-accounts-main" routerLinkActive="active">👤 Employee Accounts</a>
   </nav>
 
+  <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav">
     <a (click)="logOut()">↩️ Logout</a>
   </div>

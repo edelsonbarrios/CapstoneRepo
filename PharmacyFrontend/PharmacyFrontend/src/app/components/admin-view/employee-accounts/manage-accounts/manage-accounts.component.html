@@ -3,7 +3,11 @@
     <!-- Search & Add Employee -->
     <div class="table-header">
       <div class="search-wrapper">
-        <input type="text" placeholder="🔍 Search Username" class="search-box" [(ngModel)]="searchUsername">
+        <input type="text" 
+        placeholder="🔍 Search Username" class="search-box" 
+        [(ngModel)]="searchUsername"
+        (input)="onSearchChange()"
+        >
         <button class="btn search-btn" (click)="searchAccountByUsername()">Search</button>
       </div>
     </div>

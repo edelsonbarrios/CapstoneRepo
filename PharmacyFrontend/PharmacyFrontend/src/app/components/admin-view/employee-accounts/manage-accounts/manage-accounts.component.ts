@@ -32,6 +32,19 @@ export class ManageAccountsComponent implements OnInit{
     this.getAllAccounts();
   }
 
+  get filteredAccounts() : Account[]{
+    if(!this.searchUsername)
+      return this.accounts;
+    const query = this.searchUsername.toLowerCase();
+    return this.accounts.filter(
+      a => a.username.toLowerCase().includes(query)
+    );
+  }
+
+  onSearchChange() {
+    this.updatePagination();
+  }
+
   getAllAccounts() {
     this.getService.GetAllAccounts().subscribe({
       next: accounts => {
@@ -61,11 +74,12 @@ export class ManageAccountsComponent implements OnInit{
   }
 
   updatePagination() {
-    this.totalPages = Math.ceil(this.accounts.length / this.itemsPerPage);
+    var items = this.filteredAccounts;
+    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedAccounts = this.accounts.slice(startIndex, endIndex);
+    this.paginatedAccounts = items.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {

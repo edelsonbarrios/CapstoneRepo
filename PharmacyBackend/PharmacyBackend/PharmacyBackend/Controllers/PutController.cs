@@ -349,7 +349,7 @@ namespace PharmacyBackend.Controllers
                 if (product.IsActive == false)
                     return NotFound("Product is inactive");
                 if (item.BoxQuantityReceived <= 0)
-                    return BadRequest($"Received Quantity of {product.ProductName} is 0. ");
+                    return BadRequest($"Received Quantity of {product.ProductName} is 0.");
             }
 
             var purchaseOrder = await _updateService.MarkAsReceivedAsync(request);
