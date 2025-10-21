@@ -44,22 +44,27 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 
         #region Brand
         public Task<Brand> CreateBrandAsync(Brand brand);
+        public Task<bool> ValidateBrandNameAsync(string name);
         #endregion
 
         #region Generic 
         public Task<Generic> CreateGenericAsync(Generic generic);
+        public Task<bool> ValidateGenericNameAsync(string name);
         #endregion
 
         #region Formulation
         public Task<Formulation> CreateFormulationAsync(Formulation formulation);
+        public Task<bool> ValidateFormulationNameAsync(string name);
         #endregion
 
         #region Classification
         public Task<Classification> CreateClassificationAsync(Classification classification);
+        public Task<bool> ValidateClassificationNameAsync(string name);
         #endregion
 
         #region Types
         public Task<TypeModel> CreateTypeModelAsync(TypeModel typeModel);
+        public Task<bool> ValidateTypeNameAsync(string name);
         #endregion
 
         #region Supplier

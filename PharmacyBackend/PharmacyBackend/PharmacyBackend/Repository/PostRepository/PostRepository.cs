@@ -475,6 +475,14 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return brand;
         }
+
+        public async Task<bool> ValidateBrandNameAsync(string name)
+        {
+            var validation = await _context.Brand.AnyAsync(b => b.BrandName.Equals(name) && b.IsActive);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Generic
@@ -483,6 +491,13 @@ namespace PharmacyBackend.Repository.POST
             await _context.Generic.AddAsync(generic);
             await _context.SaveChangesAsync();
             return generic;
+        }
+        public async Task<bool> ValidateGenericNameAsync(string name)
+        {
+            var validation = await _context.Generic.AnyAsync(g => g.GenericName.Equals(name) && g.IsActive);
+            if (validation)
+                return false;
+            return true;
         }
         #endregion
 
@@ -493,6 +508,13 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return formulation;
         }
+        public async Task<bool> ValidateFormulationNameAsync(string name)
+        {
+            var validation = await _context.Formulation.AnyAsync(f => f.FormulationName.Equals(name) && f.IsActive);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Classification
@@ -502,6 +524,13 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return classification;
         }
+        public async Task<bool> ValidateClassificationNameAsync(string name)
+        {
+            var validation = await _context.Classification.AnyAsync(c => c.ClassificationName.Equals(name) && c.IsActive);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Type
@@ -510,6 +539,13 @@ namespace PharmacyBackend.Repository.POST
             await _context.TypeModel.AddAsync(typeModel);
             await _context.SaveChangesAsync();
             return typeModel;
+        }
+        public async Task<bool> ValidateTypeNameAsync(string name)
+        {
+            var validation = await _context.TypeModel.AnyAsync(t => t.TypeName.Equals(name) && t.IsActive);
+            if (validation)
+                return false;
+            return true;
         }
         #endregion
 

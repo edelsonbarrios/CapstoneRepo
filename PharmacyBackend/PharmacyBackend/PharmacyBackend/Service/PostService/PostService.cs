@@ -510,12 +510,15 @@ namespace PharmacyBackend.Service.PostService
         #region Brand
         public async Task<BrandDto> CreateBrandAsync(CreateBrandDto dto)
         {
+            var validation = await _postRepo.ValidateBrandNameAsync(dto.BrandName);
+            if (!validation)
+                return null;
+
             var brand = new Brand
             {
                 BrandName = dto.BrandName
             };
             var created = await _postRepo.CreateBrandAsync(brand);
-
             return new BrandDto
             {
                 BrandID = created.BrandID,
@@ -527,12 +530,15 @@ namespace PharmacyBackend.Service.PostService
         #region Generic
         public async Task<GenericDto> CreateGenericAsync(CreateGenericDto dto)
         {
+            var validation = await _postRepo.ValidateGenericNameAsync(dto.GenericName);
+            if (!validation)
+                return null;
+
             var generic = new Generic
             {
                 GenericName = dto.GenericName
             };
             var created = await _postRepo.CreateGenericAsync(generic);
-
             return new GenericDto
             {
                 GenericID = created.GenericID,
@@ -544,12 +550,15 @@ namespace PharmacyBackend.Service.PostService
         #region Formulation
         public async Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto)
         {
+            var validation = await _postRepo.ValidateFormulationNameAsync(dto.FormulationName);
+            if (!validation)
+                return null;
+
             var formulation = new Formulation
             {
                 FormulationName = dto.FormulationName
             };
             var created = await _postRepo.CreateFormulationAsync(formulation);
-
             return new FormulationDto
             {
                 FormulationID = created.FormulationID,
@@ -561,12 +570,15 @@ namespace PharmacyBackend.Service.PostService
         #region Classification
         public async Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto)
         {
+            var validation = await _postRepo.ValidateClassificationNameAsync(dto.ClassificationName);
+            if (!validation)
+                return null;
+
             var classification = new Classification
             {
                 ClassificationName = dto.ClassificationName
             };
             var created = await _postRepo.CreateClassificationAsync(classification);
-
             return new ClassificationDto
             {
                 ClassificationID = created.ClassificationID,
@@ -578,12 +590,15 @@ namespace PharmacyBackend.Service.PostService
         #region Type
         public async Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto)
         {
+            var validation = await _postRepo.ValidateTypeNameAsync(dto.TypeName);
+            if (!validation)
+                return null;
+
             var type = new TypeModel
             {
                 TypeName = dto.TypeName
             };
             var created = await _postRepo.CreateTypeModelAsync(type);
-
             return new TypeModelDto
             {
                 TypeID = created.TypeID,
