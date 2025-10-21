@@ -232,6 +232,16 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: { roles: ['Administrator'] },
       },
+      {
+        path: 'your-account',
+        loadComponent: () => {
+          return import (
+            './components/admin-view/your-account/your-account.component'
+          ).then((m) => m.YourAccountComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+      }
     ],
   },
   {
@@ -460,6 +470,16 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'your-account',
+        loadComponent: () => {
+          return import (
+            './components/inventory-manager-view/your-account/your-account.component'
+          ).then((m) => m.YourAccountComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Inventory Manager'] },
+      }
     ],
   },
   {
@@ -502,6 +522,16 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: { roles: ['Cashier'] },
       },
+      {
+        path: 'your-account',
+        loadComponent: () => {
+          return import (
+            './components/cashier-view/your-account/your-account.component'
+          ).then((m) => m.YourAccountComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Cashier'] },
+      }
     ],
   },
   {

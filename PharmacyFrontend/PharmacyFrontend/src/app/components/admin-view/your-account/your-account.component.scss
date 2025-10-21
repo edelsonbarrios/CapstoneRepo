@@ -1,0 +1,129 @@
+.wrapper {
+  padding: 1rem;
+  background: #f2f6fc;
+  display: grid;
+  grid-template-rows: 10% 90%;
+  height: 100%;
+
+  .header {
+
+    h1 {
+      color: #3498ff;
+      font-size: 1.6rem;
+    }
+  }
+
+  .account {
+    gap: 10px;
+    border: 1px solid red;
+    background: white;
+    border-radius: 12px;
+    padding: 0.7rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
+
+    .account-details {
+      border: 2px solid rgb(204, 204, 204);
+      border-radius: 1rem;
+      padding: 0.7rem;
+      margin-bottom: 10px;
+
+      .details-header {
+        margin-bottom: 10px;
+
+        h1 {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+      }
+
+      .details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+
+        .content {
+          margin-bottom: 8px;
+
+          h2 {
+            color: rgb(77, 77, 77);
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
+          p {
+            color: rgb(59, 59, 59);
+            font-size: 1.1rem;
+            font-weight: 500;
+            border: 1px solid rgb(204, 204, 204);
+            border-radius: 0.3rem;
+            padding: 0.2rem 1rem 0.2rem 1rem;
+          }
+        }
+      }
+    }
+
+    .edit-account {
+      border: 2px solid rgb(204, 204, 204);
+      border-radius: 1rem;
+      padding: 0.7rem;
+
+      .edit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+
+        h1 {
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+        
+        .btn-edit {
+          background-color: #3498ff;
+          color: rgb(235, 235, 235);
+          padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+          font-size: 1rem;
+          font-weight: 600;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #2d83da;
+          }
+
+          &:active {
+            opacity: 0.8;
+          }
+        }
+      }
+
+      .edit {
+
+        .content {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-bottom: 8px;
+
+          h2 {
+            color: rgb(77, 77, 77);
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
+          p {
+            color: rgb(59, 59, 59);
+            font-size: 1.1rem;
+            font-weight: 500;
+            border: 1px solid rgb(204, 204, 204);
+            border-radius: 0.3rem;
+            padding: 0.2rem 1rem 0.2rem 1rem;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
