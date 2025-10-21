@@ -29,6 +29,7 @@ export class CashierTransactionComponent implements OnInit {
   productSalesSummary: ProductSalesSummary[] = [];
   startDate: string = '';
   endDate: string = '';
+  selectedPaymentMethod: string = '';
 
   // Pagination for products table
   paginatedProducts: any[] = [];
@@ -48,9 +49,22 @@ export class CashierTransactionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Set default dates to today
+    const today = new Date();
+    this.startDate = this.formatDate(today);
+    this.endDate = this.formatDate(today);
+    
     this.getAllSalesTransactions();
     this.getSummarySalesForToday();
-    this.updateProductPagination();
+    this.getProductSalesSummary();
+  }
+
+  // Helper method to format date as YYYY-MM-DD
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   getAllSalesTransactions() {
@@ -66,12 +80,19 @@ export class CashierTransactionComponent implements OnInit {
   }
 
   getProductSalesSummary() {
+    // Only call if both dates are set
+    if (!this.startDate || !this.endDate) {
+      console.log('Dates not set, skipping product sales summary');
+      return;
+    }
+
     this.getService.getProductSalesSummaryAsync(this.startDate, this.endDate).subscribe({
       next: (res) => {
         this.productSalesSummary = res;
+        this.updateProductPagination();
       },
       error: (err) => {
-        console.log(`${err.error}`);
+        console.log(`Product sales summary error: ${err.error}`);
       },
     });
   }
@@ -84,6 +105,79 @@ export class CashierTransactionComponent implements OnInit {
       error: (err) => {
         console.log(`${err.error}`);
       },
+    });
+  }
+
+  getDailySalesByFilter() {
+    // Validate that both dates are set
+    if (!this.startDate || !this.endDate) {
+      console.warn('Both start and end dates are required');
+      return;
+    }
+
+    console.log('Filtering with:', {
+      startDate: this.startDate,
+      endDate: this.endDate,
+      paymentMethod: this.selectedPaymentMethod
+    });
+
+    // Update summary cards
+    this.getService.getDailySalesSummaryByFilter(
+      this.startDate, 
+      this.endDate, 
+      0, 
+      this.selectedPaymentMethod
+    ).subscribe({
+      next: res => {
+        console.log('Summary response:', res);
+        this.dailySalesSummary = res;
+      },
+      error: err => {
+        console.error('Summary error:', err);
+      }
+    });
+
+    // Update product sales table
+    this.getProductSalesSummary();
+
+    // Filter transactions locally (or call backend if you have an endpoint)
+    this.filterTransactionsLocally();
+  }
+
+  // Filter transactions locally based on date and payment method
+  filterTransactionsLocally() {
+    this.getService.getAllSalesTransactionsAsync().subscribe({
+      next: (allTransactions) => {
+        let filtered = allTransactions;
+
+        // Filter by date range
+        if (this.startDate && this.endDate) {
+          const start = new Date(this.startDate);
+          const end = new Date(this.endDate);
+          end.setHours(23, 59, 59, 999); // Include entire end date
+
+          filtered = filtered.filter(transaction => {
+            const transactionDate = new Date(transaction.transactionDate);
+            return transactionDate >= start && transactionDate <= end;
+          });
+        }
+
+        // Filter by payment method
+        if (this.selectedPaymentMethod && 
+            this.selectedPaymentMethod !== '' && 
+            this.selectedPaymentMethod !== 'all') {
+          filtered = filtered.filter(transaction => 
+            transaction.paymentMethod.toLowerCase() === this.selectedPaymentMethod.toLowerCase()
+          );
+        }
+
+        this.transactions = filtered;
+        this.currentSalesPage = 1; // Reset to first page
+        this.updateSalesPagination();
+      },
+      error: (err) => {
+        console.error('Error filtering transactions:', err);
+      }
     });
   }
 
@@ -100,12 +194,12 @@ export class CashierTransactionComponent implements OnInit {
 
   updateProductPagination() {
     this.totalProductPages = Math.ceil(
-      this.products.length / this.itemsPerProductPage
+      this.productSalesSummary.length / this.itemsPerProductPage
     );
     if (this.totalProductPages === 0) this.totalProductPages = 1;
     const startIndex = (this.currentProductPage - 1) * this.itemsPerProductPage;
     const endIndex = startIndex + this.itemsPerProductPage;
-    this.paginatedProducts = this.products.slice(startIndex, endIndex);
+    this.paginatedProducts = this.productSalesSummary.slice(startIndex, endIndex);
   }
 
   goToProductPage(page: number) {

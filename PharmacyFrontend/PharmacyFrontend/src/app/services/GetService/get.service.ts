@@ -184,6 +184,34 @@ export class GetService {
       `${this.apiUrl}/Get/daily-sales/summary`
     );
   }
+  getDailySalesSummaryByFilter(
+    startDate: string,
+    endDate: string,
+    employeeId: number,
+    paymentMethod: string
+  ): Observable<DailySalesSummary> {
+    let params = new HttpParams();
+
+    // Always include dates (they're required by the backend)
+    params = params.append('startDate', startDate);
+    params = params.append('endDate', endDate);
+
+    // Only add optional parameters if they have values
+    if (employeeId && employeeId > 0) {
+      params = params.append('employeeId', employeeId.toString());
+    }
+
+    if (paymentMethod && paymentMethod !== '' && paymentMethod !== 'all') {
+      params = params.append('paymentMethod', paymentMethod);
+    }
+
+    console.log('API Request params:', params.toString());
+
+    return this.httpClient.get<DailySalesSummary>(
+      `${this.apiUrl}/Get/daily-sales/summary`,
+      { params }
+    );
+  }
   getSummarySalesForTodayAsync(): Observable<DailySalesSummary> {
     return this.httpClient.get<DailySalesSummary>(
       `${this.apiUrl}/Get/DailySalesSummary`
@@ -200,11 +228,13 @@ export class GetService {
       params = params.append('startDate', dateStr);
     }
     if (endDate) {
-      const dateStr =
-        endDate instanceof Date ? endDate.toISOString() : endDate;
+      const dateStr = endDate instanceof Date ? endDate.toISOString() : endDate;
       params = params.append('endDate', dateStr);
     }
-    return this.httpClient.get<ProductSalesSummary[]>(`${this.apiUrl}/Get/daily-sales/products`, {params},);
+    return this.httpClient.get<ProductSalesSummary[]>(
+      `${this.apiUrl}/Get/daily-sales/products`,
+      { params }
+    );
   }
   //Transaction Service End
 
@@ -328,9 +358,4 @@ export class GetService {
   }
 
   //Inventory Report Service End
-
-
-
-
-
 }
