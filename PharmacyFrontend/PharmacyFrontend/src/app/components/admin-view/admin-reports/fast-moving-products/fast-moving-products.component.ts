@@ -28,6 +28,8 @@ export class FastMovingProductsComponent implements OnInit {
   totalPages: number = 0;
 
   constructor(private getService: GetService) {}
+  // Modal
+  showExportModal: boolean = false;
 
   ngOnInit(): void {
     // Set default dates (last 30 days)
@@ -122,5 +124,24 @@ export class FastMovingProductsComponent implements OnInit {
       this.currentPage = page;
       this.updatePaginatedData();
     }
+  }
+
+  showExportConfirmation(): void {
+    this.showExportModal = true;
+  }
+
+  confirmExport(): void {
+    this.showExportModal = false;
+    this.exportToExcel();
+  }
+
+  cancelExport(): void {
+    this.showExportModal = false;
+  }
+
+  exportToExcel(): void {
+    // TODO: Implement export logic here
+    console.log('Export to Excel functionality to be implemented');
+    alert('Export functionality will be implemented here');
   }
 }

@@ -59,9 +59,8 @@
         </select>
       </div>
     </div>
-
-    <button (click)="exportToExcel()">Export Excel</button>
     <button (click)="resetFilters()">Reset</button>
+    <button (click)="showExportConfirmation()">Export Excel</button>
   </div>
 
   <div class="lower container">
@@ -95,7 +94,6 @@
       </tbody>
     </table>
 
-    <!-- ✅ PAGINATION CONTROLS (same as Supplier component) -->
     <div class="pagination-controls" *ngIf="inventoryReport.inventoryItems.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
@@ -103,3 +101,16 @@
     </div>
   </div>
 </main>
+
+<!-- Export Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showExportModal">
+  <div class="wrapper-modal">
+    <h1>Do you want to Export this into Excel?</h1>
+    <p class="subtext">This will download the inventory report as an Excel file.</p>
+
+    <div class="button-wrapper">
+      <button class="btn-confirm" (click)="confirmExport()">OK</button>
+      <button class="btn-cancel" (click)="cancelExport()">Cancel</button>
+    </div>
+  </div>
+</div>

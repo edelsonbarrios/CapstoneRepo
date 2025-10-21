@@ -50,6 +50,7 @@
     </div>
 
     <button (click)="resetFilters()">Reset</button>
+    <button (click)="showExportConfirmation()">Export Excel</button>
   </div>
 
   <div class="lower container">
@@ -103,3 +104,16 @@
     </div>
   </div>
 </main>
+
+<!-- Export Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showExportModal">
+  <div class="wrapper-modal">
+    <h1>Do you want to Export this into Excel?</h1>
+    <p class="subtext">This will download the fast-moving products report as an Excel file.</p>
+
+    <div class="button-wrapper">
+      <button class="btn-confirm" (click)="confirmExport()">OK</button>
+      <button class="btn-cancel" (click)="cancelExport()">Cancel</button>
+    </div>
+  </div>
+</div>

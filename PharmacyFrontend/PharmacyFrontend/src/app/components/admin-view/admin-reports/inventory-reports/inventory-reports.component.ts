@@ -29,6 +29,9 @@ export class InventoryReportsComponent implements OnInit {
   totalPages: number = 0;
   paginatedInventory: any[] = [];
 
+  // Modal
+  showExportModal: boolean = false;
+
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
@@ -97,8 +100,21 @@ export class InventoryReportsComponent implements OnInit {
     }
   }
 
+  showExportConfirmation(): void {
+    this.showExportModal = true;
+  }
+
+  confirmExport(): void {
+    this.showExportModal = false;
+    this.exportToExcel();
+  }
+
+  cancelExport(): void {
+    this.showExportModal = false;
+  }
+
   exportToExcel(): void {
-    if (this.exporting) return; // Prevent multiple clicks
+    if (this.exporting) return;
 
     this.exporting = true;
 
@@ -146,5 +162,4 @@ export class InventoryReportsComponent implements OnInit {
       return 'Normal';
     }
   }
-
 }
