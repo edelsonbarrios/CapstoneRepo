@@ -3,22 +3,22 @@
   <div class="upper-container">
     <div class="sub-container">
       <div class="content">
-        <label>Produc Sold</label>
-        <p>89</p>
+        <label>Product Sold</label>
+        <p>{{fastMovingReport?.totalProductsSold || 0}}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
         <label>Total Quantity</label>
-        <p>150</p>
+        <p>{{fastMovingReport?.totalQuantitySold || 0}}</p>
       </div>
     </div>
 
     <div class="sub-container">
       <div class="content">
         <label>Total Revenue</label>
-        <p>&#8369;125,000.00</p>
+        <p>{{fastMovingReport?.totalRevenue | currency:'PHP':'symbol-narrow'}}</p>
       </div>
     </div>
   </div>
@@ -29,33 +29,41 @@
     <div class="cntr-control">
       <div class="control">
         <label>Start Date</label>
-        <input type="date" />
+        <input type="date" [(ngModel)]="startDate" (change)="onFilterChange()">
       </div>
     
       <div class="control">
         <label>End Date</label>
-        <input type="date" />
+        <input type="date" [(ngModel)]="endDate" (change)="onFilterChange()">
       </div>
     
       <div class="control">
         <label>Top N Products</label>
-        <select id="top">
-          <option value="">Top Products</option>
-          <option value="top-10">Top 10</option>
-          <option value="top-20">Top 20</option>
-          <option value="top-50">Top 50</option>
-          <option value="top-100">Top 1000</option>
+        <select id="top" [(ngModel)]="selectedTopN" (change)="onFilterChange()">
+          <option value="">All Products</option>
+          <option value="10">Top 10</option>
+          <option value="20">Top 20</option>
+          <option value="50">Top 50</option>
+          <option value="100">Top 100</option>
         </select>
       </div>
     </div>
 
-    <button>Export Excel</button>
+    <button (click)="resetFilters()">Reset</button>
   </div>
 
   <div class="lower container">
     <h2>Product Ranking</h2>
 
-    <table class="ranking-table">
+    <div *ngIf="loading" style="text-align: center; padding: 2rem; color: #6b7280;">
+      Loading...
+    </div>
+
+    <div *ngIf="error" style="text-align: center; padding: 2rem; color: #dc2626;">
+      {{error}}
+    </div>
+
+    <table class="ranking-table" *ngIf="!loading && fastMovingReport">
       <thead>
         <tr>
           <th>Rank</th>
@@ -67,24 +75,28 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="products.length === 0">
+        <tr *ngIf="paginatedProducts.length === 0">
           <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
             No recent data
           </td>
         </tr>
         <tr *ngFor="let p of paginatedProducts">
           <td>{{p.rank}}</td>
-          <td>{{p.product}}</td>
-          <td>{{p.category}}</td>
-          <td>{{p.qtySold}}</td>
-          <td>{{p.revenue}}</td>
-          <td><span>{{p.stock}}</span></td>
+          <td>{{p.productName}}</td>
+          <td>{{p.categoryName}}</td>
+          <td>{{p.quantitySold}}</td>
+          <td>{{p.revenue | currency:'PHP':'symbol-narrow'}}</td>
+          <td>
+            <span [style.color]="p.currentStock < 10 ? '#dc2626' : '#10b981'">
+              {{p.currentStock}}
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
 
     <!-- PAGINATION CONTROLS -->
-    <div class="pagination-controls" *ngIf="products.length > 0">
+    <div class="pagination-controls" *ngIf="!loading && paginatedProducts.length > 0">
       <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
       <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>

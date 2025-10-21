@@ -22,6 +22,7 @@ import { DailySalesSummary } from '../../models/sales-transaction-models/daily-s
 import { SalesReport } from '../../models/report-models/sales-report';
 import { InventoryReport } from '../../models/report-models/inventory-report';
 import { ProductSalesSummary } from '../../models/sales-transaction-models/product-sales-summary';
+import { FastMovingProductReport } from '../../models/report-models/fast-moving-product-report';
 @Injectable({
   providedIn: 'root',
 })
@@ -358,4 +359,63 @@ export class GetService {
   }
 
   //Inventory Report Service End
+
+  //Fast Moving Product Report Service
+  getFastMovingProductReportAsync(
+    startDate?: Date | string,
+    endDate?: Date | string,
+    topN?: number
+  ): Observable<FastMovingProductReport> {
+    let params = new HttpParams();
+
+    // Only add parameters if they have valid values
+    if (startDate) {
+      let dateStr: string;
+      if (startDate instanceof Date) {
+        dateStr = startDate.toISOString();
+      } else if (startDate.trim() !== '') {
+        // Convert YYYY-MM-DD to ISO string
+        const date = new Date(startDate);
+        dateStr = date.toISOString();
+      } else {
+        dateStr = ''; // Empty string, don't add to params
+      }
+
+      if (dateStr) {
+        params = params.append('startDate', dateStr);
+      }
+    }
+
+    if (endDate) {
+      let dateStr: string;
+      if (endDate instanceof Date) {
+        // Set to end of day
+        const date = new Date(endDate);
+        date.setHours(23, 59, 59, 999);
+        dateStr = date.toISOString();
+      } else if (endDate.trim() !== '') {
+        // Convert YYYY-MM-DD to end of day ISO string
+        const date = new Date(endDate);
+        date.setHours(23, 59, 59, 999);
+        dateStr = date.toISOString();
+      } else {
+        dateStr = ''; // Empty string, don't add to params
+      }
+
+      if (dateStr) {
+        params = params.append('endDate', dateStr);
+      }
+    }
+
+    if (topN !== undefined && topN !== null) {
+      params = params.append('topN', topN.toString());
+    }
+
+    const url = `${this.apiUrl}/Get/reports/fast-moving-products`;
+    console.log('Request URL:', url);
+    console.log('Params:', params.toString());
+
+    return this.httpClient.get<FastMovingProductReport>(url, { params });
+  }
+  //Fast Moving Product Report Service End
 }

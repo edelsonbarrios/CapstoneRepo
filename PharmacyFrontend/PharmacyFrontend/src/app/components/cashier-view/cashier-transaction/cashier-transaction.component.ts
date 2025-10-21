@@ -208,6 +208,7 @@ export class CashierTransactionComponent implements OnInit {
       this.updateProductPagination();
     }
   }
+  
 
   updateSalesPagination() {
     this.totalSalesPages = Math.ceil(

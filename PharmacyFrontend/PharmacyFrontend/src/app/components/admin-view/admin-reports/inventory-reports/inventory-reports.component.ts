@@ -71,6 +71,13 @@ export class InventoryReportsComponent implements OnInit {
     this.updatePaginatedData();
   }
 
+  resetFilters() {
+    this.startDate = '';
+    this.endDate = '';
+    this.selectedFilterType = '';
+    this.onFilterChange();
+  }
+
   updatePaginatedData() {
     const items = this.inventoryReport.inventoryItems || [];
     const start = (this.currentPage - 1) * this.itemsPerPage;
