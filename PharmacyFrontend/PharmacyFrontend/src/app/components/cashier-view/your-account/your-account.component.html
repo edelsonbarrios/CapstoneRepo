@@ -1,92 +1,53 @@
-<main class="wrapper">
-  
-  <div class="header">
-    <h1>Account Settings</h1>
+<main class="account-wrapper">
+  <div class="account-header">
+    <h1>⚙️ Account Settings</h1>
   </div>
 
-  <div class="account">
-
-    <div class="account-details">
-      <div class="details-header">
-        <h1>Account Details</h1>
+  <div class="account-card">
+    <!-- Account Details -->
+    <div class="section">
+      <div class="section-header">
+        <h2>👤 Account Details</h2>
       </div>
-      
-      <div class="details">
-        <div class="content">
-          <h2>Employee Code:</h2>
-          <p>Sample Employee Code</p>
-        </div>
 
-         <div class="content">
-          <h2>Last Name:</h2>
-          <p>Sample Last Name</p>
-        </div>
-
-         <div class="content">
-          <h2>First Name:</h2>
-          <p>Sample First Name</p>
-        </div>
-
-         <div class="content">
-          <h2>Middle Name:</h2>
-          <p>Sample Middle Name</p>
-        </div>
-
-         <div class="content">
-          <h2>Email:</h2>
-          <p>Sample Email</p>
-        </div>
-
-         <div class="content">
-          <h2>Contact Number:</h2>
-          <p>Sample Contact</p>
-        </div>
-
-         <div class="content">
-          <h2>Birth Date:</h2>
-          <p>Sample Birth Date</p>
-        </div>
-
-         <div class="content">
-          <h2>Age:</h2>
-          <p>Sample Age</p>
-        </div>
-
-         <div class="content">
-          <h2>Gender:</h2>
-          <p>Sample Gender</p>
-        </div>
-
-         <div class="content">
-          <h2>Role Position:</h2>
-          <p>Sample Role Position</p>
-        </div>
-
-        <div class="content">
-          <h2>Address:</h2>
-          <p>Sample Address</p>
+      <div class="details-grid">
+        <div class="info-box" *ngFor="let field of [
+          {label: 'Employee Code', value: employee.employeeCode},
+          {label: 'Last Name', value: employee.lastName},
+          {label: 'First Name', value: employee.firstName},
+          {label: 'Middle Name', value: employee.middleName},
+          {label: 'Email', value: employee.email},
+          {label: 'Contact Number', value: employee.phoneNumber},
+          {label: 'Birth Date', value: (employee.birthDate | date:'dd-MM-yyyy')},
+          {label: 'Age', value: employee.age},
+          {label: 'Gender', value: employee.gender},
+          {label: 'Role Position', value: employee.rolePosition},
+          {label: 'Address', value: employee.address}
+        ]">
+          <label>{{ field.label }}</label>
+          <p>{{ field.value }}</p>
         </div>
       </div>
     </div>
 
-    <div class="edit-account">
-      <div class="edit-header">
-        <h1>Account Settings</h1>
-        <button class="btn-edit">Edit Account</button>
+    <!-- Account Edit Section -->
+    <div class="section">
+      <div class="section-header with-action">
+        <h2>🔒 Account Credentials</h2>
+        <button class="btn-edit">✏️ Edit Account</button>
       </div>
 
-      <div class="edit">
-        <div class="content">
-          <h2>Username:</h2>
+      <div class="details-grid credentials">
+        <div class="info-box">
+          <label>Username</label>
           <p>Sample Username</p>
         </div>
 
-        <div class="content">
-          <h2>Password:</h2>
+        <div class="info-box">
+          <label>Password</label>
           <p>Sample Password</p>
         </div>
       </div>
     </div>
-
   </div>
 </main>
