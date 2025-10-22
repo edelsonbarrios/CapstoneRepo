@@ -1,19 +1,30 @@
-<div class="wrapper">
+<main class="wrapper">
   <div class="header">
     <div class="nav-interact">
-     <a routerLink="/inventory-manager-main/item-data-control-main/manage-brand-name">Brand Name</a>
-     <a routerLink="/inventory-manager-main/item-data-control-main/manage-generic-name">Generic Name</a>
-     <a routerLink="/inventory-manager-main/item-data-control-main/manage-formulation">Formulation</a>
-     <a routerLink="/inventory-manager-main/item-data-control-main/manage-classification">Classification</a>
-     <a routerLink="/inventory-manager-main/item-data-control-main/manage-type">Type</a>
-    </div>
-
-    <div class="notif-wrapper">
-      <div class="notification">🔔<span class="dot"></span></div>
+      <a routerLink="/inventory-manager-main/item-data-control-main/manage-brand-name" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-file-prescription"></i></span>
+        <span class="tab-label">Brand Name</span>
+      </a>
+      <a routerLink="/inventory-manager-main/item-data-control-main/manage-generic-name" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-tag"></i></span>
+        <span class="tab-label">Generic Name</span>
+      </a>
+      <a routerLink="/inventory-manager-main/item-data-control-main/manage-formulation" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-flask"></i></span>
+        <span class="tab-label">Formulation</span>
+      </a>
+      <a routerLink="/inventory-manager-main/item-data-control-main/manage-classification" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-sitemap"></i></span>
+        <span class="tab-label">Classification</span>
+      </a>
+      <a routerLink="/inventory-manager-main/item-data-control-main/manage-type" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-pills"></i></span>
+        <span class="tab-label">Type</span>
+      </a>
     </div>
   </div>
 
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>
-</div>
+</main>

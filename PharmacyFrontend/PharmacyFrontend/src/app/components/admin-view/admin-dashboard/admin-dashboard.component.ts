@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 
 // Interfaces for table data
@@ -18,7 +18,7 @@ interface ExpiringProduct {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [RouterLink, NgFor, NgIf],
+  imports: [RouterLink, NgFor, NgIf, RouterLinkActive],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })

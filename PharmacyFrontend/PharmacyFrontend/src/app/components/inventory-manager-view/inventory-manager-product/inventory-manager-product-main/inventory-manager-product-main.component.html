@@ -1,16 +1,18 @@
-<div class="wrapper">
+<main class="wrapper">
   <div class="header">
     <div class="nav-interact">
-      <a routerLink="/inventory-manager-main/inventory-manager-product-main/manage-product">Product</a>
-      <a routerLink="/inventory-manager-main/inventory-manager-product-main/manage-category">Category</a>
-    </div>
-
-    <div class="notif-wrapper">
-      <div class="notification">🔔<span class="dot"></span></div>
+      <a routerLink="/inventory-manager-main/inventory-manager-product-main/manage-product" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-box"></i></span>
+        <span class="tab-label">Product</span>
+      </a>
+      <a routerLink="/inventory-manager-main/inventory-manager-product-main/manage-category" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-layer-group"></i></span>
+        <span class="tab-label">Category</span>
+      </a>
     </div>
   </div>
 
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>
-</div>
+</main>

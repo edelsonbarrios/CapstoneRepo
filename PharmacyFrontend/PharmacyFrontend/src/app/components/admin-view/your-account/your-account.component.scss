@@ -1,126 +1,171 @@
 .wrapper {
   padding: 1rem;
-  background: #f2f6fc;
+  background: #f8fafc;
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: 5% 95%;
   height: 100%;
+  gap: 1rem;
 
   .header {
+    display: flex;
+    align-items: center;
 
     h1 {
       color: #3498ff;
-      font-size: 1.6rem;
+      font-size: 28px;
+      font-weight: 700;
     }
   }
 
   .account {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-    border: 1px solid red;
-    background: white;
-    border-radius: 12px;
-    padding: 0.7rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f1f5f9;
 
     .account-details {
-      border: 2px solid rgb(204, 204, 204);
-      border-radius: 1rem;
-      padding: 0.7rem;
-      margin-bottom: 10px;
+      background: white;
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      transition: box-shadow 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
 
       .details-header {
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
 
         h1 {
-          font-size: 1.2rem;
-          font-weight: 500;
+          font-size: 1rem;
+          font-weight: 600;
+          color: #334155;
+          letter-spacing: -0.2px;
         }
       }
 
       .details {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 4px;
+        gap: 0.8rem;
 
         .content {
-          margin-bottom: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
 
           h2 {
-            color: rgb(77, 77, 77);
-            font-size: 1rem;
-            font-weight: 500;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
 
           p {
-            color: rgb(59, 59, 59);
-            font-size: 1.1rem;
+            color: #334155;
+            font-size: 14px;
             font-weight: 500;
-            border: 1px solid rgb(204, 204, 204);
-            border-radius: 0.3rem;
-            padding: 0.2rem 1rem 0.2rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            background: white;
+            transition: all 0.2s ease;
+
+            &:hover {
+              border-color: #cbd5e1;
+              background: #f8fafc;
+            }
           }
         }
       }
     }
 
     .edit-account {
-      border: 2px solid rgb(204, 204, 204);
-      border-radius: 1rem;
-      padding: 0.7rem;
+      background: white;
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f1f5f9;
+      transition: box-shadow 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
 
       .edit-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
 
         h1 {
-          font-size: 1.2rem;
-          font-weight: 500;
+          font-size: 16px;
+          font-weight: 600;
+          color: #334155;
+          letter-spacing: -0.2px;
         }
         
         .btn-edit {
           background-color: #3498ff;
-          color: rgb(235, 235, 235);
-          padding: 0.3rem 0.5rem 0.3rem 0.5rem;
-          font-size: 1rem;
+          color: white;
+          padding: 10px 20px;
+          font-size: 14px;
           font-weight: 600;
           border: none;
-          border-radius: 4px;
+          border-radius: 8px;
           cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
 
           &:hover {
-            background-color: #2d83da;
+            background-color: #1d6fd8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52, 152, 255, 0.3);
           }
 
           &:active {
-            opacity: 0.8;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
           }
         }
       }
 
       .edit {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
 
         .content {
           display: flex;
-          align-items: center;
-          gap: 4px;
-          margin-bottom: 8px;
+          flex-direction: column;
+          gap: 8px;
 
           h2 {
-            color: rgb(77, 77, 77);
-            font-size: 1rem;
-            font-weight: 500;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
 
           p {
-            color: rgb(59, 59, 59);
-            font-size: 1.1rem;
+            color: #334155;
+            font-size: 14px;
             font-weight: 500;
-            border: 1px solid rgb(204, 204, 204);
-            border-radius: 0.3rem;
-            padding: 0.2rem 1rem 0.2rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            background: white;
+            transition: all 0.2s ease;
             display: inline-block;
+            max-width: fit-content;
+
+            &:hover {
+              border-color: #cbd5e1;
+              background: #f8fafc;
+            }
           }
         }
       }
