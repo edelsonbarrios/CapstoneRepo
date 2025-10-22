@@ -180,6 +180,10 @@
         align-items: center;
         justify-content: center;
         transition: transform 0.25s ease;
+
+        i {
+          color: #1e293b;
+        }
       }
 
       .label {
@@ -217,6 +221,10 @@
 
         .icon {
           transform: scale(1.1);
+
+          i {
+            color: #1d4ed8;
+          }
         }
       }
     }
