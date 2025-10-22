@@ -6,7 +6,13 @@ import { PostService } from '../../../services/PostService/post.service';
 import { Product } from '../../../models/product-models/product';
 import { CreateSalesItemDto } from '../../../models/sales-transaction-models/create-sales-item';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
+import {
+  CommonModule,
+  CurrencyPipe,
+  DatePipe,
+  NgFor,
+  NgIf,
+} from '@angular/common';
 import { ViewSalesComponent } from '../view-sales/view-sales.component';
 import { SalesTransaction } from '../../../models/sales-transaction-models/sales-transaction';
 import { DailySalesSummary } from '../../../models/sales-transaction-models/daily-sales-summary';
@@ -15,7 +21,14 @@ import { ProductSalesSummary } from '../../../models/sales-transaction-models/pr
 @Component({
   selector: 'app-cashier-transaction',
   standalone: true,
-  imports: [FormsModule, NgIf, ViewSalesComponent, CommonModule, DatePipe, CurrencyPipe],
+  imports: [
+    FormsModule,
+    NgIf,
+    ViewSalesComponent,
+    CommonModule,
+    DatePipe,
+    CurrencyPipe,
+  ],
   templateUrl: './cashier-transaction.component.html',
   styleUrl: './cashier-transaction.component.scss',
 })
@@ -23,7 +36,7 @@ export class CashierTransactionComponent implements OnInit {
   loggedInEmployee: Employee = new Employee();
   products: Product[] = [];
   selectedItems: CreateSalesItemDto[] = [];
-  viewSales?: Product | null;
+  viewSales?: SalesTransaction | null;
   transactions: SalesTransaction[] = [];
   dailySalesSummary: DailySalesSummary = new DailySalesSummary();
   productSalesSummary: ProductSalesSummary[] = [];
@@ -53,7 +66,7 @@ export class CashierTransactionComponent implements OnInit {
     const today = new Date();
     this.startDate = this.formatDate(today);
     this.endDate = this.formatDate(today);
-    
+
     this.getAllSalesTransactions();
     this.getSummarySalesForToday();
     this.getProductSalesSummary();
@@ -72,6 +85,7 @@ export class CashierTransactionComponent implements OnInit {
       next: (res) => {
         this.transactions = res;
         this.updateSalesPagination();
+        this.filterTransactionsLocally();
       },
       error: (err) => {
         console.log(`${err.error}`);
@@ -80,21 +94,22 @@ export class CashierTransactionComponent implements OnInit {
   }
 
   getProductSalesSummary() {
-    // Only call if both dates are set
     if (!this.startDate || !this.endDate) {
       console.log('Dates not set, skipping product sales summary');
       return;
     }
 
-    this.getService.getProductSalesSummaryAsync(this.startDate, this.endDate).subscribe({
-      next: (res) => {
-        this.productSalesSummary = res;
-        this.updateProductPagination();
-      },
-      error: (err) => {
-        console.log(`Product sales summary error: ${err.error}`);
-      },
-    });
+    this.getService
+      .getProductSalesSummaryAsync(this.startDate, this.endDate)
+      .subscribe({
+        next: (res) => {
+          this.productSalesSummary = res;
+          this.updateProductPagination();
+        },
+        error: (err) => {
+          console.log(`Product sales summary error: ${err.error}`);
+        },
+      });
   }
 
   getDailySalesSummary() {
@@ -118,24 +133,26 @@ export class CashierTransactionComponent implements OnInit {
     console.log('Filtering with:', {
       startDate: this.startDate,
       endDate: this.endDate,
-      paymentMethod: this.selectedPaymentMethod
+      paymentMethod: this.selectedPaymentMethod,
     });
 
     // Update summary cards
-    this.getService.getDailySalesSummaryByFilter(
-      this.startDate, 
-      this.endDate, 
-      0, 
-      this.selectedPaymentMethod
-    ).subscribe({
-      next: res => {
-        console.log('Summary response:', res);
-        this.dailySalesSummary = res;
-      },
-      error: err => {
-        console.error('Summary error:', err);
-      }
-    });
+    this.getService
+      .getDailySalesSummaryByFilter(
+        this.startDate,
+        this.endDate,
+        0,
+        this.selectedPaymentMethod
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Summary response:', res);
+          this.dailySalesSummary = res;
+        },
+        error: (err) => {
+          console.error('Summary error:', err);
+        },
+      });
 
     // Update product sales table
     this.getProductSalesSummary();
@@ -156,18 +173,22 @@ export class CashierTransactionComponent implements OnInit {
           const end = new Date(this.endDate);
           end.setHours(23, 59, 59, 999); // Include entire end date
 
-          filtered = filtered.filter(transaction => {
+          filtered = filtered.filter((transaction) => {
             const transactionDate = new Date(transaction.transactionDate);
             return transactionDate >= start && transactionDate <= end;
           });
         }
 
         // Filter by payment method
-        if (this.selectedPaymentMethod && 
-            this.selectedPaymentMethod !== '' && 
-            this.selectedPaymentMethod !== 'all') {
-          filtered = filtered.filter(transaction => 
-            transaction.paymentMethod.toLowerCase() === this.selectedPaymentMethod.toLowerCase()
+        if (
+          this.selectedPaymentMethod &&
+          this.selectedPaymentMethod !== '' &&
+          this.selectedPaymentMethod !== 'all'
+        ) {
+          filtered = filtered.filter(
+            (transaction) =>
+              transaction.paymentMethod.toLowerCase() ===
+              this.selectedPaymentMethod.toLowerCase()
           );
         }
 
@@ -177,7 +198,7 @@ export class CashierTransactionComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error filtering transactions:', err);
-      }
+      },
     });
   }
 
@@ -199,7 +220,10 @@ export class CashierTransactionComponent implements OnInit {
     if (this.totalProductPages === 0) this.totalProductPages = 1;
     const startIndex = (this.currentProductPage - 1) * this.itemsPerProductPage;
     const endIndex = startIndex + this.itemsPerProductPage;
-    this.paginatedProducts = this.productSalesSummary.slice(startIndex, endIndex);
+    this.paginatedProducts = this.productSalesSummary.slice(
+      startIndex,
+      endIndex
+    );
   }
 
   goToProductPage(page: number) {
@@ -208,7 +232,6 @@ export class CashierTransactionComponent implements OnInit {
       this.updateProductPagination();
     }
   }
-  
 
   updateSalesPagination() {
     this.totalSalesPages = Math.ceil(
@@ -227,7 +250,11 @@ export class CashierTransactionComponent implements OnInit {
     }
   }
 
-  openViewSalesForm() {
-    this.viewSales = new Product();
+  openViewSalesForm(view: SalesTransaction) {
+    this.viewSales = view;
+  }
+
+  closeViewSalesForm() {
+    this.viewSales = null;
   }
 }

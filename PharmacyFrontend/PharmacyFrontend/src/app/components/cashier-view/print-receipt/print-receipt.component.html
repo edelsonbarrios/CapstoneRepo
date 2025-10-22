@@ -24,7 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of receiptData.items">
+        <tr *ngFor="let item of isPrinting ? receiptData.items : paginatedItems">
           <td>{{ item.productId }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.unitType }}</td>
@@ -33,6 +33,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="pagination-controls" *ngIf="receiptData.items.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
 
     <!-- Totals Section -->
     <div class="receipt-summary">

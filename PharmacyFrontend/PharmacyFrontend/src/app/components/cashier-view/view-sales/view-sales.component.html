@@ -1,78 +1,90 @@
 <div class="modal">
-
   <div class="modal-header">
-    <h2>Transaction</h2>
-    <a>x</a>
+    <h2>Transaction Details</h2>
+    <a (click)="closeViewSales()">×</a>
   </div>
 
-  <div class="grid-container">
-    <div class="transaction-info">
-      <label>Invoice Number:</label>
-      <p>Sample Number</p>
+  <div class="modal-body">
+    <!-- Transaction Information -->
+    <div class="grid-container">
+      <div class="transaction-info">
+        <label>Invoice Number</label>
+        <p>{{viewSales.invoiceNumber}}</p>
+      </div>
+
+      <div class="transaction-info">
+        <label>Transaction Date</label>
+        <p>{{viewSales.transactionDate | date: 'MMM dd, yyyy'}}</p>
+      </div>
+
+      <div class="transaction-info">
+        <label>Cashier</label>
+        <p>{{cashier.fullName}}</p>
+      </div>
+
+      <div class="transaction-info">
+        <label>Payment Method</label>
+        <p>{{viewSales.paymentMethod}}</p>
+      </div>
     </div>
 
-    <div class="transaction-info">
-      <label>Date:</label>
-      <p>Sample Date</p>
+    <!-- Items Section -->
+    <div class="items-section">
+      <h3 class="section-title">Purchased Items</h3>
+      <table class="item-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Unit</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="this.viewSales.items.length == 0">
+            <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">
+              No items found
+            </td>
+          </tr>
+          <tr *ngFor="let item of paginatedItems">
+            <td>{{item.productName}}</td>
+            <td>{{item.unitType}}</td>
+            <td>{{item.quantity}}</td>
+            <td>₱{{item.unitPrice | number: '1.2-2'}}</td>
+            <td>₱{{(item.quantity * item.unitPrice) | number: '1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls" *ngIf="this.viewSales.items.length > 0">
+        <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          ← Previous
+        </button>
+        <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+        <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          Next →
+        </button>
+      </div>
     </div>
 
-    <div class="transaction-info">
-      <label>Cashier:</label>
-      <p>Sample Cashier</p>
+    <!-- Summary Section -->
+    <div class="summary-section">
+      <div class="final-info">
+        <label>Total Amount</label>
+        <p class="total-amount">₱{{viewSales.totalAmount | number: '1.2-2'}}</p>
+      </div>
+
+      <div class="final-info">
+        <label>Amount Paid</label>
+        <p class="amount-paid">₱{{viewSales.amountPaid | number: '1.2-2'}}</p>
+      </div>
+
+      <div class="final-info">
+        <label>Change</label>
+        <p class="change-amount">₱{{viewSales.changeAmount | number: '1.2-2'}}</p>
+      </div>
     </div>
-
-    <div class="transaction-info">
-      <label>Payment Method:</label>
-      <p>Sample Method</p>
-    </div>
-  </div>
-
-  <h2>Items:</h2>
-  <table class="item-table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Unit</th>
-        <th>Qty</th>
-        <th>Price</th>
-        <th>Subtotal</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="items.length === 0">
-        <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">
-          No recent data
-        </td>
-      </tr>
-      <tr *ngFor="let item of paginatedItems">
-        <td>{{item.product}}</td>
-        <td>{{item.unit}}</td>
-        <td>{{item.qty}}</td>
-        <td>{{item.price}}</td>
-        <td>{{item.subtotal}}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- PAGINATION CONTROLS -->
-  <div class="pagination-controls" *ngIf="items.length > 0">
-    <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
-    <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
-    <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
-  </div>
-
-  <div class="final-info">
-    <label>Total:</label>
-    <p>Sample Total</p>
-  </div>
-
-  <div class="final-info">
-    <label>Amount Paid:</label>
-    <p style="color: green;">Sample Paid</p>
-  </div>
-
-  <div class="final-info">
-    <label>Change:</label>
-    <p style="color: rgb(52, 140, 255);">Sample Change</p>
   </div>
 </div>

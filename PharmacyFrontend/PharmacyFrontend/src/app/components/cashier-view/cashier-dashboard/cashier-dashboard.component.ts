@@ -195,17 +195,20 @@ export class CashierDashboardComponent implements OnInit {
     const toAdd = this.products.filter((p) => p.selected);
 
     toAdd.forEach((p) => {
-      const unitType = p.tempUnitType || 'Box';
+      const unitType = p.tempUnitType || 'Piece';
       const price = this.resolveUnitPriceFromProduct(p, unitType);
       const qtyToAdd = p.quantity && p.quantity > 0 ? p.quantity : 1;
 
+      // Check if product with same ID and unit type already exists in cart
       const existing = this.selectedProducts.find(
         (sp) => sp.productID === p.productID && sp.unitType === unitType
       );
 
       if (existing) {
+        // Add to existing quantity
         existing.quantity += qtyToAdd;
       } else {
+        // Add as new item
         this.selectedProducts.push({
           productID: p.productID,
           productName: p.productName,
@@ -216,10 +219,10 @@ export class CashierDashboardComponent implements OnInit {
         });
       }
 
+      // Reset product selection state
       p.selected = false;
       p.quantity = 0;
-
-      p.tempUnitType = 'Box';
+      p.tempUnitType = 'Piece';
     });
   }
 
@@ -240,7 +243,6 @@ export class CashierDashboardComponent implements OnInit {
 
     const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
     item.unitPrice = resolved;
-
 
     const max = this.getMaxQuantity(item);
     if (max !== Infinity && item.quantity > max) {
