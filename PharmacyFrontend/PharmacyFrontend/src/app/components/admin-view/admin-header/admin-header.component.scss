@@ -6,12 +6,27 @@
   border-right: 1px solid #f1f5f9;
   height: 100vh;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.04);
-  position: relative;
+  position: sticky; // Changed from relative to sticky
+  top: 0; // Added: stick to top of viewport
+  left: 0; // Added: align to left
   overflow: hidden;
+  z-index: 100; // Added: ensure it stays above other content
 
   // Subtle accent line
   &::before {
-    content: '';
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%);
+    opacity: 0.6;
+  }
+
+  // Subtle accent line
+  &::before {
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
@@ -28,7 +43,7 @@
 
     .logo {
       margin-bottom: 1rem;
-      
+
       .logo-container {
         display: flex;
         justify-content: center;
@@ -50,7 +65,7 @@
         &:hover {
           border-color: #e2e8f0;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          
+
           img {
             transform: scale(1.05);
           }
@@ -125,16 +140,16 @@
     gap: 0.375rem;
     padding: 1.25rem 1rem;
     overflow-y: auto;
-    
+
     // Custom scrollbar
     &::-webkit-scrollbar {
       width: 4px;
     }
-    
+
     &::-webkit-scrollbar-track {
       background: transparent;
     }
-    
+
     &::-webkit-scrollbar-thumb {
       background: #e2e8f0;
       border-radius: 4px;
@@ -157,7 +172,7 @@
 
       // Hover background effect
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         top: 0;
@@ -259,7 +274,7 @@
       overflow: hidden;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         top: 0;
