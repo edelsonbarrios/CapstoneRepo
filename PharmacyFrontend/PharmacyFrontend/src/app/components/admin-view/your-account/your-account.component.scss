@@ -1,64 +1,105 @@
 .wrapper {
-  padding: 1rem;
-  background: #f8fafc;
   display: grid;
-  grid-template-rows: 5% 95%;
+  grid-template-rows: auto 1fr;
   height: 100%;
+  padding: 1rem;
   gap: 1rem;
 
-  .header {
-    display: flex;
-    align-items: center;
-
+  .header-section {
     h1 {
-      color: #3498ff;
-      font-size: 28px;
+      font-size: 1.2rem;
       font-weight: 700;
+      color: #1e293b;
+      letter-spacing: -0.5px;
     }
   }
 
-  .account {
+  .content-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
+    overflow-y: auto;
 
-    .account-details {
+    .container {
       background: white;
       border-radius: 16px;
       padding: 1rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-      border: 1px solid #f1f5f9;
       transition: box-shadow 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
       &:hover {
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
       }
+    }
 
-      .details-header {
-        margin-bottom: 1rem;
+    .section-header {
+      margin-bottom: 24px;
 
-        h1 {
-          font-size: 1rem;
-          font-weight: 600;
-          color: #334155;
-          letter-spacing: -0.2px;
-        }
+      h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #334155;
+        letter-spacing: -0.2px;
+      }
+    }
+
+    .section-header-with-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #334155;
+        letter-spacing: -0.2px;
       }
 
-      .details {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
+      .btn-edit {
+        background-color: #3498ff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
 
-        .content {
+        &:hover {
+          background-color: #2b7fd6;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(52, 152, 255, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
+        }
+      }
+    }
+
+    .account-details {
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+
+        .detail-item {
           display: flex;
           flex-direction: column;
           gap: 8px;
 
-          h2 {
-            color: #475569;
-            font-size: 0.8rem;
+          &.full-width {
+            grid-column: 1 / -1;
+          }
+
+          label {
+            font-size: 13px;
             font-weight: 600;
+            color: #475569;
             text-transform: uppercase;
             letter-spacing: 0.5px;
           }
@@ -67,15 +108,15 @@
             color: #334155;
             font-size: 14px;
             font-weight: 500;
+            padding: 10px 14px;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 10px 14px;
-            background: white;
+            background: #f8fafc;
             transition: all 0.2s ease;
 
             &:hover {
               border-color: #cbd5e1;
-              background: #f8fafc;
+              background: white;
             }
           }
         }
@@ -83,69 +124,20 @@
     }
 
     .edit-account {
-      background: white;
-      border-radius: 16px;
-      padding: 1.2rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-      border: 1px solid #f1f5f9;
-      transition: box-shadow 0.2s ease;
+      .edit-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
 
-      &:hover {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-
-      .edit-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-
-        h1 {
-          font-size: 16px;
-          font-weight: 600;
-          color: #334155;
-          letter-spacing: -0.2px;
-        }
-        
-        .btn-edit {
-          background-color: #3498ff;
-          color: white;
-          padding: 10px 20px;
-          font-size: 14px;
-          font-weight: 600;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
-
-          &:hover {
-            background-color: #1d6fd8;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(52, 152, 255, 0.3);
-          }
-
-          &:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
-          }
-        }
-      }
-
-      .edit {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-
-        .content {
+        .detail-item {
           display: flex;
           flex-direction: column;
           gap: 8px;
 
-          h2 {
-            color: #475569;
+          label {
             font-size: 13px;
             font-weight: 600;
+            color: #475569;
             text-transform: uppercase;
             letter-spacing: 0.5px;
           }
@@ -154,19 +146,36 @@
             color: #334155;
             font-size: 14px;
             font-weight: 500;
+            padding: 10px 14px;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 10px 14px;
-            background: white;
+            background: #f8fafc;
             transition: all 0.2s ease;
-            display: inline-block;
-            max-width: fit-content;
 
             &:hover {
               border-color: #cbd5e1;
-              background: #f8fafc;
+              background: white;
             }
           }
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .wrapper {
+    .content-section {
+      .account-details {
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .edit-account {
+        .edit-grid {
+          grid-template-columns: 1fr;
         }
       }
     }

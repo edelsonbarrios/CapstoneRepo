@@ -88,11 +88,17 @@
             width: 60%;
             height: 3px;
             border-radius: 2px;
-            animation: slideIn 0.3s ease;
+            animation: slideIn 0.5s ease;
           }
         }
       }
     }
+  }
+
+  .main-content {
+    height: 100%;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease;
   }
 }
 
