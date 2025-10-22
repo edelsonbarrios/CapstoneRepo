@@ -1,17 +1,23 @@
-<main class="wrapper">
-  <div class="manage-vat-rates">
-    <h1>Manage Vat Rates</h1>
+<div class="wrapper">
+  <div class="manage-product">
+    <h1>Manage VAT Rates</h1>
 
-    <!-- VAT CONTROLS -->
-    <div class="vat-control" [class.error]="vatError">
-      <input type="text" id="vat-name" name="vat-name" placeholder="VAT Name" [(ngModel)]="createdVat.vatName">
-      <input type="text" id="rate" name="rate" placeholder="Rate (%)" [(ngModel)]="createdVat.vatRate">
+    <!-- VAT INPUT CONTROLS -->
+    <div class="product-control">
+      <div class="input-wrapper">
+        <input type="text" id="vat-name" name="vat-name" class="input-field" placeholder="VAT Name" 
+          [(ngModel)]="createdVat.vatName"
+          [class.error]="vatError">
+        <input type="text" id="rate" name="rate" class="input-field" placeholder="Rate (%)" 
+          [(ngModel)]="createdVat.vatRate"
+          [class.error]="vatError">
+      </div>
+      <button class="btn-product" (click)="createNewVat()">Save VAT</button>
     </div>
     <p class="error-message" *ngIf="vatError">{{ vatError }}</p>
-    <button class="btn-save" (click)="createNewVat()">Save VAT</button>
 
-    <!-- VAT TABLES -->
-    <table class="vat-table">
+    <!-- VAT TABLE -->
+    <table class="product-table">
       <thead>
         <tr>
           <th>Name</th>
@@ -22,7 +28,7 @@
       </thead>
       <tbody>
         <tr *ngIf="vats.length === 0">
-          <td colspan="4" style="text-align: center; color: #888; padding: 1rem;">
+          <td colspan="4" style="text-align: center; color: #94a3b8; padding: 2rem;">
             No recent data
           </td>
         </tr>
@@ -31,7 +37,7 @@
           <td>{{v.vatRate}}%</td>
           <td>{{v.dateCreated | date: 'dd-MM-yyyy'}}</td>
           <td>
-            <button class="btn-edit" (click)="openEditVatForm(v)">Edit</button>
+            <button class="btn-view" (click)="openEditVatForm(v)">Edit</button>
             <button class="btn-archive" (click)="openArchiveForm(v.vatid)">Delete</button>
           </td>
         </tr>
@@ -45,7 +51,7 @@
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
-</main>
+</div>
 
 <div class="modal-overlay" *ngIf="editVat">
   <app-edit-vat 
@@ -55,13 +61,20 @@
   ></app-edit-vat>
 </div>
 
-<!-- Success Alert Modal for Save -->
+<!-- Success Alert Modal -->
 <div class="modal-overlay" *ngIf="showSuccessAlert">
   <div class="success-alert">
-    <div class="alert-icon">✓</div>
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
     <p class="alert-message">{{successMessage}}</p>
     <div class="alert-footer">
-      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
     </div>
   </div>
 </div>
@@ -78,9 +91,17 @@
   ></app-archive-confirmation>
 </div>
 
+<!-- Error Alert Modal -->
 <div class="modal-overlay" *ngIf="errorMessage">
   <div class="success-alert">
-    <div class="alert-icon">X</div>
+    <div class="alert-icon error">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#ef4444" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#ef4444"/>
+        <path d="M28 20L20 28M20 20L28 28" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Error</h3>
     <p class="alert-message">{{errorMessage}}</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeErrrMessage()">OK</button>

@@ -1,14 +1,22 @@
 <div class="wrapper">
-  <div class="top-bar">
-    <input type="text" class="search-box" 
-    placeholder="🔍 Search Supplier..." 
-    [(ngModel)]="searchQuery"
-    (input)="onSearchChange()"
-    >
-    <button class="btn new-supplier" (click)="openCreateSupplierForm()">+ New Supplier</button>
+  <div class="search-container container">
+    <div class="search-controls">
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          class="search-box" 
+          placeholder="Search Supplier..." 
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+        >
+      </div>
+      <button class="btn-new-supplier" (click)="openCreateSupplierForm()">+ New Supplier</button>
+    </div>
   </div>
 
-  <div class="card">
+  <div class="table-container container">
+    <h2>Supplier Management</h2>
+    
     <table class="modern-table">
       <thead>
         <tr>
@@ -24,9 +32,7 @@
       </thead>
       <tbody>
         <tr *ngIf="suppliers.length === 0">
-          <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
-            No recent data
-          </td>
+          <td colspan="8" style="text-align: center;">No suppliers found</td>
         </tr>
         <tr *ngFor="let s of paginatedSuppliers">
           <td>{{s.supplierName}}</td>
@@ -36,13 +42,13 @@
           <td>{{s.email}}</td>
           <td>{{s.address}}</td>
           <td>
-            <span class="status active">Active</span>
+            <span class="status-badge">Active</span>
           </td>
           <td style="text-align: center;">
             <div class="action-btns">
-              <button class="btn add" (click)="openAssignProductSupplierForm(s)">+ Assign Product</button>
-              <button class="btn edit" (click)="openViewSupplierForm(s)">View Details</button>
-              <button class="btn archive" (click)="openArchiveForm(s.id)">Delete</button>
+              <button class="btn-action btn-assign" (click)="openAssignProductSupplierForm(s)">Assign Product</button>
+              <button class="btn-action btn-view" (click)="openViewSupplierForm(s)">View</button>
+              <button class="btn-action btn-delete" (click)="openArchiveForm(s.id)">Delete</button>
             </div>
           </td>
         </tr>
@@ -60,38 +66,35 @@
 
 <div class="modal-overlay" *ngIf="newSupplier">
   <app-create-supplier
-  *ngIf="newSupplier"
-  [newSupplier]="newSupplier"
-  (closeForm)="closeCreateSupplierForm()"
+    *ngIf="newSupplier"
+    [newSupplier]="newSupplier"
+    (closeForm)="closeCreateSupplierForm()"
   ></app-create-supplier>
 </div>
 
 <div class="modal-overlay" *ngIf="assignSupplier">
   <app-assign-products-supplier 
-  *ngIf="assignSupplier"
-  (close)="closeAssignProductSupplierForm()"
-  [supplier]="assignSupplier"
+    *ngIf="assignSupplier"
+    (close)="closeAssignProductSupplierForm()"
+    [supplier]="assignSupplier"
   ></app-assign-products-supplier>
 </div>
 
 <div class="modal-overlay" *ngIf="viewSupplier">
   <app-view-supplier
-  *ngIf="viewSupplier"
-  [viewSupplier]="viewSupplier"
-  (closeForm)="closeViewSupplierForm()"
+    *ngIf="viewSupplier"
+    [viewSupplier]="viewSupplier"
+    (closeForm)="closeViewSupplierForm()"
   ></app-view-supplier>
 </div>
 
-
 <div class="modal-overlay" *ngIf="showArchiveForm">
   <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [alertMessage]="'Supplier sucessfully deleted.'"
-  [message]="'Do you really want to delete this supplier?'"
-
-  (onArchive)="archiveSupplier()"
-  (onCancel)="closeArchiveForm()"
+    *ngIf="showArchiveForm"
+    [id]="showArchiveForm"
+    [alertMessage]="'Supplier successfully deleted.'"
+    [message]="'Do you really want to delete this supplier?'"
+    (onArchive)="archiveSupplier()"
+    (onCancel)="closeArchiveForm()"
   ></app-archive-confirmation>
 </div>
-

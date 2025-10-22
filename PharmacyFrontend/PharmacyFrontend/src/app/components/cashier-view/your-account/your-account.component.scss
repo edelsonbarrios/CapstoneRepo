@@ -175,3 +175,22 @@
     }
   }
 }
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .wrapper {
+    .content-section {
+      .account-details {
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .edit-account {
+        .edit-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

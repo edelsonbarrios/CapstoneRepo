@@ -1,4 +1,5 @@
 <div class="wrapper">
+  <!-- PROFILE SECTION -->
   <div class="profile">
     <div class="logo">
       <div class="logo-container">
@@ -6,24 +7,53 @@
       </div>
     </div>
     <div class="user-info">
-      <div>
-        <div class="name">{{employee.fullName}}</div>
-        <div class="email">{{employee.rolePosition}}</div>
+      <div class="avatar">
+        <span>{{ getInitials(employee.fullName) }}</span>
+      </div>
+      <div class="details">
+        <div class="name">{{ employee.fullName }}</div>
+        <div class="role">{{ employee.rolePosition }}</div>
       </div>
     </div>
   </div>
 
+  <!-- MAIN NAVIGATION -->
   <nav class="nav">
-    <a routerLink="/inventory-manager-main/inventory-manager-dashboard">📊 Dashboard</a>
-    <a routerLink="/inventory-manager-main/inventory-manager-product-main">📈 Products</a>
-    <a routerLink="/inventory-manager-main/inventory-purchase-order">🛠️ Purchase Order</a>
-    <a routerLink="/inventory-manager-main/manage-replenishment">📦Replenishment</a>
-    <a routerLink="/inventory-manager-main/inventory-module-main">👤 Inventory </a>
-    <a routerLink="/inventory-manager-main/item-data-control-main">📋 Item Data Control</a>
-    <a routerLink="/inventory-manager-main/your-account">Your Account</a>
+    <a routerLink="/inventory-manager-main/inventory-manager-dashboard" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-chart-line"></i></span>
+      <span class="label">Dashboard</span>
+    </a>
+    <a routerLink="/inventory-manager-main/inventory-manager-product-main" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-box-open"></i></span>
+      <span class="label">Products</span>
+    </a>
+    <a routerLink="/inventory-manager-main/inventory-purchase-order" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-money-check-dollar"></i></span>
+      <span class="label">Purchase Order</span>
+    </a>
+    <a routerLink="/inventory-manager-main/manage-replenishment" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-truck-fast"></i></span>
+      <span class="label">Replenishment</span>
+    </a>
+    <a routerLink="/inventory-manager-main/inventory-module-main" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-warehouse"></i></span>
+      <span class="label">Inventory</span>
+    </a>
+    <a routerLink="/inventory-manager-main/item-data-control-main" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-tachograph-digital"></i></span>
+      <span class="label">Item Data Control</span>
+    </a>
+    <a routerLink="/inventory-manager-main/your-account" routerLinkActive="active" class="nav-item">
+      <span class="icon"><i class="fa-solid fa-gear"></i></span>
+      <span class="label">Your Account</span>
+    </a>
   </nav>
 
+  <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav">
-    <a (click)="logOut()">↩️ Logout</a>
+    <button class="logout-btn" (click)="logOut()">
+      <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+      <span class="label">Logout</span>
+    </button>
   </div>
 </div>

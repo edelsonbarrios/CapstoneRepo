@@ -1,14 +1,22 @@
 <main class="wrapper">
-    <div class="header">
-        <div class="nav-interact">
-            <a routerLink="/admin-main/admin-maintenance-main/vat-entry">Vat Entry</a>
-            <a routerLink="/admin-main/admin-maintenance-main/manage-discount">Discount</a>
-            <a routerLink="/admin-main/admin-maintenance-main/database-backup">Database Backup</a>
-        </div>
-        <div class="notification">🔔<span class="dot"></span></div>
+  <div class="header">
+    <div class="nav-interact">
+      <a routerLink="/admin-main/admin-maintenance-main/vat-entry" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-clipboard-list"></i></span>
+        <span class="tab-label">Vat Entry</span>
+      </a>
+      <a routerLink="/admin-main/admin-maintenance-main/manage-discount" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-tags"></i></span>
+        <span class="tab-label">Discount</span>
+      </a>
+      <a routerLink="/admin-main/admin-maintenance-main/database-backup" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-floppy-disk"></i></span>
+        <span class="tab-label">Database Backup</span>
+      </a>
     </div>
-    
-    <div class="main-content">
-        <router-outlet></router-outlet>
-    </div>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
 </main>

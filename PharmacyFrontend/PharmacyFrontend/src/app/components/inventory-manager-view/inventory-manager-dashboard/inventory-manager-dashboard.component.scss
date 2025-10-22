@@ -1,245 +1,253 @@
 .wrapper {
-  height: 100%;
   padding: 1rem;
-  background: #f2f6fc;
+  background: #f8fafc;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  height: 100%;
+  gap: 1rem;
+  animation: fadeIn 1s ease;
 
   .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.8rem;
 
     h1 {
       color: #3498ff;
-      font-size: 1.5rem;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
     }
   }
 
+  // FIRST CONTAINER - STATS CARDS
   .first-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
 
-    .grid-items {
-      background: white;
-      border-radius: 12px;
-      padding: 0.9rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border: 1px solid #f1f5f9;
+    .stat-card {
+      background: linear-gradient(135deg, rgba(179, 217, 244, 0.08) 0%, rgba(179, 217, 244, 0.04) 100%);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(179, 217, 244, 0.2);
+      transition: all 0.2s ease;
 
-      h3 {
-        font-size: 1rem;
-        font-weight: 400;
-        color: rgb(100, 100, 100);
+      &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
+        background: white;
       }
 
-      h2 {
-        font-size: 1.4rem;
-        font-weight: 500;
+      .stat-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 12px;
+        letter-spacing: -0.2px;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -1px;
+
+        &.success {
+          color: #22c55e;
+        }
+
+        &.primary {
+          color: #3498ff;
+        }
+
+        &.danger {
+          color: #ef4444;
+        }
+
+        &.warning {
+          color: #f59e0b;
+        }
       }
     }
   }
 
+  // SECOND CONTAINER - CRITICAL & NEAR EXPIRY
   .second-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
-
-    .grid-items {
-      background: white;
-      border-radius: 12px;
-      padding: 0.9rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border: 1px solid #f1f5f9;
-
-      h3 {
-        font-size: 1.2rem;
-        font-weight: 400;
-        margin-bottom: 10px;
-      }
-
-      .crit-stock {
-        border-collapse: collapse;
-        width: 100%;
-
-        th,
-        td {
-          text-align: left;
-        }
-
-        th {
-          font-size: 1rem;
-          font-weight: 600;
-          padding: 0.3rem;
-          background-color: rgb(238, 238, 238);
-          border-bottom: 1px solid rgb(204, 204, 204);
-        }
-
-        td {
-          padding: 0.4rem;
-          border-bottom: 1px solid rgb(223, 223, 223);
-        }
-
-        .stock-box {
-          background-color: #fce4e4;
-          color: #c0392b;
-          padding: 4px 8px;
-          border-radius: 24px;
-          font-size: 1rem;
-        }
-      }
-
-      .near-expiry {
-        border-collapse: collapse;
-        width: 100%;
-
-        th,
-        td {
-          text-align: left;
-        }
-
-        th {
-          font-size: 1rem;
-          font-weight: 600;
-          padding: 0.3rem;
-          background-color: rgb(238, 238, 238);
-          border-bottom: 1px solid rgb(204, 204, 204);
-        }
-
-        td {
-          padding: 0.4rem;
-          border-bottom: 1px solid rgb(223, 223, 223);
-        }
-
-        .expiry-date {
-          background-color: #fff0d0;
-          color: #d19618;
-          padding: 4px 8px;
-          border-radius: 24px;
-          font-size: 1rem;
-        }
-      }
-
-      .pagination-controls {
-        display: flex;
-        justify-content: right;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-
-        .btn-page {
-          padding: 0.5rem 1rem;
-          border-radius: 0.4rem;
-          border: 1px solid #3498ff;
-          background-color: white;
-          color: #3498ff;
-          cursor: pointer;
-          transition: opacity 0.15s, background-color 0.15s;
-
-          &:hover:not(:disabled) {
-            background-color: #3498ff;
-            color: white;
-          }
-
-          &:active:not(:disabled) {
-            opacity: 0.8;
-          }
-
-          &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-          }
-        }
-
-        .page-info {
-          font-weight: 600;
-          color: #1e2f47;
-        }
-      }
-    }
+    gap: 1.5rem;
   }
 
+  // THIRD CONTAINER - EXPIRED STOCK
   .third-container {
-    background: white;
-    border-radius: 12px;
-    padding: 0.9rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f1f5f9;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 400;
-      margin-bottom: 10px;
+  // SHARED TABLE CARD STYLES
+  .table-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+    transition: box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-    .expired-items {
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 20px;
+      letter-spacing: -0.2px;
+    }
+
+    .modern-table {
       border-collapse: collapse;
       width: 100%;
+      margin-bottom: 16px;
 
       th,
       td {
+        padding: 14px 12px;
         text-align: left;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 14px;
       }
 
       th {
-        font-size: 1rem;
         font-weight: 600;
-        padding: 0.3rem;
-        background-color: rgb(238, 238, 238);
-        border-bottom: 1px solid rgb(204, 204, 204);
+        color: #334155;
+        background: #f8fafc;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       td {
-        padding: 0.4rem;
-        border-bottom: 1px solid rgb(223, 223, 223);
+        color: #475569;
+        font-weight: 500;
       }
 
-      .expiry-date {
-           background-color: #fce4e4;
-          color: #c0392b;
-          padding: 4px 8px;
-          border-radius: 24px;
-          font-size: 1rem;
+      tbody tr {
+        transition: background 0.15s ease;
+
+        &:hover {
+          background: #f8fafc;
         }
+
+        &:last-child td {
+          border-bottom: none;
+        }
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+
+        &.badge-danger {
+          background: rgba(239, 68, 68, 0.1);
+          color: #ef4444;
+        }
+
+        &.badge-warning {
+          background: rgba(245, 158, 11, 0.1);
+          color: #f59e0b;
+        }
+      }
     }
 
     .pagination-controls {
       display: flex;
-      justify-content: right;
+      justify-content: flex-end;
       align-items: center;
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 8px;
 
       .btn-page {
-        padding: 0.5rem 1rem;
-        border-radius: 0.4rem;
-        border: 1px solid #3498ff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
         background-color: white;
-        color: #3498ff;
+        color: #475569;
         cursor: pointer;
-        transition: opacity 0.15s, background-color 0.15s;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s ease;
 
         &:hover:not(:disabled) {
           background-color: #3498ff;
+          border-color: #3498ff;
           color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
         }
 
         &:active:not(:disabled) {
-          opacity: 0.8;
+          transform: translateY(0);
         }
 
         &:disabled {
-          opacity: 0.5;
+          opacity: 0.4;
           cursor: not-allowed;
         }
       }
 
       .page-info {
         font-weight: 600;
-        color: #1e2f47;
+        color: #64748b;
+        font-size: 13px;
+        min-width: 80px;
+        text-align: center;
       }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1400px) {
+  .wrapper {
+    .first-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .wrapper {
+    .first-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .second-container {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    .first-container {
+      grid-template-columns: 1fr;
     }
   }
 }

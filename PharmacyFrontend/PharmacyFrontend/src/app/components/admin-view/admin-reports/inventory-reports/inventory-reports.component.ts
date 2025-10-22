@@ -25,7 +25,7 @@ export class InventoryReportsComponent implements OnInit {
 
   // Pagination
   currentPage: number = 1;
-  itemsPerPage: number = 4;
+  itemsPerPage: number = 3;
   totalPages: number = 0;
   paginatedInventory: any[] = [];
 

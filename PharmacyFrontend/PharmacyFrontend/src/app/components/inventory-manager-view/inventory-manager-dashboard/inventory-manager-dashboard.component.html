@@ -3,46 +3,44 @@
   <!-- DASHBOARD HEADER -->
   <div class="header">
     <h1>Dashboard Overview</h1>
-    <div class="notification">🔔<span class="dot"></span></div>
   </div>
 
   <!-- DASHBOARD BODY -->
 
-  <!-- FIRST ROW -->
+  <!-- FIRST ROW - STATS CARDS -->
   <div class="first-container">
-    <div class="grid-items">
-      <h3>Total Active Products</h3>
-      <h2 style="color: rgb(68, 189, 44);">{{inventoryDashboard.totalActiveProducts}}</h2>
+    <div class="stat-card">
+      <p class="stat-label">Total Active Products</p>
+      <h2 class="stat-value success">{{inventoryDashboard.totalActiveProducts}}</h2>
     </div>
 
-    <div class="grid-items">
-      <h3>Total Inventory Items</h3>
-      <h2 style="color: rgb(49, 156, 255);">{{inventoryDashboard.totalInventoryItems}}</h2>
+    <div class="stat-card">
+      <p class="stat-label">Total Inventory Items</p>
+      <h2 class="stat-value primary">{{inventoryDashboard.totalInventoryItems}}</h2>
     </div>
 
-    <div class="grid-items">
-      <h3>Critical Stock</h3>
-      <h2 style="color: #c0392b;">{{inventoryDashboard.criticalStockCount}}</h2>
+    <div class="stat-card">
+      <p class="stat-label">Critical Stock</p>
+      <h2 class="stat-value danger">{{inventoryDashboard.criticalStockCount}}</h2>
     </div>
 
-    <div class="grid-items">
-      <h3>Expiring Soon</h3>
-      <h2 style="color: #d19618;">{{inventoryDashboard.nearExpiryCount}}</h2>
+    <div class="stat-card">
+      <p class="stat-label">Expiring Soon</p>
+      <h2 class="stat-value warning">{{inventoryDashboard.nearExpiryCount}}</h2>
     </div>
 
-    <div class="grid-items">
-      <h3>Expired Stock</h3>
-      <h2 style="color: #c0392b;">{{inventoryDashboard.expiredStockCount}}</h2>
+    <div class="stat-card">
+      <p class="stat-label">Expired Stock</p>
+      <h2 class="stat-value danger">{{inventoryDashboard.expiredStockCount}}</h2>
     </div>
   </div>
 
-  <!-- SECOND ROW -->
-
+  <!-- SECOND ROW - CRITICAL & NEAR EXPIRY -->
   <div class="second-container">
-    <div class="grid-items">
-      <h3>Critical Stock Items</h3>
+    <div class="table-card">
+      <p class="card-title">Critical Stock Items</p>
       
-      <table class="crit-stock">
+      <table class="modern-table">
         <thead>
           <tr>
             <th>Product</th>
@@ -53,14 +51,12 @@
         </thead>
         <tbody>
           <tr *ngIf="inventoryDashboard.criticalStockItems.length === 0">
-            <td colspan="4" style="text-align: center; color: #525252; padding: 1rem;">
-              No recent data
-            </td>
+            <td colspan="4" style="text-align: center;">No recent data</td>
           </tr>
           <tr *ngFor="let i of paginatedCriticalItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
-            <td><span class="stock-box">{{i.totalPiecesAvailable}}</span></td>
+            <td><span class="badge badge-danger">{{i.totalPiecesAvailable}}</span></td>
             <td>{{i.reorderLevel}}</td>
           </tr>
         </tbody>
@@ -74,10 +70,10 @@
       </div>
     </div>
 
-    <div class="grid-items">
-      <h3>Near Expiry Items</h3>
+    <div class="table-card">
+      <p class="card-title">Near Expiry Items</p>
       
-      <table class="near-expiry">
+      <table class="modern-table">
         <thead>
           <tr>
             <th>Product</th>
@@ -88,14 +84,12 @@
         </thead>
         <tbody>
           <tr *ngIf="inventoryDashboard.nearExpiryItems.length === 0">
-            <td colspan="4" style="text-align: center; color: #525252; padding: 1rem;">
-              No recent data
-            </td>
+            <td colspan="4" style="text-align: center;">No recent data</td>
           </tr>
           <tr *ngFor="let i of paginatedNearExpiryItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
-            <td><span class="expiry-date" >{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
+            <td><span class="badge badge-warning">{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
             <td>{{i.totalPiecesAvailable}}</td>
           </tr>
         </tbody>
@@ -110,10 +104,12 @@
     </div>
   </div>
 
+  <!-- THIRD ROW - EXPIRED STOCK -->
   <div class="third-container">
-    <h3>Expired Stock Items</h3>
+    <div class="table-card">
+      <p class="card-title">Expired Stock Items</p>
 
-    <table class="expired-items">
+      <table class="modern-table">
         <thead>
           <tr>
             <th>Product</th>
@@ -126,14 +122,12 @@
         </thead>
         <tbody>
           <tr *ngIf="inventoryDashboard.expiredStockItems.length === 0">
-            <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
-              No recent data
-            </td>
+            <td colspan="6" style="text-align: center;">No recent data</td>
           </tr>
           <tr *ngFor="let i of paginatedExpiredItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
-            <td><span class="expiry-date">{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
+            <td><span class="badge badge-danger">{{i.expirationDate | date: 'dd-MM-yyyy'}}</span></td>
             <td>{{i.boxQuantity}}</td>
             <td>{{i.sheetQuantity}}</td>
             <td>{{i.pieceQuantity}}</td>
@@ -147,5 +141,6 @@
         <span class="page-info">Page {{expiredCurrentPage}} of {{expiredTotalPages}}</span>
         <button class="btn-page" [disabled]="expiredCurrentPage === expiredTotalPages" (click)="goToExpiredPage(expiredCurrentPage + 1)">Next</button>
       </div>
+    </div>
   </div>
 </div>

@@ -1,11 +1,22 @@
-<div class="wrapper">
-  <div class="header-wrapper">
-    <a routerLink="/admin-main/employee-accounts-main/manage-employees">Manage Employees</a>
-    <a routerLink="/admin-main/employee-accounts-main/manage-accounts">Manage Accounts</a>
-    <a routerLink="/admin-main/employee-accounts-main/manage-employee-history">Employee History</a>
+<main class="wrapper">
+  <div class="header">
+    <div class="nav-interact">
+      <a routerLink="/admin-main/employee-accounts-main/manage-employees" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-users"></i></span>
+        <span class="tab-label">Manage Employees</span>
+      </a>
+      <a routerLink="/admin-main/employee-accounts-main/manage-accounts" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-user-gear"></i></span>
+        <span class="tab-label">Manage Accounts</span>
+      </a>
+      <a routerLink="/admin-main/employee-accounts-main/manage-employee-history" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+        <span class="tab-label">Employee History</span>
+      </a>
+    </div>
   </div>
 
   <div class="main-content">
     <router-outlet></router-outlet>
   </div>
-</div>
+</main>
