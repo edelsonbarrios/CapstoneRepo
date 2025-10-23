@@ -1,113 +1,222 @@
 <div class="modal" *ngIf="newEmployee && !newEmployeeId">
   <div class="modal-header">
-    <h2>👤 Add Employee</h2>
-    <p>Quickly add employee by filling the form</p>
-    <button class="upload-btn">Upload Photo</button>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <div class="title">
+        <h2>Add New Employee</h2>
+        <p>Fill in employee information below</p>
+      </div>
+    </div>
+    <button class="upload-btn">
+      <i class="fas fa-camera"></i>
+      Upload Photo
+    </button>
   </div>
-  <hr />
 
   <div class="modal-body">
     <fieldset>
-      <legend>📋 Add details of an employee</legend>
+      <legend>
+        <i class="fas fa-clipboard-list"></i>
+        Employee Details
+      </legend>
 
       <div class="form-grid">
         <!-- Employee Code -->
         <div class="form-group" [class.error]="employeeCodeError">
-          <label>Employee Code <span>*</span></label>
-          <input type="text" placeholder="Enter Employee Code" [(ngModel)]="newEmployee.employeeCode"/>
-          <p class="error-message" *ngIf="employeeCodeError">{{ employeeCodeError }}</p>
+          <label for="employeeCode">
+            Employee Code 
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="employeeCode"
+            placeholder="Enter Employee Code" 
+            [(ngModel)]="newEmployee.employeeCode"
+          />
+          <span class="error-message" *ngIf="employeeCodeError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ employeeCodeError }}
+          </span>
         </div>
 
         <div class="form-group" [class.error]="lastNameError">
-          <label>Last Name <span>*</span></label>
-          <input type="text" placeholder="Enter Last Name" [(ngModel)]="newEmployee.lastName"/>
-          <p class="error-message" *ngIf="lastNameError">{{ lastNameError }}</p>
+          <label for="lastName">
+            Last Name 
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="lastName"
+            placeholder="Enter Last Name" 
+            [(ngModel)]="newEmployee.lastName"
+          />
+          <span class="error-message" *ngIf="lastNameError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ lastNameError }}
+          </span>
         </div>
 
         <div class="form-group" [class.error]="firstNameError">
-          <label>First Name<span>*</span></label>
-          <input type="text" placeholder="Enter First Name" [(ngModel)]="newEmployee.firstName"/>
-          <p class="error-message" *ngIf="firstNameError">{{ firstNameError }}</p>
+          <label for="firstName">
+            First Name
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="firstName"
+            placeholder="Enter First Name" 
+            [(ngModel)]="newEmployee.firstName"
+          />
+          <span class="error-message" *ngIf="firstNameError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ firstNameError }}
+          </span>
         </div>
 
         <div class="form-group">
-          <label>Middle Name</label>
-          <input type="text" placeholder="Enter Middle Name" [(ngModel)]="newEmployee.middleName"/>
+          <label for="middleName">Middle Name</label>
+          <input 
+            type="text" 
+            id="middleName"
+            placeholder="Enter Middle Name" 
+            [(ngModel)]="newEmployee.middleName"
+          />
         </div>
 
         <div class="form-group" [class.error]="genderError">
-          <label>Gender<span>*</span></label>
-          <select class="form-group" [(ngModel)]="newEmployee.gender">
+          <label for="gender">
+            Gender
+            <span class="required">*</span>
+          </label>
+          <select id="gender" [(ngModel)]="newEmployee.gender">
             <option value="">Select Gender</option>
             <option *ngFor="let g of genders" [value]="g">{{g}}</option>
           </select>
-          <p class="error-message" *ngIf="genderError">{{ genderError }}</p>
+          <span class="error-message" *ngIf="genderError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ genderError }}
+          </span>
         </div>
 
         <div class="form-group small" [class.error]="ageError">
-          <label>Age</label>
-          <input type="number" placeholder="Age" [(ngModel)]="newEmployee.age"/>
-          <p class="error-message" *ngIf="ageError">{{ ageError }}</p>
+          <label for="age">Age</label>
+          <input 
+            type="number" 
+            id="age"
+            placeholder="Age" 
+            [(ngModel)]="newEmployee.age"
+          />
+          <span class="error-message" *ngIf="ageError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ ageError }}
+          </span>
         </div>
 
         <div class="form-group small" [class.error]="birthDateError">
-          <label>Birth Date</label>
-          <input type="date" [(ngModel)]="newEmployee.birthDate"/>
-          <p class="error-message" *ngIf="birthDateError">{{ birthDateError }}</p>
+          <label for="birthDate">Birth Date</label>
+          <input 
+            type="date" 
+            id="birthDate"
+            [(ngModel)]="newEmployee.birthDate"
+          />
+          <span class="error-message" *ngIf="birthDateError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ birthDateError }}
+          </span>
         </div>
 
         <div class="form-group small" [class.error]="phoneNumberError">
-          <label>Phone Number</label>
-          <input type="text" placeholder="Enter Phone No." [(ngModel)]="newEmployee.phoneNumber"/>
-          <p class="error-message" *ngIf="phoneNumberError">{{ phoneNumberError }}</p>
+          <label for="phoneNumber">Phone Number</label>
+          <input 
+            type="text" 
+            id="phoneNumber"
+            placeholder="Enter Phone No." 
+            [(ngModel)]="newEmployee.phoneNumber"
+          />
+          <span class="error-message" *ngIf="phoneNumberError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ phoneNumberError }}
+          </span>
         </div>
 
         <div class="form-group small" [class.error]="civilStatusError">
-          <label>Civil Status</label>
-          <select id="civilStatus"[(ngModel)]="newEmployee.civilStatus">
+          <label for="civilStatus">Civil Status</label>
+          <select id="civilStatus" [(ngModel)]="newEmployee.civilStatus">
             <option value="">Select Status</option>
             <option value="single">Single</option>
             <option value="married">Married</option>
             <option value="widowed">Widowed</option>
             <option value="divorced">Divorced</option>
           </select>
-          <p class="error-message" *ngIf="civilStatusError">{{ civilStatusError }}</p>
+          <span class="error-message" *ngIf="civilStatusError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ civilStatusError }}
+          </span>
         </div>
 
         <div class="form-group small" [class.error]="rolePositionError">
-          <label>Role Position</label>
-          <select [(ngModel)]="newEmployee.rolePosition">
+          <label for="rolePosition">Role Position</label>
+          <select id="rolePosition" [(ngModel)]="newEmployee.rolePosition">
             <option value="">Select Role Position</option>
             <option *ngFor="let rp of rolePositions" [value]="rp">{{rp}}</option>
           </select>
-          <p class="error-message" *ngIf="rolePositionError">{{ rolePositionError }}</p>
+          <span class="error-message" *ngIf="rolePositionError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ rolePositionError }}
+          </span>
         </div>
 
         <div class="form-group" [class.error]="emailError">
-          <label>Email</label>
-          <input type="text" placeholder="Enter Email" [(ngModel)]="newEmployee.email"/>
-          <p class="error-message" *ngIf="emailError">{{ emailError }}</p>
+          <label for="email">Email</label>
+          <input 
+            type="text" 
+            id="email"
+            placeholder="Enter Email" 
+            [(ngModel)]="newEmployee.email"
+          />
+          <span class="error-message" *ngIf="emailError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ emailError }}
+          </span>
         </div>
 
         <div class="form-group wide" [class.error]="addressError">
-          <label>Address <span>*</span></label>
-          <input type="text" placeholder="Enter Address" [(ngModel)]="newEmployee.address"/>
-          <p class="error-message" *ngIf="addressError">{{ addressError }}</p>
+          <label for="address">
+            Address 
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="address"
+            placeholder="Enter Address" 
+            [(ngModel)]="newEmployee.address"
+          />
+          <span class="error-message" *ngIf="addressError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ addressError }}
+          </span>
         </div>
       </div>
     </fieldset>
   </div>
 
   <div class="modal-footer">
-    <button class="cancel-btn" (click)="closeCreateEmployeeForm()">Cancel</button>
-    <button class="add-btn" [disabled]="isUserLoading" (click)="createNewEmployee()">+ Add Employee</button>
+    <button class="btn btn-cancel" (click)="closeCreateEmployeeForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" [disabled]="isUserLoading" (click)="createNewEmployee()">
+      <i class="fas fa-user-plus"></i>
+      Add Employee
+    </button>
   </div>
 </div>
 
 <div class="modal-overlay" *ngIf="newEmployeeId">
   <app-create-account
-  *ngIf="newEmployeeId"
-  [employeeId]="newEmployeeId"
-  (closeForm)="closeCreateAccountForm()"
+    *ngIf="newEmployeeId"
+    [employeeId]="newEmployeeId"
+    (closeForm)="closeCreateAccountForm()"
   ></app-create-account>
 </div>

@@ -58,7 +58,7 @@
       }
 
       .btn.add {
-        background: #4a90e2;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: #fff;
         padding: 0.6rem 1.2rem;
         border: none;
@@ -66,9 +66,10 @@
         cursor: pointer;
         font-weight: 600;
         transition: background 0.3s;
+        
 
         &:hover {
-          background: #357ab7;
+          background: linear-gradient(135deg, #059669 0%, #047857 100%);
         }
       }
     }
@@ -109,6 +110,7 @@
           background: #4834d4;
         }
       }
+
       #red {
         background-color: #ff1111;
       }
@@ -122,25 +124,30 @@
       margin-top: 1rem;
 
       .btn-page {
-        padding: 0.5rem 1rem;
-        border-radius: 0.4rem;
-        border: 1px solid #3498ff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
         background-color: white;
-        color: #3498ff;
+        color: #475569;
         cursor: pointer;
-        transition: opacity 0.15s, background-color 0.15s;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s ease;
 
         &:hover:not(:disabled) {
           background-color: #3498ff;
+          border-color: #3498ff;
           color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
         }
 
         &:active:not(:disabled) {
-          opacity: 0.8;
+          transform: translateY(0);
         }
 
         &:disabled {
-          opacity: 0.5;
+          opacity: 0.4;
           cursor: not-allowed;
         }
       }
@@ -173,7 +180,7 @@
   width: 400px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
   text-align: center;
-  
+
   .alert-icon {
     width: 60px;
     height: 60px;
@@ -187,18 +194,18 @@
     color: white;
     font-weight: bold;
   }
-  
+
   .alert-message {
     font-size: 16px;
     color: #333;
     margin-bottom: 25px;
     font-weight: 500;
   }
-  
+
   .alert-footer {
     display: flex;
     justify-content: flex-end;
-    
+
     .ok-btn {
       padding: 8px 24px;
       background: #007bff;

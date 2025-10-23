@@ -89,25 +89,30 @@
       margin-top: 1rem;
 
       .btn-page {
-        padding: 0.5rem 1rem;
-        border-radius: 0.4rem;
-        border: 1px solid #3498ff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
         background-color: white;
-        color: #3498ff;
+        color: #475569;
         cursor: pointer;
-        transition: opacity 0.15s, background-color 0.15s;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s ease;
 
         &:hover:not(:disabled) {
           background-color: #3498ff;
+          border-color: #3498ff;
           color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
         }
 
         &:active:not(:disabled) {
-          opacity: 0.8;
+          transform: translateY(0);
         }
 
         &:disabled {
-          opacity: 0.5;
+          opacity: 0.4;
           cursor: not-allowed;
         }
       }

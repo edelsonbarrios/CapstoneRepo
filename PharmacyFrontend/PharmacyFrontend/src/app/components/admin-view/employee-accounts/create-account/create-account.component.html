@@ -1,44 +1,79 @@
 <div class="modal" *ngIf="employeeId && !showSuccessAlert">
   <div class="modal-header">
-    <h2>👤 Add Employee Account</h2>
-    <p>Quickly add employee by filling the form</p>
-    <button class="upload-btn">Upload Photo</button>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-user-lock"></i>
+      </div>
+      <div class="title">
+        <h2>Create Employee Account</h2>
+        <p>Set up login credentials for the employee</p>
+      </div>
+    </div>
   </div>
-  <hr />
 
   <div class="modal-body">
     <fieldset>
-      <legend>📋 Add details of an employee</legend>
+      <legend>
+        <i class="fas fa-key"></i>
+        Account Credentials
+      </legend>
 
       <div class="form-grid">
-
         <div class="form-group" [class.error]="usernameError">
-          <label>User Name <span>*</span></label>
-          <input type="text" placeholder="Enter UserName" [(ngModel)]="newAccount.username">
-          <p class="error-message" *ngIf="usernameError">{{ usernameError }}</p>
+          <label for="username">
+            Username 
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="username"
+            placeholder="Enter Username" 
+            [(ngModel)]="newAccount.username"
+          >
+          <span class="error-message" *ngIf="usernameError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ usernameError }}
+          </span>
         </div>
 
         <div class="form-group" [class.error]="passwordError">
-          <label>Password<span>*</span></label>
-          <input type="password" placeholder="Enter Password" [(ngModel)]="newAccount.password">
-          <p class="error-message" *ngIf="passwordError">{{ passwordError }}</p>
+          <label for="password">
+            Password
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="password" 
+            id="password"
+            placeholder="Enter Password" 
+            [(ngModel)]="newAccount.password"
+          >
+          <span class="error-message" *ngIf="passwordError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ passwordError }}
+          </span>
         </div>
       </div>
     </fieldset>
   </div>
 
   <div class="modal-footer">
-    <button class="add-btn" (click)="createNewAccount()">Submit</button>
+    <button class="btn btn-submit" (click)="createNewAccount()">
+      <i class="fas fa-check-circle"></i>
+      Create Account
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
 <div class="success-overlay" *ngIf="showSuccessAlert">
-  <div class="success-alert">
-    <div class="alert-icon">✓</div>
-    <p class="alert-message">Account successfully created.</p>
-    <div class="alert-footer">
-      <button class="ok-btn" (click)="closeCreateAccountForm()">OK</button>
+  <div class="success-modal">
+    <div class="success-icon">
+      <i class="fas fa-check"></i>
     </div>
+    <h3 class="success-title">Success!</h3>
+    <p class="success-message">Employee account has been created successfully</p>
+    <button class="btn btn-primary" (click)="closeSuccessAlert()">
+      Done
+    </button>
   </div>
 </div>

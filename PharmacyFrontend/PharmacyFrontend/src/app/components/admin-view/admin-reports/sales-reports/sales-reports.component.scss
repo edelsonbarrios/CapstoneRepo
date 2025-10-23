@@ -138,18 +138,18 @@
   }
 
   .btn-export {
-    background-color: #31be15;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 
     &:hover {
-      background-color: #299c12;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
     }
   }
 
   .btn-reset {
-    background-color: #eb1515;
+    background-color: #c22828;
 
     &:hover {
-      background-color: #d61111;
+      background-color: #b42222;
     }
   }
 
