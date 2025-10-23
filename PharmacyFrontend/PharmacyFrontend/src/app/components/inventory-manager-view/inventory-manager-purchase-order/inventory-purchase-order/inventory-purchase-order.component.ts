@@ -36,6 +36,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   purchaseOrderNumber: string = '';
   showSuccessAlert: boolean = false;
   selectSupplier: boolean = false;
+  addItem: boolean = false;
 
   // Search filter
   searchQuery: string = '';
@@ -105,6 +106,10 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   closeProductsForm() {
     this.openProductForm = false;
+  }
+
+  closeAddItemMessage() {
+    this.addItem = false;
   }
 
   onProductsSelected(products: Product[]) {
@@ -185,7 +190,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
 
   createPurchaseOrder() {
     if (this.purchaseOrders.purchaseOrderItems.length === 0) {
-      alert('Please add at least one item to the purchase order.');
+      this.addItem = true;
       return;
     }
 

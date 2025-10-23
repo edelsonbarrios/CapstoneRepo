@@ -36,6 +36,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   receiptNumber: string = '';
   paginatedItems: any[] = [];
   markReceivedError: string = '';
+  transactionReceived: boolean = false;
 
   // Pagination properties
   currentPage: number = 1;
@@ -199,7 +200,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       .markPurchaseOrderAsReceivedAsync(requestPayload)
       .subscribe({
         next: (res) => {
-          alert(`Purchase Order has now been received.`);
+          this.transactionReceived = true;
           this.closeForm.emit();
         },
         error: (err) => {
@@ -211,6 +212,10 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
 
   closeErrorMessage() {
     this.markReceivedError = '';
+  }
+
+  closeReceiedMessage() {
+    this.transactionReceived = false;
   }
 
   getLoggedInEmployee() {
