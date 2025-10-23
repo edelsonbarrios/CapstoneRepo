@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.DailySaleDTOs;
@@ -651,6 +652,14 @@ namespace PharmacyBackend.Repository.GET
 
             return await _context.Inventory
                 .Include(i => i.Product)
+                .ThenInclude(p => p.Category)
+                .Include(i => i.Product.Brand)
+                .Include(i => i.Product.Generic)
+                .Include(i => i.Product.Formulation)
+                .Include(i => i.Product.Classification)
+                .Include(i => i.Product.TypeModel)
+                .OrderByDescending(i => i.DateAdded)
+                .ThenByDescending(i => i.InventoryID)
                 .Where(i => i.ExpirationDate <= nearExpiryDate && i.ExpirationDate > now)
                 .ToListAsync();
         }
@@ -1008,6 +1017,59 @@ namespace PharmacyBackend.Repository.GET
             }
         }
 
+        #endregion
+
+        #region AdminDashboard
+        public async Task<decimal> GetTodaySalesAmountAsync()
+        {
+            var today = DateTime.UtcNow.Date;
+            var tommorow = today.AddDays(1);
+            return await _context.SalesTransaction
+                .Where(st => st.TransactionDate.Date >= today
+                && st.TransactionDate <= tommorow)
+                .SumAsync(st => st.NetAmount);
+        }
+        public async Task<int> GetInventoryLowStockCountAsync()
+        {
+            return await _context.Inventory
+                .Where(iv => iv.BoxQuantity <= iv.ReorderLevel)
+                .CountAsync();
+        }
+        public async Task<int> GetInventoryOutOfStockCountAsync()
+        {
+            return await _context.Inventory
+                .Where(iv => iv.BoxQuantity == 0)
+                .CountAsync();
+        }
+        public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()
+        {
+            var currentMonth = DateTime.Today.Month;
+            var topSellingProducts = await _context.SalesItem
+                .Include(si => si.SalesTransaction)
+                .Include(si => si.Product)
+                  .ThenInclude(p => p.Inventory)
+                .Where(si => si.SalesTransaction.TransactionDate.Month == currentMonth)
+                .GroupBy(si => new {si.Product.ProductID, si.Product.ProductName})
+                .Select(g => new
+                {
+                    g.Key.ProductID,
+                    g.Key.ProductName,
+                    QuantitySold = g.Sum(si => si.Quantity),
+                    TotalSales = g.Sum(si => si.Subtotal),
+                    g.FirstOrDefault().Product
+                }).ToListAsync();
+            var result = topSellingProducts.Select(ts => new ProductSalesSummaryDto
+            {
+                ProductId = ts.ProductID,
+                ProductName = ts.ProductName,
+                QuantitySold = ts.QuantitySold,
+                AvailableStock = ts.Product.Inventory
+                .Where(i => i.IsActive && !i.IsExpired)
+                .Sum(i => i.TotalPiecesAvailable),
+                TotalSales = ts.TotalSales
+            }).ToList();
+            return result;
+        }
         #endregion
     }
 }

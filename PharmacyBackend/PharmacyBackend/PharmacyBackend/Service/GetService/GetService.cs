@@ -1205,7 +1205,42 @@ namespace PharmacyBackend.Service.GetService
                 IsNearExpiry = i.IsNearExpiry,
                 IsCriticalStock = i.IsCriticalStock,
                 IsMultiUnit = i.IsMultiUnit,
-                TotalPiecesAvailable = i.TotalPiecesAvailable
+                TotalPiecesAvailable = i.TotalPiecesAvailable,
+                Product = new ProductDto
+                {
+                    ProductID = i.Product.ProductID,
+                    ProductName = i.Product.ProductName,
+                    CategoryID = i.Product.CategoryID,
+                    BrandID = i.Product.BrandID,
+                    GenericID = i.Product.GenericID,
+                    FormulationID = i.Product.FormulationID,
+                    ClassificationID = i.Product.ClassificationID,
+                    TypeID = i.Product.TypeID,
+                    IsActive = i.Product.IsActive,
+                    DateCreated = i.Product.DateCreated,
+                    SheetsPerBox = i.Product.SheetsPerBox,
+                    PiecesPerSheet = i.Product.PiecesPerSheet,
+                    BoxPrice = i.Product.BoxPrice,
+                    SheetPrice = i.Product.SheetPrice,
+                    PiecePrice = i.Product.PiecePrice,
+                    ReorderLevel = i.Product.ReorderLevel,
+                    UnitMeasurement = i.Product.UnitMeasurement,
+                    PiecePerBox = i.Product.PiecePerBox,
+
+                    // Derived product properties (guarded against null Inventory collections)
+                    ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+                    NearExpiryStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsNearExpiry && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+                    IsCriticalStock = (i.Product.Inventory?.Where(x => x.IsActive && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0) <= i.Product.ReorderLevel,
+                    HasExpiredStock = i.Product.Inventory?.Any(x => x.IsActive && x.IsExpired) ?? false,
+
+                    // Related names
+                    CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
+                    BrandName = i.Product.Brand?.BrandName ?? string.Empty,
+                    GenericName = i.Product.Generic?.GenericName ?? string.Empty,
+                    FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
+                    ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
+                    TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
+                }
             });
         }
 
@@ -2074,6 +2109,37 @@ namespace PharmacyBackend.Service.GetService
 
                 return package.GetAsByteArray();
             }
+        }
+        #endregion
+
+        #region AdminDashboard
+        public async Task<decimal> GetTodaySalesAmountAsync()
+        {
+            var todaySales = await _getRepo.GetTodaySalesAmountAsync();
+            if (todaySales <= 0)
+                return 0;
+            return todaySales;
+        }
+        public async Task<int> GetInventoryLowStockCountAsync()
+        {
+            var lowStockCount = await _getRepo.GetInventoryLowStockCountAsync();
+            if (lowStockCount == 0)
+                return 0;
+            return lowStockCount;
+        }
+        public async Task<int> GetInventoryOutOfStockCountAsync()
+        {
+            var outOfStockCount = await _getRepo.GetInventoryOutOfStockCountAsync();
+            if (outOfStockCount == 0)
+                return 0;
+            return outOfStockCount;
+        }
+        public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()
+        {
+            var topSelling = await _getRepo.GetTopSellingProductsMonthlyAsync();
+            if (!topSelling.Any() || topSelling.Count() == 0)
+                return new List<ProductSalesSummaryDto>();
+            return topSelling;
         }
         #endregion
     }

@@ -884,9 +884,43 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting fast-moving products report: {ex.Message}" });
             }
         }
-        
+
         #endregion
 
+        #region AdminDashboard 
+        [HttpGet("TodaySalesAmount")]
+        public async Task<ActionResult<decimal>> GetTodaySalesAmountAsync()
+        {
+            var todaySalesAmount = await _getService.GetTodaySalesAmountAsync();
+            if (todaySalesAmount <= 0)
+                return NotFound(0);
+            return Ok(todaySalesAmount);
+        }
+        [HttpGet("InventoryLowStock")]
+        public async Task<ActionResult<int>> GetInventoryLowOfStockCountAsync()
+        {
+            var lowStockCount = await _getService.GetInventoryLowStockCountAsync();
+            if (lowStockCount == 0)
+                return NotFound(0);
+            return Ok(lowStockCount);
+        }
+        [HttpGet("InventoryOutOfStock")]
+        public async Task<ActionResult<int>> GetInventoryOutOfStockCountAsync()
+        {
+            var outOfStockCount = await _getService.GetInventoryOutOfStockCountAsync();
+            if (outOfStockCount == 0)
+                return NotFound(0);
+            return Ok(outOfStockCount);
+        }
+        [HttpGet("TopSellingMonthly")]
+        public async Task<ActionResult<List<ProductSalesSummaryDto>>> GetTopSellingProductsMonthlyAsync()
+        {
+            var topSellingProducts = await _getService.GetTopSellingProductsMonthlyAsync();
+            if (!topSellingProducts.Any() || topSellingProducts.Count() == 0)
+                return NotFound(new List<ProductSalesSummaryDto>());
+            return Ok(topSellingProducts);
+        }
+        #endregion
     }
 }
 

@@ -192,5 +192,12 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
             DateTime? endDate = null,
             int topN = 20);
         #endregion
+
+        #region AdminDashboard
+        public Task<decimal> GetTodaySalesAmountAsync();
+        public Task<int> GetInventoryLowStockCountAsync();
+        public Task<int> GetInventoryOutOfStockCountAsync();
+        public Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync();
+        #endregion
     }
 }

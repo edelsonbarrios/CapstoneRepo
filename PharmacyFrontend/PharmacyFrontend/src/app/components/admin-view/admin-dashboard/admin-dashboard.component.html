@@ -14,7 +14,7 @@
       <div class="grid-sales">
         <p class="title">Today's Sales</p>
 
-        <div class="sales-amount">&#8369;32,580</div>
+        <div class="sales-amount">{{todaySalesAmount | currency: 'PHP'}}</div>
         <div class="sales-change">
           <span class="percentages">&#43;8&#37; vs. yesterday</span>
         </div>
@@ -28,12 +28,12 @@
 
         <div class="inventory-container">
           <div class="sub-items">
-            <div class="stock-value">12</div>
+            <div class="stock-value">{{lowStockCount}}</div>
             <div class="stock-name">Low Stock</div>
           </div>
 
           <div class="sub-items">
-            <div class="stock-value">15</div>
+            <div class="stock-value">{{outOfStockCount}}</div>
             <div class="stock-name">Out of Stock</div>
           </div>
         </div>
@@ -55,9 +55,9 @@
             </td>
           </tr>
           <tr *ngFor="let med of paginatedTopMeds">
-            <td>{{med.rank}}</td>
             <td>{{med.productName}}</td>
-            <td>{{med.soldCount}}</td>
+            <td>{{med.quantitySold}}</td>
+            <td>{{med.availableStock}}</td>
           </tr>
         </tbody>
       </table>
@@ -91,9 +91,9 @@
             </td>
           </tr>
           <tr *ngFor="let product of paginatedExpiringProducts">
-            <td>{{product.batchNo}}</td>
-            <td>{{product.product}}</td>
-            <td>{{product.expiry}}</td>
+            <td>{{product.batchNumber}}</td>
+            <td>{{product.product.productName}}{{product.product.formulationName}}</td>
+            <td>{{product.expirationDate | date: 'dd-MM-yyyy'}}</td>
           </tr>
         </tbody>
       </table>

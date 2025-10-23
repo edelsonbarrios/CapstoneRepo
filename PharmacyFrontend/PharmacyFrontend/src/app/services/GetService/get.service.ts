@@ -420,4 +420,22 @@ export class GetService {
     return this.httpClient.get<FastMovingProductReport>(url, { params });
   }
   //Fast Moving Product Report Service End
+
+  //Admin Dashboard Services
+  getTodaySalesAmountAsync() : Observable<number> {
+    return this.httpClient.get<number>(`${this.apiUrl}/Get/TodaySalesAmount`);
+  }
+  getInventoryLowStockCountAsync() : Observable<number> {
+    return this.httpClient.get<number>(`${this.apiUrl}/Get/InventoryLowStock`);
+  }
+  getInventoryOutOfStockCountAsync() : Observable<number> {
+    return this.httpClient.get<number>(`${this.apiUrl}/Get/InventoryOutOfStock`)
+  }
+  getTopSellingProductsMonthly() : Observable<ProductSalesSummary[]>{
+    return this.httpClient.get<ProductSalesSummary[]>(`${this.apiUrl}/Get/TopSellingMonthly`);
+  }
+  getInventoryNearExpiry() : Observable<Inventory[]>{
+    return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoryNearExpiry`);
+  }
+  //Admin Dashboard Services End/
 }
