@@ -10,7 +10,6 @@
   top: 0; // Added: stick to top of viewport
   left: 0; // Added: align to left
   overflow: hidden;
-  z-index: 100; // Added: ensure it stays above other content
 
   // Subtle accent line
   &::before {
