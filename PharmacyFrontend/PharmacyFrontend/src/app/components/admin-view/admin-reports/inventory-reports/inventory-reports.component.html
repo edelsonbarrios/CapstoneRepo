@@ -11,7 +11,7 @@
     <div class="sub-container">
       <div class="content">
         <label>Total Value</label>
-        <p>{{inventoryReport.summary.totalValue}}</p>
+        <p>{{inventoryReport.summary.totalValue | currency : 'PHP': 'symbol-narrow'}}</p>
       </div>
     </div>
 

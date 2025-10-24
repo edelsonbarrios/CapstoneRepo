@@ -141,7 +141,7 @@ namespace PharmacyBackend.Repository.POST
                 }
 
                 // Calculate totals
-                salesTransaction.TotalAmount = salesTransaction.TotalAmount;
+                salesTransaction.TotalAmount = salesTransaction.Items.Sum(si => si.Subtotal);
                 salesTransaction.NetAmount = salesTransaction.TotalAmount - salesTransaction.DiscountAmount + salesTransaction.VATAmount;
 
                 _context.SalesTransaction.Add(salesTransaction);
