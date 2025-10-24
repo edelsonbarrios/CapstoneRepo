@@ -32,13 +32,6 @@ export class FastMovingProductsComponent implements OnInit {
   showExportModal: boolean = false;
 
   ngOnInit(): void {
-    // Set default dates (last 30 days)
-    const today = new Date();
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(today.getDate() - 30);
-    
-    this.startDate = this.formatDate(thirtyDaysAgo);
-    this.endDate = this.formatDate(today);
     
     this.getFastMovingReport();
   }
@@ -52,12 +45,6 @@ export class FastMovingProductsComponent implements OnInit {
   }
 
   getFastMovingReport() {
-    console.log('Current filter values:', {
-      startDate: this.startDate,
-      endDate: this.endDate,
-      selectedTopN: this.selectedTopN
-    });
-
     this.loading = true;
     this.error = '';
 
@@ -74,7 +61,6 @@ export class FastMovingProductsComponent implements OnInit {
       topN
     ).subscribe({
       next: (res) => {
-        console.log('API Response:', res);
         this.fastMovingReport = res;
         this.loading = false;
         this.setupPagination();
@@ -103,7 +89,6 @@ export class FastMovingProductsComponent implements OnInit {
   }
 
   onFilterChange() {
-    console.log('Filter changed');
     this.currentPage = 1;
     this.getFastMovingReport();
   }

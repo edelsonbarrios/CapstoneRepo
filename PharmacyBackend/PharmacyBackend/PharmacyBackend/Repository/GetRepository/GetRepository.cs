@@ -857,6 +857,12 @@ namespace PharmacyBackend.Repository.GET
             if(startDate.HasValue && !endDate.HasValue)
             {
                 var startingDate = startDate.Value.Date;
+                query = query.Where(i => i.DateAdded >= startingDate);
+            }
+
+            if(startDate.HasValue && !endDate.HasValue)
+            {
+                var startingDate = startDate.Value.Date;
                 query = query.Where(i => i.DateAdded.Date >= startingDate);
             }
 
@@ -913,6 +919,13 @@ namespace PharmacyBackend.Repository.GET
                 .AsQueryable();
 
             // Apply date filter only if dates are provided
+
+            if(startDate.HasValue && !endDate.HasValue)
+            {
+                var startingDate = startDate.Value.Date;
+                salesQuery = salesQuery.Where(si => si.SalesTransaction.TransactionDate.Date >= startingDate);
+            }
+
             if (startDate.HasValue && endDate.HasValue)
             {
                 var startDateUtc = startDate.Value.Date;
