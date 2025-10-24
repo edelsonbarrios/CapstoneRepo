@@ -7,6 +7,7 @@ using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
+using System.Runtime.InteropServices;
 
 namespace PharmacyBackend.Repository.GET
 {
@@ -852,6 +853,13 @@ namespace PharmacyBackend.Repository.GET
                 .AsQueryable();
 
             // Apply date filter only if dates are provided
+
+            if(startDate.HasValue && !endDate.HasValue)
+            {
+                var startingDate = startDate.Value.Date;
+                query = query.Where(i => i.DateAdded.Date >= startingDate);
+            }
+
             if (startDate.HasValue && endDate.HasValue)
             {
                 var startDateUtc = startDate.Value.Date;
