@@ -35,6 +35,7 @@
         <select [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
           <option value="Multi-Level">Multi Level</option>
           <option value="Dual-Level">Dual Level</option>
+          <option value="Single-Level">Single-Level</option>
         </select>
         <p class="error-message" *ngIf="unitMeasurementError">{{ unitMeasurementError }}</p>
       </div>
