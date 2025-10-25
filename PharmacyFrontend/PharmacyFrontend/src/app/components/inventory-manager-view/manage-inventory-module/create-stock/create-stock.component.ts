@@ -43,7 +43,6 @@ export class CreateStockComponent implements OnInit{
 
   onSelectProduct(request: Product) {
     this.selectedProduct = request;
-    // Clear product error when a product is selected
     if (this.selectedProduct && this.selectedProduct.productName) {
       this.productError = '';
     }
@@ -57,7 +56,6 @@ export class CreateStockComponent implements OnInit{
   }
 
   createInventory() {
-    // Clear previous errors
     this.productError = '';
     this.batchNumberError = '';
     this.manufacturingDateError = '';
@@ -66,19 +64,16 @@ export class CreateStockComponent implements OnInit{
 
     let isValid = true;
 
-    // Validate product selection
     if (!this.selectedProduct || !this.selectedProduct.productName) {
       this.productError = 'Product is required';
       isValid = false;
     }
 
-    // Validate batch number
     if (!this.createStock.batchNumber || this.createStock.batchNumber.trim() === '') {
       this.batchNumberError = 'Batch number is required';
       isValid = false;
     }
 
-    // Validate manufacturing date
     if (!this.createStock.manufacturingDate) {
       this.manufacturingDateError = 'Manufacturing date is required';
       isValid = false;
@@ -99,7 +94,6 @@ export class CreateStockComponent implements OnInit{
       }
     }
 
-    // Validate expiration date
     if (!this.createStock.expirationDate) {
       this.expirationDateError = 'Expiration date is required';
       isValid = false;
@@ -114,7 +108,6 @@ export class CreateStockComponent implements OnInit{
       }
     }
 
-    // Validate cost price
     if (!this.createStock.costPrice || this.createStock.costPrice <= 0) {
       this.costPriceError = 'Cost price is required';
       isValid = false;
@@ -158,7 +151,6 @@ export class CreateStockComponent implements OnInit{
   }
 
   closeCreateInventoryForm() {
-    // Clear all errors when closing form
     this.productError = '';
     this.batchNumberError = '';
     this.manufacturingDateError = '';
