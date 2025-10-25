@@ -1,4 +1,5 @@
 ﻿using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
@@ -162,6 +163,12 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
             DateTime? startDate,
             DateTime? endDate,
             int topN);
+        #endregion
+
+        #region BackUp Database 
+        Task<BackupListResponse> GetAllBackupsAsync();
+        Task<byte[]?> DownloadBackupAsync(string fileName);
+        string GetBackupDirectory();
         #endregion
     }
 }

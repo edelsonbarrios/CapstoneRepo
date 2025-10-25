@@ -2,6 +2,7 @@
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.ServiceContracts;
 using PharmacyBackend.Contracts.ServiceContracts.DeleteInterface;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Repository.DELETE;
 
 namespace PharmacyBackend.Service.DeleteService
@@ -9,10 +10,12 @@ namespace PharmacyBackend.Service.DeleteService
     public class DeleteService : IDeleteServiceContracts
     {
         private readonly IDeleteRepositoryContracts _deleteRepo;
+        private readonly IConfiguration _config;
 
-        public DeleteService(IDeleteRepositoryContracts deleteRepo)
+        public DeleteService(IDeleteRepositoryContracts deleteRepo, IConfiguration config)
         {
             _deleteRepo = deleteRepo;
+            _config = config;
         }
 
         #region Account
@@ -170,6 +173,104 @@ namespace PharmacyBackend.Service.DeleteService
             if (!deletePurchaseOrder)
                 return false;
             return true;
+        }
+        #endregion
+
+        #region BackUp Database
+        public async Task<DeleteBackupResponse> DeleteBackupAsync(string fileName)
+        {
+            try
+            {
+                var backupDir = GetBackupDirectory();
+                var filePath = Path.Combine(backupDir, fileName);
+                if (!File.Exists(filePath))
+                {
+                    return new DeleteBackupResponse
+                    {
+                        Success = false,
+                        Message = "Backup file not found"
+                    };
+                }
+                File.Delete(filePath);
+                return new DeleteBackupResponse
+                {
+                    Success = true,
+                    Message = "Backup deleted successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new DeleteBackupResponse
+                {
+                    Success = false,
+                    Message = $"Failed to delete backup: {ex.Message}"
+                };
+            }
+        }
+
+        // Interface method - no parameters, reads from config
+        public async Task CleanupOldBackupsAsync()
+        {
+            // Read values from configuration
+            var retentionDays = _config.GetValue<int>("BackupSettings:RetentionDays", 30);
+            var maxBackupCount = _config.GetValue<int>("BackupSettings:MaxBackupCount", 50);
+
+            await CleanupOldBackupsAsync(retentionDays, maxBackupCount);
+        }
+
+        // Helper method - keeps your existing logic
+        private async Task<bool> CleanupOldBackupsAsync(int retentionDays, int maxBackupCount)
+        {
+            try
+            {
+                var backupDir = GetBackupDirectory();
+                if (!Directory.Exists(backupDir))
+                {
+                    return true;
+                }
+                var backupFiles = Directory.GetFiles(backupDir, "*.backup")
+                    .Select(file => new FileInfo(file))
+                    .OrderByDescending(f => f.CreationTime)
+                    .ToList();
+                var cutoffDate = DateTime.Now.AddDays(-retentionDays);
+                var filesToDelete = new List<FileInfo>();
+                // Delete files older than retention period
+                filesToDelete.AddRange(backupFiles.Where(f => f.CreationTime < cutoffDate));
+                // If still exceeding max count, delete oldest files
+                if (backupFiles.Count > maxBackupCount)
+                {
+                    var excessFiles = backupFiles
+                        .Skip(maxBackupCount)
+                        .Where(f => !filesToDelete.Contains(f));
+                    filesToDelete.AddRange(excessFiles);
+                }
+                foreach (var file in filesToDelete.Distinct())
+                {
+                    try
+                    {
+                        file.Delete();
+                    }
+                    catch
+                    {
+                        // Log but continue with other files
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private string GetBackupDirectory()
+        {
+            var backupPath = _config.GetValue<string>("BackupSettings:BackupPath");
+            if (string.IsNullOrEmpty(backupPath))
+            {
+                backupPath = Path.Combine(Directory.GetCurrentDirectory(), "Backups");
+            }
+            return backupPath;
         }
         #endregion
 

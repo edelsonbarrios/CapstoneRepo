@@ -18,6 +18,7 @@ using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
 using System.Runtime.CompilerServices;
 using PharmacyBackend.DTOs.ReportsDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -191,6 +192,12 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
             DateTime? startDate = null,
             DateTime? endDate = null,
             int topN = 20);
+        #endregion
+
+        #region BackUp Database
+        Task<BackupListResponse> GetAllBackupsAsync();
+        Task<BackupSettingsDto> GetBackupSettingsAsync();
+        Task<byte[]?> DownloadBackupAsync(string fileName);
         #endregion
     }
 }

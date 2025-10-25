@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,13 +21,16 @@ namespace PharmacyBackend.Repository.POST
         private readonly PharmacyContext _context;
         private readonly IConfiguration _config;
         private readonly JwtHelper _jwtHelper;
+        private readonly ILogger<PostRepository> _logger;
         public PostRepository(PharmacyContext context,
             IConfiguration config,
-            JwtHelper jwtHelper)
+            JwtHelper jwtHelper,
+            ILogger<PostRepository> logger)
         {
             _context = context;
             _jwtHelper = jwtHelper;
             _config = config;
+            _logger = logger;
         }
         #region Account
         public async Task<string> AuthenticationAsync(LogInRequest request)
@@ -671,6 +678,329 @@ namespace PharmacyBackend.Repository.POST
             await _context.StockMovement.AddAsync(stockMovement);
             await _context.SaveChangesAsync();
             return stockMovement;
+        }
+        #endregion
+
+        #region BackUp Database
+
+        public async Task<CreateBackupResponse> CreateBackupAsync(CreateBackupRequest request)
+{
+            try
+            {
+                var backupDir = GetBackupDirectory();
+
+                if (!Directory.Exists(backupDir))
+                {
+                    Directory.CreateDirectory(backupDir);
+                }
+
+                var backupType = request.IsManual ? "MANUAL" : "AUTO";
+                var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                var fileName = $"PharmacyDB_{backupType}_{timestamp}.backup";
+                var backupPath = Path.Combine(backupDir, fileName);
+
+                // Get connection details from connection string
+                var connectionString = _config.GetConnectionString("RacquelDB");
+                var builder = new NpgsqlConnectionStringBuilder(connectionString);
+
+                var host = builder.Host;
+                var port = builder.Port;
+                var database = builder.Database;
+                var username = builder.Username;
+                var password = builder.Password;
+
+                // Get pg_dump path from configuration
+                var pgDumpPath = _config["PostgreSQL:PgDumpPath"] ?? "pg_dump";
+
+                // Verify pg_dump exists
+                if (!File.Exists(pgDumpPath))
+                {
+                    return new CreateBackupResponse
+                    {
+                        Success = false,
+                        Message = $"pg_dump not found at: {pgDumpPath}. Please install PostgreSQL or update the path in appsettings.json",
+                        Backup = null
+                    };
+                }
+
+                // Use pg_dump for PostgreSQL backup
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = pgDumpPath,
+                    Arguments = $"-h {host} -p {port} -U {username} -F c -b -v -f \"{backupPath}\" {database}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                // Set password as environment variable
+                processInfo.EnvironmentVariables["PGPASSWORD"] = password;
+
+                using (var process = Process.Start(processInfo))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Failed to start pg_dump process");
+                    }
+
+                    await process.WaitForExitAsync();
+
+                    if (process.ExitCode != 0)
+                    {
+                        var error = await process.StandardError.ReadToEndAsync();
+                        throw new Exception($"pg_dump failed: {error}");
+                    }
+                }
+
+                var fileInfo = new FileInfo(backupPath);
+
+                return new CreateBackupResponse
+                {
+                    Success = true,
+                    Message = "Backup created successfully",
+                    Backup = new BackupDto
+                    {
+                        FileName = fileName,
+                        CreatedDate = fileInfo.CreationTime,
+                        FileSizeBytes = fileInfo.Length,
+                        BackupType = request.IsManual ? "Manual" : "Automated",
+                        Status = "Success"
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new CreateBackupResponse
+                {
+                    Success = false,
+                    Message = $"Backup failed: {ex.Message}",
+                    Backup = null
+                };
+            }
+        }
+        public async Task<RestoreBackupResponse> RestoreBackupAsync(RestoreBackupRequest request)
+        {
+            // Verify that the user explicitly confirmed the restore operation
+            if (!request.ConfirmRestore)
+            {
+                return new RestoreBackupResponse
+                {
+                    Success = false,
+                    Message = "Restore not confirmed. This operation will overwrite the current database."
+                };
+            }
+
+            try
+            {
+                // Get the configured backup directory path from appsettings.json
+                var backupDir = GetBackupDirectory();
+
+                // Combine the directory path with the filename to get the full path
+                var backupPath = Path.Combine(backupDir, request.FileName);
+
+                _logger.LogInformation($"Starting restore from: {backupPath}");
+
+                // Verify the backup file actually exists on disk
+                // Using System.IO.File explicitly to avoid conflict with ControllerBase.File()
+                if (!System.IO.File.Exists(backupPath))
+                {
+                    return new RestoreBackupResponse
+                    {
+                        Success = false,
+                        Message = "Backup file not found"
+                    };
+                }
+
+                // Parse the connection string to extract individual components
+                var connectionString = _config.GetConnectionString("RacquelDB");
+                var builder = new NpgsqlConnectionStringBuilder(connectionString);
+
+                var host = builder.Host ?? "localhost";  // Default to localhost if not specified
+                var port = builder.Port;                  // PostgreSQL port (usually 5432)
+                var database = builder.Database;          // Target database name
+                var username = builder.Username;          // Database username
+                var password = builder.Password;          // Database password
+
+                _logger.LogInformation($"Database: {database}, Host: {host}, Port: {port}, User: {username}");
+
+                // Get the path to pg_restore executable from configuration
+                var pgRestorePath = _config["PostgreSQL:PgRestorePath"] ?? "pg_restore";
+
+                _logger.LogInformation($"pg_restore path: {pgRestorePath}");
+
+                // Check if pg_restore executable exists at the configured path
+                if (!System.IO.File.Exists(pgRestorePath))
+                {
+                    return new RestoreBackupResponse
+                    {
+                        Success = false,
+                        Message = $"pg_restore not found at: {pgRestorePath}"
+                    };
+                }
+
+                _logger.LogInformation("Clearing connection pools...");
+                NpgsqlConnection.ClearAllPools();
+
+                _logger.LogInformation("Step 1: Terminating database connections...");
+
+                // Create a connection string pointing to the 'postgres' system database
+                var postgresConnString = new NpgsqlConnectionStringBuilder(connectionString)
+                {
+                    Database = "postgres"  // Change database to 'postgres' system database
+                }.ToString();
+
+                using (var connection = new NpgsqlConnection(postgresConnString))
+                {
+                    await connection.OpenAsync();
+                    _logger.LogInformation("Connected to postgres database");
+
+                
+                    // Force disconnect all users/connections from the target database
+                 
+                    var terminateQuery = $@"
+                        SELECT pg_terminate_backend(pid)
+                        FROM pg_stat_activity
+                        WHERE datname = '{database}'
+                        AND pid <> pg_backend_pid();";
+
+                    using (var command = new NpgsqlCommand(terminateQuery, connection))
+                    {
+                        // Set timeout to 30 seconds to prevent hanging
+                        // If terminating connections takes longer, the command will fail
+                        command.CommandTimeout = 30;
+
+                        var result = await command.ExecuteScalarAsync();
+                        _logger.LogInformation($"Terminated connections: {result}");
+                    }
+
+                    // WAIT FOR CONNECTIONS TO FULLY CLOSE
+                    _logger.LogInformation("Waiting for connections to close...");
+                    await Task.Delay(1000);
+
+                    _logger.LogInformation("Step 2: Dropping and recreating database...");
+
+                    // This completely removes the old database and creates a fresh empty one
+                    var dropCreateQuery = $@"
+                        DROP DATABASE IF EXISTS ""{database}"";
+                        CREATE DATABASE ""{database}"";";
+
+                    using (var command = new NpgsqlCommand(dropCreateQuery, connection))
+                    {
+                        // Set timeout to 60 seconds
+                        // Dropping/creating databases can take time depending on size
+                        command.CommandTimeout = 60;
+
+                        await command.ExecuteNonQueryAsync();
+                        _logger.LogInformation("Database dropped and recreated successfully");
+                    }
+                }
+
+                // Clear pools again after database recreation
+                // This ensures no cached connections to the old database remain
+                NpgsqlConnection.ClearAllPools();
+
+                _logger.LogInformation("Step 3: Running pg_restore...");
+
+                // Set up the pg_restore process with proper arguments
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = pgRestorePath,  // Path to pg_restore.exe
+
+                    // Arguments explanation:
+                    Arguments = $"-h {host} -p {port} -U {username} -d {database} -v \"{backupPath}\"",
+
+                    // Redirect output streams so we can capture and log them
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+
+                    // Don't use shell execute (more secure and reliable)
+                    UseShellExecute = false,
+
+                    // Don't create a visible command window
+                    CreateNoWindow = true
+                };
+
+                processInfo.EnvironmentVariables["PGPASSWORD"] = password;
+
+                _logger.LogInformation($"pg_restore command: {pgRestorePath} {processInfo.Arguments}");
+
+                using (var process = Process.Start(processInfo))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Failed to start pg_restore process");
+                    }
+                    var outputTask = process.StandardOutput.ReadToEndAsync();
+                    var errorTask = process.StandardError.ReadToEndAsync();
+
+                    using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+
+                    try
+                    {
+                        // Wait for pg_restore to complete, or timeout after 5 minutes
+                        await process.WaitForExitAsync(cts.Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // If timeout occurs, forcefully kill the process
+                        process.Kill();
+                        throw new Exception("Restore process timed out after 5 minutes");
+                    }
+
+                    var output = await outputTask;
+                    var error = await errorTask;
+
+                    _logger.LogInformation($"pg_restore exit code: {process.ExitCode}");
+
+                    // Log standard output (verbose progress information)
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        _logger.LogInformation($"pg_restore output: {output}");
+                    }
+
+                    // Log error output (warnings and errors)
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        _logger.LogWarning($"pg_restore stderr: {error}");
+                    }
+                }
+                // Process automatically disposed here
+
+                _logger.LogInformation("Restore completed successfully!");
+
+                return new RestoreBackupResponse
+                {
+                    Success = true,
+                    Message = "Database restored successfully",
+                    RestoredDate = DateTime.Now  // Record when the restore completed
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Restore failed with exception");
+
+                return new RestoreBackupResponse
+                {
+                    Success = false,
+                    Message = $"Restore failed: {ex.Message}",
+                    RestoredDate = null
+                };
+            }
+        }
+
+        // HELPER METHOD: GET BACKUP DIRECTORY
+        private string GetBackupDirectory()
+        {
+            var backupPath = _config.GetValue<string>("BackupSettings:BackupPath");
+
+            if (string.IsNullOrEmpty(backupPath))
+            {
+                // Default: Create a Backups folder in the current application directory
+                backupPath = Path.Combine(Directory.GetCurrentDirectory(), "Backups");
+            }
+
+            return backupPath;
         }
         #endregion
     }

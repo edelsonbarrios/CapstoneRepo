@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface;
 using PharmacyBackend.DataContext;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 
 namespace PharmacyBackend.Repository.DELETE
 {
     public class DeleteRepository : IDeleteRepositoryContracts
     {
         private readonly PharmacyContext _context;
-        public DeleteRepository(PharmacyContext context)
+        private readonly IConfiguration _config;
+        public DeleteRepository(PharmacyContext context , IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         #region Account
@@ -215,6 +219,108 @@ namespace PharmacyBackend.Repository.DELETE
             await _context.SaveChangesAsync();
             return true;
         }
+        #endregion
+
+        #region BackUp Database
+
+        public async Task<DeleteBackupResponse> DeleteBackupAsync(string fileName)
+        {
+            try
+            {
+                var backupDir = GetBackupDirectory();
+                var filePath = Path.Combine(backupDir, fileName);
+
+                if (!File.Exists(filePath))
+                {
+                    return new DeleteBackupResponse
+                    {
+                        Success = false,
+                        Message = "Backup file not found"
+                    };
+                }
+
+                File.Delete(filePath);
+
+                return new DeleteBackupResponse
+                {
+                    Success = true,
+                    Message = "Backup deleted successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new DeleteBackupResponse
+                {
+                    Success = false,
+                    Message = $"Failed to delete backup: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<bool> CleanupOldBackupsAsync(int retentionDays, int maxBackupCount)
+        {
+            try
+            {
+                var backupDir = GetBackupDirectory();
+
+                if (!Directory.Exists(backupDir))
+                {
+                    return true;
+                }
+
+                var backupFiles = Directory.GetFiles(backupDir, "*.backup")
+                    .Select(file => new FileInfo(file))
+                    .OrderByDescending(f => f.CreationTime)
+                    .ToList();
+
+                var cutoffDate = DateTime.Now.AddDays(-retentionDays);
+                var filesToDelete = new List<FileInfo>();
+
+                // Delete files older than retention period
+                filesToDelete.AddRange(backupFiles.Where(f => f.CreationTime < cutoffDate));
+
+                // If still exceeding max count, delete oldest files
+                if (backupFiles.Count > maxBackupCount)
+                {
+                    var excessFiles = backupFiles
+                        .Skip(maxBackupCount)
+                        .Where(f => !filesToDelete.Contains(f));
+
+                    filesToDelete.AddRange(excessFiles);
+                }
+
+                foreach (var file in filesToDelete.Distinct())
+                {
+                    try
+                    {
+                        file.Delete();
+                    }
+                    catch
+                    {
+                        // Log but continue with other files
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private string GetBackupDirectory()
+        {
+            var backupPath = _config.GetValue<string>("BackupSettings:BackupPath");
+
+            if (string.IsNullOrEmpty(backupPath))
+            {
+                backupPath = Path.Combine(Directory.GetCurrentDirectory(), "Backups");
+            }
+
+            return backupPath;
+        }
+
         #endregion
 
     }

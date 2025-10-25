@@ -23,6 +23,8 @@ using PharmacyBackend.DTOs.ReportsDTOs;
 using OfficeOpenXml.Style;
 using OfficeOpenXml;
 using System.Drawing;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
+using PharmacyBackend.Repository.GET;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -30,11 +32,18 @@ namespace PharmacyBackend.Service.GetService
     {
         private readonly IGetRepositoryContracts _getRepo;
         private readonly IUpdateRepositoryContracts _updateRepo;
+        private readonly IConfiguration _config;
+        private readonly ILogger<GetService> _logger;
 
-        public GetService(IGetRepositoryContracts getRepo, IUpdateRepositoryContracts updateRepo)
+        public GetService(IGetRepositoryContracts getRepo, 
+            IUpdateRepositoryContracts updateRepo,
+            IConfiguration config,
+            ILogger<GetService> logger)
         {
             _getRepo = getRepo;
             _updateRepo = updateRepo;
+            _config = config;
+            _logger = logger;
         }
 
         #region DashBoardInventoryMan
@@ -2075,6 +2084,57 @@ namespace PharmacyBackend.Service.GetService
                 return package.GetAsByteArray();
             }
         }
+        #endregion
+
+        #region BackUp Database
+        public async Task<BackupListResponse> GetAllBackupsAsync()
+        {
+            try
+            {
+                return await _getRepo.GetAllBackupsAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting backups");
+                return new BackupListResponse
+                {
+                    Success = false,
+                    Backups = new List<BackupDto>(),
+                    TotalCount = 0,
+                    TotalSizeMB = "0.00 MB"
+                };
+            }
+        }
+
+        public async Task<byte[]?> DownloadBackupAsync(string fileName)
+        {
+            try
+            {
+                _logger.LogInformation($"Downloading backup: {fileName}");
+                return await _getRepo.DownloadBackupAsync(fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error downloading backup");
+                return null;
+            }
+        }
+
+        public async Task<BackupSettingsDto> GetBackupSettingsAsync()
+        {
+            return new BackupSettingsDto
+            {
+                AutoBackupEnabled = _config.GetValue<bool>("BackupSettings:AutoBackupEnabled", true),
+                AutoBackupTime = new TimeSpan(
+                    _config.GetValue<int>("BackupSettings:AutoBackupHour", 2),
+                    _config.GetValue<int>("BackupSettings:AutoBackupMinute", 0),
+                    0
+                ),
+                RetentionDays = _config.GetValue<int>("BackupSettings:RetentionDays", 30),
+                MaxBackupCount = _config.GetValue<int>("BackupSettings:MaxBackupCount", 50)
+            };
+        }
+
         #endregion
     }
 }

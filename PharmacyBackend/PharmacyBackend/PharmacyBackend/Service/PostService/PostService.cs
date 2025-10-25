@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.PostInterface;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
+using PharmacyBackend.Contracts.ServiceContracts.DeleteInterface;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
@@ -20,6 +23,8 @@ using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.Helper;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
+using PharmacyBackend.Repository.POST;
+using PharmacyBackend.Service.DeleteService;
 
 namespace PharmacyBackend.Service.PostService
 {
@@ -28,17 +33,29 @@ namespace PharmacyBackend.Service.PostService
         private readonly IPostRepositoryContracts _postRepo;
         private readonly IGetRepositoryContracts _getRepo;
         private readonly IUpdateRepositoryContracts _updateRepo;
+        private readonly IDeleteRepositoryContracts _deleteRepo;
+        private readonly ILogger<PostService> _logger; 
+        private readonly IConfiguration _configuration;
         private readonly PharmacyContext _context;
+        private readonly IDeleteServiceContracts _deleteServ;
 
         public PostService(IPostRepositoryContracts postRepo,
             IGetRepositoryContracts getRepo,
             IUpdateRepositoryContracts updateRepo,
-            PharmacyContext context)
+            IDeleteRepositoryContracts deleteRepo,
+            ILogger<PostService> logger, 
+            IConfiguration configuration,
+            PharmacyContext context,
+            IDeleteServiceContracts deleteServ)
         {
             _postRepo = postRepo;
             _getRepo = getRepo;         
             _updateRepo = updateRepo;
+            _deleteRepo = deleteRepo;
             _context = context;
+            _logger = logger;
+            _configuration = configuration;
+            _deleteServ = deleteServ;
         }
 
         #region Account
@@ -958,6 +975,83 @@ namespace PharmacyBackend.Service.PostService
                 EmployeeID = created.EmployeeID
             };
         }
+        #endregion
+
+        #region BackUp Database
+
+        public async Task<CreateBackupResponse> CreateBackupAsync(CreateBackupRequest request)
+        {
+            try
+            {
+                _logger.LogInformation($"Creating {(request.IsManual ? "manual" : "automated")} backup");
+                return await _postRepo.CreateBackupAsync(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating backup");
+                return new CreateBackupResponse
+                {
+                    Success = false,
+                    Message = $"Error: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<RestoreBackupResponse> RestoreBackupAsync(RestoreBackupRequest request)
+        {
+            try
+            {
+                _logger.LogInformation($"Restoring backup: {request.FileName}");
+                return await _postRepo.RestoreBackupAsync(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error restoring backup");
+                return new RestoreBackupResponse
+                {
+                    Success = false,
+                    Message = $"Error: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task PerformAutomatedBackupAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Starting automated backup");
+
+                var request = new CreateBackupRequest
+                {
+                    IsManual = false,
+                    Description = "Automated daily backup"
+                };
+
+                var response = await _postRepo.CreateBackupAsync(request);
+
+                if (response.Success)
+                {
+                    _logger.LogInformation("Automated backup completed successfully");
+
+                    // Trigger cleanup through delete service
+                    await _deleteServ.CleanupOldBackupsAsync();
+                }
+                else
+                {
+                    _logger.LogError($"Automated backup failed: {response.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during automated backup");
+            }
+        }
+
+        public async Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings)
+        {
+            throw new NotImplementedException("Settings are read from appsettings.json and cannot be updated at runtime");
+        }
+
         #endregion
 
     }

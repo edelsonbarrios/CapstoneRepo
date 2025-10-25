@@ -14,6 +14,7 @@ using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
 using PharmacyBackend.Models.CashierViewModel;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 {
@@ -92,6 +93,14 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         #region StockMovement
         public Task<StockMovementDto> CreateStockMovementAsync(CreateStockMovementDto dto);
+        #endregion
+
+        #region BackUp Database
+        Task<CreateBackupResponse> CreateBackupAsync(CreateBackupRequest request);
+        Task<RestoreBackupResponse> RestoreBackupAsync(RestoreBackupRequest request);
+        Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings);
+        Task PerformAutomatedBackupAsync(); // For background service
+
         #endregion
 
     }

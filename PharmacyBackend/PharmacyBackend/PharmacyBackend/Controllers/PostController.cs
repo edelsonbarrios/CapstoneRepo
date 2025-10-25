@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query.Internal;
@@ -9,6 +10,7 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
@@ -29,12 +31,14 @@ namespace PharmacyBackend.Controllers
     {
         private readonly IPostServiceContracts _postService;
         private readonly IGetServiceContracts _getService;
-
+        private readonly ILogger<PostController> _logger;
         public PostController(IPostServiceContracts postService,
-            IGetServiceContracts getService)
+            IGetServiceContracts getService,
+            ILogger<PostController> logger)
         {
             _postService = postService;
             _getService = getService;
+            _logger = logger;
         }
 
         #region Employee
@@ -505,6 +509,85 @@ namespace PharmacyBackend.Controllers
                 return BadRequest($"Error creating stock movement: {ex.Message}");
             }
         }
+        #endregion
+
+        #region BackUp Database
+
+        /// <summary>
+        /// Create a manual backup
+        /// </summary>
+        [HttpPost("backups/create")]
+        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<CreateBackupResponse>> CreateBackup(
+            [FromBody] CreateBackupRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Manual backup requested");
+                var response = await _postService.CreateBackupAsync(request);
+
+                if (response.Success)
+                {
+                    return Ok(response);
+                }
+
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in CreateBackup endpoint");
+                return StatusCode(500, new CreateBackupResponse
+                {
+                    Success = false,
+                    Message = $"Server error: {ex.Message}"
+                });
+            }
+        }
+        /// <summary>
+        /// Restore database from backup
+        /// </summary>
+        [HttpPost("backups/restore")]
+        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<RestoreBackupResponse>> RestoreBackup(
+            [FromBody] RestoreBackupRequest request)
+        {
+            try
+            {
+                _logger.LogWarning($"Database restore requested for: {request.FileName}");
+
+                // Additional safety check
+                if (!request.ConfirmRestore)
+                {
+                    return BadRequest(new RestoreBackupResponse
+                    {
+                        Success = false,
+                        Message = "Restore not confirmed. Set ConfirmRestore to true to proceed."
+                    });
+                }
+
+                var response = await _postService.RestoreBackupAsync(request);
+
+                if (response.Success)
+                {
+                    return Ok(response);
+                }
+
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in RestoreBackup endpoint");
+                return StatusCode(500, new RestoreBackupResponse
+                {
+                    Success = false,
+                    Message = $"Server error: {ex.Message}"
+                });
+            }
+        }
+
+        
+
+
         #endregion
     }
 }
