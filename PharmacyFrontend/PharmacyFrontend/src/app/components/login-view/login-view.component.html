@@ -1,28 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Login - Pharmacy Management System</title>
 </head>
+
 <body>
-  <main>
-    <div class="logo">
-      <img src="logo.png" alt="logo" width="100%" height="90px">
+  <main class="login-container">
+    <!-- Decorative Elements -->
+    <div class="decorative-pills">
+      <i class="fas fa-pills pill-1"></i>
+      <i class="fas fa-capsules pill-2"></i>
+      <i class="fas fa-prescription-bottle pill-3"></i>
     </div>
-    <h1 style="text-align: center;">Login</h1>
-    <div class="header-wrapper">
-      <h1>Welcome back!</h1>
-      <h2>Please login to your account</h2>
-    </div>
-    <div class="input-wrapper" [class.error]="loginError">
-      <input type="text" [(ngModel)]="userName" placeholder="Username">
-      <input type="password" [(ngModel)]="password" placeholder="Password">
-      <p class="error-message" *ngIf="loginError">{{ loginError }}</p>
-    </div>
-    <div class="button-wrapper">
-      <button (click)="Authenticate()">Login</button>
+
+    <div class="login-card">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-wrapper">
+          <img src="logo.png" alt="Pharmacy Logo">
+        </div>
+      </div>
+
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <div class="icon-badge">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h1 class="welcome-title">Welcome Back!</h1>
+        <p class="welcome-subtitle">Please login to your account</p>
+      </div>
+
+      <!-- Form Section -->
+      <form class="login-form" (submit)="$event.preventDefault(); Authenticate()">
+        <div class="form-group" [class.error]="loginError">
+          <label for="username">
+            <i class="fas fa-user"></i>
+            Username
+          </label>
+          <input type="text" id="username" [(ngModel)]="userName" name="username" placeholder="Enter your username"
+            autocomplete="username">
+        </div>
+
+        <div class="form-group" [class.error]="loginError">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Password
+          </label>
+          <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="Enter your password"
+            autocomplete="current-password">
+        </div>
+
+        <div class="error-container" *ngIf="loginError">
+          <div class="error-alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{{ loginError }}</span>
+          </div>
+        </div>
+
+        <div class="button-section">
+          <button type="submit" class="login-button" (click)="Authenticate()">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+          </button>
+        </div>
+      </form>
     </div>
   </main>
 </body>
+
 </html>
