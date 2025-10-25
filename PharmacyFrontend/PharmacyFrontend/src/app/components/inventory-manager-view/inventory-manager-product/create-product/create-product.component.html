@@ -1,149 +1,273 @@
+<!-- create-product.component.html -->
 <div class="modal" *ngIf="!showSuccessAlert">
-
+  
   <!-- MODAL HEADER -->
   <div class="modal-header">
-    <div class="modal-title">
-      <h2>Add Product</h2>
-      <a>&#10006;</a>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-box"></i>
+      </div>
+      <div class="title">
+        <h2>Add New Product</h2>
+        <p>Fill in the details to register a new product</p>
+      </div>
     </div>
-    <div class="desc">Fill in the details to register a new product.</div>
   </div>
 
   <!-- MODAL BODY -->
   <div class="modal-body">
+    <fieldset>
+      <legend>
+        <i class="fas fa-clipboard-list"></i>
+        Product Details
+      </legend>
 
-    <div class="form-grid">
+      <div class="form-grid">
 
-      <!-- Product Name (Text Input) -->
-      <div class="form-group" [class.error]="productNameError">
-        <label>Product Name</label>
-        <input type="text" [(ngModel)]="newProduct.productName">
-        <p class="error-message" *ngIf="productNameError">{{ productNameError }}</p>
+        <!-- Product Name -->
+        <div class="form-group" [class.error]="productNameError">
+          <label for="productName">
+            Product Name
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="productName"
+            placeholder="Enter Product Name" 
+            [(ngModel)]="newProduct.productName"
+          />
+          <span class="error-message" *ngIf="productNameError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ productNameError }}
+          </span>
+        </div>
+
+        <!-- Category Name -->
+        <div class="form-group" [class.error]="categoryNameError">
+          <label for="categoryName">
+            Category Name
+            <span class="required">*</span>
+          </label>
+          <select id="categoryName" [(ngModel)]="newProduct.categoryName">
+            <option value="">Select Category</option>
+            <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
+          </select>
+          <span class="error-message" *ngIf="categoryNameError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ categoryNameError }}
+          </span>
+        </div>
+
+        <!-- Unit Packaging -->
+        <div class="form-group" [class.error]="unitMeasurementError">
+          <label for="unitMeasurement">
+            Unit Packaging
+            <span class="required">*</span>
+          </label>
+          <select id="unitMeasurement" [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
+            <option value="Multi-Level">Multi Level</option>
+            <option value="Dual-Level">Dual Level</option>
+          </select>
+          <span class="error-message" *ngIf="unitMeasurementError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ unitMeasurementError }}
+          </span>
+        </div>
+
+        <!-- Brand Name -->
+        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+          <label for="brandName">Brand Name</label>
+          <select id="brandName" [(ngModel)]="newProduct.brandName">
+            <option value="">Select Brand</option>
+            <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
+          </select>
+        </div>
+
+        <!-- Generic Name -->
+        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+          <label for="genericName">Generic Name</label>
+          <select id="genericName" [(ngModel)]="newProduct.genericName">
+            <option value="">Select Generic</option>
+            <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
+          </select>
+        </div>
+
+        <!-- Classification -->
+        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+          <label for="classificationName">Classification</label>
+          <select id="classificationName" [(ngModel)]="newProduct.classificationName">
+            <option value="">Select Classification</option>
+            <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
+          </select>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+          <label for="typeName">Type of Medicine</label>
+          <select id="typeName" [(ngModel)]="newProduct.typeName">
+            <option value="">Select Type</option>
+            <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
+          </select>
+        </div>
+
+        <!-- Formulation -->
+        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+          <label for="formulationName">Formulation</label>
+          <select id="formulationName" [(ngModel)]="newProduct.formulationName">
+            <option value="">Select Formulation</option>
+            <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
+          </select>
+        </div>
+
+        <!-- Sheets Per Box -->
+        <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="sheetsPerBoxError">
+          <label for="sheetsPerBox">
+            Sheets Per Box
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="sheetsPerBox"
+            placeholder="Enter Sheets Per Box" 
+            [(ngModel)]="newProduct.sheetsPerBox"
+          />
+          <span class="error-message" *ngIf="sheetsPerBoxError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ sheetsPerBoxError }}
+          </span>
+        </div>
+
+        <!-- Piece Per Box -->
+        <div class="form-group" *ngIf="unitMeasurement == 'Dual-Level'" [class.error]="piecePerBoxError">
+          <label for="piecePerBox">
+            Piece Per Box
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="piecePerBox"
+            placeholder="Enter Piece Per Box" 
+            [(ngModel)]="newProduct.piecePerBox"
+          />
+          <span class="error-message" *ngIf="piecePerBoxError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ piecePerBoxError }}
+          </span>
+        </div>
+
+        <!-- Pieces Per Sheet -->
+        <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="piecesPerSheetError">
+          <label for="piecesPerSheet">
+            Pieces Per Sheet
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="piecesPerSheet"
+            placeholder="Enter Pieces Per Sheet" 
+            [(ngModel)]="newProduct.piecesPerSheet"
+          />
+          <span class="error-message" *ngIf="piecesPerSheetError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ piecesPerSheetError }}
+          </span>
+        </div>
+
+        <!-- Box Price -->
+        <div class="form-group" [class.error]="boxPriceError" *ngIf="unitMeasurement == 'Multi-Level' || unitMeasurement == 'Dual-Level'">
+          <label for="boxPrice">
+            Box Price (&#8369;)
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="boxPrice"
+            placeholder="Enter Box Price" 
+            [(ngModel)]="newProduct.boxPrice"
+          />
+          <span class="error-message" *ngIf="boxPriceError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ boxPriceError }}
+          </span>
+        </div>
+
+        <!-- Sheet Price -->
+        <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
+          <label for="sheetPrice">Sheet Price (&#8369;)</label>
+          <input 
+            type="number" 
+            id="sheetPrice"
+            placeholder="Enter Sheet Price" 
+            [(ngModel)]="newProduct.sheetPrice"
+          />
+        </div>
+
+        <!-- Piece Price -->
+        <div class="form-group" [class.error]="piecePriceError">
+          <label for="piecePrice">
+            Piece Price (&#8369;)
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="piecePrice"
+            placeholder="Enter Piece Price" 
+            [(ngModel)]="newProduct.piecePrice"
+          />
+          <span class="error-message" *ngIf="piecePriceError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ piecePriceError }}
+          </span>
+        </div>
+
+        <!-- Reorder Level -->
+        <div class="form-group" [class.error]="reorderLevelError">
+          <label for="reorderLevel">
+            Reorder Level
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="reorderLevel"
+            placeholder="Enter Reorder Level" 
+            [(ngModel)]="newProduct.reorderLevel"
+          />
+          <span class="error-message" *ngIf="reorderLevelError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ reorderLevelError }}
+          </span>
+        </div>
+
       </div>
-
-      <div class="form-group" [class.error]="categoryNameError">
-        <label>Category Name</label>
-        <select [(ngModel)]="newProduct.categoryName">
-          <option value="">-- Select Category --</option>
-          <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
-        </select>
-        <p class="error-message" *ngIf="categoryNameError">{{ categoryNameError }}</p>
-      </div>
-
-      <div class="form-group" [class.error]="unitMeasurementError">
-        <label>Unit Packaging</label>
-        <select [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
-          <option value="Multi-Level">Multi Level</option>
-          <option value="Dual-Level">Dual Level</option>
-          <option value="Single-Level">Single-Level</option>
-        </select>
-        <p class="error-message" *ngIf="unitMeasurementError">{{ unitMeasurementError }}</p>
-      </div>
-
-      <!-- Brand Name -->
-      <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
-        <label>Brand Name</label>
-        <select [(ngModel)]="newProduct.brandName">
-          <option value="">-- Select Brand --</option>
-          <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
-        </select>
-      </div>
-
-      <!-- Generic Name -->
-      <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
-        <label>Generic Name</label>
-        <select [(ngModel)]="newProduct.genericName">
-          <option value="">-- Select Generic --</option>
-          <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
-        </select>
-      </div>
-
-      <!-- Classification -->
-      <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
-        <label>Classification</label>
-        <select [(ngModel)]="newProduct.classificationName">
-          <option value="">-- Select Classification --</option>
-          <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
-        </select>
-      </div>
-
-      <!-- Type -->
-      <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
-        <label>Type of Medicine</label>
-        <select [(ngModel)]="newProduct.typeName">
-          <option value="">-- Select Type --</option>
-          <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
-        </select>
-      </div>
-
-      <!-- Formulation -->
-      <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
-        <label>Formulation</label>
-        <select [(ngModel)]="newProduct.formulationName">
-          <option value="">-- Select Formulation --</option>
-          <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
-        </select>
-      </div>
-
-      
-
-      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="sheetsPerBoxError">
-        <label *ngIf="unitMeasurement == 'Multi-Level'">Sheets Per Box</label>
-        <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.sheetsPerBox">
-        <p class="error-message" *ngIf="sheetsPerBoxError">{{ sheetsPerBoxError }}</p>
-      </div>
-
-      <div class="form-group" *ngIf="unitMeasurement == 'Dual-Level'" [class.error]="piecePerBoxError">
-        <label *ngIf="unitMeasurement == 'Dual-Level'">Piece Per Box</label>
-        <input *ngIf="unitMeasurement == 'Dual-Level'" type="number" [(ngModel)]="newProduct.piecePerBox">
-        <p class="error-message" *ngIf="piecePerBoxError">{{ piecePerBoxError }}</p>
-      </div>
-
-      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="piecesPerSheetError">
-        <label *ngIf="unitMeasurement == 'Multi-Level'">Pieces Per Sheet</label>
-        <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.piecesPerSheet">
-        <p class="error-message" *ngIf="piecesPerSheetError">{{ piecesPerSheetError }}</p>
-      </div>
-
-      <div class="form-group" [class.error]="boxPriceError" *ngIf="unitMeasurement == 'Multi-Level' || unitMeasurement == 'Dual-Level'">
-        <label>Box Price (&#8369;)</label>
-        <input type="number" [(ngModel)]="newProduct.boxPrice">
-        <p class="error-message" *ngIf="boxPriceError">{{ boxPriceError }}</p>
-      </div>
-
-      <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
-        <label *ngIf="unitMeasurement == 'Multi-Level'">Sheet Price (&#8369;)</label>
-        <input *ngIf="unitMeasurement == 'Multi-Level'" type="number" [(ngModel)]="newProduct.sheetPrice">
-      </div>
-
-      <div class="form-group" [class.error]="piecePriceError">
-        <label>Piece Price (&#8369;)</label>
-        <input type="number" [(ngModel)]="newProduct.piecePrice">
-        <p class="error-message" *ngIf="piecePriceError">{{ piecePriceError }}</p>
-      </div>
-
-      <div class="form-group" [class.error]="reorderLevelError">
-        <label>Reorder Level</label>
-        <input type="number" [(ngModel)]="newProduct.reorderLevel">
-        <p class="error-message" *ngIf="reorderLevelError">{{ reorderLevelError }}</p>
-      </div>
-
-    </div>
-
+    </fieldset>
   </div>
 
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save" (click)="createProduct()">Save</button>
-    <button class="btn-cancel" (click)="closeCreateProductForm()">Cancel</button>
+    <button class="btn btn-cancel" (click)="closeCreateProductForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" (click)="createProduct()">
+      <i class="fas fa-save"></i>
+      Save Product
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
-<div class="success-alert" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Product has been Added Successfully</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">Product has been added successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
+    </div>
   </div>
 </div>

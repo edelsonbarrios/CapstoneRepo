@@ -1,62 +1,123 @@
 <div class="modal" *ngIf="!showSuccessAlert">
+  
+  <!-- MODAL HEADER -->
   <div class="modal-header">
-    <h2>Stock Adjustment</h2>
-  </div>
-
-  <div class="modal-body">
-    <div class="form-grid">
-
-      <div class="form-group">
-        <label>Box Quantity Adjustment</label>
-        <input type="number" [(ngModel)]="boxQuantityChanged">
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-sliders-h"></i>
       </div>
-
-      <div class="form-group">
-        <label>Sheet Quantity Adjustment</label>
-        <input type="number" [(ngModel)]="sheetQuantityChanged">
+      <div class="title">
+        <h2>Stock Adjustment</h2>
+        <p>Adjust inventory quantities and movement</p>
       </div>
-
-      <div class="form-group">
-        <label>Piece Quantity Adjustment</label>
-        <input type="number" [(ngModel)]="pieceQuantityChanged">
-      </div>
-
-      <div class="form-group">
-        <label>Movement Type</label>
-        <select id="movement-type" [(ngModel)]="movementType">
-          <option *ngFor="let mt of movementTypes" [value]="mt">{{mt}}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Reference Number</label>
-        <input type="text" [(ngModel)]="refNumber">
-      </div>
-
-      <div class="form-group">
-        <label>Employee Name</label>
-        <p>{{employee.fullName}}</p>
-      </div>
-
     </div>
   </div>
 
-  <div class="note-desc">
-    <p>Notes</p>
-    <textarea [(ngModel)]="notes"></textarea>
+  <!-- MODAL BODY -->
+  <div class="modal-body">
+    <fieldset>
+      <legend>
+        <i class="fas fa-edit"></i>
+        Adjustment Details
+      </legend>
+
+      <div class="form-grid">
+
+        <!-- Box Quantity Adjustment -->
+        <div class="form-group">
+          <label for="boxQuantity">Box Quantity Adjustment</label>
+          <input 
+            type="number" 
+            id="boxQuantity"
+            [(ngModel)]="boxQuantityChanged"
+          />
+        </div>
+
+        <!-- Sheet Quantity Adjustment -->
+        <div class="form-group">
+          <label for="sheetQuantity">Sheet Quantity Adjustment</label>
+          <input 
+            type="number" 
+            id="sheetQuantity"
+            [(ngModel)]="sheetQuantityChanged"
+          />
+        </div>
+
+        <!-- Piece Quantity Adjustment -->
+        <div class="form-group">
+          <label for="pieceQuantity">Piece Quantity Adjustment</label>
+          <input 
+            type="number" 
+            id="pieceQuantity"
+            [(ngModel)]="pieceQuantityChanged"
+          />
+        </div>
+
+        <!-- Movement Type -->
+        <div class="form-group">
+          <label for="movementType">Movement Type</label>
+          <select id="movementType" [(ngModel)]="movementType">
+            <option *ngFor="let mt of movementTypes" [value]="mt">{{mt}}</option>
+          </select>
+        </div>
+
+        <!-- Reference Number -->
+        <div class="form-group">
+          <label for="refNumber">Reference Number</label>
+          <input 
+            type="text" 
+            id="refNumber"
+            [(ngModel)]="refNumber"
+          />
+        </div>
+
+        <!-- Employee Name -->
+        <div class="form-group">
+          <label>Employee Name</label>
+          <div class="display-value">{{employee.fullName}}</div>
+        </div>
+
+      </div>
+
+      <!-- Notes Section -->
+      <div class="notes-section">
+        <label for="notes">Notes</label>
+        <textarea 
+          id="notes"
+          [(ngModel)]="notes" 
+          placeholder="Add any additional notes here..."
+          rows="4"
+        ></textarea>
+      </div>
+    </fieldset>
   </div>
 
+  <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save" (click)="createNewStockMovement()">Save</button>
-    <button class="btn-cancel" (click)="closeStockAdjustmentForm()">Cancel</button>
+    <button class="btn btn-cancel" (click)="closeStockAdjustmentForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" (click)="createNewStockMovement()">
+      <i class="fas fa-save"></i>
+      Save Adjustment
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
-<div class="success-alert" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Stock has been Adjust Successfully</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">Stock has been adjusted successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
+    </div>
   </div>
 </div>

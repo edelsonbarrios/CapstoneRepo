@@ -7,7 +7,7 @@ import { Employee } from '../../../../models/employee-models/employee';
 import { jwtDecode } from 'jwt-decode';
 import { LogInToken } from '../../../shared/token';
 import { FormsModule } from '@angular/forms';
-import { NgClass, CommonModule } from "../../../../../../node_modules/@angular/common";
+import { NgClass, CommonModule } from "@angular/common";
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
 import { StockAdjustment } from '../../../../models/inventory-module-models/stock-adjustment';
 
@@ -90,5 +90,4 @@ export class StockAdjustComponent implements OnInit {
     this.showSuccessAlert = false;
     this.closeStockAdjustmentForm();
   }
-
 }

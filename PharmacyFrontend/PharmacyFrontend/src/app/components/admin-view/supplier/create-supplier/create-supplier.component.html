@@ -1,65 +1,133 @@
 <div class="modal" *ngIf="!showSuccessAlert">
   <div class="modal-header">
     <div class="icon-title">
-      <span class="icon">👤</span>
+      <div class="icon-wrapper">
+        <i class="fa-solid fa-truck"></i>
+      </div>
       <div class="title">
-        <h2>Add Supplier</h2>
-        <p>Fill in supplier contact details below.</p>
+        <h2>Add New Supplier</h2>
+        <p>Enter supplier information and contact details</p>
       </div>
     </div>
   </div>
 
   <div class="modal-body">
-
     <div class="form-grid">
       <div class="form-group" [class.error]="supplierNameError">
-        <label for="supplierName">Supplier Name <span class="required">*</span></label>
-        <input type="text" id="supplierName" placeholder="e.g., Dyna Drug" [(ngModel)]="newSupplier.supplierName">
-        <p class="error-message" *ngIf="supplierNameError">{{ supplierNameError }}</p>
+        <label for="supplierName">
+          Supplier Name 
+          <span class="required">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="supplierName" 
+          placeholder="e.g., Dyna Drug" 
+          [(ngModel)]="newSupplier.supplierName"
+        >
+        <span class="error-message" *ngIf="supplierNameError">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ supplierNameError }}
+        </span>
       </div>
 
       <div class="form-group" [class.error]="contactNumberError">
-        <label for="contactNumber">Contact Number <span class="required">*</span></label>
-        <input type="text" id="contactNumber" placeholder="e.g., 09xx xxx xxxx" [(ngModel)]="newSupplier.contactNumber">
-        <p class="error-message" *ngIf="contactNumberError">{{ contactNumberError }}</p>
+        <label for="contactNumber">
+          Contact Number 
+          <span class="required">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="contactNumber" 
+          placeholder="e.g., 09xx xxx xxxx" 
+          [(ngModel)]="newSupplier.contactNumber"
+        >
+        <span class="error-message" *ngIf="contactNumberError">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ contactNumberError }}
+        </span>
       </div>
 
       <div class="form-group" [class.error]="supplierNameError">
-        <label for="supplierName">Contact Person <span class="required">*</span></label>
-        <input type="text" id="supplierName" placeholder="e.g., Dyna Drug" [(ngModel)]="newSupplier.contactPerson">
-        <p class="error-message" *ngIf="supplierNameError">{{ supplierNameError }}</p>
+        <label for="contactPerson">
+          Contact Person 
+          <span class="required">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="contactPerson" 
+          placeholder="e.g., John Doe" 
+          [(ngModel)]="newSupplier.contactPerson"
+        >
+        <span class="error-message" *ngIf="supplierNameError">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ supplierNameError }}
+        </span>
       </div>
 
       <div class="form-group" [class.error]="contactNumberError">
-        <label for="contactNumber">Contact Person Number <span class="required">*</span></label>
-        <input type="text" id="contactNumber" placeholder="e.g., 09xx xxx xxxx" [(ngModel)]="newSupplier.contactPersonNumber">
-        <p class="error-message" *ngIf="contactNumberError">{{ contactNumberError }}</p>
+        <label for="contactPersonNumber">
+          Contact Person Number 
+          <span class="required">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="contactPersonNumber" 
+          placeholder="e.g., 09xx xxx xxxx" 
+          [(ngModel)]="newSupplier.contactPersonNumber"
+        >
+        <span class="error-message" *ngIf="contactNumberError">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ contactNumberError }}
+        </span>
       </div>
 
       <div class="form-group">
         <label for="email">Email Address</label>
-        <input type="email" id="email" placeholder="examplesupplier@gmail.com" [(ngModel)]="newSupplier.email">
+        <input 
+          type="email" 
+          id="email" 
+          placeholder="examplesupplier@gmail.com" 
+          [(ngModel)]="newSupplier.email"
+        >
       </div>
 
       <div class="form-group" [class.error]="addressError">
         <label for="address">Address</label>
-        <input type="text" id="address" placeholder="City, Province" [(ngModel)]="newSupplier.address">
-        <p class="error-message" *ngIf="addressError">{{ addressError }}</p>
+        <input 
+          type="text" 
+          id="address" 
+          placeholder="City, Province" 
+          [(ngModel)]="newSupplier.address"
+        >
+        <span class="error-message" *ngIf="addressError">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ addressError }}
+        </span>
       </div>
     </div>
   </div>
 
   <div class="modal-footer">
-    <button class="btn cancel" (click)="closeCreateSupplierForm()">Cancel</button>
-    <button class="btn save" (click)="createNewSupplier()">Save</button>
+    <button class="btn btn-cancel" (click)="closeCreateSupplierForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" (click)="createNewSupplier()">
+      <i class="fas fa-save"></i>
+      Save Supplier
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
-<div class="success-alert" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Supplier has been Added Successfully</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div class="success-overlay" *ngIf="showSuccessAlert">
+  <div class="success-modal">
+    <div class="success-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <h3 class="success-title">Success!</h3>
+    <p class="success-message">Supplier has been added successfully</p>
+    <button class="btn btn-primary" (click)="closeSuccessAlert()">
+      Done
+    </button>
   </div>
 </div>

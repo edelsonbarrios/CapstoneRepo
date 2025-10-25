@@ -1,82 +1,118 @@
 <div class="modal">
+  
+  <!-- MODAL HEADER -->
   <div class="modal-header">
-    <h2>Stock Entry</h2>
-    <a (click)="closeViewStockEntry()">X</a>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-eye"></i>
+      </div>
+      <div class="title">
+        <h2>Stock Entry Details</h2>
+        <p>View complete stock entry information</p>
+      </div>
+    </div>
+    <button class="close-btn" (click)="closeViewStockEntry()">
+      <i class="fas fa-times"></i>
+    </button>
   </div>
 
+  <!-- MODAL BODY -->
   <div class="modal-body">
-    <div class="form-grid">
+    <fieldset>
+      <legend>
+        <i class="fas fa-info-circle"></i>
+        Entry Information
+      </legend>
 
-      <div class="form-group">
-        <label>Batch No.</label>
-        <p>{{viewEntry.batchNumber}}</p>
+      <div class="form-grid">
+
+        <!-- Batch No. -->
+        <div class="form-group">
+          <label>Batch Number</label>
+          <div class="display-value">{{viewEntry.batchNumber}}</div>
+        </div>
+
+        <!-- Product Name -->
+        <div class="form-group">
+          <label>Product Name</label>
+          <div class="display-value">{{viewEntry.productName}}</div>
+        </div>
+
+        <!-- Box Qty -->
+        <div class="form-group">
+          <label>Box Quantity</label>
+          <div class="display-value">{{viewEntry.boxQuantity}}</div>
+        </div>
+
+        <!-- Sheet Qty -->
+        <div class="form-group">
+          <label>Sheet Quantity</label>
+          <div class="display-value">{{viewEntry.sheetQuantity}}</div>
+        </div>
+
+        <!-- Piece Qty -->
+        <div class="form-group">
+          <label>Piece Quantity</label>
+          <div class="display-value">{{viewEntry.pieceQuantity}}</div>
+        </div>
+
+        <!-- Sheet-per-Box -->
+        <div class="form-group">
+          <label>Sheets Per Box</label>
+          <div class="display-value">{{viewEntry.sheetsPerBox}}</div>
+        </div>
+
+        <!-- Reorder Level -->
+        <div class="form-group">
+          <label>Reorder Level</label>
+          <div class="display-value">{{viewEntry.reorderLevel}}</div>
+        </div>
+
+        <!-- Manufacturing Date -->
+        <div class="form-group">
+          <label>Manufacturing Date</label>
+          <div class="display-value">{{viewEntry.manufacturingDate | date: 'dd-MM-yyyy'}}</div>
+        </div>
+
+        <!-- Expiration -->
+        <div class="form-group">
+          <label>Expiration Date</label>
+          <div class="display-value">{{viewEntry.expirationDate | date: 'dd-MM-yyyy'}}</div>
+        </div>
+
+        <!-- Cost Price -->
+        <div class="form-group">
+          <label>Cost Price</label>
+          <div class="display-value">&#8369;{{viewEntry.costPrice}}</div>
+        </div>
+
+        <!-- Box Price -->
+        <div class="form-group">
+          <label>Box Price</label>
+          <div class="display-value">&#8369;{{viewEntry.boxPrice}}</div>
+        </div>
+
+        <!-- Sheet Price -->
+        <div class="form-group">
+          <label>Sheet Price</label>
+          <div class="display-value">&#8369;{{viewEntry.sheetPrice}}</div>
+        </div>
+
+        <!-- Piece Price -->
+        <div class="form-group">
+          <label>Piece Price</label>
+          <div class="display-value">&#8369;{{viewEntry.piecePrice}}</div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label>Status</label>
+          <div class="display-value status-badge">
+            <span class="badge available">Available</span>
+          </div>
+        </div>
+
       </div>
-
-      <div class="form-group">
-        <label>Product Name</label>
-        <p>{{viewEntry.productName}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Box Qty</label>
-        <p>{{viewEntry.boxQuantity}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Sheet Qty</label>
-        <p>{{viewEntry.sheetQuantity}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Piece Qty</label>
-        <p>{{viewEntry.pieceQuantity}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Sheet-per-Box</label>
-        <p>{{viewEntry.sheetsPerBox}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Reorder Level</label>
-        <p>{{viewEntry.reorderLevel}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Manufacturing Date</label>
-        <p>{{viewEntry.manufacturingDate | date: 'dd-MM-yyyy'}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Expiration</label>
-        <p>{{viewEntry.expirationDate | date: 'dd-MM-yyyy'}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Cost Price</label>
-        <p>{{viewEntry.costPrice}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Box Price</label>
-        <p>{{viewEntry.boxPrice}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Sheet Price</label>
-        <p>{{viewEntry.sheetPrice}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Piece Price</label>
-        <p>{{viewEntry.piecePrice}}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Status</label>
-        <p>Available</p>
-      </div>
-
-    </div>
+    </fieldset>
   </div>
 </div>

@@ -122,7 +122,7 @@
   }
 
   button {
-    background-color: #31be15;
+    margin-right: 4px;
     color: white;
     margin-top: 20px;
     padding: 10px 20px;
@@ -143,6 +143,22 @@
     &:active {
       transform: translateY(0);
       box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
+    }
+  }
+
+  .btn-export {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+    &:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+  }
+
+  .btn-reset {
+    background-color: #c22828;
+
+    &:hover {
+      background-color: #b42222;
     }
   }
 

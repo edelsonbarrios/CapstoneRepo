@@ -1,30 +1,74 @@
 <div class="modal" *ngIf="!showSuccessAlert">
-
-  <!-- EDIT FORMULATION HEADER -->
+  
+  <!-- MODAL HEADER -->
   <div class="modal-header">
-    <h2>Add Formulation</h2>
-    <a>X</a>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-flask"></i>
+      </div>
+      <div class="title">
+        <h2>Edit Formulation</h2>
+        <p>Update formulation information</p>
+      </div>
+    </div>
   </div>
 
-  <!-- EDIT FORMULATION FILL UP -->
-  <div class="fillup" [class.error]="formulationNameError">
-    <label>Formulation</label>
-    <input type="text" placeholder="(e.g.Biogesic 500mg Tablet..)" [(ngModel)]="editFormulation.formulationName">
-    <p class="error-message" *ngIf="formulationNameError">{{ formulationNameError }}</p>
+  <!-- MODAL BODY -->
+  <div class="modal-body">
+    <fieldset>
+      <legend>
+        <i class="fas fa-clipboard-list"></i>
+        Formulation Details
+      </legend>
+
+      <div class="form-grid">
+        <!-- Formulation Name -->
+        <div class="form-group" [class.error]="formulationNameError">
+          <label for="formulationName">
+            Formulation
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="formulationName"
+            placeholder="(e.g. Biogesic 500mg Tablet..)" 
+            [(ngModel)]="editFormulation.formulationName"
+          />
+          <span class="error-message" *ngIf="formulationNameError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ formulationNameError }}
+          </span>
+        </div>
+      </div>
+    </fieldset>
   </div>
 
-  <!-- EDIT FORMULATION FOOTER -->
+  <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save" (click)="updateFormulation()">Update</button>
-    <button class="btn-cancel" (click)="closeEditFormulationForm()">Cancel</button>
+    <button class="btn btn-cancel" (click)="closeEditFormulationForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" (click)="updateFormulation()">
+      <i class="fas fa-save"></i>
+      Update Formulation
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
-<div class="success-alert" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Item has been Updated</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">Item has been Updated</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
+    </div>
   </div>
 </div>

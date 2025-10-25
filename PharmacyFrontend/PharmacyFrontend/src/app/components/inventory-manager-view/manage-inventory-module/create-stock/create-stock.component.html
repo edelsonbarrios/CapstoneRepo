@@ -1,108 +1,253 @@
 <div class="modal" *ngIf="!showSuccessAlert">
+  
+  <!-- MODAL HEADER -->
   <div class="modal-header">
-    <h2>Add Stock Entry</h2>
-    <p>Fill in the details to add new entry.</p>
-  </div>
-
-  <div class="modal-body">
-    <div class="form-grid">
-
-      <div class="form-group" [class.error]="productError">
-        <label>Product</label>
-        <select [(ngModel)]="selectedProduct" (ngModelChange)="onSelectProduct($event)">
-          <option *ngFor="let p of products" [ngValue]="p">{{p.productName}}</option>
-        </select>
-        <p class="error-message" *ngIf="productError">{{ productError }}</p>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-box-open"></i>
       </div>
-
-      <div class="form-group">
-        <label>Category</label>
-        <input type="text" placeholder="Category Name" [(ngModel)]="selectedProduct.categoryName">
+      <div class="title">
+        <h2>Add Stock Entry</h2>
+        <p>Fill in the details to add new entry</p>
       </div>
-
-      <div class="form-group" [class.error]="batchNumberError">
-        <label>Batch Number</label>
-        <input type="text" placeholder="Batch Number" [(ngModel)]="createStock.batchNumber">
-        <p class="error-message" *ngIf="batchNumberError">{{ batchNumberError }}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Box Quantity</label> 
-        <input type="number" [(ngModel)]="createStock.boxQuantity" min="0">
-      </div>
-
-      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
-        <label>Sheets Per Box</label>
-        <input type="number" [(ngModel)]="selectedProduct.sheetsPerBox" min="0">
-      </div>
-
-      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level'">
-        <label>Piece Per Box</label>
-        <input type="number" [(ngModel)]="selectedProduct.piecePerBox" min="0">
-      </div>
-
-      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level'">
-        <label>Piece Quantity</label>
-        <input type="number" [(ngModel)]="createStock.pieceQuantity" min="0">
-      </div>
-
-      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
-        <label>Piece Per Sheet</label>
-        <input type="number" [(ngModel)]="selectedProduct.piecesPerSheet" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Reorder Level</label>
-        <input type="number" [(ngModel)]="selectedProduct.reorderLevel" min="0">
-      </div>
-
-      <div class="form-group" [class.error]="manufacturingDateError">
-        <label>Manufacturing Date</label>
-        <input type="date" [(ngModel)]="createStock.manufacturingDate">
-        <p class="error-message" *ngIf="manufacturingDateError">{{ manufacturingDateError }}</p>
-      </div>
-
-      <div class="form-group" [class.error]="expirationDateError">
-        <label>Expiry Date</label>
-        <input type="date" [(ngModel)]="createStock.expirationDate">
-        <p class="error-message" *ngIf="expirationDateError">{{ expirationDateError }}</p>
-      </div>
-
-      <div class="form-group" [class.error]="costPriceError">
-        <label>Cost Price*</label>
-        <input type="number" [(ngModel)]="createStock.costPrice" min="0">
-        <p class="error-message" *ngIf="costPriceError">{{ costPriceError }}</p>
-      </div>
-
-      <div class="form-group">
-        <label>Box Price*</label>
-        <input type="number" [(ngModel)]="selectedProduct.boxPrice" min="0">
-      </div>
-
-      <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
-        <label>Sheet Price</label>
-        <input type="number" [(ngModel)]="selectedProduct.sheetPrice" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Piece Price</label>
-        <input type="number" [(ngModel)]="selectedProduct.piecePrice" min="0">
-      </div>
-
     </div>
   </div>
 
+  <!-- MODAL BODY -->
+  <div class="modal-body">
+    <fieldset>
+      <legend>
+        <i class="fas fa-clipboard-list"></i>
+        Stock Details
+      </legend>
+
+      <div class="form-grid">
+
+        <!-- Product -->
+        <div class="form-group" [class.error]="productError">
+          <label for="product">
+            Product
+            <span class="required">*</span>
+          </label>
+          <select id="product" [(ngModel)]="selectedProduct" (ngModelChange)="onSelectProduct($event)">
+            <option *ngFor="let p of products" [ngValue]="p">{{p.productName}}</option>
+          </select>
+          <span class="error-message" *ngIf="productError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ productError }}
+          </span>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input 
+            type="text" 
+            id="category"
+            placeholder="Category Name" 
+            [(ngModel)]="selectedProduct.categoryName"
+          />
+        </div>
+
+        <!-- Batch Number -->
+        <div class="form-group" [class.error]="batchNumberError">
+          <label for="batchNumber">
+            Batch Number
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="batchNumber"
+            placeholder="Batch Number" 
+            [(ngModel)]="createStock.batchNumber"
+          />
+          <span class="error-message" *ngIf="batchNumberError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ batchNumberError }}
+          </span>
+        </div>
+
+        <!-- Box Quantity -->
+        <div class="form-group">
+          <label for="boxQuantity">Box Quantity</label>
+          <input 
+            type="number" 
+            id="boxQuantity"
+            [(ngModel)]="createStock.boxQuantity" 
+            min="0"
+          />
+        </div>
+
+        <!-- Sheets Per Box (Multi-Level) -->
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
+          <label for="sheetsPerBox">Sheets Per Box</label>
+          <input 
+            type="number" 
+            id="sheetsPerBox"
+            [(ngModel)]="selectedProduct.sheetsPerBox" 
+            min="0"
+          />
+        </div>
+
+        <!-- Piece Per Box (Dual-Level) -->
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level'">
+          <label for="piecePerBox">Piece Per Box</label>
+          <input 
+            type="number" 
+            id="piecePerBox"
+            [(ngModel)]="selectedProduct.piecePerBox" 
+            min="0"
+          />
+        </div>
+
+        <!-- Piece Quantity (Dual-Level) -->
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level'">
+          <label for="pieceQuantity">Piece Quantity</label>
+          <input 
+            type="number" 
+            id="pieceQuantity"
+            [(ngModel)]="createStock.pieceQuantity" 
+            min="0"
+          />
+        </div>
+
+        <!-- Piece Per Sheet (Multi-Level) -->
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
+          <label for="piecePerSheet">Piece Per Sheet</label>
+          <input 
+            type="number" 
+            id="piecePerSheet"
+            [(ngModel)]="selectedProduct.piecesPerSheet" 
+            min="0"
+          />
+        </div>
+
+        <!-- Reorder Level -->
+        <div class="form-group">
+          <label for="reorderLevel">Reorder Level</label>
+          <input 
+            type="number" 
+            id="reorderLevel"
+            [(ngModel)]="selectedProduct.reorderLevel" 
+            min="0"
+          />
+        </div>
+
+        <!-- Manufacturing Date -->
+        <div class="form-group" [class.error]="manufacturingDateError">
+          <label for="manufacturingDate">
+            Manufacturing Date
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="date" 
+            id="manufacturingDate"
+            [(ngModel)]="createStock.manufacturingDate"
+          />
+          <span class="error-message" *ngIf="manufacturingDateError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ manufacturingDateError }}
+          </span>
+        </div>
+
+        <!-- Expiry Date -->
+        <div class="form-group" [class.error]="expirationDateError">
+          <label for="expirationDate">
+            Expiry Date
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="date" 
+            id="expirationDate"
+            [(ngModel)]="createStock.expirationDate"
+          />
+          <span class="error-message" *ngIf="expirationDateError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ expirationDateError }}
+          </span>
+        </div>
+
+        <!-- Cost Price -->
+        <div class="form-group" [class.error]="costPriceError">
+          <label for="costPrice">
+            Cost Price (&#8369;)
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="number" 
+            id="costPrice"
+            [(ngModel)]="createStock.costPrice" 
+            min="0"
+          />
+          <span class="error-message" *ngIf="costPriceError">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ costPriceError }}
+          </span>
+        </div>
+
+        <!-- Box Price -->
+        <div class="form-group">
+          <label for="boxPrice">Box Price (&#8369;)</label>
+          <input 
+            type="number" 
+            id="boxPrice"
+            [(ngModel)]="selectedProduct.boxPrice" 
+            min="0"
+          />
+        </div>
+
+        <!-- Sheet Price (Multi-Level) -->
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level'">
+          <label for="sheetPrice">Sheet Price (&#8369;)</label>
+          <input 
+            type="number" 
+            id="sheetPrice"
+            [(ngModel)]="selectedProduct.sheetPrice" 
+            min="0"
+          />
+        </div>
+
+        <!-- Piece Price -->
+        <div class="form-group">
+          <label for="piecePrice">Piece Price (&#8369;)</label>
+          <input 
+            type="number" 
+            id="piecePrice"
+            [(ngModel)]="selectedProduct.piecePrice" 
+            min="0"
+          />
+        </div>
+
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-save" (click)="createInventory()">Save</button>
-    <button class="btn-cancel" (click)="closeCreateInventoryForm()">Cancel</button>
+    <button class="btn btn-cancel" (click)="closeCreateInventoryForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" (click)="createInventory()">
+      <i class="fas fa-save"></i>
+      Save Entry
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
-<div class="success-alert" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Stock Entry has been Added Successfully</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">Stock Entry has been added successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
+    </div>
   </div>
 </div>
