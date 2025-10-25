@@ -1,40 +1,70 @@
-<div class="modal">
-
+<div class="modal" *ngIf="!showSuccessAlert">
+  
   <!-- MODAL HEADER -->
   <div class="modal-header">
-    <div class="modal-title">
-      <h2>Update Category</h2>
-      <a (click)="closeUpdateCategoryForm()">&#10006;</a>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-edit"></i>
+      </div>
+      <div class="title">
+        <h2>Update Category</h2>
+        <p>Modify the category details</p>
+      </div>
     </div>
-    <div class="desc">Modify the category details.</div>
   </div>
 
   <!-- MODAL BODY -->
   <div class="modal-body">
+    <fieldset>
+      <legend>
+        <i class="fas fa-clipboard-list"></i>
+        Category Details
+      </legend>
 
-   <div class="form">
-     <div class="form-group">
-      <label>Category Name</label>
-      <input type="text" [(ngModel)]="viewCategory.categoryName">
-    </div>
-
-   </div>
-
+      <div class="form-grid">
+        <!-- Category Name -->
+        <div class="form-group">
+          <label for="categoryName">
+            Category Name
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="categoryName"
+            placeholder="Enter Category Name" 
+            [(ngModel)]="viewCategory.categoryName"
+          />
+        </div>
+      </div>
+    </fieldset>
   </div>
 
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-update" (click)="updateCategory()">Update</button>
-    <button class="btn-cancel" (click)="closeUpdateCategoryForm()">Cancel</button>
+    <button class="btn btn-cancel" (click)="closeUpdateCategoryForm()">
+      Cancel
+    </button>
+    <button class="btn btn-save" (click)="updateCategory()">
+      <i class="fas fa-save"></i>
+      Update Category
+    </button>
   </div>
 </div>
 
-<div class="success-overlay" *ngIf="showSuccessAlert">
+<!-- Success Alert Modal -->
+<div class="modal-overlay" *ngIf="showSuccessAlert">
   <div class="success-alert">
-    <div class="alert-icon">✓</div>
-    <p class="alert-message">Category Successfully updated.</p>
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">Category has been updated successfully</p>
     <div class="alert-footer">
-      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
     </div>
   </div>
 </div>

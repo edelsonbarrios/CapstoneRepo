@@ -1,157 +1,203 @@
 <div class="modal" *ngIf="!showSuccessAlert">
-
-  <!-- UPDATE PRODUCT HEADER -->
+  
+  <!-- MODAL HEADER -->
   <div class="modal-header">
-    <div class="modal-title">
-      <h2>{{ productToUpdate.productName || 'Update Product' }}</h2>
-      <a (click)="closeUpdateProductForm()">&#10006;</a>
+    <div class="icon-title">
+      <div class="icon-wrapper">
+        <i class="fas fa-edit"></i>
+      </div>
+      <div class="title">
+        <h2>{{ productToUpdate.productName || 'Update Product' }}</h2>
+        <p>Modify product information below</p>
+      </div>
     </div>
   </div>
 
-  <!-- UPDATE PRODUCT BODY -->
+  <!-- MODAL BODY -->
   <div class="modal-body">
-    <div class="form-grid">
+    <fieldset>
+      <legend>
+        <i class="fas fa-clipboard-list"></i>
+        Product Details
+      </legend>
 
-      <!-- PRODUCT NAME -->
-      <div class="form-group">
-        <label>Product Name</label>
-        <input
-          type="text"
-          [(ngModel)]="productToUpdate.productName"
-          placeholder="Enter product name"
-        />
-      </div>
+      <div class="form-grid">
 
-      <!-- GENERIC NAME -->
-      <div class="form-group" *ngIf="productToUpdate.genericName">
-        <label>Generic Name</label>
-        <select [(ngModel)]="productToUpdate.genericName">
-          <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
-        </select>
-      </div>
+        <!-- Product Name -->
+        <div class="form-group">
+          <label for="productName">
+            Product Name
+            <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="productName"
+            [(ngModel)]="productToUpdate.productName"
+            placeholder="Enter product name"
+          />
+        </div>
 
-      <div class="form-group" *ngIf="productToUpdate.brandName">
-        <label>Brand Name</label>
-        <select [(ngModel)]="productToUpdate.brandName">
-          <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
-        </select>
-      </div>
+        <!-- Generic Name -->
+        <div class="form-group" *ngIf="productToUpdate.genericName">
+          <label for="genericName">Generic Name</label>
+          <select id="genericName" [(ngModel)]="productToUpdate.genericName">
+            <option value="">Select Generic</option>
+            <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
+          </select>
+        </div>
 
-      <!-- CLASSIFICATION -->
-      <div class="form-group" *ngIf="productToUpdate.classificationName">
-        <label>Classification</label>
-        <select [(ngModel)]="productToUpdate.classificationName">
-          <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
-        </select>
-      </div>
+        <!-- Brand Name -->
+        <div class="form-group" *ngIf="productToUpdate.brandName">
+          <label for="brandName">Brand Name</label>
+          <select id="brandName" [(ngModel)]="productToUpdate.brandName">
+            <option value="">Select Brand</option>
+            <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
+          </select>
+        </div>
 
-      <!-- TYPE -->
-      <div class="form-group" *ngIf="productToUpdate.typeName">
-        <label>Type</label>
-        <select [(ngModel)]="productToUpdate.typeName">
-          <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
-        </select>
-      </div>
+        <!-- Classification -->
+        <div class="form-group" *ngIf="productToUpdate.classificationName">
+          <label for="classificationName">Classification</label>
+          <select id="classificationName" [(ngModel)]="productToUpdate.classificationName">
+            <option value="">Select Classification</option>
+            <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
+          </select>
+        </div>
 
-      <!-- FORMULATION -->
-      <div class="form-group" *ngIf="productToUpdate.formulationName">
-        <label>Formulation</label>
-        <select [(ngModel)]="productToUpdate.formulationName">
-          <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
-        </select>
-      </div>
+        <!-- Type -->
+        <div class="form-group" *ngIf="productToUpdate.typeName">
+          <label for="typeName">Type</label>
+          <select id="typeName" [(ngModel)]="productToUpdate.typeName">
+            <option value="">Select Type</option>
+            <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
+          </select>
+        </div>
 
-      <!-- CATEGORY -->
-      <div class="form-group" *ngIf="productToUpdate.categoryName">
-        <label>Category</label>
-        <select [(ngModel)]="productToUpdate.categoryName">
-          <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
-        </select>
-      </div>
+        <!-- Formulation -->
+        <div class="form-group" *ngIf="productToUpdate.formulationName">
+          <label for="formulationName">Formulation</label>
+          <select id="formulationName" [(ngModel)]="productToUpdate.formulationName">
+            <option value="">Select Formulation</option>
+            <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
+          </select>
+        </div>
 
-      <!-- SHEETS PER BOX -->
-      <div class="form-group" *ngIf="productToUpdate.sheetsPerBox">
-        <label>Sheets Per Box</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.sheetsPerBox"
-          placeholder="Enter sheets per box"
-        />
-      </div>
+        <!-- Category -->
+        <div class="form-group" *ngIf="productToUpdate.categoryName">
+          <label for="categoryName">Category</label>
+          <select id="categoryName" [(ngModel)]="productToUpdate.categoryName">
+            <option value="">Select Category</option>
+            <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
+          </select>
+        </div>
 
-      <!-- PIECES PER SHEET -->
-      <div class="form-group" *ngIf="productToUpdate.piecesPerSheet">
-        <label>Pieces Per Sheet</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.piecesPerSheet"
-          placeholder="Enter pieces per sheet"
-        />
-      </div>
+        <!-- Sheets Per Box -->
+        <div class="form-group" *ngIf="productToUpdate.sheetsPerBox">
+          <label for="sheetsPerBox">Sheets Per Box</label>
+          <input
+            type="number"
+            id="sheetsPerBox"
+            [(ngModel)]="productToUpdate.sheetsPerBox"
+            placeholder="Enter sheets per box"
+          />
+        </div>
 
-      <div class="form-group" *ngIf="productToUpdate.piecePerBox">
-        <label>Pieces Per Box</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.piecePerBox"
-          placeholder="Enter pieces per sheet"
-        />
-      </div>
+        <!-- Pieces Per Sheet -->
+        <div class="form-group" *ngIf="productToUpdate.piecesPerSheet">
+          <label for="piecesPerSheet">Pieces Per Sheet</label>
+          <input
+            type="number"
+            id="piecesPerSheet"
+            [(ngModel)]="productToUpdate.piecesPerSheet"
+            placeholder="Enter pieces per sheet"
+          />
+        </div>
 
-      <!-- BOX PRICE -->
-      <div class="form-group" *ngIf="productToUpdate.boxPrice">
-        <label>Box Price (&#8369;)</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.boxPrice"
-          placeholder="Enter box price"
-        />
-      </div>
+        <!-- Pieces Per Box -->
+        <div class="form-group" *ngIf="productToUpdate.piecePerBox">
+          <label for="piecePerBox">Pieces Per Box</label>
+          <input
+            type="number"
+            id="piecePerBox"
+            [(ngModel)]="productToUpdate.piecePerBox"
+            placeholder="Enter pieces per box"
+          />
+        </div>
 
-      <!-- SHEET PRICE -->
-      <div class="form-group" *ngIf="productToUpdate.sheetPrice">
-        <label>Sheet Price (&#8369;)</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.sheetPrice"
-          placeholder="Enter sheet price"
-        />
-      </div>
+        <!-- Box Price -->
+        <div class="form-group" *ngIf="productToUpdate.boxPrice">
+          <label for="boxPrice">Box Price (&#8369;)</label>
+          <input
+            type="number"
+            id="boxPrice"
+            [(ngModel)]="productToUpdate.boxPrice"
+            placeholder="Enter box price"
+          />
+        </div>
 
-      <!-- PIECE PRICE -->
-      <div class="form-group" *ngIf="productToUpdate.piecePrice">
-        <label>Piece Price (&#8369;)</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.piecePrice"
-          placeholder="Enter piece price"
-        />
-      </div>
+        <!-- Sheet Price -->
+        <div class="form-group" *ngIf="productToUpdate.sheetPrice">
+          <label for="sheetPrice">Sheet Price (&#8369;)</label>
+          <input
+            type="number"
+            id="sheetPrice"
+            [(ngModel)]="productToUpdate.sheetPrice"
+            placeholder="Enter sheet price"
+          />
+        </div>
 
-      <!-- REORDER LEVEL -->
-      <div class="form-group" *ngIf="productToUpdate.reorderLevel">
-        <label>Reorder Level</label>
-        <input
-          type="number"
-          [(ngModel)]="productToUpdate.reorderLevel"
-          placeholder="Enter reorder level"
-        />
+        <!-- Piece Price -->
+        <div class="form-group" *ngIf="productToUpdate.piecePrice">
+          <label for="piecePrice">Piece Price (&#8369;)</label>
+          <input
+            type="number"
+            id="piecePrice"
+            [(ngModel)]="productToUpdate.piecePrice"
+            placeholder="Enter piece price"
+          />
+        </div>
+
+        <!-- Reorder Level -->
+        <div class="form-group" *ngIf="productToUpdate.reorderLevel">
+          <label for="reorderLevel">Reorder Level</label>
+          <input
+            type="number"
+            id="reorderLevel"
+            [(ngModel)]="productToUpdate.reorderLevel"
+            placeholder="Enter reorder level"
+          />
+        </div>
+
       </div>
-    </div>
+    </fieldset>
   </div>
 
-  <!-- UPDATE PRODUCT FOOTER -->
+  <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn-update" (click)="updateProduct()">Update</button>
-    <button class="btn-cancel" (click)="closeUpdateProductForm()">Cancel</button>
+    <button class="btn btn-cancel" (click)="closeUpdateProductForm()">
+      Cancel
+    </button>
+    <button class="btn btn-update" (click)="updateProduct()">
+      <i class="fas fa-save"></i>
+      Update Product
+    </button>
   </div>
 </div>
 
 <!-- Success Alert Modal -->
-<div class="success-alert" *ngIf="showSuccessAlert">
-  <div class="alert-icon">✓</div>
-  <p class="alert-message">Product has been Edited Successfully</p>
-  <div class="alert-footer">
-    <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">Product has been updated successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
+    </div>
   </div>
 </div>
