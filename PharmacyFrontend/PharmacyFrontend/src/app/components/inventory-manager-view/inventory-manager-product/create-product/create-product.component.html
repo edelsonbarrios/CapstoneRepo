@@ -67,6 +67,7 @@
           <select id="unitMeasurement" [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
             <option value="Multi-Level">Multi Level</option>
             <option value="Dual-Level">Dual Level</option>
+            <option value="Single-Level">Single Level</option>
           </select>
           <span class="error-message" *ngIf="unitMeasurementError">
             <i class="fas fa-exclamation-circle"></i>
@@ -75,7 +76,7 @@
         </div>
 
         <!-- Brand Name -->
-        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+        <div class="form-group">
           <label for="brandName">Brand Name</label>
           <select id="brandName" [(ngModel)]="newProduct.brandName">
             <option value="">Select Brand</option>

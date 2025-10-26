@@ -64,7 +64,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       return this.purchaseOrders.purchaseOrderItems;
     }
     const query = this.searchQuery.toLowerCase();
-    return this.purchaseOrders.purchaseOrderItems.filter(item =>
+    return this.purchaseOrders.purchaseOrderItems.filter((item) =>
       item.productName.toLowerCase().includes(query)
     );
   }
@@ -113,28 +113,40 @@ export class InventoryPurchaseOrderComponent implements OnInit {
   }
 
   onProductsSelected(products: Product[]) {
-    const items: PurchaseOrderItem[] = products.map((p) => ({
-      id: 0,
-      productId: p.productID,
-      productName: p.productName,
-      boxQuantityOrdered: 1,
-      boxQuantityReceived: 0,
-      sheetQuantityOrdered: 0,
-      sheetQuantityReceived: 0,
-      pieceQuantityOrdered: 0,
-      pieceQuantityReceived: 0,
-      boxPrice: p.boxPrice,
-      sheetPrice: p.sheetPrice,
-      piecePrice: p.piecePrice,
-      totalCost: p.boxPrice,
-      batchNumber: '',
-      manufacturingDate: new Date(),
-      expirationDate: new Date(),
-      category: p.categoryName,
-      classification: p.classificationName,
-      type: p.typeName,
-      unitMeasurement: p.unitMeasurement,
-    }));
+    const items: PurchaseOrderItem[] = products.map((p) => {
+      const isBoxOrder = p.poUnitType === 'Box';
+      const initialQuantity = 1;
+
+      return {
+        id: 0,
+        productId: p.productID,
+        productName: p.productName,
+        // Set quantities based on unit type
+        boxQuantityOrdered: isBoxOrder ? initialQuantity : 0,
+        boxQuantityReceived: 0,
+        sheetQuantityOrdered: 0,
+        sheetQuantityReceived: 0,
+        pieceQuantityOrdered: isBoxOrder ? 0 : initialQuantity,
+        pieceQuantityReceived: 0,
+        boxPrice: p.boxPrice,
+        sheetPrice: p.sheetPrice,
+        piecePrice: p.piecePrice,
+        // Calculate total based on unit type
+        totalCost: isBoxOrder
+          ? p.boxPrice * initialQuantity
+          : p.piecePrice * initialQuantity,
+        batchNumber: '',
+        manufacturingDate: new Date(),
+        expirationDate: new Date(),
+        category: p.categoryName,
+        classification: p.classificationName,
+        type: p.typeName,
+        unitMeasurement: p.unitMeasurement,
+        poUnitType: p.poUnitType,
+        quantityOrdered: initialQuantity,
+        quantityReceived: 0
+      };
+    });
 
     this.purchaseOrders.purchaseOrderItems.push(...items);
     this.updatePagination();
@@ -150,23 +162,22 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     if (!product) return;
 
     // Reset
+    item.boxQuantityOrdered = 0;
     item.sheetQuantityOrdered = 0;
     item.pieceQuantityOrdered = 0;
 
-    if (product.unitMeasurement === 'Dual-Level') {
-      // Box → Piece
-      item.pieceQuantityOrdered =
-        item.boxQuantityOrdered * (product.sheetsPerBox || 0);
-    } else if (product.unitMeasurement === 'Multi-Level') {
-      // Box → Sheet → Piece
-      item.sheetQuantityOrdered =
-        item.boxQuantityOrdered * (product.sheetsPerBox || 0);
-      item.pieceQuantityOrdered =
-        item.sheetQuantityOrdered * (product.piecesPerSheet || 0);
+    if (product.poUnitType == 'Box') {
+      item.boxQuantityOrdered = item.quantityOrdered;
+      item.totalCost = item.boxPrice * item.quantityOrdered;
+    } else if (product.poUnitType == 'Pieces') {
+      item.pieceQuantityOrdered = item.quantityOrdered;
+      item.totalCost = item.piecePrice * item.quantityOrdered;
     }
-
-    item.totalCost = item.boxQuantityOrdered * product.boxPrice;
     this.computeTotalAmount();
+  }
+
+  getDisplayUnitPrice(request: PurchaseOrderItem) {
+    return request.poUnitType == 'Box' ? request.boxPrice : request.piecePrice;
   }
 
   computeTotalAmount() {
@@ -219,8 +230,11 @@ export class InventoryPurchaseOrderComponent implements OnInit {
           sheetPrice: item.sheetPrice,
           piecePrice: item.piecePrice,
           batchNumber: item.batchNumber,
+          totalCost: item.totalCost,
           manufacturingDate: new Date(item.manufacturingDate).toISOString(),
           expirationDate: new Date(item.expirationDate).toISOString(),
+          poUnitType: item.poUnitType,
+          quantityReceived: 0
         })
       ),
     };
@@ -228,6 +242,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
       next: () => {
         this.showSuccessAlert = true;
+        console.log(`${JSON.stringify(requestPayload)}`);
         this.clearFields();
       },
       error: (err) => {

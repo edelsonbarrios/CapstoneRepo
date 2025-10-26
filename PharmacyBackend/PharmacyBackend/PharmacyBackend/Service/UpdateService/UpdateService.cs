@@ -733,12 +733,13 @@ namespace PharmacyBackend.Service.UpdateService
         public async Task<bool> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
         {
             var purchaseOrder = await _getRepo.GetPurchaseOrderByIdAsync(request.PurchaseOrderId);
+            purchaseOrder.ReceiptNumber = request.ReceiptNumber;
             if (purchaseOrder is null)
                 return false;
 
             foreach (var item in request.PurchaseOrderItems)
             {
-                if (item.BoxQuantityReceived <= 0)
+                if (item.BoxQuantityReceived <= 0 && item.PieceQuantityReceived <= 0)
                     return false;
                 var poItem = purchaseOrder.PurchaseOrderItems
                     .FirstOrDefault(po => po.Id == item.Id);
@@ -827,7 +828,7 @@ namespace PharmacyBackend.Service.UpdateService
                             ProductID = item.ProductID,
                             BoxQuantity = 0,
                             SheetQuantity = 0,
-                            PieceQuantity = item.BoxQuantityReceived,
+                            PieceQuantity = item.PieceQuantityReceived,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,

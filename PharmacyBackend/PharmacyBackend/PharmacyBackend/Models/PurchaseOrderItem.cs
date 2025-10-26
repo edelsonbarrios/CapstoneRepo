@@ -28,6 +28,7 @@ namespace PharmacyBackend.Models
         public string BatchNumber { get; set; }
         public DateTime ManufacturingDate { get; set; }
         public DateTime ExpirationDate { get; set; }
+        public string PoUnitType { get; set; }
 
         //Navigation Properties
         public Product Product { get; set; }

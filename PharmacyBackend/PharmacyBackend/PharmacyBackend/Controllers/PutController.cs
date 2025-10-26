@@ -348,7 +348,7 @@ namespace PharmacyBackend.Controllers
                 var product = await _getService.GetProductByIdAsync(item.ProductID);
                 if (product.IsActive == false)
                     return NotFound("Product is inactive");
-                if (item.BoxQuantityReceived <= 0)
+                if (item.BoxQuantityReceived <= 0 && item.PieceQuantityReceived <= 0)
                     return BadRequest($"Received Quantity of {product.ProductName} is 0.");
             }
 

@@ -21,6 +21,8 @@ import { Employee } from '../../../../models/employee-models/employee';
 import { jwtDecode } from 'jwt-decode';
 import { LogInToken } from '../../../shared/token';
 import { GetService } from '../../../../services/GetService/get.service';
+import { PurchaseOrderItem } from '../../../../models/purchase-order-item-models/purchase-order-item';
+import { Product } from '../../../../models/product-models/product';
 
 @Component({
   selector: 'app-view-purchase-order-details',
@@ -34,7 +36,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
   receiptNumber: string = '';
-  paginatedItems: any[] = [];
+  paginatedItems: PurchaseOrderItem[] = [];
   markReceivedError: string = '';
   transactionReceived: boolean = false;
 
@@ -51,6 +53,8 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getLoggedInEmployee();
     this.updatePagination();
+    
+    console.log(`${JSON.stringify(this.purchaseOrder.purchaseOrderItems)}`);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -125,14 +129,15 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  updateItemTotal(item: any) {
-    const boxTotal = (item.boxQuantityReceived || 0) * (item.boxPrice || 0);
-    const sheetTotal =
-      (item.sheetQuantityReceived || 0) * (item.sheetPrice || 0);
-    const pieceTotal =
-      (item.pieceQuantityReceived || 0) * (item.piecePrice || 0);
-
-    item.totalCost = boxTotal + sheetTotal + pieceTotal;
+  updateItemTotal(item: PurchaseOrderItem) {
+    if(item.poUnitType == 'Box') {
+      item.boxQuantityReceived = item.quantityReceived;
+      item.totalCost = item.quantityReceived * item.boxPrice;
+    }else {
+      item.pieceQuantityReceived = item.quantityReceived;
+      item.totalCost = item.quantityReceived * item.piecePrice;
+    }
+    console.log(`${JSON.stringify(item)}`);
     this.computeTotalAmount();
   }
 
@@ -142,6 +147,14 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
         (sum, item) => sum + (item.totalCost || 0),
         0
       );
+  }
+
+  getDisplayUnitPrice(req : PurchaseOrderItem) : number{
+    if(req.poUnitType == 'Box') {
+      return req.boxPrice;
+    }else {
+      return req.piecePrice;
+    }
   }
 
   closeViewPOForm() {
@@ -182,6 +195,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       purchaseOrderId: this.purchaseOrder.id,
       totalAmount: this.purchaseOrder.totalAmount,
       employeeId: this.employee.id,
+      receiptNumber: this.receiptNumber,
       purchaseOrderItems: this.purchaseOrder.purchaseOrderItems.map((item) => ({
         id: item.id,
         productID: item.productId,

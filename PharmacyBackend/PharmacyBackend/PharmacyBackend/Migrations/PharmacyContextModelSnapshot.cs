@@ -583,6 +583,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("PurchaseOrderNumber")
                         .HasColumnType("text");
 
+                    b.Property<string>("ReceiptNumber")
+                        .HasColumnType("text");
+
                     b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text")
@@ -639,6 +642,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<int>("PieceQuantityReceived")
                         .HasColumnType("integer");
+
+                    b.Property<string>("PoUnitType")
+                        .HasColumnType("text");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");

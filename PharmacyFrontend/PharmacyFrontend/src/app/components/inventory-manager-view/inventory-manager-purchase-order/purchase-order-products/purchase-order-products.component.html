@@ -37,11 +37,11 @@
             <th>Product Name</th>
             <th>Category</th>
             <th>Brand</th>
-            <th>Generic</th>
             <th>Formulation</th>
-            <th>Classification</th>
             <th>Type</th>
-            <th>Box Price</th>
+            <th>Unit Measurement</th>
+            <th>Unit Order Type</th>
+            <th>Unit Price</th>
           </tr>
         </thead>
         <tbody>
@@ -63,15 +63,13 @@
             <td *ngIf="product.categoryName == ''">N/A</td>
             <td *ngIf="product.brandName">{{ product.brandName }}</td>
             <td *ngIf="product.brandName == ''">N/A</td>
-            <td *ngIf="product.genericName">{{ product.genericName }}</td>
-            <td *ngIf="product.genericName == ''">N/A</td>
             <td *ngIf="product.formulationName">{{ product.formulationName }}</td>
-            <td *ngIf="product.formulationName == ''">N/A</td>
-            <td *ngIf="product.classificationName">{{ product.classificationName }}</td>
             <td *ngIf="product.formulationName == ''">N/A</td>
             <td *ngIf="product.typeName">{{ product.typeName }}</td>
             <td *ngIf="product.typeName == ''">N/A</td>
-            <td class="price">{{ product.boxPrice | currency : "PHP" }}</td>
+            <td>{{product.unitMeasurement}}</td>
+            <td>{{product.poUnitType}}</td>
+            <td class="price">{{getUnitPrice(product) | currency: 'PHP': 'symbol-narrow'}}</td>
           </tr>
         </tbody>
       </table>

@@ -36,7 +36,11 @@
       </div>
       <div class="summary-item">
         <label>Receipt Number</label>
-        <input type="text" [(ngModel)]="receiptNumber" placeholder="Enter receipt number" class="receipt-input" />
+        <input type="text" 
+        [(ngModel)]="receiptNumber" 
+        placeholder="Enter receipt number" 
+        class="receipt-input"
+         />
       </div>
     </div>
   </section>
@@ -51,8 +55,9 @@
           <th>Batch No.</th>
           <th>MFG Date</th>
           <th>EXP Date</th>
-          <th>Box Ordered</th>
-          <th>Box Received</th>
+          <th>Unit Measurement</th>
+          <th>Unit Ordered</th>
+          <th>Quantity Received</th>
           <th>Unit Price</th>
           <th>Total</th>
         </tr>
@@ -74,18 +79,19 @@
             <input type="date" [(ngModel)]="item.expirationDate" (ngModelChange)="validateExpDate(item)" />
             <p class="error-message" *ngIf="item.expDateError">{{ item.expDateError }}</p>
           </td>
-          <td>{{ item.boxQuantityOrdered }}</td>
+          <td>{{item.poUnitType}}</td>
+          <td *ngIf="item.boxQuantityOrdered || item.pieceQuantityOrdered">{{ item.boxQuantityOrdered || item.pieceQuantityOrdered }}</td>
           <td>
             <input
               type="number"
-              [(ngModel)]="item.boxQuantityReceived"
-              [max]="item.boxQuantityOrdered"
+              [(ngModel)]="item.quantityReceived"
+              [max]="item.quantityOrdered"
               min="0"
               (input)="updateItemTotal(item)"
               placeholder="0"
             />
           </td>
-          <td>{{ item.boxPrice | currency: 'PHP' }}</td>
+          <td>{{ getDisplayUnitPrice(item) | currency: 'PHP' }}</td>
           <td>{{ item.totalCost | currency: 'PHP' }}</td>
         </tr>
       </tbody>

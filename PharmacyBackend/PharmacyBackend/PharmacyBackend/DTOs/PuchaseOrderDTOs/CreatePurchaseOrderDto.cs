@@ -10,6 +10,7 @@ namespace PharmacyBackend.DTOs.PuchaseOrderDTOs
         public string EmployeeLastName { get; set; }
         public string SupplierName { get; set; }
         public string? Notes { get; set; }
+        public string ReceiptNumber { get; set; }
         public List<CreatePurchaseOrderItemDto> PurchaseOrderItems { get; set; } = new();
     }
 }

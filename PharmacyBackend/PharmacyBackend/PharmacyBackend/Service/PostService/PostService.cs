@@ -876,10 +876,11 @@ namespace PharmacyBackend.Service.PostService
                     BoxPrice = poi.BoxPrice,
                     SheetPrice = poi.SheetPrice,
                     PiecePrice = poi.PiecePrice,
-                    TotalCost = poi.BoxQuantityOrdered * poi.BoxPrice,
+                    TotalCost = poi.TotalCost,
                     BatchNumber = poi.BatchNumber,
                     ManufacturingDate = poi.ManufacturingDate,
-                    ExpirationDate = poi.ExpirationDate
+                    ExpirationDate = poi.ExpirationDate,
+                    PoUnitType = poi.PoUnitType,
                 }).ToList()
             };
 

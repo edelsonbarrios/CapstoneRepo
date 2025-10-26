@@ -10,5 +10,6 @@ export class PurchaseOrder {
   totalAmount : number = 0;
   status : string = '';
   notes: string = '';
+  receiptNumber: string = '';
   purchaseOrderItems: PurchaseOrderItem[] = [];
 }

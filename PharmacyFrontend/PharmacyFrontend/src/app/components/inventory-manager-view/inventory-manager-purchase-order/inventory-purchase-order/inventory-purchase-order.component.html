@@ -64,9 +64,10 @@
           <thead>
             <tr>
               <th>Product Name</th>
-              <th>Unit Cost</th>
               <th>Unit Measurement</th>
-              <th>Box Qty</th>
+              <th>Unit Cost</th>
+              <th>Order Unit</th>
+              <th>Quantity</th>
               <th>Total</th>
               <th></th>
             </tr>
@@ -79,15 +80,14 @@
             </tr>
             <tr *ngFor="let item of paginatedItems">
               <td class="product-name">{{ item.productName }}</td>
-              <td>{{ item.boxPrice | currency : "PHP" }}</td>
-              <td>
-                <span class="unit-badge">{{ item.unitMeasurement }}</span>
-              </td>
+              <td>{{item.unitMeasurement}}</td>
+              <td>{{ getDisplayUnitPrice(item) | currency : "PHP" }}</td>
+              <td>{{item.poUnitType}}</td>
               <td>
                 <input
                   type="number"
                   min="1"
-                  [(ngModel)]="item.boxQuantityOrdered"
+                  [(ngModel)]="item.quantityOrdered"
                   (input)="recalculateQuantitiesAndTotals(item)"
                   class="qty-input"
                 />

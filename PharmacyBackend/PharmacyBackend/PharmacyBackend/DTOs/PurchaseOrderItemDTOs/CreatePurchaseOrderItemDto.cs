@@ -10,7 +10,9 @@
         public decimal SheetPrice { get; set; }
         public decimal PiecePrice { get; set; }
         public string BatchNumber { get; set; }
+        public decimal TotalCost { get; set; }
         public DateTime ManufacturingDate { get; set; }
         public DateTime ExpirationDate { get; set; }
+        public string PoUnitType { get; set; }
     }
 }

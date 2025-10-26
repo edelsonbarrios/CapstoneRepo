@@ -28,8 +28,11 @@ export class PurchaseOrderProductsComponent implements OnInit {
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
-    this.getAllProducts();
     this.updatePagination();
+
+    this.supplierProudcts.forEach(p => {
+      this.initializeProductUnitOrderType(p);
+    });
   }
 
   // Filtered products based on search query
@@ -44,6 +47,18 @@ export class PurchaseOrderProductsComponent implements OnInit {
       product.brandName?.toLowerCase().includes(query) ||
       product.genericName?.toLowerCase().includes(query)
     );
+  }
+
+  initializeProductUnitOrderType(prod : Product) : void {
+    if(prod.unitMeasurement == 'Multi-Level' || prod.unitMeasurement == 'Dual-Level') {
+      prod.poUnitType = 'Box';
+    } else {
+      prod.poUnitType = 'Pieces';
+    }
+  }
+
+  getUnitPrice(prod: Product) : number{
+    return prod.poUnitType == 'Box' ? prod.boxPrice : prod.piecePrice;
   }
 
   updatePagination() {
@@ -73,17 +88,6 @@ export class PurchaseOrderProductsComponent implements OnInit {
     }
   }
 
-  getAllProducts() {
-    this.getService.getAllProductsAsync().subscribe({
-      next: res => {
-        this.products = res;
-      },
-      error: err => {
-        console.log(`${err.error}`);
-      }
-    });
-  }
-
   toggleAll(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.paginatedProducts.forEach(p => (p.selected = checked));
@@ -102,7 +106,6 @@ export class PurchaseOrderProductsComponent implements OnInit {
     }
     
     this.productsSelected.emit(selected);
-    this.close.emit();
   }
 
   cancel() {

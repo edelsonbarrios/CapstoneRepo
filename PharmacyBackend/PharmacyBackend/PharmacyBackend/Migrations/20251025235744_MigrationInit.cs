@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PharmacyBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class TableRedesign : Migration
+    public partial class MigrationInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -328,6 +328,7 @@ namespace PharmacyBackend.Migrations
                     TotalAmount = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     Status = table.Column<string>(type: "text", nullable: true, defaultValue: "Pending"),
                     Notes = table.Column<string>(type: "text", nullable: true),
+                    ReceiptNumber = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -467,7 +468,8 @@ namespace PharmacyBackend.Migrations
                     TotalCost = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     BatchNumber = table.Column<string>(type: "text", nullable: true),
                     ManufacturingDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PoUnitType = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

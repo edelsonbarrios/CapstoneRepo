@@ -144,6 +144,9 @@ export class GetService {
   getAllProductsAsync(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(`${this.apiUrl}/Get/ProductAll`);
   }
+  getProductByIdAsync(id: number) : Observable<Product> {
+    return this.httpClient.get<Product>(`${this.apiUrl}/Get/Product?id=${id}`);
+  }
   //Product Service End
 
   //Purchase Order Service

@@ -7,6 +7,7 @@ export class CreatePurchaseOrderItem {
   sheetPrice : number = 0;
   piecePrice : number = 0;
   batchNumber : string = '';
+  totalCost: number = 0;
   manufacturingDate : string = '';
   expirationDate : string = '';
 }

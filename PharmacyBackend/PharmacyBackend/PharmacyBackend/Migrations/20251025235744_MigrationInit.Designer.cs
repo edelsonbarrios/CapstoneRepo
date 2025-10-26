@@ -12,8 +12,8 @@ using PharmacyBackend.DataContext;
 namespace PharmacyBackend.Migrations
 {
     [DbContext(typeof(PharmacyContext))]
-    [Migration("20251020171305_addsync")]
-    partial class addsync
+    [Migration("20251025235744_MigrationInit")]
+    partial class MigrationInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -586,6 +586,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("PurchaseOrderNumber")
                         .HasColumnType("text");
 
+                    b.Property<string>("ReceiptNumber")
+                        .HasColumnType("text");
+
                     b.Property<string>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text")
@@ -642,6 +645,9 @@ namespace PharmacyBackend.Migrations
 
                     b.Property<int>("PieceQuantityReceived")
                         .HasColumnType("integer");
+
+                    b.Property<string>("PoUnitType")
+                        .HasColumnType("text");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("integer");

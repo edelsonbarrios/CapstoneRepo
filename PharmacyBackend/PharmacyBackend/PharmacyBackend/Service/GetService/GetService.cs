@@ -1335,7 +1335,8 @@ namespace PharmacyBackend.Service.GetService
                     BoxPrice  = poi.BoxPrice,
                     SheetPrice = poi.SheetPrice,
                     PiecePrice = poi.PiecePrice,
-                    TotalCost = poi.TotalCost
+                    TotalCost = poi.TotalCost,
+                    PoUnitType = poi.PoUnitType,
                 }).ToList()
             });
         }
@@ -1370,7 +1371,8 @@ namespace PharmacyBackend.Service.GetService
                     BoxPrice = poi.BoxPrice,
                     SheetPrice = poi.SheetPrice,
                     PiecePrice = poi.PiecePrice,
-                    TotalCost = poi.TotalCost
+                    TotalCost = poi.TotalCost,
+                    PoUnitType = poi.PoUnitType,
                 }).ToList()
             };
         }
@@ -1436,7 +1438,8 @@ namespace PharmacyBackend.Service.GetService
                     BoxPrice = poi.BoxPrice,
                     SheetPrice = poi.SheetPrice,
                     PiecePrice = poi.PiecePrice,
-                    TotalCost = poi.TotalCost
+                    TotalCost = poi.TotalCost,
+                    PoUnitType = poi.PoUnitType,
                 }).ToList()
             });
         }
@@ -1471,7 +1474,8 @@ namespace PharmacyBackend.Service.GetService
                     BoxPrice = poi.BoxPrice,
                     SheetPrice = poi.SheetPrice,
                     PiecePrice = poi.PiecePrice,
-                    TotalCost = poi.TotalCost
+                    TotalCost = poi.TotalCost,
+                    PoUnitType = poi.PoUnitType,
                 }).ToList()
             }).ToList();
             return modifPurchaseOrders;

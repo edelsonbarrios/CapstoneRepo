@@ -23,4 +23,7 @@ export class PurchaseOrderItem {
 
   mfgDateError?: string;
   expDateError?: string;
+  poUnitType: string = '';
+  quantityOrdered: number = 0;
+  quantityReceived: number = 0;
 }

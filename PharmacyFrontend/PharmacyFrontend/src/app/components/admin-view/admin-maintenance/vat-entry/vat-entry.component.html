@@ -8,8 +8,9 @@
         <input type="text" id="vat-name" name="vat-name" class="input-field" placeholder="VAT Name" 
           [(ngModel)]="createdVat.vatName"
           [class.error]="vatError">
-        <input type="text" id="rate" name="rate" class="input-field" placeholder="Rate (%)" 
+        <input type="number" id="rate" name="rate" class="input-field" placeholder="Rate (%)" 
           [(ngModel)]="createdVat.vatRate"
+          min="0"
           [class.error]="vatError">
       </div>
       <button class="btn-product" (click)="createNewVat()">Save VAT</button>

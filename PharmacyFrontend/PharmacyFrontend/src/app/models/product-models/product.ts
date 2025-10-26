@@ -37,4 +37,5 @@ export class Product {
 
   selected?: boolean;
   quantity: number = 0;
+  poUnitType: string = '';
 }
