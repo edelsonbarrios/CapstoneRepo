@@ -13,6 +13,8 @@ using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
 using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
+using PharmacyBackend.Service.GetService;
 
 namespace PharmacyBackend.Controllers
 {
@@ -21,10 +23,12 @@ namespace PharmacyBackend.Controllers
     public class GetController : ControllerBase
     {
         private readonly IGetServiceContracts _getService;
+        private readonly ILogger<GetController> _logger;
 
-        public GetController(IGetServiceContracts getService)
+        public GetController(IGetServiceContracts getService, ILogger<GetController> logger)
         {
             _getService = getService;
+            _logger = logger;
         }
 
         #region DashBoardInventoryMan
@@ -884,6 +888,89 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting fast-moving products report: {ex.Message}" });
             }
         }
+
+        #endregion
+
+        #region BackUp Database
+
+        /// <summary>
+        /// Get all available backups
+        /// </summary>
+        [HttpGet("backups")]
+        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<BackupListResponse>> GetAllBackups()
+        {
+            try
+            {
+                var response = await _getService.GetAllBackupsAsync();
+
+                if (response.Success)
+                {
+                    return Ok(response);
+                }
+
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetAllBackups endpoint");
+                return StatusCode(500, new BackupListResponse
+                {
+                    Success = false,
+                    Backups = new List<BackupDto>(),
+                    TotalCount = 0,
+                    TotalSizeMB = "0.00 MB"
+                });
+            }
+        }
+        /// <summary>
+        /// Get current backup configuration settings
+        /// </summary>
+        [HttpGet("backups/settings")]
+        public async Task<ActionResult<BackupSettingsDto>> GetBackupSettings()
+        {
+            try
+            {
+                var settings = await _getService.GetBackupSettingsAsync();
+                return Ok(settings);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting backup settings");
+                return StatusCode(500, "Error retrieving settings");
+            }
+        }
+        /// <summary>
+        /// Download a specific backup file
+        /// </summary>
+        [HttpGet("backups/download/{fileName}")]
+        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DownloadBackup(string fileName)
+        {
+            try
+            {
+                // Validate filename to prevent directory traversal attacks
+                if (fileName.Contains("..") || fileName.Contains("/") || fileName.Contains("\\"))
+                {
+                    return BadRequest(new { Success = false, Message = "Invalid filename" });
+                }
+
+                var fileBytes = await _getService.DownloadBackupAsync(fileName);
+
+                if (fileBytes == null)
+                {
+                    return NotFound(new { Success = false, Message = "Backup file not found" });
+                }
+
+                return File(fileBytes, "application/octet-stream", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in DownloadBackup endpoint");
+                return StatusCode(500, new { Success = false, Message = "Error downloading backup" });
+            }
+        }
+
 
         #endregion
 

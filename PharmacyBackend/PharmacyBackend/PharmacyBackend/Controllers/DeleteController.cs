@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface;
 using PharmacyBackend.Contracts.ServiceContracts.DeleteInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 
 namespace PharmacyBackend.Controllers
@@ -12,10 +14,12 @@ namespace PharmacyBackend.Controllers
     public class DeleteController : ControllerBase
     {
         private readonly IDeleteServiceContracts _deleteService;
+        private readonly ILogger<DeleteController> _logger;
 
-        public DeleteController(IDeleteServiceContracts deleteService)
+        public DeleteController(IDeleteServiceContracts deleteService, ILogger<DeleteController> logger)
         {
             _deleteService = deleteService;
+            _logger = logger;
         }
         #region Employee
         [HttpDelete("Employee")]
@@ -188,6 +192,79 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Purchase Order not found or already deleted.");
             return Ok("Purchase Order deleted successfully.");
         }
+        #endregion
+
+        #region BackUp Database
+
+        /// <summary>
+        /// Delete a specific backup file
+        /// </summary>
+        [HttpDelete("backups/{fileName}")]
+        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<DeleteBackupResponse>> DeleteBackup(string fileName)
+        {
+            try
+            {
+                // Validate filename to prevent directory traversal attacks
+                if (fileName.Contains("..") || fileName.Contains("/") || fileName.Contains("\\"))
+                {
+                    return BadRequest(new DeleteBackupResponse
+                    {
+                        Success = false,
+                        Message = "Invalid filename"
+                    });
+                }
+
+                _logger.LogInformation($"Backup deletion requested: {fileName}");
+                var response = await _deleteService.DeleteBackupAsync(fileName);
+
+                if (response.Success)
+                {
+                    return Ok(response);
+                }
+
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in DeleteBackup endpoint");
+                return StatusCode(500, new DeleteBackupResponse
+                {
+                    Success = false,
+                    Message = $"Server error: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Manually trigger cleanup of old backups
+        /// </summary>
+        [HttpDelete("backups/cleanup")]
+        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CleanupOldBackups()
+        {
+            try
+            {
+                _logger.LogInformation("Manual backup cleanup requested");
+                await _deleteService.CleanupOldBackupsAsync();
+
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Cleanup completed successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in CleanupOldBackups endpoint");
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = $"Server error: {ex.Message}"
+                });
+            }
+        }
+
         #endregion
     }
 }

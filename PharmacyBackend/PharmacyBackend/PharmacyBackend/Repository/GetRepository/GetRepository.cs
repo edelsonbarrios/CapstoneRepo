@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.Models;
@@ -14,9 +17,11 @@ namespace PharmacyBackend.Repository.GET
     public class GetRepository : IGetRepositoryContracts
     {
         private readonly PharmacyContext _context;
-        public GetRepository(PharmacyContext context)
+        private readonly IConfiguration _config;
+        public GetRepository(PharmacyContext context, IConfiguration configuration)
         {
             _context = context;
+            _config = configuration;
         }
 
         #region Account
@@ -1091,6 +1096,98 @@ namespace PharmacyBackend.Repository.GET
             }).ToList();
             return result;
         }
+        #endregion
+        
+        #region BackUp Database
+
+        public async Task<BackupListResponse> GetAllBackupsAsync()
+        {
+            try
+            {
+                var backupDir = GetBackupDirectory();
+                if (!Directory.Exists(backupDir))
+                {
+                    Directory.CreateDirectory(backupDir);
+                    return new BackupListResponse
+                    {
+                        Success = true,
+                        Backups = new List<BackupDto>(),
+                        TotalCount = 0,
+                        TotalSizeMB = "0.00 MB"
+                    };
+                }
+
+                // Changed from *.bak to *.backup to match the file extension created by CreateBackupAsync
+                var backupFiles = Directory.GetFiles(backupDir, "*.backup")
+                    .Select(file => new FileInfo(file))
+                    .OrderByDescending(f => f.CreationTime)
+                    .ToList();
+
+                var backups = backupFiles.Select(file => new BackupDto
+                {
+                    FileName = file.Name,
+                    CreatedDate = file.CreationTime,
+                    FileSizeBytes = file.Length,
+                    BackupType = file.Name.Contains("_AUTO_") ? "Automated" : "Manual",
+                    Status = "Success"
+                }).ToList();
+
+                var totalSize = backupFiles.Sum(f => f.Length);
+
+                return new BackupListResponse
+                {
+                    Success = true,
+                    Backups = backups,
+                    TotalCount = backups.Count,
+                    TotalSizeMB = $"{totalSize / (1024.0 * 1024.0):F2} MB"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BackupListResponse
+                {
+                    Success = false,
+                    Backups = new List<BackupDto>(),
+                    TotalCount = 0,
+                    TotalSizeMB = "0.00 MB"
+                };
+            }
+        }
+
+        public async Task<byte[]?> DownloadBackupAsync(string fileName)
+        {
+            try
+            {
+                var backupDir = GetBackupDirectory();
+                var filePath = Path.Combine(backupDir, fileName);
+
+                if (!File.Exists(filePath))
+                {
+                    return null;
+                }
+
+                return await File.ReadAllBytesAsync(filePath);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public string GetBackupDirectory()
+        {
+            // Get the backup directory from configuration or use default
+            var backupPath = _config.GetValue<string>("BackupSettings:BackupPath");
+
+            if (string.IsNullOrEmpty(backupPath))
+            {
+                // Default to a Backups folder in the application directory
+                backupPath = Path.Combine(Directory.GetCurrentDirectory(), "Backups");
+            }
+
+            return backupPath;
+        }
+
         #endregion
     }
 }

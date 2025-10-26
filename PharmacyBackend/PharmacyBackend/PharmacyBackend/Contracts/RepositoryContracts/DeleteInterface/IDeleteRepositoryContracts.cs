@@ -1,3 +1,5 @@
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
+
 namespace PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface
 {
     public interface IDeleteRepositoryContracts
@@ -65,6 +67,13 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.DeleteInterface
 
         #region PurchaseOrder
         public Task<bool> DeletePurchaseOrderByIdAsync(int id);
+        #endregion
+
+        #region BackUp Database
+
+        Task<DeleteBackupResponse> DeleteBackupAsync(string fileName);
+        Task<bool> CleanupOldBackupsAsync(int retentionDays, int maxBackupCount);
+
         #endregion
     }
 }

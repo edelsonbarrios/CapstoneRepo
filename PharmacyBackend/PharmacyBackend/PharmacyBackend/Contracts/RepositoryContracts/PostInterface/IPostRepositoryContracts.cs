@@ -1,4 +1,5 @@
 ﻿using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
@@ -91,6 +92,13 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 
         #region StockMovement
         public Task<StockMovement> CreateStockMovementAsync(StockMovement stockMovement);
+        #endregion
+
+        #region BackUp Database
+
+        Task<CreateBackupResponse> CreateBackupAsync(CreateBackupRequest request);
+        Task<RestoreBackupResponse> RestoreBackupAsync(RestoreBackupRequest request);
+
         #endregion
     }
 }

@@ -18,6 +18,7 @@ using PharmacyBackend.DTOs.DashboardDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
 using System.Runtime.CompilerServices;
 using PharmacyBackend.DTOs.ReportsDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -198,6 +199,12 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<int> GetInventoryLowStockCountAsync();
         public Task<int> GetInventoryOutOfStockCountAsync();
         public Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync();
+        #endregion
+        
+        #region BackUp Database
+        Task<BackupListResponse> GetAllBackupsAsync();
+        Task<BackupSettingsDto> GetBackupSettingsAsync();
+        Task<byte[]?> DownloadBackupAsync(string fileName);
         #endregion
     }
 }
