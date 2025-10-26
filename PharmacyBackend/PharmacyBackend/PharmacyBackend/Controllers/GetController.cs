@@ -136,6 +136,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Username does not exist.");
             return Ok(account);
         }
+        [HttpGet("AccountEmployeeId")] 
+        public async Task<ActionResult<AccountDTO>> GetAccountByEmployeeIdAsync(int employeeId)
+        {
+            if (employeeId == 0)
+                return NotFound(new AccountDTO());
+            var account = await _getService.GetAccountByEmployeeIdAsync(employeeId);
+            if (account is null)
+                return BadRequest(new AccountDTO());
+            return account;
+        }
         #endregion
 
         #region Daily Sales Endpoints

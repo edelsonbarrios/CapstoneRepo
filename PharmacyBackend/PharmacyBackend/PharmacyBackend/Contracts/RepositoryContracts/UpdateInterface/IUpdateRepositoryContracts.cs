@@ -1,4 +1,5 @@
-﻿using PharmacyBackend.DTOs.SalesDTOs;
+﻿using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 using System.Runtime.CompilerServices;
@@ -8,7 +9,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
     public interface IUpdateRepositoryContracts
     {
 
-        #region Employee
+        #region Employee&Account
         public Task<bool> UpdateEmployeeAsync(Employee request);
         public Task<bool> UpdateAccountAsync(Account request);
         #endregion

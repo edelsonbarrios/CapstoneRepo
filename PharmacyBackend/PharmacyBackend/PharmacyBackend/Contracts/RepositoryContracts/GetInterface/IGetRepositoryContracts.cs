@@ -28,6 +28,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<Account> GetAccountByIdAsync(int id);
         public Task<bool> AccountUsernameValidation(string userName);
         public Task<Account> SearchAccountByUsernameAsync(string userName);
+        public Task<Account> GetAccountByEmployeeIdAsync(int employeeId);
         #endregion
 
         #region Daily Sales

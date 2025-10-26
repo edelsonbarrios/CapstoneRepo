@@ -100,6 +100,7 @@ builder.Services.AddScoped<IGetServiceContracts, GetService>();
 builder.Services.AddScoped<IPostServiceContracts, PostService>();
 builder.Services.AddScoped<IDeleteServiceContracts, DeleteService>();
 builder.Services.AddScoped<IUpdateServiceContracts, UpdateService>();
+builder.Services.AddScoped<AccountHelper>();
 #endregion
 
 

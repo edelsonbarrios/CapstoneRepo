@@ -47,6 +47,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<List<AccountDTO>> GetAllAccountsAsync();
         public Task<AccountDTO> GetAccountByIdAsync(int id);
         public Task<bool> AccountUsernameValidation(string userName);
+        public Task<AccountDTO> GetAccountByEmployeeIdAsync(int employeeId);
         #endregion
 
         #region Daily Sales

@@ -49,6 +49,11 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Accounts.FirstOrDefaultAsync(a => a.Username.StartsWith(userName));
         }
+        public async Task<Account> GetAccountByEmployeeIdAsync(int employeeId)
+        {
+            return await _context.Accounts
+                .FirstOrDefaultAsync(a => a.EmployeeId == employeeId);
+        }
         #endregion
 
         #region Employee

@@ -29,16 +29,20 @@ namespace PharmacyBackend.Service.UpdateService
         private readonly IGetRepositoryContracts _getRepo;
         private readonly IPostRepositoryContracts _postRepo;
         private readonly PharmacyContext _context;
+        private readonly AccountHelper _accountHelper;
 
         public UpdateService(IUpdateRepositoryContracts updateRepo,
             IGetRepositoryContracts getRepo,
             IPostRepositoryContracts postRepo,
-            PharmacyContext context)
+            PharmacyContext context,
+            AccountHelper accountHelper
+            )
         {
             _updateRepo = updateRepo;
             _getRepo = getRepo;
             _postRepo = postRepo;
             _context = context;
+            _accountHelper = accountHelper;
         }
         #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
@@ -88,6 +92,24 @@ namespace PharmacyBackend.Service.UpdateService
             if (!resetPassowrd)
                 return false;
             return resetPassowrd;
+        }
+        public async Task<bool> UpdateEmployeeAccountAsync(UpdateEmployeeAccountRequest request)
+        {
+            var account = await _getRepo.GetAccountByIdAsync(request.AccountId);
+            if (account is null)
+                return false;
+
+            var encryptedCurrentPassword = AesHelper.Encrypt(request.CurrentPassword);
+            if (!account.EncryptedPassword.Equals(encryptedCurrentPassword))
+                return false;
+
+            if (!request.NewPassword.Equals(request.ConfirmNewPassword))
+                return false;
+
+            account.Username = request.NewUserName;
+            account.EncryptedPassword = AesHelper.Encrypt(request.NewPassword);
+            await _updateRepo.UpdateAccountAsync(account);
+            return true;
         }
         #endregion
 

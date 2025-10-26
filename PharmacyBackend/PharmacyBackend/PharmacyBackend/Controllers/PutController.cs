@@ -16,6 +16,7 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.Helper;
 using System.Diagnostics.Contracts;
 
 namespace PharmacyBackend.Controllers
@@ -26,11 +27,16 @@ namespace PharmacyBackend.Controllers
     {
         private readonly IUpdateServiceContracts _updateService;
         private readonly IGetServiceContracts _getService;
+        private readonly AccountHelper _accountHelper;
 
-        public PutController(IUpdateServiceContracts updateService, IGetServiceContracts getService)
+        public PutController(IUpdateServiceContracts updateService, 
+            IGetServiceContracts getService,
+            AccountHelper accountHelper
+            )
         {
             _updateService = updateService;
             _getService = getService;
+            _accountHelper = accountHelper;
         }
 
         #region Employee
@@ -78,6 +84,28 @@ namespace PharmacyBackend.Controllers
             if (!resetPassword)
                 return BadRequest(new { Message = "Password cannot be resetted." });
             return Ok(new { Message = "Account successfully resetted." });
+        }
+        [HttpPut("UpdateEmployeeAccount")]
+        public async Task<ActionResult<object>> UpdateEmployeeAccountAsync(UpdateEmployeeAccountRequest req)
+        {
+            if (req is null)
+                return NotFound(new { Message = "Account does not exist." });
+
+            if (string.IsNullOrEmpty(req.NewPassword) || string.IsNullOrEmpty(req.ConfirmNewPassword))
+                return BadRequest(new { Message = "Password fields cannot be empty." });
+
+            if (!req.NewPassword.Equals(req.ConfirmNewPassword))
+                return BadRequest(new { Message = "New password and confirmation does not match." });
+
+            var userNameValidation = _accountHelper.AccountUsernameMultiplicationValidation(req.NewUserName);
+            if (!userNameValidation)
+                return BadRequest(new {Message = $"{req.NewUserName} username has already been taken. Please try again" });
+
+            var updateEmployeeAccount = await _updateService.UpdateEmployeeAccountAsync(req);
+            if (!updateEmployeeAccount)
+                return BadRequest(new { Message = "Failed to update employee account. Please check your inputs and try again." });
+
+            return Ok(new { Message = "Account updated successfully." });
         }
         #endregion
 

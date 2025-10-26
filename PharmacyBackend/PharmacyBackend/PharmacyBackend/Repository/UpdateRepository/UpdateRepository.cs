@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface;
 using PharmacyBackend.DataContext;
+using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 

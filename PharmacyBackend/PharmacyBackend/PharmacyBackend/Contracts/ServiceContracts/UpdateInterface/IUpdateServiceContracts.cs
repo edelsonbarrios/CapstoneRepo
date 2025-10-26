@@ -25,6 +25,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Account
         public Task<bool> ResetAccountPasswordAsync(int accountId);
+        public Task<bool> UpdateEmployeeAccountAsync(UpdateEmployeeAccountRequest request);
         #endregion
 
         #region Sales

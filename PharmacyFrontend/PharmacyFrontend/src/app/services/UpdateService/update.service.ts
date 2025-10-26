@@ -17,6 +17,7 @@ import { UpdateProductRequest } from '../../models/product-models/update-product
 import { Category } from '../../models/category-models/category';
 import { VAT } from '../../models/vat-models/vat';
 import { UpdateEmployeeRequest } from '../../models/employee-models/updateEmployeeRequest';
+import { UpdateEmployeeAccountRequest } from '../../models/update-employee-account-request';
 
 @Injectable({
   providedIn: 'root',
@@ -50,6 +51,9 @@ export class UpdateService {
       params = params.set('accountId', accountId);
     }
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ResetAccountPassword`,{}, {params});
+  }
+  updateEmployeeAccountAsync(request: UpdateEmployeeAccountRequest) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/UpdateEmployeeAccount`, request);
   }
   //Account Service End
 

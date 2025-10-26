@@ -25,6 +25,7 @@ using OfficeOpenXml;
 using System.Drawing;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Repository.GET;
+using Microsoft.EntityFrameworkCore.Update;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -293,7 +294,23 @@ namespace PharmacyBackend.Service.GetService
             };
             return modifAccount;
         }
-
+        
+        public async Task<AccountDTO> GetAccountByEmployeeIdAsync(int employeeId)
+        {
+            if (employeeId == 0)
+                return new AccountDTO();
+            var account = await _getRepo.GetAccountByEmployeeIdAsync(employeeId);
+            if (account is null)
+                return new AccountDTO();
+            var modifEmployee = new AccountDTO
+            {
+                Id = account.Id,
+                Username = account.Username,
+                Password = account.EncryptedPassword,
+                EmployeeId = account.EmployeeId
+            };
+            return modifEmployee;
+        }
 
         #endregion
 

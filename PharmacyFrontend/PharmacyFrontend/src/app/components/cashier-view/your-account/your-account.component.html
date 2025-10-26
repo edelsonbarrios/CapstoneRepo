@@ -30,24 +30,85 @@
       </div>
     </div>
 
-    <!-- Account Edit Section -->
+    <!-- Account Credentials Section -->
     <div class="section">
       <div class="section-header with-action">
         <h2><span><i class="fa-solid fa-lock"></i></span> Account Credentials</h2>
-        <button class="btn-edit"><span><i class="fa-solid fa-pen-to-square"></i></span> Edit Account</button>
+        <button class="btn-edit" (click)="toggleEditCredentials()" *ngIf="!isEditingCredentials">
+          <span><i class="fa-solid fa-pen-to-square"></i></span> Edit Account
+        </button>
       </div>
 
-      <div class="details-grid credentials">
+      <!-- View Mode -->
+      <div class="details-grid credentials" *ngIf="!isEditingCredentials">
         <div class="info-box">
           <label>Username</label>
-          <p>Sample Username</p>
+          <p>{{account.username}}</p>
         </div>
 
         <div class="info-box">
           <label>Password</label>
-          <p>Sample Password</p>
+          <input readonly type="password" class="credential-input" [(ngModel)]="account.password">
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div *ngIf="isEditingCredentials" class="edit-credentials">
+        <div class="edit-form">
+          <div class="form-group">
+            <label><i class="fa-solid fa-key"></i> Current Password</label>
+            <input type="password" [(ngModel)]="currentPassword" placeholder="Enter your current password"
+              class="credential-input" />
+          </div>
+
+          <div class="form-divider"></div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-user-pen"></i> New Username</label>
+            <input type="text" [(ngModel)]="username" placeholder="Enter new username" class="credential-input" />
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-lock"></i> New Password</label>
+            <input type="password" [(ngModel)]="password" placeholder="Enter new password" class="credential-input" />
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-shield-halved"></i> Confirm New Password</label>
+            <input type="password" [(ngModel)]="passwordConfirmation" placeholder="Confirm new password"
+              class="credential-input" />
+          </div>
+        </div>
+
+        <div class="edit-actions">
+          <button class="btn-save" (click)="saveCredentials()">
+            <i class="fa-solid fa-check"></i> Save Changes
+          </button>
+          <button class="btn-cancel" (click)="cancelEdit()">
+            <i class="fa-solid fa-xmark"></i> Cancel
+          </button>
         </div>
       </div>
     </div>
   </div>
 </main>
+
+<div class="error-overlay" *ngIf="updateErrorMessage">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">{{updateErrorMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeErrorMessage()">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" *ngIf="updateSuccessMessage">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Account successfully updated.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSucceessMessage()">OK</button>
+    </div>
+  </div>
+</div>

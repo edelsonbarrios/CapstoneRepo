@@ -64,6 +64,10 @@ export class GetService {
       `${this.apiUrl}/Get/SearchAccount?userName=${userName}`
     );
   }
+
+  getAccountByEmployeeIdAsync(employeeId: number) : Observable<Account> {
+    return this.httpClient.get<Account>(`${this.apiUrl}/Get/AccountEmployeeId?employeeId=${employeeId}`);
+  }
   //Account Service End
 
   //VAT Service
