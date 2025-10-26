@@ -24,23 +24,35 @@ export class EditGenericComponent {
   ) {}
 
   updateGeneric() {
-    // Clear previous error
     this.genericNameError = '';
     
-    // Validate generic name
     if (!this.editGeneric.genericName || this.editGeneric.genericName.trim() === '') {
       this.genericNameError = 'Generic name is required';
       return;
     }
 
-    if(!this.editGeneric) return;
+    if (!this.editGeneric) return;
+    
     this.updateService.updateGenericAsync(this.editGeneric.genericID, this.editGeneric).subscribe({
       next: res => {
         this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
-        this.editGeneric.genericName = '';
+        
+        if (err.status === 400) {
+          if (typeof err.error === 'string' && err.error.includes('already exists')) {
+            this.genericNameError = 'Generic name already exists';
+          } else if (typeof err.error === 'string') {
+            this.genericNameError = err.error;
+          } else {
+            this.genericNameError = 'Failed to update generic';
+          }
+        } else if (err.status === 404) {
+          this.genericNameError = 'Generic not found';
+        } else {
+          this.genericNameError = 'An error occurred while updating the generic';
+        }
       }
     });
   }

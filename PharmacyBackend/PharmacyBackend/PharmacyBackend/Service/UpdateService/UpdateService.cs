@@ -216,28 +216,36 @@ namespace PharmacyBackend.Service.UpdateService
         #region Discount
         public async Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto)
         {
+            var validation = await ValidateDiscountAsync(dto.DiscountName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetDiscountByIdAsync(id);
             if (existing == null) return false;
 
             existing.DiscountName = dto.DiscountName;
             existing.DiscountRate = dto.DiscountRate;
             existing.IsActive = dto.IsActive;
-
             await _updateRepo.UpdateDiscountAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateDiscountAsync(string name, int discountId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateDiscountNameAsync(name, discountId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveDiscountByIdAsync(int discountId)
         {
             var discount = await _getRepo.GetDiscountByIdAsync(discountId);
             if (discount is null)
                 return false;
-
             discount.IsActive = false;
-
             var updateDiscount = await _updateRepo.UpdateDiscountAsync(discount);
             if (!updateDiscount)
                 return false;
-
             return updateDiscount;
         }
         #endregion
@@ -454,14 +462,25 @@ namespace PharmacyBackend.Service.UpdateService
         #region Category
         public async Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto)
         {
+            var validation = await ValidateCategoryNameAsync(dto.CategoryName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetCategoryByIdAsync(id);
             if (existing == null) return false;
 
             existing.CategoryName = dto.CategoryName;
-
             await _updateRepo.UpdateCategoryAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateCategoryNameAsync(string name, int categoryId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateCategoryNameAsync(name, categoryId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveCategoryByIdAsync(int categoryId)
         {
             if (categoryId == 0) return false;
@@ -477,14 +496,25 @@ namespace PharmacyBackend.Service.UpdateService
         #region Brand
         public async Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto)
         {
+            var validation = await ValidateBrandNameAsync(dto.BrandName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetBrandByIdAsync(id);
             if (existing == null) return false;
 
             existing.BrandName = dto.BrandName;
-
             await _updateRepo.UpdateBrandAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateBrandNameAsync(string name, int brandId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateBrandNameAsync(name, brandId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveBrandByIdAsync(int brandId)
         {
             var brand = await _getRepo.GetBrandByIdAsync(brandId);
@@ -499,14 +529,25 @@ namespace PharmacyBackend.Service.UpdateService
         #region Generic
         public async Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto)
         {
+            var validation = await ValidateGenericNameAsync(dto.GenericName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetGenericByIdAsync(id);
             if (existing == null) return false;
 
             existing.GenericName = dto.GenericName;
-
             await _updateRepo.UpdateGenericAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateGenericNameAsync(string name, int genericId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateGenericNameAsync(name, genericId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveGenericByIdAsync(int genericId)
         {
             var generic = await _getRepo.GetGenericByIdAsync(genericId);
@@ -515,21 +556,31 @@ namespace PharmacyBackend.Service.UpdateService
             generic.IsActive = false;
             await _updateRepo.UpdateGenericAsync(generic);
             return true;
-
         }
         #endregion
 
         #region Formulation
         public async Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto)
         {
+            var validation = await ValidateFormulationNameAsync(dto.FormulationName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetFormulationByIdAsync(id);
             if (existing == null) return false;
 
             existing.FormulationName = dto.FormulationName;
-
             await _updateRepo.UpdateFormulationAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateFormulationNameAsync(string name, int formulationId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateFormulationNameAsync(name, formulationId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveFormulationByIdAsync(int formulationId)
         {
             var formulation = await _getRepo.GetFormulationByIdAsync(formulationId);
@@ -544,14 +595,25 @@ namespace PharmacyBackend.Service.UpdateService
         #region Classification
         public async Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto)
         {
+            var validation = await ValidateClassificationNameAsync(dto.ClassificationName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetClassificationByIdAsync(id);
             if (existing == null) return false;
 
             existing.ClassificationName = dto.ClassificationName;
-
             await _updateRepo.UpdateClassificationAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateClassificationNameAsync(string name, int classificationId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateClassificationNameAsync(name, classificationId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveClassificationByIdAsync(int classificationId)
         {
             var classification = await _getRepo.GetClassificationByIdAsync(classificationId);
@@ -566,14 +628,25 @@ namespace PharmacyBackend.Service.UpdateService
         #region Type
         public async Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto)
         {
+            var validation = await ValidateTypeNameAsync(dto.TypeName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetTypeModelByIdAsync(id);
             if (existing == null) return false;
 
             existing.TypeName = dto.TypeName;
-
             await _updateRepo.UpdateTypeModelAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateTypeNameAsync(string name, int typeId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateTypeNameAsync(name, typeId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveTypeModelByIdAsync(int typeId)
         {
             var type = await _getRepo.GetTypeModelByIdAsync(typeId);
@@ -675,28 +748,36 @@ namespace PharmacyBackend.Service.UpdateService
         #region VAT
         public async Task<bool> UpdateVATAsync(int id, UpdateVATDto dto)
         {
+            var validation = await ValidateVATNameAsync(dto.VATName, id);
+            if (!validation)
+                return false;
+
             var existing = await _getRepo.GetVATByIdAsync(id);
             if (existing == null) return false;
 
             existing.VATName = dto.VATName;
             existing.VATRate = dto.VATRate;
             existing.IsActive = dto.IsActive;
-
             await _updateRepo.UpdateVATAsync(existing);
             return true;
         }
+
+        public async Task<bool> ValidateVATNameAsync(string name, int vatId)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _updateRepo.ValidateVATNameAsync(name, vatId);
+            return validation;
+        }
+
         public async Task<bool> ArchiveVATByIdAsync(int vatId)
         {
             var vat = await _getRepo.GetVATByIdAsync(vatId);
             if (vat is null)
                 return false;
-
             vat.IsActive = false;
-
             var updateVat = await _updateRepo.UpdateVATAsync(vat);
             if (!updateVat)
                 return false;
-
             return updateVat;
         }
         #endregion

@@ -25,23 +25,35 @@ export class EditTypeComponent {
   ) {}
 
   updateType() {
-    // Clear previous error
     this.typeNameError = '';
     
-    // Validate type name
     if (!this.editType.typeName || this.editType.typeName.trim() === '') {
       this.typeNameError = 'Type name is required';
       return;
     }
 
-    if(!this.editType) return;
+    if (!this.editType) return;
+    
     this.updateService.updateTypeAsync(this.editType.typeID, this.editType).subscribe({
       next: res => {
         this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
-        this.editType.typeName = '';
+        
+        if (err.status === 400) {
+          if (typeof err.error === 'string' && err.error.includes('already exists')) {
+            this.typeNameError = 'Type name already exists';
+          } else if (typeof err.error === 'string') {
+            this.typeNameError = err.error;
+          } else {
+            this.typeNameError = 'Failed to update type';
+          }
+        } else if (err.status === 404) {
+          this.typeNameError = 'Type not found';
+        } else {
+          this.typeNameError = 'An error occurred while updating the type';
+        }
       }
     });
   }

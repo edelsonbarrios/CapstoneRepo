@@ -15,31 +15,54 @@ export class EditVatComponent {
   @Input() editVat: VAT = new VAT();
   @Output() closeForm = new EventEmitter<void>();
   
+  vatNameError: string = '';
   showSuccessAlert: boolean = false;
 
   constructor(
     private updateService: UpdateService
   ) {}
 
-  editVAT() {
-    if(!this.editVat) return;
+ editVAT() {
+    this.vatNameError = '';
+    
+    if (!this.editVat.vatName || this.editVat.vatName.trim() === '') {
+      this.vatNameError = 'VAT name is required';
+      return;
+    }
+
+    if (!this.editVat) return;
+    
     this.updateService.updateVatAsync(this.editVat.vatid, this.editVat).subscribe({
       next: res => {
         this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${JSON.stringify(err.error)}`);
-        this.closeEditVatForm();
+        
+        if (err.status === 400) {
+          if (typeof err.error === 'string' && err.error.includes('already exists')) {
+            this.vatNameError = 'VAT name already exists';
+          } else if (typeof err.error === 'string') {
+            this.vatNameError = err.error;
+          } else {
+            this.vatNameError = 'Failed to update VAT';
+          }
+        } else if (err.status === 404) {
+          this.vatNameError = 'VAT not found';
+        } else {
+          this.vatNameError = 'An error occurred while updating the VAT';
+        }
       }
     });
   }
 
   closeSuccessAlert() {
     this.showSuccessAlert = false;
-    this.closeForm.emit();
+    this.closeEditVatForm();
   }
 
   closeEditVatForm() {
+    this.vatNameError = '';
     this.closeForm.emit();
   }
 }

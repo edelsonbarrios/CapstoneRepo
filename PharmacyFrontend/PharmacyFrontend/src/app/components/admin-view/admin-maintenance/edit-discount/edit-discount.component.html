@@ -3,23 +3,16 @@
   <!--  DISCOUNT HEADER -->
   <div class="modal-header">
     <h2>Edit VAT Rates</h2>
-    <a>X</a>
+    <a (click)="closeEditDiscountForm()">X</a>
   </div>
 
   <!-- EDIT DISCOUNT -->
   <div class="fillup">
     <label>Name</label>
-    <input type="text">
-
-    <label>Type</label>
-    <input type="text">
+    <input type="text" [(ngModel)]="editDiscount.discountName" >
     
     <label>Value</label>
-    <input type="number">
-
-    <label>Validity</label>
-    <input type="text">
-  </div>
+    <input type="number" [(ngModel)]="editDiscount.discountRate">
 
     <p>Status</p>
     <select id="status">
@@ -28,6 +21,16 @@
 
     <!-- FOOTER -->
      <div class="footer">
-      <button class="btn-save">Save Changes</button>
+      <button class="btn-save"(click)="updateDiscount()">Save Changes</button>
      </div>
+
+     <!-- Success Alert Modal -->
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Discount has been saved Successfully</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
+  </div>
 </div>

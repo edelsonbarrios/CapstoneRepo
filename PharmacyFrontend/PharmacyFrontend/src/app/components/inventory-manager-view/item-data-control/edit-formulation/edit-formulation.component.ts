@@ -23,10 +23,8 @@ export class EditFormulationComponent {
   ) {}
 
   updateFormulation() {
-    // Clear previous error
     this.formulationNameError = '';
     
-    // Validate formulation name
     if (!this.editFormulation.formulationName || this.editFormulation.formulationName.trim() === '') {
       this.formulationNameError = 'Formulation name is required';
       return;
@@ -38,7 +36,20 @@ export class EditFormulationComponent {
       },
       error: err => {
         console.log(`${err.error}`);
-        this.editFormulation.formulationName = '';
+        
+        if (err.status === 400) {
+          if (typeof err.error === 'string' && err.error.includes('already exists')) {
+            this.formulationNameError = 'Formulation name already exists';
+          } else if (typeof err.error === 'string') {
+            this.formulationNameError = err.error;
+          } else {
+            this.formulationNameError = 'Failed to update formulation';
+          }
+        } else if (err.status === 404) {
+          this.formulationNameError = 'Formulation not found';
+        } else {
+          this.formulationNameError = 'An error occurred while updating the formulation';
+        }
       }
     });
   }

@@ -6,7 +6,6 @@ import { CreateDiscountRequest } from '../../../../models/discount-models/create
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
-import { Product } from '../../../../models/product-models/product';
 import { EditDiscountComponent } from '../edit-discount/edit-discount.component';
 import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmation/archive-confirmation.component';
 
@@ -21,12 +20,12 @@ export class ManageDiscountComponent implements OnInit {
   discounts: Discount[] = [];
   paginatedDiscounts: Discount[] = [];
   newDiscount: Discount = new Discount();
-  errorMessage: string = '';
-  editDiscount?: Product | null;
+  discountError: string = '';
+  editDiscount?: Discount | null;
   showSuccessAlert: boolean = false;
   successMessage: string = '';
   showArchiveForm: number = 0;
-  showErrorMessage: string = '';
+  errorMessage: string = '';
 
   // Pagination properties
   currentPage: number = 1;
@@ -59,6 +58,7 @@ export class ManageDiscountComponent implements OnInit {
       },
       error: (err) => {
         console.log(`${err.error}`);
+        this.errorMessage = err.error;
       },
     });
   }
@@ -79,12 +79,15 @@ export class ManageDiscountComponent implements OnInit {
   }
 
   createNewDiscount() {
-    if (!this.newDiscount) return;
-
-    if (!this.newDiscount.discountName || !this.newDiscount.discountRate) {
-      this.errorMessage = 'Discount name and rate are required.';
+    if (!this.newDiscount.discountName) {
+      this.discountError = 'Discount name is required';
       return;
     }
+    if (!this.newDiscount.discountRate || this.newDiscount.discountRate <= 0) {
+      this.discountError = "Rate must be greater than 0";
+      return;
+    }
+    this.discountError = '';
 
     const requestPayload: CreateDiscountRequest = {
       discountName: this.newDiscount.discountName,
@@ -93,26 +96,25 @@ export class ManageDiscountComponent implements OnInit {
 
     this.postService.createDiscountAsync(requestPayload).subscribe({
       next: (res) => {
-        this.errorMessage = '';
         this.successMessage = 'Discount has been Added Successfully';
         this.showSuccessAlert = true;
       },
       error: (err) => {
-        this.showErrorMessage = err.error;
-        this.errorMessage = err.error;
         this.newDiscount.discountName = '';
         this.newDiscount.discountRate = 0;
+        this.errorMessage = err.error;
       },
     });
   }
 
-  closeValidationMessage() {
-    this.showErrorMessage = '';
+  closeErrrMessage() {
+    this.errorMessage = '';
   }
 
   archiveDiscount() {
     this.updateService.archiveDiscountAsync(this.showArchiveForm).subscribe({
       next: mes => {
+        this.successMessage = 'Discount has been Archived Successfully';
         this.showArchiveForm = 0;
         this.getAllDiscount();
       },
@@ -130,7 +132,12 @@ export class ManageDiscountComponent implements OnInit {
     this.getAllDiscount();
   }
 
-  openEditDiscountForm() {
-    this.editDiscount = new Product();
+  openEditDiscountForm(discount: Discount) {
+    this.editDiscount = { ...discount }; // Create a copy to avoid mutating the original
+  }
+
+  closeEditDiscountForm() {
+    this.editDiscount = null;
+    this.getAllDiscount(); // Refresh the list after editing
   }
 }

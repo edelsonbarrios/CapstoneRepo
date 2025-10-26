@@ -47,27 +47,33 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
 
         #region Category
         public Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto);
+        public Task<bool> ValidateCategoryNameAsync(string name);
         #endregion
 
         #region Brand
         public Task<BrandDto> CreateBrandAsync(CreateBrandDto dto);
+        public Task<bool> ValidateBrandNameAsync(string name);
 
         #endregion
 
         #region Generic
         public Task<GenericDto> CreateGenericAsync(CreateGenericDto dto);
+        public Task<bool> ValidateGenericNameAsync(string name);
         #endregion
 
         #region Formulation
         public Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto);
+        public Task<bool> ValidateFormulationNameAsync(string name);
         #endregion
 
         #region Classification
         public Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto);
+        public Task<bool> ValidateClassificationNameAsync(string name);
         #endregion
 
         #region Type
         public Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto);
+        public Task<bool> ValidateTypeNameAsync(string name);
         #endregion
 
         #region Supplier

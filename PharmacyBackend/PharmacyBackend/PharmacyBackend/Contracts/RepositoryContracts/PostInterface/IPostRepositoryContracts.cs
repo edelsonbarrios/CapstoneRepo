@@ -40,6 +40,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.PostInterface
 
         #region Category
         public Task<Category> CreateCategoryAsync(Category category);
+        public Task<bool> ValidateCategoryNameAsync(string name);
         #endregion
 
         #region Brand
