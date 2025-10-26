@@ -29,6 +29,9 @@ export class UpdateProductComponent implements OnInit{
   formulations: Formulation[] = [];
   categories: Category[] = [];
   showSuccessAlert: boolean = false;
+  
+  // Track which fields were initially present (not null/undefined/empty)
+  initialFieldsPresent: Set<string> = new Set();
 
   constructor(
     private getService : GetService,
@@ -37,6 +40,29 @@ export class UpdateProductComponent implements OnInit{
 
   ngOnInit(): void {
     this.getAllItemDataControls();
+    this.trackInitialFields();
+  }
+
+  // Track which fields have actual values when component loads
+  trackInitialFields(): void {
+    const fieldsToCheck = [
+      'genericName', 'brandName', 'classificationName', 'typeName',
+      'formulationName', 'categoryName', 'sheetsPerBox', 'piecesPerSheet',
+      'piecePerBox', 'boxPrice', 'sheetPrice', 'piecePrice', 'reorderLevel'
+    ];
+
+    fieldsToCheck.forEach(field => {
+      const value = (this.productToUpdate as any)[field];
+      // Consider a field present if it has a meaningful value
+      if (value !== null && value !== undefined && value !== '' && value !== 0) {
+        this.initialFieldsPresent.add(field);
+      }
+    });
+  }
+
+  // Check if a field should be displayed
+  shouldShowField(fieldName: string): boolean {
+    return this.initialFieldsPresent.has(fieldName);
   }
 
   updateProduct() {

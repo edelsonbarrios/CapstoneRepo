@@ -38,7 +38,7 @@
         </div>
 
         <!-- Generic Name -->
-        <div class="form-group" *ngIf="productToUpdate.genericName">
+        <div class="form-group" *ngIf="shouldShowField('genericName')">
           <label for="genericName">Generic Name</label>
           <select id="genericName" [(ngModel)]="productToUpdate.genericName">
             <option value="">Select Generic</option>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Brand Name -->
-        <div class="form-group" *ngIf="productToUpdate.brandName">
+        <div class="form-group" *ngIf="shouldShowField('brandName')">
           <label for="brandName">Brand Name</label>
           <select id="brandName" [(ngModel)]="productToUpdate.brandName">
             <option value="">Select Brand</option>
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Classification -->
-        <div class="form-group" *ngIf="productToUpdate.classificationName">
+        <div class="form-group" *ngIf="shouldShowField('classificationName')">
           <label for="classificationName">Classification</label>
           <select id="classificationName" [(ngModel)]="productToUpdate.classificationName">
             <option value="">Select Classification</option>
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Type -->
-        <div class="form-group" *ngIf="productToUpdate.typeName">
+        <div class="form-group" *ngIf="shouldShowField('typeName')">
           <label for="typeName">Type</label>
           <select id="typeName" [(ngModel)]="productToUpdate.typeName">
             <option value="">Select Type</option>
@@ -74,7 +74,7 @@
         </div>
 
         <!-- Formulation -->
-        <div class="form-group" *ngIf="productToUpdate.formulationName">
+        <div class="form-group" *ngIf="shouldShowField('formulationName')">
           <label for="formulationName">Formulation</label>
           <select id="formulationName" [(ngModel)]="productToUpdate.formulationName">
             <option value="">Select Formulation</option>
@@ -83,7 +83,7 @@
         </div>
 
         <!-- Category -->
-        <div class="form-group" *ngIf="productToUpdate.categoryName">
+        <div class="form-group" *ngIf="shouldShowField('categoryName')">
           <label for="categoryName">Category</label>
           <select id="categoryName" [(ngModel)]="productToUpdate.categoryName">
             <option value="">Select Category</option>
@@ -92,79 +92,89 @@
         </div>
 
         <!-- Sheets Per Box -->
-        <div class="form-group" *ngIf="productToUpdate.sheetsPerBox">
+        <div class="form-group" *ngIf="shouldShowField('sheetsPerBox')">
           <label for="sheetsPerBox">Sheets Per Box</label>
           <input
             type="number"
             id="sheetsPerBox"
             [(ngModel)]="productToUpdate.sheetsPerBox"
             placeholder="Enter sheets per box"
+            min="0"
           />
         </div>
 
         <!-- Pieces Per Sheet -->
-        <div class="form-group" *ngIf="productToUpdate.piecesPerSheet">
+        <div class="form-group" *ngIf="shouldShowField('piecesPerSheet')">
           <label for="piecesPerSheet">Pieces Per Sheet</label>
           <input
             type="number"
             id="piecesPerSheet"
             [(ngModel)]="productToUpdate.piecesPerSheet"
             placeholder="Enter pieces per sheet"
+            min="0"
           />
         </div>
 
         <!-- Pieces Per Box -->
-        <div class="form-group" *ngIf="productToUpdate.piecePerBox">
+        <div class="form-group" *ngIf="shouldShowField('piecePerBox')">
           <label for="piecePerBox">Pieces Per Box</label>
           <input
             type="number"
             id="piecePerBox"
             [(ngModel)]="productToUpdate.piecePerBox"
             placeholder="Enter pieces per box"
+            min="0"
           />
         </div>
 
         <!-- Box Price -->
-        <div class="form-group" *ngIf="productToUpdate.boxPrice">
+        <div class="form-group" *ngIf="shouldShowField('boxPrice')">
           <label for="boxPrice">Box Price (&#8369;)</label>
           <input
             type="number"
             id="boxPrice"
             [(ngModel)]="productToUpdate.boxPrice"
             placeholder="Enter box price"
+            min="0"
+            step="0.01"
           />
         </div>
 
         <!-- Sheet Price -->
-        <div class="form-group" *ngIf="productToUpdate.sheetPrice">
+        <div class="form-group" *ngIf="shouldShowField('sheetPrice')">
           <label for="sheetPrice">Sheet Price (&#8369;)</label>
           <input
             type="number"
             id="sheetPrice"
             [(ngModel)]="productToUpdate.sheetPrice"
             placeholder="Enter sheet price"
+            min="0"
+            step="0.01"
           />
         </div>
 
         <!-- Piece Price -->
-        <div class="form-group" *ngIf="productToUpdate.piecePrice">
+        <div class="form-group" *ngIf="shouldShowField('piecePrice')">
           <label for="piecePrice">Piece Price (&#8369;)</label>
           <input
             type="number"
             id="piecePrice"
             [(ngModel)]="productToUpdate.piecePrice"
             placeholder="Enter piece price"
+            min="0"
+            step="0.01"
           />
         </div>
 
         <!-- Reorder Level -->
-        <div class="form-group" *ngIf="productToUpdate.reorderLevel">
+        <div class="form-group" *ngIf="shouldShowField('reorderLevel')">
           <label for="reorderLevel">Reorder Level</label>
           <input
             type="number"
             id="reorderLevel"
             [(ngModel)]="productToUpdate.reorderLevel"
             placeholder="Enter reorder level"
+            min="0"
           />
         </div>
 
