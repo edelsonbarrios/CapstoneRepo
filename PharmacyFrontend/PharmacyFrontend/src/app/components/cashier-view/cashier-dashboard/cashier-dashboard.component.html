@@ -46,7 +46,7 @@
         </table>
       </div>
 
-      <button class="btn-primary" (click)="addSelectedProducts()">➕ Add Selected</button>
+      <button class="btn-primary" (click)="addSelectedProducts()"><span><i class="fa-solid fa-plus"></i></span>Add Selected</button>
     </section>
 
     <!-- RIGHT: Cart Compute Panel -->
@@ -113,9 +113,9 @@
         </div>
 
         <div class="bottom-btn">
-          <button class="btn-print" (click)="openPrintReceiptForm()">🖨️ Print</button>
-          <button class="btn-cancel" (click)="clearSelection()">❌ Cancel</button>
-          <button class="btn-settle" (click)="openViewSettleForm()">💰 Settle</button>
+          <button class="btn-print" (click)="openPrintReceiptForm()"><span><i class="fa-solid fa-print"></i></span> Print</button>
+          <button class="btn-cancel" (click)="clearSelection()"><span><i class="fa-solid fa-circle-xmark"></i></span> Cancel</button>
+          <button class="btn-settle" (click)="openViewSettleForm()"><span><i class="fa-solid fa-peso-sign"></i></span> Settle</button>
         </div>
       </div>
     </section>
