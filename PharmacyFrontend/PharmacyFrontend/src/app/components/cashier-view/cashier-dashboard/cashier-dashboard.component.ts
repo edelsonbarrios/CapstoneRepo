@@ -65,7 +65,7 @@ export class CashierDashboardComponent implements OnInit {
   selectedCategory: string = '';
 
   constructor(
-    private getService: GetService, 
+    private getService: GetService,
     private postService: PostService,
   ) {}
 
@@ -81,7 +81,7 @@ export class CashierDashboardComponent implements OnInit {
       this.products = response.message
     })
   }
-  
+
   closeTransactionMessage() {
     this.finishedTransac = false;
     this.openPrintReceiptForm();
