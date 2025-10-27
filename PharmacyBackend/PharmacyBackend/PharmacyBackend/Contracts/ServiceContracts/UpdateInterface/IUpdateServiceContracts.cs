@@ -80,6 +80,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 
         #region Inventory
         public Task<bool> UpdateInventoryAsync(int id, UpdateInventoryDto dto);
+        public Task<bool> ArchiveInventoryByIdAsync(int inventoryId);
         #endregion
 
         #region VAT

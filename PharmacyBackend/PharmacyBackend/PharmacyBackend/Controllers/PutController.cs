@@ -331,6 +331,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound("Inventory not found or update failed.");
             return Ok("Inventory updated successfully.");
         }
+        [HttpPut("ArchiveInventory")]
+        public async Task<ActionResult<object>> ArchiveInventoryByIdAsync(int inventoryId)
+        {
+          if(inventoryId == 0)
+            return NotFound(new {Message = "Inventory does not exists."});
+          var archiveInventory = await _updateService.ArchiveInventoryByIdAsync(inventoryId);
+          if(!archiveInventory)
+            return BadRequest(new {Message = "Inventory cannot be deleted."});
+          return Ok(new { Message = "Inventory successfully deleted."});
+        }
         #endregion
 
         #region VAT

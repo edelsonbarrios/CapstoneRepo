@@ -6,6 +6,7 @@ import { GetService } from '../../../../services/GetService/get.service';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
 import { FormsModule } from '@angular/forms';
 import { ViewEntryComponent } from '../view-entry/view-entry.component';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-manage-stock-entry',
@@ -20,14 +21,17 @@ export class ManageStockEntryComponent implements OnInit {
   inventories: Inventory[] = [];
   paginatedInventories: Inventory[] = [];
   searchQuery: string = '';
-  
+  showDeleteConfirmation: boolean = false;
+  inventoryToDelete ?: Inventory | null;
+
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 6;
   totalPages: number = 0;
 
   constructor(
-    private getService: GetService
+    private getService: GetService,
+    private updateService : UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +43,7 @@ export class ManageStockEntryComponent implements OnInit {
       return this.inventories;
     }
     const query = this.searchQuery.toLowerCase();
-    return this.inventories.filter(inv => 
+    return this.inventories.filter(inv =>
       inv.batchNumber.toLowerCase().includes(query) ||
       inv.productName.toLowerCase().includes(query)
     );
@@ -51,7 +55,7 @@ export class ManageStockEntryComponent implements OnInit {
   }
 
   getAllInventories() {
-    this.getService.getAllInventoriesAsync().subscribe({
+    this.getService.getAllAvailableInventoriesAsync().subscribe({
       next: res => {
         this.inventories = res;
         this.updatePagination();
@@ -93,5 +97,30 @@ export class ManageStockEntryComponent implements OnInit {
 
   closeViewStockForm() {
     this.viewEntry = null;
+  }
+
+  openDeleteConfirmation(inventory: Inventory) {
+    this.inventoryToDelete = inventory;
+    this.showDeleteConfirmation = true;
+  }
+
+  closeDeleteConfirmation() {
+    this.showDeleteConfirmation = false;
+    this.inventoryToDelete = null;
+  }
+
+  confirmDelete() {
+    if (!this.inventoryToDelete) return;
+
+    this.updateService.archiveInventoryByIdAsync(this.inventoryToDelete.inventoryID).subscribe({
+      next: res => {
+        console.log(`${JSON.stringify(res)}`);
+        console.log(`${this.inventoryToDelete?.inventoryID}`);
+        this.getAllInventories();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 }

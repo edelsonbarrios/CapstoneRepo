@@ -140,7 +140,6 @@ namespace PharmacyBackend.Service.UpdateService
 
 
             employeeToUpdate.EmployeeCode = request.EmployeeCode;
-            employeeToUpdate.LastName = request.LastName;
             employeeToUpdate.FirstName = request.FirstName;
             employeeToUpdate.MiddleName = request.MiddleName;
             employeeToUpdate.Age = request.Age;
@@ -691,6 +690,21 @@ namespace PharmacyBackend.Service.UpdateService
 
             var updated = await _updateRepo.UpdateInventoryAsync(existing);
             return true;
+        }
+        public async Task<bool> ArchiveInventoryByIdAsync(int inventoryId) 
+        {
+           if(inventoryId == 0)
+             return false;
+
+           var inventory = await _context.Inventory
+             .FirstOrDefaultAsync(iv => iv.InventoryID == inventoryId);
+
+           if(inventory is null)
+             return false;
+
+           inventory.IsActive = false;
+           await _updateRepo.UpdateInventoryAsync(inventory);
+           return true;
         }
         #endregion
 

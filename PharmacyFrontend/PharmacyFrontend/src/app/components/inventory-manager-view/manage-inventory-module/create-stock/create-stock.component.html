@@ -68,7 +68,7 @@
         </div>
 
         <!-- Box Quantity -->
-        <div class="form-group">
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Multi-Level' || selectedProduct.unitMeasurement == 'Dual-Level'">
           <label for="boxQuantity">Box Quantity</label>
           <input 
             type="number" 
@@ -101,7 +101,7 @@
         </div>
 
         <!-- Piece Quantity (Dual-Level) -->
-        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level'">
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level' || selectedProduct.unitMeasurement == 'Single-Level'">
           <label for="pieceQuantity">Piece Quantity</label>
           <input 
             type="number" 
@@ -186,7 +186,7 @@
         </div>
 
         <!-- Box Price -->
-        <div class="form-group">
+        <div class="form-group" *ngIf="selectedProduct.unitMeasurement == 'Dual-Level' || selectedProduct.unitMeasurement == 'Multi-Level'">
           <label for="boxPrice">Box Price (&#8369;)</label>
           <input 
             type="number" 

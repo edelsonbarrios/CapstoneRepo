@@ -237,4 +237,9 @@ export class UpdateService {
     );
   }
   //Category Service End
+  // Inventory Service
+  archiveInventoryByIdAsync(inventoryId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveInventory?inventoryId=${inventoryId}`, {});
+  }
+  // Inventory Service End
 }
