@@ -1,0 +1,100 @@
+<main class="wrapper">
+  <!-- Upper Stats Cards -->
+  <div class="upper-container">
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Transaction</label>
+        <p>1,245</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Stock Entries</label>
+        <p>423</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Adjustment</label>
+        <p>187</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Sales/Removals</label>
+        <p>635</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle Filter Controls -->
+  <div class="middle container">
+    <h2>Stock History</h2>
+
+    <div class="cntr-control">
+      <div class="control">
+        <label>Start Date</label>
+        <input type="date" />
+      </div>
+
+      <div class="control">
+        <label>End Date</label>
+        <input type="date" />
+      </div>
+
+      <div class="control">
+        <label>Transaction Type</label>
+        <select id="transaction">
+          <option value="">All Transaction</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label>Search</label>
+        <input type="text" placeholder="Search..." />
+      </div>
+    </div>
+
+    <button class="btn-export">
+      <span><i class="fa-solid fa-file-arrow-down"></i></span>
+      Export Excel
+    </button>
+  </div>
+
+  <!-- Lower Table -->
+  <div class="lower container">
+    <h2>Transaction Details</h2>
+
+    <table class="stock-history">
+      <thead>
+        <tr>
+          <th>Date & Time</th>
+          <th>Product</th>
+          <th>Batch</th>
+          <th>Type</th>
+          <th>Reference</th>
+          <th>Before</th>
+          <th>Changed</th>
+          <th>After</th>
+          <th>Performed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sample date</td>
+          <td>Sample product</td>
+          <td>Sample batch</td>
+          <td>Sample type</td>
+          <td>Sample reference</td>
+          <td>Sample before</td>
+          <td>Sample changed</td>
+          <td>Sample after</td>
+          <td>Sample performedby</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
