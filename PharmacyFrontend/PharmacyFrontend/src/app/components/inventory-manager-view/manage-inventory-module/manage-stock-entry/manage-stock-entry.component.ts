@@ -55,7 +55,7 @@ export class ManageStockEntryComponent implements OnInit {
   }
 
   getAllInventories() {
-    this.getService.getAllAvailableInventoriesAsync().subscribe({
+    this.getService.getAllInventoriesAsync().subscribe({
       next: res => {
         this.inventories = res;
         this.updatePagination();
@@ -114,8 +114,8 @@ export class ManageStockEntryComponent implements OnInit {
 
     this.updateService.archiveInventoryByIdAsync(this.inventoryToDelete.inventoryID).subscribe({
       next: res => {
-        console.log(`${JSON.stringify(res)}`);
-        console.log(`${this.inventoryToDelete?.inventoryID}`);
+        console.log(`${res.message}`);
+        this.showDeleteConfirmation = false;
         this.getAllInventories();
       },
       error: err => {

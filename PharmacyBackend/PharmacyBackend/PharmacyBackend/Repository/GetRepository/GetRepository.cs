@@ -595,6 +595,7 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Inventory>> GetAllInventoryAsync()
         {
             return await _context.Inventory
+                .Where(i => i.IsActive == true)
                 .Include(i => i.Product)
                 .ThenInclude(p => p.Category)
                 .Include(i => i.Product.Brand)
