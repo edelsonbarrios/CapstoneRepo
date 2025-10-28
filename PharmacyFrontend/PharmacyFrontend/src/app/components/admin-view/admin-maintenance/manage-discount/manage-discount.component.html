@@ -7,14 +7,17 @@
       <div class="input-wrapper">
         <input type="text" id="discount-name" name="discount-name" class="input-field" placeholder="Discount Name"
           [(ngModel)]="newDiscount.discountName"
-          [class.error]="errorMessage">
-        <input type="text" id="value" name="value" class="input-field" placeholder="Value (%)"
+          [class.error]="discountError">
+        <input type="number" id="value" name="value" class="input-field" placeholder="Value (%)"
           [(ngModel)]="newDiscount.discountRate"
-          [class.error]="errorMessage">
+          [class.error]="discountError"
+          min="0"
+          max="100"
+          step="0.01">
       </div>
       <button class="btn-product" (click)="createNewDiscount()">Save Discount</button>
     </div>
-    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="error-message" *ngIf="discountError">{{ discountError }}</p>
 
     <!-- DISCOUNT TABLE -->
     <table class="product-table">
@@ -23,8 +26,8 @@
           <th>Name</th>
           <th>Type</th>
           <th>Value</th>
-          <th>Validity</th>
-          <th>Actions</th>
+          <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -39,7 +42,7 @@
           <td>{{d.discountRate}}%</td>
           <td>Active</td>
           <td>
-            <button class="btn-view" (click)="openEditDiscountForm()">Edit</button>
+            <button class="btn-view" (click)="openEditDiscountForm(d)">Edit</button>
             <button class="btn-archive" (click)="openArchiveForm(d.id)">Delete</button>
           </td>
         </tr>
@@ -55,8 +58,12 @@
   </div>
 </div>
 
+<!-- Edit Discount Modal -->
 <div class="modal-overlay" *ngIf="editDiscount">
-  <app-edit-discount *ngIf="editDiscount"></app-edit-discount>
+  <app-edit-discount 
+    [editDiscount]="editDiscount"
+    (closeForm)="closeEditDiscountForm()">
+  </app-edit-discount>
 </div>
 
 <!-- Success Alert Modal -->
@@ -77,20 +84,20 @@
   </div>
 </div>
 
+<!-- Archive Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showArchiveForm">
   <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [alertMessage]="'Discount successfully deleted.'"
-  [message]="'Do you really want to delete this discount?'"
-
-  (onArchive)="archiveDiscount()"
-  (onCancel)="closeArchiveForm()"
-  ></app-archive-confirmation>
+    *ngIf="showArchiveForm"
+    [id]="showArchiveForm"
+    [alertMessage]="'Discount successfully deleted.'"
+    [message]="'Do you really want to delete this discount?'"
+    (onArchive)="archiveDiscount()"
+    (onCancel)="closeArchiveForm()">
+  </app-archive-confirmation>
 </div>
 
 <!-- Error Alert Modal -->
-<div class="modal-overlay" *ngIf="showErrorMessage">
+<div class="modal-overlay" *ngIf="errorMessage">
   <div class="success-alert">
     <div class="alert-icon error">
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -100,9 +107,9 @@
       </svg>
     </div>
     <h3 class="alert-title">Error</h3>
-    <p class="alert-message">{{showErrorMessage}}</p>
+    <p class="alert-message">{{errorMessage}}</p>
     <div class="alert-footer">
-      <button class="ok-btn" (click)="closeValidationMessage()">OK</button>
+      <button class="ok-btn" (click)="closeErrrMessage()">OK</button>
     </div>
   </div>
 </div>

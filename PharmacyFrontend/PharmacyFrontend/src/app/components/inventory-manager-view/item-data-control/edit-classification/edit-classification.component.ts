@@ -24,10 +24,8 @@ export class EditClassificationComponent {
   ) {}
 
   updateClassification() {
-    // Clear previous error
     this.classificationNameError = '';
     
-    // Validate classification name
     if (!this.editClassification.classificationName || this.editClassification.classificationName.trim() === '') {
       this.classificationNameError = 'Classification name is required';
       return;
@@ -37,9 +35,22 @@ export class EditClassificationComponent {
       next: res => {
         this.showSuccessAlert = true;
       },
-      error : err => {
+      error: err => {
         console.log(`${err.error}`);
-        this.editClassification.classificationName = '';
+        
+        if (err.status === 400) {
+          if (typeof err.error === 'string' && err.error.includes('already exists')) {
+            this.classificationNameError = 'Classification name already exists';
+          } else if (typeof err.error === 'string') {
+            this.classificationNameError = err.error;
+          } else {
+            this.classificationNameError = 'Failed to update classification';
+          }
+        } else if (err.status === 404) {
+          this.classificationNameError = 'Classification not found';
+        } else {
+          this.classificationNameError = 'An error occurred while updating the classification';
+        }
       }
     });
   }

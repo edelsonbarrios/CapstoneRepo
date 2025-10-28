@@ -510,28 +510,36 @@ namespace PharmacyBackend.Service.PostService
         #region Category
         public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto)
         {
+            var validation = await ValidateCategoryNameAsync(dto.CategoryName);
+            if (!validation)
+                return null;
+
             var category = new Category
             {
                 CategoryName = dto.CategoryName
             };
-
             var created = await _postRepo.CreateCategoryAsync(category);
-
             return new CategoryDto
             {
                 CategoryID = created.CategoryID,
                 CategoryName = created.CategoryName
             };
         }
+
+        public async Task<bool> ValidateCategoryNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.ValidateCategoryNameAsync(name);
+            return validation;
+        }
         #endregion
 
         #region Brand
         public async Task<BrandDto> CreateBrandAsync(CreateBrandDto dto)
         {
-            var validation = await _postRepo.ValidateBrandNameAsync(dto.BrandName);
+            var validation = await ValidateBrandNameAsync(dto.BrandName);
             if (!validation)
                 return null;
-
             var brand = new Brand
             {
                 BrandName = dto.BrandName
@@ -543,15 +551,21 @@ namespace PharmacyBackend.Service.PostService
                 BrandName = created.BrandName
             };
         }
+
+        public async Task<bool> ValidateBrandNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.ValidateBrandNameAsync(name);
+            return validation;
+        }
         #endregion
 
         #region Generic
         public async Task<GenericDto> CreateGenericAsync(CreateGenericDto dto)
         {
-            var validation = await _postRepo.ValidateGenericNameAsync(dto.GenericName);
+            var validation = await ValidateGenericNameAsync(dto.GenericName);
             if (!validation)
                 return null;
-
             var generic = new Generic
             {
                 GenericName = dto.GenericName
@@ -563,15 +577,21 @@ namespace PharmacyBackend.Service.PostService
                 GenericName = created.GenericName
             };
         }
+
+        public async Task<bool> ValidateGenericNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.ValidateGenericNameAsync(name);
+            return validation;
+        }
         #endregion
 
         #region Formulation
         public async Task<FormulationDto> CreateFormulationAsync(CreateFormulationDto dto)
         {
-            var validation = await _postRepo.ValidateFormulationNameAsync(dto.FormulationName);
+            var validation = await ValidateFormulationNameAsync(dto.FormulationName);
             if (!validation)
                 return null;
-
             var formulation = new Formulation
             {
                 FormulationName = dto.FormulationName
@@ -583,15 +603,21 @@ namespace PharmacyBackend.Service.PostService
                 FormulationName = created.FormulationName
             };
         }
+
+        public async Task<bool> ValidateFormulationNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.ValidateFormulationNameAsync(name);
+            return validation;
+        }
         #endregion
 
         #region Classification
         public async Task<ClassificationDto> CreateClassificationAsync(CreateClassificationDto dto)
         {
-            var validation = await _postRepo.ValidateClassificationNameAsync(dto.ClassificationName);
+            var validation = await ValidateClassificationNameAsync(dto.ClassificationName);
             if (!validation)
                 return null;
-
             var classification = new Classification
             {
                 ClassificationName = dto.ClassificationName
@@ -603,15 +629,21 @@ namespace PharmacyBackend.Service.PostService
                 ClassificationName = created.ClassificationName
             };
         }
+
+        public async Task<bool> ValidateClassificationNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.ValidateClassificationNameAsync(name);
+            return validation;
+        }
         #endregion
 
         #region Type
         public async Task<TypeModelDto> CreateTypeModelAsync(CreateTypeModelDto dto)
         {
-            var validation = await _postRepo.ValidateTypeNameAsync(dto.TypeName);
+            var validation = await ValidateTypeNameAsync(dto.TypeName);
             if (!validation)
                 return null;
-
             var type = new TypeModel
             {
                 TypeName = dto.TypeName
@@ -622,6 +654,13 @@ namespace PharmacyBackend.Service.PostService
                 TypeID = created.TypeID,
                 TypeName = created.TypeName
             };
+        }
+
+        public async Task<bool> ValidateTypeNameAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            var validation = await _postRepo.ValidateTypeNameAsync(name);
+            return validation;
         }
         #endregion
 

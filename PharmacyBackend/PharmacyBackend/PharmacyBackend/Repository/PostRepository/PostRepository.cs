@@ -473,6 +473,14 @@ namespace PharmacyBackend.Repository.POST
             await _context.SaveChangesAsync();
             return category;
         }
+
+        public async Task<bool> ValidateCategoryNameAsync(string name)
+        {
+            var validation = await _context.Category.AnyAsync(c => c.CategoryName.Equals(name) && c.IsActive);
+            if(validation) 
+                return false;
+            return true;
+        }
         #endregion
 
         #region Brand

@@ -22,6 +22,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         #region Discount
         public Task<bool> UpdateDiscountAsync(Discount discount);
+        public Task<bool> ValidateDiscountNameAsync(string name, int discountId);
         #endregion
 
         #region Product
@@ -30,26 +31,32 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         #region Category
         public Task<bool> UpdateCategoryAsync(Category category);
+        public Task<bool> ValidateCategoryNameAsync(string name, int categoryId);
         #endregion
 
         #region Brand
         public Task<bool> UpdateBrandAsync(Brand brand);
+        public Task<bool> ValidateBrandNameAsync(string name, int brandId);
         #endregion
 
         #region Generic
         public Task<bool> UpdateGenericAsync(Generic generic);
+        public Task<bool> ValidateGenericNameAsync(string name, int genericId);
         #endregion
 
         #region Formulation
         public Task<bool> UpdateFormulationAsync(Formulation formulation);
+        public Task<bool> ValidateFormulationNameAsync(string name, int formulationId);
         #endregion
 
         #region Classification
         public Task<bool> UpdateClassificationAsync(Classification classification);
+        public Task<bool> ValidateClassificationNameAsync(string name, int classificationId);
         #endregion
 
         #region TypeModel
         public Task<bool> UpdateTypeModelAsync(TypeModel typeModel);
+        public Task<bool> ValidateTypeNameAsync(string name, int typeId);
         #endregion
 
         #region Supplier
@@ -63,6 +70,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
 
         #region VAT
         public Task<bool> UpdateVATAsync(VAT vat);
+        public Task<bool> ValidateVATNameAsync(string name, int vatId);
         #endregion
 
         #region PurchaseOrder

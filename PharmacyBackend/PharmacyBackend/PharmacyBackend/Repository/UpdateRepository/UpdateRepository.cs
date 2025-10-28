@@ -82,6 +82,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> ValidateDiscountNameAsync(string name, int discountId)
+        {
+            var validation = await _context.Discounts
+                .AnyAsync(d => d.DiscountName.Equals(name) && d.IsActive && d.Id != discountId);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Product
@@ -100,6 +108,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> ValidateCategoryNameAsync(string name, int categoryId)
+        {
+            var validation = await _context.Category
+                .AnyAsync(c => c.CategoryName.Equals(name) && c.IsActive && c.CategoryID != categoryId);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Brand
@@ -107,6 +123,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
         {
             _context.Brand.Update(brand);
             await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> ValidateBrandNameAsync(string name, int brandId)
+        {
+            var validation = await _context.Brand
+                .AnyAsync(b => b.BrandName.Equals(name) && b.IsActive && b.BrandID != brandId);
+            if (validation)
+                return false;
             return true;
         }
         #endregion
@@ -118,6 +142,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> ValidateGenericNameAsync(string name, int genericId)
+        {
+            var validation = await _context.Generic
+                .AnyAsync(g => g.GenericName.Equals(name) && g.IsActive && g.GenericID != genericId);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Formulation
@@ -125,6 +157,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
         {
             _context.Formulation.Update(formulation);
             await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> ValidateFormulationNameAsync(string name, int formulationId)
+        {
+            var validation = await _context.Formulation
+                .AnyAsync(f => f.FormulationName.Equals(name) && f.IsActive && f.FormulationID != formulationId);
+            if (validation)
+                return false;
             return true;
         }
         #endregion
@@ -136,6 +176,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> ValidateClassificationNameAsync(string name, int classificationId)
+        {
+            var validation = await _context.Classification
+                .AnyAsync(c => c.ClassificationName.Equals(name) && c.IsActive && c.ClassificationID != classificationId);
+            if (validation)
+                return false;
+            return true;
+        }
         #endregion
 
         #region Type
@@ -143,6 +191,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
         {
             _context.TypeModel.Update(typeModel);
             await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> ValidateTypeNameAsync(string name, int typeId)
+        {
+            var validation = await _context.TypeModel
+                .AnyAsync(t => t.TypeName.Equals(name) && t.IsActive && t.TypeID != typeId);
+            if (validation)
+                return false;
             return true;
         }
         #endregion
@@ -186,6 +242,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
         {
             _context.VAT.Update(vat);
             await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> ValidateVATNameAsync(string name, int vatId)
+        {
+            var validation = await _context.VAT
+                .AnyAsync(v => v.VATName.Equals(name) && v.IsActive && v.VATID != vatId);
+            if (validation)
+                return false;
             return true;
         }
         #endregion

@@ -125,6 +125,10 @@ namespace PharmacyBackend.Controllers
         [HttpPut("Discount")]
         public async Task<IActionResult> UpdateDiscountAsync(int id, [FromBody] UpdateDiscountDto dto)
         {
+            var validation = await _updateService.ValidateDiscountAsync(dto.DiscountName, id);
+            if (!validation)
+                return BadRequest("Discount name already exists.");
+
             var success = await _updateService.UpdateDiscountAsync(id, dto);
             if (!success)
                 return NotFound();
@@ -169,10 +173,14 @@ namespace PharmacyBackend.Controllers
         [HttpPut("Category")]
         public async Task<IActionResult> UpdateCategoryAsync(int id, [FromBody] UpdateCategoryDto dto)
         {
+            var validation = await _updateService.ValidateCategoryNameAsync(dto.CategoryName, id);
+            if (!validation)
+                return BadRequest("Category name already exists.");
+
             var success = await _updateService.UpdateCategoryAsync(id, dto);
             if (!success)
                 return NotFound("Category not found or update failed.");
-            return Ok(new { Message = "Product sucessfully updated."});
+            return Ok(new { Message = "Category sucessfully updated." });
         }
         [HttpPut("ArchiveCategory")]
         public async Task<ActionResult<object>> ArchiveCategoryByIdAsync(int categoryId)
@@ -190,6 +198,10 @@ namespace PharmacyBackend.Controllers
         [HttpPut("Brand")]
         public async Task<IActionResult> UpdateBrandAsync(int id, [FromBody] UpdateBrandDto dto)
         {
+            var validation = await _updateService.ValidateBrandNameAsync(dto.BrandName, id);
+            if (!validation)
+                return BadRequest("Brand name already exists.");
+
             var success = await _updateService.UpdateBrandAsync(id, dto);
             if (!success)
                 return NotFound();
@@ -209,8 +221,12 @@ namespace PharmacyBackend.Controllers
 
         #region Generic
         [HttpPut("Generic")]
-        public async Task<IActionResult> UpdateGenericAsync(int id,  [FromBody]UpdateGenericDto dto)
+        public async Task<IActionResult> UpdateGenericAsync(int id, [FromBody] UpdateGenericDto dto)
         {
+            var validation = await _updateService.ValidateGenericNameAsync(dto.GenericName, id);
+            if (!validation)
+                return BadRequest("Generic name already exists.");
+
             var success = await _updateService.UpdateGenericAsync(id, dto);
             if (!success)
                 return NotFound();
@@ -232,6 +248,10 @@ namespace PharmacyBackend.Controllers
         [HttpPut("Formulation")]
         public async Task<IActionResult> UpdateFormulationAsync(int id, [FromBody] UpdateFormulationDto dto)
         {
+            var validation = await _updateService.ValidateFormulationNameAsync(dto.FormulationName, id);
+            if (!validation)
+                return BadRequest("Formulation name already exists.");
+
             var success = await _updateService.UpdateFormulationAsync(id, dto);
             if (!success)
                 return NotFound();
@@ -253,6 +273,10 @@ namespace PharmacyBackend.Controllers
         [HttpPut("Classification")]
         public async Task<IActionResult> UpdateClassificationAsync(int id, [FromBody] UpdateClassificationDto dto)
         {
+            var validation = await _updateService.ValidateClassificationNameAsync(dto.ClassificationName, id);
+            if (!validation)
+                return BadRequest("Classification name already exists.");
+
             var success = await _updateService.UpdateClassificationAsync(id, dto);
             if (!success)
                 return NotFound();
@@ -274,6 +298,10 @@ namespace PharmacyBackend.Controllers
         [HttpPut("Type")]
         public async Task<IActionResult> UpdateTypeModelAsync(int id, [FromBody] UpdateTypeModelDto dto)
         {
+            var validation = await _updateService.ValidateTypeNameAsync(dto.TypeName, id);
+            if (!validation)
+                return BadRequest("Type name already exists.");
+
             var success = await _updateService.UpdateTypeModelAsync(id, dto);
             if (!success)
                 return NotFound();
@@ -298,7 +326,7 @@ namespace PharmacyBackend.Controllers
             var success = await _updateService.UpdateSupplierAsync(id, dto);
             if (!success)
                 return NotFound("Supplier not found or update failed.");
-            return Ok(new {Message = "Supplier updated sucessfully."});
+            return Ok(new { Message = "Supplier updated sucessfully." });
         }
         [HttpPut("ArchiveSupplier")]
         public async Task<ActionResult<ArchiveSupplierResponse>> ArchiveSupplierByIdAsync(int supplierId)
@@ -347,6 +375,10 @@ namespace PharmacyBackend.Controllers
         [HttpPut("VAT")]
         public async Task<IActionResult> UpdateVATAsync(int id, [FromBody] UpdateVATDto dto)
         {
+            var validation = await _updateService.ValidateVATNameAsync(dto.VATName, id);
+            if (!validation)
+                return BadRequest("VAT name already exists.");
+
             var success = await _updateService.UpdateVATAsync(id, dto);
             if (!success)
                 return NotFound("VAT not found or update failed.");

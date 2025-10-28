@@ -27,7 +27,7 @@ export class EditBrandComponent implements OnInit{
     console.log(this.editBrand);
   }
 
-  updateBrand() {
+   updateBrand() {
     // Clear previous error
     this.brandNameError = '';
     
@@ -37,14 +37,30 @@ export class EditBrandComponent implements OnInit{
       return;
     }
 
-    if(!this.editBrand) return;
+    if (!this.editBrand) return;
+    
     this.updateService.updateBrandAsync(this.editBrand.brandID, this.editBrand).subscribe({
       next: res => {
         this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
-        this.editBrand.brandName = '';
+        
+        // Handle specific error messages from backend
+        if (err.status === 400) {
+          // Check if it's a validation error
+          if (typeof err.error === 'string' && err.error.includes('already exists')) {
+            this.brandNameError = 'Brand name already exists';
+          } else if (typeof err.error === 'string') {
+            this.brandNameError = err.error;
+          } else {
+            this.brandNameError = 'Failed to update brand';
+          }
+        } else if (err.status === 404) {
+          this.brandNameError = 'Brand not found';
+        } else {
+          this.brandNameError = 'An error occurred while updating the brand';
+        }
       }
     });
   }

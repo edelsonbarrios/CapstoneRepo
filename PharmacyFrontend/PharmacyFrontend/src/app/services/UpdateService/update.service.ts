@@ -64,6 +64,11 @@ export class UpdateService {
       {}
     );
   }
+  updateDiscountAsync(id: number, request: Discount): Observable<string> {
+    return this.httpClient.put(`${this.apiUrl}/Put/Discount?id=${id}`, request, {
+      responseType: 'text',
+    });
+  }
   //Discount Service End
 
   //VAT Service
