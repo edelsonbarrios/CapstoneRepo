@@ -144,7 +144,8 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         unitMeasurement: p.unitMeasurement,
         poUnitType: p.poUnitType,
         quantityOrdered: initialQuantity,
-        quantityReceived: 0
+        quantityReceived: 0,
+        damagedPiecesCount: 0
       };
     });
 
@@ -242,12 +243,10 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
       next: () => {
         this.showSuccessAlert = true;
-        console.log(`${JSON.stringify(requestPayload)}`);
         this.clearFields();
       },
       error: (err) => {
         console.error(err.error);
-        alert('Failed to create purchase order. Please try again.');
       },
     });
   }

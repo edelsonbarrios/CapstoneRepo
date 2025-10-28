@@ -7,4 +7,5 @@ export class PurchaseOrderReceivedItem {
   batchNumber : string = '';
   manufacturingDate : string = '';
   expirationDate: string = '';
+  damagedPiecesCount: number = 0;
 }

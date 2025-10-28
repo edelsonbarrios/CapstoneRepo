@@ -791,21 +791,27 @@ namespace PharmacyBackend.Service.UpdateService
 
                 var sheetsPerBox = product?.SheetsPerBox ?? 0;
                 var piecesPerSheet = product?.PiecesPerSheet ?? 0;
+                var damagedPieces = item.DamagedPiecesCount;
 
-                // If inventory doesn’t exist → create new
-                if (inventory is null)
+                if (inventory is null) 
                 {
                     if (product.UnitMeasurement == "Multi-Level")
                     {
-                        var computedSheetQty = item.BoxQuantityReceived * sheetsPerBox;
-                        var computedPieceQty = computedSheetQty * piecesPerSheet;
+                        int computedPieceQty = (item.BoxQuantityReceived * sheetsPerBox * piecesPerSheet) - damagedPieces;
+                        int computedSheetQty = computedPieceQty /piecesPerSheet;
+
+                        int loosePieces = computedPieceQty % piecesPerSheet;
+
+                        int totalBoxes = computedSheetQty / sheetsPerBox;
+                        int looseSheets = computedPieceQty % sheetsPerBox;
+
 
                         var newInventory = new Inventory
                         {
                             ProductID = item.ProductID,
-                            BoxQuantity = item.BoxQuantityReceived,
-                            SheetQuantity = product.SheetsPerBox,
-                            PieceQuantity = product.PiecesPerSheet,
+                            BoxQuantity = totalBoxes,
+                            SheetQuantity = looseSheets,
+                            PieceQuantity = loosePieces,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,
@@ -820,22 +826,19 @@ namespace PharmacyBackend.Service.UpdateService
                         };
 
                         await _postRepo.CreateInventoryAsync(newInventory);
-
-                        /*await LogStockMovementAsync(newInventory, 0, 0, 0,
-                            item.BoxQuantityReceived, computedSheetQty, computedPieceQty,
-                            purchaseOrder.PurchaseOrderNumber, product.ProductName, request.EmployeeId);
-                        */
                     }
                     else if (product.UnitMeasurement == "Dual-Level")
                     {
-                        var computedPieceQty = item.BoxQuantityReceived * sheetsPerBox;
+                        int computedPieceQty = (item.BoxQuantityReceived * product.PiecePerBox) - damagedPieces;
+                        int totalBoxes = computedPieceQty / product.PiecePerBox;
+                        int loosePieces = computedPieceQty % product.PiecePerBox;
 
                         var newInventory = new Inventory
                         {
                             ProductID = item.ProductID,
-                            BoxQuantity = item.BoxQuantityReceived,
+                            BoxQuantity = totalBoxes,
                             SheetQuantity = 0,
-                            PieceQuantity = product.PiecePerBox,
+                            PieceQuantity = loosePieces,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,
@@ -851,20 +854,16 @@ namespace PharmacyBackend.Service.UpdateService
                         };
 
                         await _postRepo.CreateInventoryAsync(newInventory);
-
-                        /*await LogStockMovementAsync(newInventory, 0, 0, 0,
-                            item.BoxQuantityReceived, 0, computedPieceQty,
-                            purchaseOrder.PurchaseOrderNumber, product.ProductName, request.EmployeeId);
-                        */
                     }
                     else // Single-level
                     {
+                        int actualPieces = item.PieceQuantityReceived - damagedPieces;
                         var newInventory = new Inventory
                         {
                             ProductID = item.ProductID,
                             BoxQuantity = 0,
                             SheetQuantity = 0,
-                            PieceQuantity = item.PieceQuantityReceived,
+                            PieceQuantity = actualPieces,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,
@@ -879,11 +878,6 @@ namespace PharmacyBackend.Service.UpdateService
                         };
 
                         await _postRepo.CreateInventoryAsync(newInventory);
-
-                        /*await LogStockMovementAsync(newInventory, 0, 0, 0,
-                            0, 0, item.BoxQuantityReceived,
-                            purchaseOrder.PurchaseOrderNumber, product.ProductName, request.EmployeeId);
-                        */
                     }
                 }
                 else
@@ -902,23 +896,10 @@ namespace PharmacyBackend.Service.UpdateService
                     }
                     else
                     {
-                        inventory.PieceQuantity += item.BoxQuantityReceived;
+                        inventory.PieceQuantity += item.PieceQuantityReceived;
                     }
 
                     _context.Inventory.Update(inventory);
-
-                    /*await LogStockMovementAsync(
-                        inventory,
-                        inventory.BoxQuantity,
-                        inventory.SheetQuantity,
-                        inventory.PieceQuantity,
-                        item.BoxQuantityReceived,
-                        item.BoxQuantityReceived * sheetsPerBox,
-                        item.BoxQuantityReceived * sheetsPerBox * piecesPerSheet,
-                        purchaseOrder.PurchaseOrderNumber,
-                        product.ProductName,
-                        request.EmployeeId);
-                    */
                 }
             }
 

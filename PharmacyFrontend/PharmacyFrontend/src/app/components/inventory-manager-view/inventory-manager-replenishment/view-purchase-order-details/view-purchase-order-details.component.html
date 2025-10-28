@@ -1,136 +1,168 @@
-<div class="wrapper" *ngIf="purchaseOrder">
-  <!-- Header -->
-  <header>
-    <h1>Purchase Order Details</h1>
-  </header>
+<div class="modal" *ngIf="purchaseOrder">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h2>Purchase Order Details</h2>
+    <a (click)="closeViewPOForm()">&times;</a>
+  </div>
 
-  <!-- Order Summary Section -->
-  <section class="po-summary">
-    <div class="summary-row">
-      <div class="summary-item">
+  <!-- Modal Body -->
+  <div class="modal-body">
+    <!-- Order Summary Section -->
+    <h3 class="section-title">Order Information</h3>
+    <div class="grid-container">
+      <div class="transaction-info">
         <label>Purchase Order No.</label>
-        <span>{{ purchaseOrder.purchaseOrderNumber }}</span>
+        <p>{{ purchaseOrder.purchaseOrderNumber }}</p>
       </div>
-      <div class="summary-item">
+      <div class="transaction-info">
         <label>Order Date</label>
-        <span>{{ purchaseOrder.orderDate | date: 'dd-MM-yyyy' }}</span>
+        <p>{{ purchaseOrder.orderDate | date: 'dd-MM-yyyy' }}</p>
       </div>
-      <div class="summary-item">
+      <div class="transaction-info">
         <label>Supplier</label>
-        <span>{{ purchaseOrder.supplierName }}</span>
+        <p>{{ purchaseOrder.supplierName }}</p>
       </div>
-      <div class="summary-item">
+      <div class="transaction-info">
         <label>Status</label>
-        <span class="status">{{ purchaseOrder.status }}</span>
+        <p>{{ purchaseOrder.status }}</p>
+      </div>
+      <div class="transaction-info">
+        <label>Delivery Date</label>
+        <p>{{ purchaseOrder.deliveryDate | date: 'dd-MM-yyyy' }}</p>
+      </div>
+      <div class="transaction-info">
+        <label>Issued By</label>
+        <p>{{ employee.firstName }} {{ employee.lastName }}</p>
       </div>
     </div>
 
-    <div class="summary-row">
-      <div class="summary-item">
-        <label>Delivery Date</label>
-        <span>{{ purchaseOrder.deliveryDate | date: 'dd-MM-yyyy' }}</span>
-      </div>
-      <div class="summary-item">
-        <label>Issued By</label>
-        <span>{{ employee.firstName }} {{ employee.lastName }}</span>
-      </div>
-      <div class="summary-item">
-        <label>Receipt Number</label>
-        <input type="text" 
+    <!-- Receipt Number Input -->
+    <div class="receipt-section">
+      <label>Receipt Number</label>
+      <input 
+        type="text" 
         [(ngModel)]="receiptNumber" 
         placeholder="Enter receipt number" 
         class="receipt-input"
-         />
+      />
+    </div>
+
+    <!-- Product Table Section -->
+    <h3 class="section-title">Ordered Products</h3>
+    <div class="items-section">
+      <table class="item-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Batch No.</th>
+            <th>MFG Date</th>
+            <th>EXP Date</th>
+            <th>Unit Type</th>
+            <th>Ordered</th>
+            <th>Received</th>
+            <th>Damaged Pcs</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="purchaseOrder.purchaseOrderItems.length === 0">
+            <td colspan="10" style="text-align: center; color: #94a3b8; padding: 2rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let item of paginatedItems">
+            <td>{{ item.productName }}</td>
+            <td>
+              <input 
+                type="text" 
+                [(ngModel)]="item.batchNumber" 
+                placeholder="Batch No." 
+              />
+            </td>
+            <td [class.error]="item.mfgDateError">
+              <input 
+                type="date" 
+                [(ngModel)]="item.manufacturingDate" 
+                (ngModelChange)="validateMfgDate(item)" 
+              />
+              <p class="error-message" *ngIf="item.mfgDateError">{{ item.mfgDateError }}</p>
+            </td>
+            <td [class.error]="item.expDateError">
+              <input 
+                type="date" 
+                [(ngModel)]="item.expirationDate" 
+                (ngModelChange)="validateExpDate(item)" 
+              />
+              <p class="error-message" *ngIf="item.expDateError">{{ item.expDateError }}</p>
+            </td>
+            <td>{{ item.poUnitType }}</td>
+            <td>{{ item.boxQuantityOrdered || item.pieceQuantityOrdered }}</td>
+            <td>
+              <input
+                type="number"
+                [(ngModel)]="item.quantityReceived"
+                [max]="item.quantityOrdered"
+                min="0"
+                (ngModelChange)="updateItemTotal(item)"
+                placeholder="0"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                [(ngModel)]="item.damagedPiecesCount"
+                min="0"
+                (ngModelChange)="updateItemTotal(item)"
+                placeholder="0"
+              />
+            </td>
+            <td>{{ getDisplayUnitPrice(item) | currency: 'PHP' }}</td>
+            <td>{{ item.totalCost | currency: 'PHP' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- PAGINATION CONTROLS -->
+      <div class="pagination-controls" *ngIf="purchaseOrder.purchaseOrderItems.length > 0">
+        <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+        <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+        <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
       </div>
     </div>
-  </section>
 
-  <!-- Product Table -->
-  <section class="po-table">
-    <h2>Ordered Products</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Batch No.</th>
-          <th>MFG Date</th>
-          <th>EXP Date</th>
-          <th>Unit Measurement</th>
-          <th>Unit Ordered</th>
-          <th>Quantity Received</th>
-          <th>Unit Price</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="purchaseOrder.purchaseOrderItems.length === 0">
-          <td colspan="8" style="text-align: center; color: #94a3b8; padding: 2rem;">
-            No recent data
-          </td>
-        </tr>
-        <tr *ngFor="let item of paginatedItems">
-          <td>{{ item.productName }}</td>
-          <td><input type="text" [(ngModel)]="item.batchNumber" placeholder="Batch No." /></td>
-          <td class="date-cell" [class.error]="item.mfgDateError">
-            <input type="date" [(ngModel)]="item.manufacturingDate" (ngModelChange)="validateMfgDate(item)" />
-            <p class="error-message" *ngIf="item.mfgDateError">{{ item.mfgDateError }}</p>
-          </td>
-          <td class="date-cell" [class.error]="item.expDateError">
-            <input type="date" [(ngModel)]="item.expirationDate" (ngModelChange)="validateExpDate(item)" />
-            <p class="error-message" *ngIf="item.expDateError">{{ item.expDateError }}</p>
-          </td>
-          <td>{{item.poUnitType}}</td>
-          <td *ngIf="item.boxQuantityOrdered || item.pieceQuantityOrdered">{{ item.boxQuantityOrdered || item.pieceQuantityOrdered }}</td>
-          <td>
-            <input
-              type="number"
-              [(ngModel)]="item.quantityReceived"
-              [max]="item.quantityOrdered"
-              min="0"
-              (input)="updateItemTotal(item)"
-              placeholder="0"
-            />
-          </td>
-          <td>{{ getDisplayUnitPrice(item) | currency: 'PHP' }}</td>
-          <td>{{ item.totalCost | currency: 'PHP' }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- PAGINATION CONTROLS -->
-    <div class="pagination-controls" *ngIf="purchaseOrder.purchaseOrderItems.length > 0">
-      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
-      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
-      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-content">
-      <p><strong>Total Amount:</strong> {{ purchaseOrder.totalAmount | currency }}</p>
-      <div class="button-group">
-        <button class="btn-secondary" (click)="closeViewPOForm()">Cancel</button>
-        <button class="btn-primary" (click)="markAsReceived()">Mark as Received</button>
+    <!-- Summary Section -->
+    <div class="summary-section">
+      <div class="final-info">
+        <label>Total Amount:</label>
+        <p class="total-amount">{{ purchaseOrder.totalAmount | currency: 'PHP' }}</p>
       </div>
     </div>
-  </footer>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-secondary" (click)="closeViewPOForm()">Cancel</button>
+      <button class="btn-primary" (click)="markAsReceived()">Mark as Received</button>
+    </div>
+  </div>
 </div>
 
+<!-- Error Overlay -->
 <div class="error-overlay" *ngIf="markReceivedError">
   <div class="error-alert">
-    <div class="alert-icon">X</div>
-    <p class="alert-message">{{markReceivedError}}</p>
+    <div class="alert-icon">✕</div>
+    <p class="alert-message">{{ markReceivedError }}</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeErrorMessage()">OK</button>
     </div>
   </div>
 </div>
 
+<!-- Success Overlay -->
 <div class="success-overlay" *ngIf="transactionReceived">
   <div class="success-alert">
     <div class="alert-icon">✓</div>
-    <p class="alert-message">{{markReceivedError}}</p>
+    <p class="alert-message">Purchase order received successfully!</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeReceiedMessage()">OK</button>
     </div>

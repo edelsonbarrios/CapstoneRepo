@@ -130,14 +130,31 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   }
 
   updateItemTotal(item: PurchaseOrderItem) {
-    if(item.poUnitType == 'Box') {
-      item.boxQuantityReceived = item.quantityReceived;
-      item.totalCost = item.quantityReceived * item.boxPrice;
-    }else {
-      item.pieceQuantityReceived = item.quantityReceived;
-      item.totalCost = item.quantityReceived * item.piecePrice;
+    const quantityReceived = item.quantityReceived || 0;
+    const damagedPiecesCount = item.damagedPiecesCount || 0;
+
+    // Calculate base total based on unit type
+    let baseTotal = 0;
+    if (item.poUnitType === 'Box') {
+      item.boxQuantityReceived = quantityReceived;
+      baseTotal = quantityReceived * item.boxPrice;
+    } else {
+      item.pieceQuantityReceived = quantityReceived;
+      baseTotal = quantityReceived * item.piecePrice;
     }
-    console.log(`${JSON.stringify(item)}`);
+
+    // Deduct damaged pieces (damaged pieces × piece price)
+    const damagedAmount = damagedPiecesCount * item.piecePrice;
+
+    // Calculate final total
+    item.totalCost = baseTotal - damagedAmount;
+
+    // Ensure totalCost doesn't go negative
+    if (item.totalCost < 0) {
+      item.totalCost = 0;
+    }
+
+    console.log(`Updated item: ${JSON.stringify(item)}`);
     this.computeTotalAmount();
   }
 
@@ -149,10 +166,10 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       );
   }
 
-  getDisplayUnitPrice(req : PurchaseOrderItem) : number{
-    if(req.poUnitType == 'Box') {
+  getDisplayUnitPrice(req: PurchaseOrderItem): number {
+    if (req.poUnitType === 'Box') {
       return req.boxPrice;
-    }else {
+    } else {
       return req.piecePrice;
     }
   }
@@ -181,14 +198,26 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
     });
 
     if (!isValid) {
+      this.markReceivedError = 'Please correct the invalid dates before proceeding.';
       return;
     }
 
-    for(let item of this.purchaseOrder.purchaseOrderItems) {
-      if(item.boxQuantityReceived > item.boxQuantityOrdered) {
+    // Validate received quantities
+    for (let item of this.purchaseOrder.purchaseOrderItems) {
+      if (item.boxQuantityReceived > item.boxQuantityOrdered) {
         this.markReceivedError = `Received quantity of ${item.productName} is greater than ordered quantity`;
         return;
       }
+      if (item.pieceQuantityReceived > item.pieceQuantityOrdered) {
+        this.markReceivedError = `Received quantity of ${item.productName} is greater than ordered quantity`;
+        return;
+      }
+    }
+
+    // Validate receipt number
+    if (!this.receiptNumber || this.receiptNumber.trim() === '') {
+      this.markReceivedError = 'Please enter a receipt number';
+      return;
     }
 
     const requestPayload: PurchaseOrderReceivedRequest = {
@@ -200,26 +229,28 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
         id: item.id,
         productID: item.productId,
         boxQuantityOrdered: item.boxQuantityOrdered,
-        boxQuantityReceived: item.boxQuantityReceived,
+        boxQuantityReceived: item.boxQuantityReceived || 0,
         sheetQuantityOrdered: item.sheetQuantityOrdered,
-        sheetQuantityReceived: item.sheetQuantityReceived,
+        sheetQuantityReceived: item.sheetQuantityReceived || 0,
         pieceQuantityOrdered: item.pieceQuantityOrdered,
-        pieceQuantityReceived: item.pieceQuantityReceived,
+        pieceQuantityReceived: item.pieceQuantityReceived || 0,
+        damagedPiecesCount: item.damagedPiecesCount || 0,
         batchNumber: item.batchNumber,
         manufacturingDate: new Date(item.manufacturingDate).toISOString(),
         expirationDate: new Date(item.expirationDate).toISOString(),
       })),
     };
+    console.log(JSON.stringify(requestPayload));
+
     this.updateService
       .markPurchaseOrderAsReceivedAsync(requestPayload)
       .subscribe({
         next: (res) => {
           this.transactionReceived = true;
-          this.closeForm.emit();
         },
         error: (err) => {
-          this.markReceivedError = err.error;
-          console.log(requestPayload);
+          this.markReceivedError = err.error || 'An error occurred while processing the request';
+          console.log('Error payload:', requestPayload);
         },
       });
   }
@@ -230,6 +261,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
 
   closeReceiedMessage() {
     this.transactionReceived = false;
+    this.closeForm.emit();
   }
 
   getLoggedInEmployee() {
