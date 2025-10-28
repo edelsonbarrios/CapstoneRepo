@@ -1,13 +1,18 @@
 <div class="wrapper">
-  <div class="top-bar">
-    <input
-      type="text"
-      class="search-box"
-      placeholder="🔍 Search by Item Code, Brand..."
-    />
-  </div>
+  <div class="manage-replenishment">
+    <!-- SEARCH BAR -->
+    <div class="top-bar">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-box"
+          placeholder="Search by Item Code, Brand..."
+        />
+      </div>
+    </div>
 
-  <div class="card">
+    <!-- PURCHASE ORDER TABLE -->
     <table class="modern-table">
       <thead>
         <tr>
@@ -16,21 +21,26 @@
           <th>Order Date</th>
           <th>Delivery Date</th>
           <th>Status</th>
-          <th class="center">Action</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
+        <tr *ngIf="paginatedPurchaseOrders.length === 0">
+          <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            No recent data
+          </td>
+        </tr>
         <tr *ngFor="let po of paginatedPurchaseOrders">
           <td>{{ po.purchaseOrderNumber }}</td>
           <td>{{ po.supplierName }}</td>
           <td>{{ po.orderDate | date: 'dd-MM-yyyy' }}</td>
           <td>{{ po.deliveryDate | date: 'dd-MM-yyyy' }}</td>
           <td>{{ po.status }}</td>
-          <td class="center">
-            <button class="btn primary" (click)="viewPurchaseOrderDetails(po)">
+          <td>
+            <button class="btn-view" (click)="viewPurchaseOrderDetails(po)">
               View PO
             </button>
-            <button class="btn danger" (click)="openArchivePurchaseOrderForm(po.id)">
+            <button class="btn-archive" (click)="openArchivePurchaseOrderForm(po.id)">
               Delete
             </button>
           </td>
@@ -38,21 +48,22 @@
       </tbody>
     </table>
 
-    <div class="pagination">
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="paginatedPurchaseOrders.length > 0">
       <button
-        class="page-btn"
+        class="btn-page"
         [disabled]="currentPage === 1"
         (click)="goToPage(currentPage - 1)"
       >
-        ◀ Previous
+        Previous
       </button>
       <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
       <button
-        class="page-btn"
+        class="btn-page"
         [disabled]="currentPage === totalPages"
         (click)="goToPage(currentPage + 1)"
       >
-        Next ▶
+        Next
       </button>
     </div>
   </div>
