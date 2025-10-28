@@ -20,6 +20,9 @@ using Microsoft.EntityFrameworkCore;
 using PharmacyBackend.DataContext;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
+using System.Text.Json;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -30,12 +33,16 @@ namespace PharmacyBackend.Service.UpdateService
         private readonly IPostRepositoryContracts _postRepo;
         private readonly PharmacyContext _context;
         private readonly AccountHelper _accountHelper;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
         public UpdateService(IUpdateRepositoryContracts updateRepo,
             IGetRepositoryContracts getRepo,
             IPostRepositoryContracts postRepo,
             PharmacyContext context,
-            AccountHelper accountHelper
+            AccountHelper accountHelper,
+            IConfiguration configuration,
+            IWebHostEnvironment env
             )
         {
             _updateRepo = updateRepo;
@@ -43,6 +50,8 @@ namespace PharmacyBackend.Service.UpdateService
             _postRepo = postRepo;
             _context = context;
             _accountHelper = accountHelper;
+            _configuration = configuration;
+            _env = env;
         }
         #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
@@ -967,6 +976,24 @@ namespace PharmacyBackend.Service.UpdateService
 
             await _context.StockMovement.AddAsync(stockMovement);
         }
+        #endregion
+
+        #region BackUp Database
+
+        public async Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings)
+        {
+            try
+            {
+                // Repository handles all validation
+                return await _updateRepo.UpdateBackupSettingsAsync(settings);
+            }
+            catch (Exception ex)
+            {
+                // Log if you have logger
+                return false;
+            }
+        }
+
         #endregion
     }
 }

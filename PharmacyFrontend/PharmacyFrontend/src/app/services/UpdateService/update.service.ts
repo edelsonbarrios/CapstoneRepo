@@ -242,4 +242,11 @@ export class UpdateService {
     return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/ArchiveInventory?inventoryId=${inventoryId}`, {});
   }
   // Inventory Service End
+
+  //Databasebakup service
+  // update.service.ts
+  updateBackupSettingsAsync(settings: any): Observable<any> {
+    return this.httpClient.put<any>(`${this.apiUrl}/Put/backups/settings`, settings);
+  }
+  //Databasebakup service end
 }

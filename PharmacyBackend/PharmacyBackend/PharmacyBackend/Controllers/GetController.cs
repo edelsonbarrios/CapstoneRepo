@@ -24,11 +24,13 @@ namespace PharmacyBackend.Controllers
     {
         private readonly IGetServiceContracts _getService;
         private readonly ILogger<GetController> _logger;
+        private readonly IConfiguration _config;
 
-        public GetController(IGetServiceContracts getService, ILogger<GetController> logger)
+        public GetController(IGetServiceContracts getService, ILogger<GetController> logger, IConfiguration config)
         {
             _getService = getService;
             _logger = logger;
+            _config = config;
         }
 
         #region DashBoardInventoryMan
@@ -906,7 +908,7 @@ namespace PharmacyBackend.Controllers
         /// <summary>
         /// Get all available backups
         /// </summary>
-        [HttpGet("backups")]
+        [HttpGet("backups/list")]
         //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BackupListResponse>> GetAllBackups()
         {
@@ -939,16 +941,8 @@ namespace PharmacyBackend.Controllers
         [HttpGet("backups/settings")]
         public async Task<ActionResult<BackupSettingsDto>> GetBackupSettings()
         {
-            try
-            {
-                var settings = await _getService.GetBackupSettingsAsync();
-                return Ok(settings);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting backup settings");
-                return StatusCode(500, "Error retrieving settings");
-            }
+            var settings = await _getService.GetBackupSettingsAsync();
+            return Ok(settings);
         }
         /// <summary>
         /// Download a specific backup file

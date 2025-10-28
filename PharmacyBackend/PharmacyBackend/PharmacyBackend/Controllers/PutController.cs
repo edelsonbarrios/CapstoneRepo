@@ -6,6 +6,7 @@ using PharmacyBackend.Contracts.ServiceContracts.GetInterface;
 using PharmacyBackend.Contracts.ServiceContracts.UpdateInterface;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.DTOs.CategoryDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.DiscountDTOs;
 using PharmacyBackend.DTOs.EmployeeDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
@@ -28,15 +29,17 @@ namespace PharmacyBackend.Controllers
         private readonly IUpdateServiceContracts _updateService;
         private readonly IGetServiceContracts _getService;
         private readonly AccountHelper _accountHelper;
+        private readonly ILogger<PutController> _logger;
 
         public PutController(IUpdateServiceContracts updateService, 
             IGetServiceContracts getService,
-            AccountHelper accountHelper
-            )
+            AccountHelper accountHelper,
+            ILogger<PutController> logger)
         {
             _updateService = updateService;
             _getService = getService;
             _accountHelper = accountHelper;
+            _logger = logger;
         }
 
         #region Employee
@@ -407,5 +410,54 @@ namespace PharmacyBackend.Controllers
             return Ok(archivePurchaseOrder);
         }
         #endregion
-    }
+
+        #region BackUp Database
+        /// <summary>
+        /// Update backup settings in appsettings.json
+        /// NOTE: Application restart required for changes to take effect
+        /// </summary>
+        [HttpPut("backups/settings")]
+        //[Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> UpdateBackupSettings([FromBody] BackupSettingsDto settings)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { Message = "Invalid settings data." });
+            }
+
+            if (settings == null)
+            {
+                return BadRequest(new { Message = "Settings cannot be null." });
+            }
+
+            try
+            {
+                var result = await _updateService.UpdateBackupSettingsAsync(settings);
+
+                if (!result)
+                {
+                    return BadRequest(new
+                    {
+                        Message = "Failed to update backup settings. Check logs for details."
+                    });
+                }
+
+                return Ok(new
+                {
+                    Message = "Backup settings saved successfully. Please restart the application for changes to take effect.",
+                    RequiresRestart = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = "Error updating backup settings.",
+                    Error = ex.Message
+                });
+            }
+        }
+
+            #endregion
+        }
 }

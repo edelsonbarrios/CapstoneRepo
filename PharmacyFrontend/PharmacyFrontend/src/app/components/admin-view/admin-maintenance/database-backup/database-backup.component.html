@@ -1,55 +1,164 @@
-<main class="wrapper">
+<div class="wrapper">
+  <div class="manage-backup">
+    <h1>Database Backup & Restore</h1>
 
-  <!-- DATABSE BACKUP CONTAINER -->
-  <div class="database-backup">
+    <!-- BACKUP SETTINGS SECTION -->
+    <div class="settings-section">
+      <h2>Backup Settings</h2>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <label>
+            <input type="checkbox" [(ngModel)]="settings.isEnabled">
+            Enable Automatic Backups
+          </label>
+        </div>
+        
+        <div class="setting-item">
+          <label>Schedule Type</label>
+          <select [(ngModel)]="settings.scheduleType" class="input-field">
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+          </select>
+        </div>
 
-    <!-- DATABASE BACKUP HEADER -->
-    <div class="header">
-      <h1>Database Backup</h1>
+        <div class="setting-item">
+          <label>Backup Time</label>
+          <input type="time" [(ngModel)]="settings.scheduleTime" class="input-field">
+        </div>
 
-      <div class="header-control">
-        <button class="btn backup-now">Backup Now</button>
-        <button class="btn restore-backup">Restore Backup</button>
-      </div>
-
-    </div>
-
-    <!-- DATABASE BACKUP NOTIFICATION -->
-    <div class="notif-containers">
-      <div class="container">
-        <h2>Last Backup</h2>
-        <div class="last-backup">
-          08/20/2025 10:00AM
+        <div class="setting-item">
+          <label>Retention Days</label>
+          <input type="number" [(ngModel)]="settings.retentionDays" class="input-field" placeholder="30">
         </div>
       </div>
 
-      <div class="container">
-        <h2>Total Backup</h2>
-        <div class="total-backup">
-          1
+      <div class="settings-footer">
+        <!-- FIXED: Added null check for scheduleTime -->
+        <div class="next-backup">
+          <strong>Next Scheduled Backup:</strong> 
+          {{ settings.scheduleTime ? getNextScheduledBackup() : 'Loading...' }}
         </div>
+        <button class="btn-save-settings" (click)="updateSettings()">Save Settings</button>
       </div>
     </div>
 
-    <!-- DATABASE BACKUP TABLE -->
-    <table class="database-table">
+    <!-- MANUAL BACKUP BUTTON -->
+    <div class="backup-control">
+      <button class="btn-create-backup" (click)="createManualBackup()" [disabled]="isCreatingBackup">
+        <span *ngIf="!isCreatingBackup">Create Manual Backup</span>
+        <span *ngIf="isCreatingBackup">Creating Backup...</span>
+      </button>
+    </div>
+
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <!-- LOADING STATE -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading backups...</p>
+    </div>
+
+    <!-- BACKUPS TABLE -->
+    <table class="backup-table" *ngIf="!isLoading">
       <thead>
         <tr>
-          <th>Date&amp;Time</th>
+          <th>Backup Name</th>
+          <th>Type</th>
           <th>Size</th>
-          <th>Status</th>
+          <th>Created Date</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>08/20/2025 10:00AM</td>
-          <td>50mb</td>
+        <tr *ngIf="backups.length === 0">
+          <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            No backups available
+          </td>
+        </tr>
+        <tr *ngFor="let backup of paginatedBackups">
+          <td>{{ backup.fileName }}</td>
           <td>
-            <p>Successful</p>
+            <span class="badge" [class.badge-manual]="backup.backupType === 'Manual'" 
+                  [class.badge-auto]="backup.backupType === 'Automated'">
+              {{ backup.backupType }}
+            </span>
+          </td>
+          <td>{{ formatFileSize(backup.fileSize) }}</td>
+          <td>{{ backup.createdAt | date: 'MMM dd, yyyy hh:mm a' }}</td>
+          <td>
+            <button class="btn-download" (click)="downloadBackup(backup.fileName)">Download</button>
+            <button class="btn-restore" (click)="openRestoreForm(backup.fileName)">Restore</button>
+            <button class="btn-delete" (click)="openDeleteForm(backup.fileName)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
 
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="backups.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
   </div>
-</main>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="modal-overlay" *ngIf="showDeleteForm">
+  <app-archive-confirmation
+    *ngIf="showDeleteForm"
+    [alertMessage]="'Backup deleted successfully.'"
+    [message]="'Are you sure you want to delete this backup? This action cannot be undone.'"
+    (onArchive)="deleteBackup()"
+    (onCancel)="closeDeleteForm()"
+  ></app-archive-confirmation>
+</div>
+
+<!-- RESTORE CONFIRMATION MODAL -->
+<div class="modal-overlay" *ngIf="showRestoreForm">
+  <app-restore-confirmation
+    *ngIf="showRestoreForm"
+    [alertMessage]="'Database restored successfully.'"
+    [message]="'Are you sure you want to restore this backup? Current data will be replaced.'"
+    (onRestore)="restoreBackup()"
+    (onCancel)="closeRestoreForm()">
+  </app-restore-confirmation>
+</div>
+
+<!-- SUCCESS ALERT MODAL -->
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon success">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#10b981"/>
+        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">{{successMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ERROR ALERT MODAL -->
+<div class="modal-overlay" *ngIf="showErrorMessage">
+  <div class="success-alert">
+    <div class="alert-icon error">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#ef4444" opacity="0.1"/>
+        <circle cx="24" cy="24" r="18" fill="#ef4444"/>
+        <path d="M28 20L20 28M20 20L28 28" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Error</h3>
+    <!-- FIXED: Changed from showErrorMessage to errorAlertMessage -->
+    <p class="alert-message">{{errorMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeValidationMessage()">OK</button>
+    </div>
+  </div>
+</div>

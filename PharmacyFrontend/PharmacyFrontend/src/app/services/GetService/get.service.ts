@@ -445,4 +445,24 @@ export class GetService {
     return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoryNearExpiry`);
   }
   //Admin Dashboard Services End/
+
+  //Database-BackUp Services
+
+  // Get all backup files
+  getBackupListAsync(): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}/Get/backups/list`);
+  }
+
+  // Get backup settings
+  getBackupSettingsAsync(): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}/Get/backups/settings`);
+  }
+
+  // Download backup file
+  downloadBackupAsync(fileName: string): Observable<Blob> {
+    return this.httpClient.get(`${this.apiUrl}/Get/backups/download/${fileName}`, {
+      responseType: 'blob'
+    });
+  }
+  //Database-BackUp Services End
 }

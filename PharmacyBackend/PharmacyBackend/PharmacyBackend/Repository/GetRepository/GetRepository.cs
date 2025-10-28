@@ -1123,7 +1123,6 @@ namespace PharmacyBackend.Repository.GET
                     };
                 }
 
-                // Changed from *.bak to *.backup to match the file extension created by CreateBackupAsync
                 var backupFiles = Directory.GetFiles(backupDir, "*.backup")
                     .Select(file => new FileInfo(file))
                     .OrderByDescending(f => f.CreationTime)

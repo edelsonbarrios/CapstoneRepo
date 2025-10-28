@@ -4,15 +4,24 @@ using PharmacyBackend.DataContext;
 using PharmacyBackend.DTOs.AccountDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
+using System.Text;
+using System.Text.Json;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 
 namespace PharmacyBackend.Repository.UpdateRepository
 {
     public class UpdateRepository : IUpdateRepositoryContracts
     {
         private readonly PharmacyContext _context;
-        public UpdateRepository(PharmacyContext context)
+        private readonly IWebHostEnvironment _env;
+        private readonly ILogger<UpdateRepository> _logger;
+        public UpdateRepository(PharmacyContext context,
+            IWebHostEnvironment env, 
+            ILogger<UpdateRepository> logger)
         {
             _context = context;
+            _env = env;
+            _logger = logger;
         }
         #region Account
         public async Task<bool> UpdateAccountAsync(Account request)
@@ -196,6 +205,92 @@ namespace PharmacyBackend.Repository.UpdateRepository
             _context.PurchaseOrder.Update(purchaseOrder);
             await _context.SaveChangesAsync();
             return true;
+        }
+        #endregion
+
+        #region BackUp Database
+
+        public async Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings)
+        {
+            try
+            {
+                // VALIDATION - Simplified since DTO handles most validation
+                if (settings == null)
+                {
+                    _logger.LogError("Settings object is null");
+                    return false;
+                }
+
+                // No need to validate hours/minutes/days/count - DTO attributes handle this
+
+                // Get appsettings.json path
+                var appSettingsPath = Path.Combine(_env.ContentRootPath, "appsettings.json");
+
+                if (!File.Exists(appSettingsPath))
+                {
+                    _logger.LogError($"appsettings.json not found at: {appSettingsPath}");
+                    return false;
+                }
+
+                // Read and parse JSON
+                var json = await File.ReadAllTextAsync(appSettingsPath);
+                using var document = JsonDocument.Parse(json);
+
+                // Build updated JSON
+                using var stream = new MemoryStream();
+                using var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true });
+
+                writer.WriteStartObject();
+
+                // Copy all properties, updating BackupSettings
+                foreach (var property in document.RootElement.EnumerateObject())
+                {
+                    if (property.Name == "BackupSettings")
+                    {
+                        writer.WritePropertyName("BackupSettings");
+                        writer.WriteStartObject();
+
+                        writer.WriteBoolean("AutoBackupEnabled", settings.AutoBackupEnabled);
+                        writer.WriteNumber("AutoBackupHour", settings.AutoBackupHour);        // ✅ Fixed
+                        writer.WriteNumber("AutoBackupMinute", settings.AutoBackupMinute);    // ✅ Fixed
+                        writer.WriteNumber("RetentionDays", settings.RetentionDays);
+                        writer.WriteNumber("MaxBackupCount", settings.MaxBackupCount);
+
+                        // Preserve BackupPath from existing config
+                        if (property.Value.TryGetProperty("BackupPath", out var backupPath))
+                        {
+                            writer.WriteString("BackupPath", backupPath.GetString());
+                        }
+                        else
+                        {
+                            writer.WriteString("BackupPath", "C:\\PharmacyBackups");
+                        }
+
+                        writer.WriteEndObject();
+                    }
+                    else
+                    {
+                        // Copy other sections unchanged
+                        property.WriteTo(writer);
+                    }
+                }
+
+                writer.WriteEndObject();
+                await writer.FlushAsync();
+
+                // Write back to file
+                var updatedJson = Encoding.UTF8.GetString(stream.ToArray());
+                await File.WriteAllTextAsync(appSettingsPath, updatedJson);
+
+                _logger.LogInformation("Backup settings updated successfully in appsettings.json");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating backup settings");
+                return false;
+            }
         }
         #endregion
     }

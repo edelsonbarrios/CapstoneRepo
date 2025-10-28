@@ -553,7 +553,7 @@ namespace PharmacyBackend.Controllers
         {
             try
             {
-                _logger.LogWarning($"Database restore requested for: {request.FileName}");
+                _logger.LogWarning($"Database restore requested for: {request.fileName}");
 
                 // Additional safety check
                 if (!request.ConfirmRestore)
@@ -585,7 +585,13 @@ namespace PharmacyBackend.Controllers
             }
         }
 
-        
+        [HttpPost("test-backup")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> TestAutoBackup()
+        {
+            await _postService.PerformAutomatedBackupAsync();
+            return Ok(new { message = "Test backup triggered" });
+        }
 
 
         #endregion

@@ -144,4 +144,25 @@ export class PostService {
   adjustInventoryStockAsync(request: StockAdjustment) : Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/StockAdjustment`, request);
   }
+
+  //Database-BackUp Service
+  // Create manual backup
+  createManualBackupAsync(): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/backups/create`, {});
+  }
+
+  // Restore backup
+  restoreBackupAsync(fileName: string): Observable<any> {
+    const body = {
+      fileName: fileName,
+      confirmRestore: true
+    };
+    return this.httpClient.post<any>(`${this.apiUrl}/Post/backups/restore`, body);
+  }
+
+  // Update backup settings
+  updateBackupSettingsAsync(settings: any): Observable<any> {
+    return this.httpClient.put<any>(`${this.apiUrl}/Post/backups/settings`, settings);
+  }
+  //Database-BackUp Service End
 }

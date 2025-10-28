@@ -12,6 +12,7 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
 using PharmacyBackend.DTOs.EmployeeHistoryDTO;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 
 namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
 {
@@ -92,6 +93,10 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         public Task<bool> UpdatePurchaseOrderAsync(int id, UpdatePurchaseOrderDto dto);
         public Task<bool> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request);
         public Task<bool> ArchivePurchaseOrderByIdAsync(int id);
+        #endregion
+
+        #region BackUp Database
+        Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings);
         #endregion
     }
 }

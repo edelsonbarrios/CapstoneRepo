@@ -17,10 +17,12 @@ using PharmacyBackend.Repository.DELETE;
 using PharmacyBackend.Repository.GET;
 using PharmacyBackend.Repository.POST;
 using PharmacyBackend.Repository.UpdateRepository;
+using PharmacyBackend.Service.BackgroundServices;
 using PharmacyBackend.Service.DeleteService;
 using PharmacyBackend.Service.GetService;
 using PharmacyBackend.Service.PostService;
 using PharmacyBackend.Service.UpdateService;
+using PharmacyBackend.Service.BackgroundServices;
 using System.Security.Claims;
 using System.Text;
 
@@ -101,6 +103,10 @@ builder.Services.AddScoped<IPostServiceContracts, PostService>();
 builder.Services.AddScoped<IDeleteServiceContracts, DeleteService>();
 builder.Services.AddScoped<IUpdateServiceContracts, UpdateService>();
 builder.Services.AddScoped<AccountHelper>();
+#endregion
+
+#region Background Services
+builder.Services.AddHostedService<BackupBackgroundService>();
 #endregion
 
 

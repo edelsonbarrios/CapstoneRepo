@@ -2,7 +2,7 @@
 {
     public class RestoreBackupRequest
     {
-        public string FileName { get; set; } = string.Empty;
+        public string fileName { get; set; } = string.Empty;
         public bool ConfirmRestore { get; set; } // Safety check
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PharmacyBackend.DTOs.AccountDTOs;
+using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
@@ -69,5 +70,8 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
         public Task<bool> UpdatePurchaseOrderAsync(PurchaseOrder purchaseOrder);
         #endregion
 
+        #region BackUp Database
+        Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings);
+        #endregion
     }
 }

@@ -2212,16 +2212,12 @@ namespace PharmacyBackend.Service.GetService
             return new BackupSettingsDto
             {
                 AutoBackupEnabled = _config.GetValue<bool>("BackupSettings:AutoBackupEnabled", true),
-                AutoBackupTime = new TimeSpan(
-                    _config.GetValue<int>("BackupSettings:AutoBackupHour", 2),
-                    _config.GetValue<int>("BackupSettings:AutoBackupMinute", 0),
-                    0
-                ),
+                AutoBackupHour = _config.GetValue<int>("BackupSettings:AutoBackupHour", 2),       
+                AutoBackupMinute = _config.GetValue<int>("BackupSettings:AutoBackupMinute", 0),    
                 RetentionDays = _config.GetValue<int>("BackupSettings:RetentionDays", 30),
                 MaxBackupCount = _config.GetValue<int>("BackupSettings:MaxBackupCount", 50)
             };
         }
-
         #endregion
     }
 }
