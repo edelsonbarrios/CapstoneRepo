@@ -247,6 +247,7 @@ namespace PharmacyBackend.Service.UpdateService
             existing.DiscountName = dto.DiscountName;
             existing.DiscountRate = dto.DiscountRate;
             existing.IsActive = dto.IsActive;
+
             await _updateRepo.UpdateDiscountAsync(existing);
             return true;
         }
@@ -873,7 +874,6 @@ namespace PharmacyBackend.Service.UpdateService
                 var sheetsPerBox = product?.SheetsPerBox ?? 0;
                 var piecesPerSheet = product?.PiecesPerSheet ?? 0;
                 var damagedPieces = item.DamagedPiecesCount;
-                string angelica = "My baby is so pretty";
 
                 if (inventory is null) 
                 {

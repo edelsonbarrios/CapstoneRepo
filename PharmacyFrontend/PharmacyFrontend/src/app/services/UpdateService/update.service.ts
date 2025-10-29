@@ -64,6 +64,7 @@ export class UpdateService {
       {}
     );
   }
+
   updateDiscountAsync(id: number, request: Discount): Observable<string> {
     return this.httpClient.put(`${this.apiUrl}/Put/Discount?id=${id}`, request, {
       responseType: 'text',
@@ -93,6 +94,7 @@ export class UpdateService {
       {}
     );
   }
+
   assignProductsToSupplierAsync(
     request: AssignProductSupplierRequest
   ): Observable<{ message: string }> {

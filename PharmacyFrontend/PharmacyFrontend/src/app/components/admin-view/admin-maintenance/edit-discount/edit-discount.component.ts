@@ -15,7 +15,7 @@ import { NgIf } from '@angular/common';
 export class EditDiscountComponent {
   @Input() editDiscount: Discount = new Discount();
   @Output() closeForm = new EventEmitter<void>();
-  
+
   discountNameError: string = '';
   showSuccessAlert: boolean = false;
 
@@ -23,7 +23,7 @@ export class EditDiscountComponent {
 
   updateDiscount() {
     this.discountNameError = '';
-    
+
     // Validate discount name
     if (!this.editDiscount.discountName || this.editDiscount.discountName.trim() === '') {
       this.discountNameError = 'Discount name is required';
@@ -42,14 +42,14 @@ export class EditDiscountComponent {
     }
 
     if (!this.editDiscount) return;
-    
+
     this.updateService.updateDiscountAsync(this.editDiscount.id, this.editDiscount).subscribe({
       next: res => {
         this.showSuccessAlert = true;
       },
       error: err => {
         console.log(`${err.error}`);
-        
+
         if (err.status === 400) {
           if (typeof err.error === 'string' && err.error.includes('already exists')) {
             this.discountNameError = 'Discount name already exists';

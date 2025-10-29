@@ -129,6 +129,7 @@ namespace PharmacyBackend.Controllers
             if (!validation)
                 return BadRequest("Discount name already exists.");
 
+
             var success = await _updateService.UpdateDiscountAsync(id, dto);
             if (!success)
                 return NotFound();
