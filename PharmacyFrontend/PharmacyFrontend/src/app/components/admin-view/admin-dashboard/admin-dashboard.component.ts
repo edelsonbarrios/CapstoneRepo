@@ -19,6 +19,7 @@ export class AdminDashboardComponent implements OnInit {
   outOfStockCount: number = 0;
   topSellingMedicines: ProductSalesSummary[] = [];
   paginatedTopMeds: ProductSalesSummary[] = [];
+  dateToday: Date = new Date();
 
   // Expiring Soon data
   expiringProducts: Inventory[] = [];
