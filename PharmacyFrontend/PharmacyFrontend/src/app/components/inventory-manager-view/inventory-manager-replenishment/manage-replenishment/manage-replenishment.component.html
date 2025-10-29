@@ -14,7 +14,6 @@
           <th>PO Number</th>
           <th>Supplier</th>
           <th>Order Date</th>
-          <th>Delivery Date</th>
           <th>Status</th>
           <th class="center">Action</th>
         </tr>
@@ -23,8 +22,7 @@
         <tr *ngFor="let po of paginatedPurchaseOrders">
           <td>{{ po.purchaseOrderNumber }}</td>
           <td>{{ po.supplierName }}</td>
-          <td>{{ po.orderDate | date: 'dd-MM-yyyy' }}</td>
-          <td>{{ po.deliveryDate | date: 'dd-MM-yyyy' }}</td>
+          <td>{{ po.orderDate | date: 'yyyy-MM-dd' }}</td>
           <td>{{ po.status }}</td>
           <td class="center">
             <button class="btn primary" (click)="viewPurchaseOrderDetails(po)">

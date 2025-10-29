@@ -162,7 +162,6 @@ export class CreateProductComponent implements OnInit{
         debugger;
         console.log(`${JSON.stringify(res)}`);
         this.showSuccessAlert = true;
-        console.log(`papat`);
       },
       error: err => {
         alert(`${err.error}`);

@@ -81,7 +81,7 @@ export class CreateStockComponent implements OnInit{
       const mfgDate = new Date(this.createStock.manufacturingDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       const fiveYearsAgo = new Date(today);
       fiveYearsAgo.setFullYear(today.getFullYear() - 5);
 
@@ -181,10 +181,10 @@ export class CreateStockComponent implements OnInit{
         console.log(`Token does not exist.`);
         return;
       }
-  
+
       const employee: any = jwtDecode(token);
       const employeeId = parseInt(employee.EmployeeId);
-  
+
       this.getService.GetEmployeeById(employeeId).subscribe({
         next: (employee) => {
           this.employee = employee;

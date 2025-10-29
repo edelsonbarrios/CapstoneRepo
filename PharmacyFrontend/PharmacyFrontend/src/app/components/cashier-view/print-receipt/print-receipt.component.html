@@ -8,7 +8,7 @@
       <h2>123 Amparo, Quezon City</h2>
       <p><strong>Invoice #:</strong> {{ receiptData.invoiceNumber }}</p>
       <p><strong>Date:</strong> {{ today | date: 'medium' }}</p>
-      <p><strong>Cashier ID:</strong> {{ receiptData.employeeID }}</p>
+      <p><strong>Cashier Name:</strong> {{ cashier.fullName }}</p>
       <p><strong>Payment Method:</strong> {{ receiptData.paymentMethod }}</p>
     </div>
 
@@ -16,7 +16,7 @@
     <table class="receipt-table" *ngIf="receiptData?.items?.length">
       <thead>
         <tr>
-          <th>Product ID</th>
+          <th>Product</th>
           <th>Quantity</th>
           <th>Unit Type</th>
           <th>Unit Price</th>
@@ -24,8 +24,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of isPrinting ? receiptData.items : paginatedItems">
-          <td>{{ item.productId }}</td>
+        <tr *ngFor="let item of isPrinting ? receiptData?.items : paginatedItems">
+          <td>{{ getProductName(item.productId) }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.unitType }}</td>
           <td>{{ item.unitPrice | currency: 'PHP' }}</td>

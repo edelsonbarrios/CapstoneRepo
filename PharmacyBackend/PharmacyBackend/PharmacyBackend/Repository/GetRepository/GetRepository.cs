@@ -746,8 +746,6 @@ namespace PharmacyBackend.Repository.GET
                 .Where(po => po.Status.Equals("Pending") && po.IsActive == true)
                 .ToListAsync();
 
-            var papat = "string papat";
-
             return pendings;
         }
         #endregion

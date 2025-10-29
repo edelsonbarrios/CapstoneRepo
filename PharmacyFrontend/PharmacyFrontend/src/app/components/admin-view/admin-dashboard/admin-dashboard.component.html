@@ -16,7 +16,7 @@
 
         <div class="sales-amount">{{todaySalesAmount | currency: 'PHP'}}</div>
         <div class="sales-change">
-          <span class="percentages">{{dateToday | date : 'dd-MM-yyyy'}}</span>
+          <span class="percentages">{{dateToday | date : 'medium'}}</span>
         </div>
 
         <a class="interact view-report" routerLink="/admin-main/admin-reports-main">View Report &gt;</a>

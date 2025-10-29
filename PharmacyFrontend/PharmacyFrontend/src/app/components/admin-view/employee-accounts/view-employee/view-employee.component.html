@@ -87,7 +87,7 @@
         <h1>Birth Date:</h1>
       </div>
       <div class="input-wrapper">
-        <span *ngIf="!isEditMode">{{ employee.birthDate | date: 'dd-MM-yyyy'}}</span>
+        <span *ngIf="!isEditMode">{{ employee.birthDate | date: 'yyyy-MM-dd'}}</span>
         <input *ngIf="isEditMode" type="date" [(ngModel)]="employee.birthDate" placeholder="Birth Date">
       </div>
     </div>

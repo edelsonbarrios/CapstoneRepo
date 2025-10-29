@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { NgControl } from '@angular/forms';
+import { Employee } from '../../../models/employee-models/employee';
+import { GetService } from '../../../services/GetService/get.service';
+import { Product } from '../../../models/product-models/product';
 
 interface ReceiptItem {
   productId: number;
@@ -21,6 +24,7 @@ interface ReceiptPayload {
   vatId?: number;
   totalAmount: number;
   items: ReceiptItem[];
+  product: Product[];
 }
 
 @Component({
@@ -36,15 +40,29 @@ export class PrintReceiptComponent implements OnInit {
   finishedTransac: boolean = false;
   paginatedItems: ReceiptItem[] = [];
   isPrinting: boolean = false;
+  cashier: Employee = new Employee();
+  products: Product[] = [];
 
   currentPage: number = 1;
   itemsPerPage: number = 3;
   totalPages: number = 0;
 
+  constructor(
+    private getService : GetService
+  ) {}
+
   ngOnInit(): void {
+
+    this.receiptData?.items.forEach(i => {
+      this.getProductById(i.productId);
+    });
+
     if (this.receiptData && this.receiptData.items) {
       this.updatePagination();
     }
+
+
+    this.getCashier();
   }
 
   updatePagination() {
@@ -72,6 +90,45 @@ export class PrintReceiptComponent implements OnInit {
       window.print();
       this.isPrinting = false;
     }, 1000);
+  }
+
+  getCashier() : Employee{
+    if(this.receiptData!.employeeID == 0)
+      return new Employee();
+    this.getService.GetEmployeeById(this.receiptData!.employeeID).subscribe({
+      next: res => {
+        this.cashier = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
+    return this.cashier;
+  }
+
+  getProduct(product : number) {
+    if(product == 0)
+      return;
+    this.getProductById(product);
+    this.receiptData.product = this.products;
+  }
+
+  getProductById(id: number) {
+    this.getService.getProductByIdAsync(id).subscribe({
+      next: res => {
+        this.products.push(res);
+      },
+      error: err => {
+        console.log(`${err.error  }`);
+      }
+    });
+  }
+
+  getProductName(id: number) : string | null{
+    if(id == 0 || id == null)
+      return '';
+    var product = this.products.find(p => p.productID == id);
+    return product ? product.productName : '';
   }
 
   close() {
