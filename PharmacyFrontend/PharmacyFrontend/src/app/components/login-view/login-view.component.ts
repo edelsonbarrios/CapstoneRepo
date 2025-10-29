@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule} from '@angular/forms'
 import { PostService } from '../../services/PostService/post.service';
 import { Router } from '@angular/router';
@@ -23,6 +23,11 @@ export class LoginViewComponent {
     private router: Router
   ) {}
 
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnterPressed(event: KeyboardEvent) {
+    this.Authenticate();
+  }
+
   Authenticate() {
     this.postService.Authentication(this.userName, this.password).subscribe({
       next: res => {
@@ -41,7 +46,7 @@ export class LoginViewComponent {
           this.router.navigateByUrl('/inventory-manager-main');
         }else if(rolePosition == "Cashier") {
           this.router.navigateByUrl('/cashier-main');
-        }  
+        }
       },
       error: err => {
         console.log(`${err.error.message}`);

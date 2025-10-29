@@ -18,7 +18,7 @@ export class PurchaseOrderProductsComponent implements OnInit {
 
   products: Product[] = [];
   searchQuery: string = '';
-  
+
   // Pagination
   paginatedProducts: Product[] = [];
   currentPage = 1;
@@ -99,12 +99,12 @@ export class PurchaseOrderProductsComponent implements OnInit {
 
   addSelected() {
     const selected = this.supplierProudcts.filter(p => p.selected);
-    
+
     if (selected.length === 0) {
       alert('Please select at least one product.');
       return;
     }
-    
+
     this.productsSelected.emit(selected);
   }
 

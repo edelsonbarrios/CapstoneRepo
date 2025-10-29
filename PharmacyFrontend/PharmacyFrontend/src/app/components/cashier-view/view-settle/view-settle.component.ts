@@ -74,6 +74,8 @@ export class ViewSettleComponent implements OnInit {
     this.getService.getAllVatAsync().subscribe({
       next: (res) => {
         this.vats = res;
+        const defaultVat = res.find(v => v.vatName == 'Standard');
+        this.selectedVat = defaultVat || null;
       },
       error: (err) => {
         console.log(`${err.error}`);

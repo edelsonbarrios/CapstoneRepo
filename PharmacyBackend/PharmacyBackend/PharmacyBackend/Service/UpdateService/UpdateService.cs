@@ -873,6 +873,7 @@ namespace PharmacyBackend.Service.UpdateService
                 var sheetsPerBox = product?.SheetsPerBox ?? 0;
                 var piecesPerSheet = product?.PiecesPerSheet ?? 0;
                 var damagedPieces = item.DamagedPiecesCount;
+                string angelica = "My baby is so pretty";
 
                 if (inventory is null) 
                 {
