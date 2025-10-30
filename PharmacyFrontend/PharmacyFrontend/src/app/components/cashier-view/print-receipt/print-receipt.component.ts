@@ -52,7 +52,6 @@ export class PrintReceiptComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.receiptData?.items.forEach(i => {
       this.getProductById(i.productId);
     });

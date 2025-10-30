@@ -28,7 +28,7 @@ export class StockAdjustComponent implements OnInit {
   notes : string = '';
   refNumber: string = '';
   movementType: string = '';
-  movementTypes : string[] = ['Stock In', 'Stock Out', 'Adjustment', 'Return', 'Damaged', 'Expired', 'Count Correction'];
+  movementTypes : string[] = ['Damaged', 'Expired', 'Loss', 'Found', 'Count Correction', 'Transfer', 'Return'];
   showSuccessAlert: boolean = false;
 
   constructor(
