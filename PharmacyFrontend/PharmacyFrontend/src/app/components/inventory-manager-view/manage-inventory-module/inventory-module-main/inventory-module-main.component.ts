@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Inventory } from '../../../../models/inventory-module-models/inventory';
 
 @Component({
   selector: 'app-inventory-module-main',
@@ -9,4 +10,5 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './inventory-module-main.component.scss'
 })
 export class InventoryModuleMainComponent {
+  @Input() loginVerify: Inventory = new Inventory();
 }

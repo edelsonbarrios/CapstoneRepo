@@ -97,7 +97,7 @@
     <button class="btn btn-cancel" (click)="closeStockAdjustmentForm()">
       Cancel
     </button>
-    <button class="btn btn-save" (click)="createNewStockMovement()">
+    <button class="btn btn-save" (click)="createNewStockMovement()" (click)="openLoginVerifyForm()">
       <i class="fas fa-save"></i>
       Save Adjustment
     </button>
@@ -120,4 +120,10 @@
       <button class="ok-btn" (click)="closeSuccessAlert()">Got it</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="loginVerify">
+  <app-login-verification
+  *ngIf="loginVerify"
+  ></app-login-verification>
 </div>
