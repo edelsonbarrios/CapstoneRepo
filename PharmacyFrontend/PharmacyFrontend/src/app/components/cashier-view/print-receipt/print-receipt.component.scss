@@ -2,195 +2,276 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  background: #f5f5f5;
 }
 
 .receipt-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  padding: 1rem 1.5rem;
-  width: 600px;
-  font-family: "Poppins", sans-serif;
-  color: #333;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 2rem 1.5rem;
+  width: 400px;
+  max-width: 100%;
+  font-family: "Courier New", monospace;
+  color: #000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   .btn-print {
-    border: none;
-    background-color: rgba(0, 109, 186, 1);
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
+    border: 2px solid #000;
+    background-color: #fff;
+    color: #000;
+    padding: 0.5rem 1rem;
+    font-family: "Poppins", sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-bottom: 1rem;
 
     &:hover {
-      background-color: rgba(0, 109, 186, 0.9);
+      background-color: #000;
+      color: #fff;
     }
   }
 
   .receipt-header {
     text-align: center;
-    border-top: 2px solid rgba(0, 109, 186, 0.2);
-    border-bottom: 2px solid rgba(0, 109, 186, 0.2);
-    padding: 0.5rem 0;
-    margin-bottom: 0.75rem;
+    border-bottom: 2px dashed #000;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
 
     h1 {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: rgba(0, 109, 186, 1);
-      margin: 0.2rem 0;
+      color: #000;
+      margin: 0 0 0.25rem 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     h2 {
-      font-size: 0.9rem;
-      color: #666;
-      font-weight: 500;
-      margin: 0.2rem 0;
+      font-size: 0.85rem;
+      color: #000;
+      font-weight: 400;
+      margin: 0 0 1rem 0;
     }
 
     p {
-      margin: 0.1rem 0;
-      font-size: 0.85rem;
-      line-height: 1.3;
+      margin: 0.2rem 0;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      text-align: left;
+      font-family: "Courier New", monospace;
+      
+      strong {
+        font-weight: 700;
+      }
     }
   }
 
   .receipt-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.75rem;
 
     th {
-      background: rgba(0, 109, 186, 0.1);
-      color: #003f6b;
-      padding: 0.4rem 0.5rem;
+      background: none;
+      color: #000;
+      padding: 0.5rem 0.25rem;
       text-align: left;
-      font-weight: 600;
-      font-size: 0.85rem;
-      border-bottom: 2px solid rgba(0, 109, 186, 0.3);
+      font-weight: 700;
+      font-size: 0.75rem;
+      border-bottom: 1px solid #000;
+      text-transform: uppercase;
+    }
+
+    tbody tr {
+      border-bottom: 1px dashed #ccc;
+      
+      &:last-child {
+        border-bottom: none;
+      }
     }
 
     td {
-      padding: 0.35rem 0.5rem;
-      border-bottom: 1px solid #eee;
-      font-size: 0.85rem;
-      line-height: 1.2;
-    }
-
-    tr:hover {
-      background: rgba(0, 109, 186, 0.05);
+      padding: 0.5rem 0.25rem;
+      font-size: 0.75rem;
+      line-height: 1.3;
+      vertical-align: top;
+      
+      &:first-child {
+        font-weight: 400;
+      }
+      
+      &:last-child {
+        text-align: right;
+        font-weight: 700;
+      }
+      
+      &:nth-child(2),
+      &:nth-child(3),
+      &:nth-child(4) {
+        text-align: center;
+      }
     }
   }
 
   .pagination-controls {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     gap: 0.75rem;
-    margin-top: 0.75rem;
+    margin: 1rem 0;
+    padding: 0.75rem 0;
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+    font-family: "Poppins", sans-serif;
 
     .btn-page {
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-      border: 1px solid #e2e8f0;
-      background-color: white;
-      color: #475569;
+      padding: 0.4rem 0.75rem;
+      border: 1px solid #000;
+      background-color: #fff;
+      color: #000;
       cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.75rem;
+      font-weight: 600;
       transition: all 0.2s;
 
       &:hover:not(:disabled) {
-        background-color: #f8fafc;
-        border-color: #cbd5e1;
-      }
-
-      &:active:not(:disabled) {
-        transform: scale(0.98);
+        background-color: #000;
+        color: #fff;
       }
 
       &:disabled {
-        opacity: 0.5;
+        opacity: 0.3;
         cursor: not-allowed;
       }
     }
 
     .page-info {
       font-weight: 600;
-      color: #475569;
-      font-size: 0.8rem;
+      color: #000;
+      font-size: 0.75rem;
     }
   }
 
   .receipt-summary {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px dashed #000;
     text-align: right;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 400;
 
     p {
-      margin: 0.1rem 0;
-      line-height: 1.3;
+      margin: 0.3rem 0;
+      line-height: 1.5;
+      display: flex;
+      justify-content: space-between;
+      
+      &:first-child::before {
+        content: 'Discount:';
+      }
+      
+      &:nth-child(2)::before {
+        content: 'VAT:';
+      }
+      
+      &:nth-child(4)::before {
+        content: 'Amount Paid:';
+      }
+      
+      &:nth-child(5)::before {
+        content: 'Change:';
+      }
     }
 
     .line {
-      border-bottom: 1px solid rgba(0, 109, 186, 0.3);
-      margin: 0.3rem 0;
+      border: none;
+      border-top: 1px solid #000;
+      margin: 0.5rem 0;
+      height: 0;
     }
 
     h3 {
-      color: rgba(0, 109, 186, 1);
+      color: #000;
       font-weight: 700;
-      margin: 0.3rem 0;
-      font-size: 1.1rem;
+      margin: 0.75rem 0;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+      padding: 0.5rem 0;
+      
+      &::before {
+        content: 'TOTAL:';
+      }
     }
   }
 
   .receipt-footer {
     text-align: center;
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    color: #555;
-    line-height: 1.3;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px dashed #000;
+    font-size: 0.8rem;
+    color: #000;
+    line-height: 1.6;
 
     p {
-      margin: 0.2rem 0;
+      margin: 0.25rem 0;
+      font-weight: 400;
+      
+      &:first-child {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
     }
 
     button {
-      margin-top: 0.5rem;
-      padding: 0.4rem 1.2rem;
-      background-color: rgba(0, 109, 186, 1);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
+      margin-top: 1rem;
+      padding: 0.6rem 1.5rem;
+      background: #000;
+      color: #fff;
+      border: 2px solid #000;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: all 0.2s ease;
+      font-family: "Poppins", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
 
       &:hover {
-        background-color: rgba(0, 109, 186, 0.9);
+        background: #fff;
+        color: #000;
       }
     }
   }
 }
 
 @media print {
-  .btn-print {
+  .btn-print,
+  .pagination-controls {
     display: none !important;
   }
+  
   .wrapper {
     background: #fff;
     padding: 0;
+    min-height: auto;
   }
+  
   .receipt-card {
     box-shadow: none;
     border: none;
     width: 100%;
+    padding: 1rem;
   }
 }
 
