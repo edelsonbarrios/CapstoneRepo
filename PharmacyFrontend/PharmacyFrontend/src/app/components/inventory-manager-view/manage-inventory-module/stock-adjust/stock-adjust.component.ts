@@ -10,11 +10,12 @@ import { FormsModule } from '@angular/forms';
 import { NgClass, CommonModule } from "@angular/common";
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
 import { StockAdjustment } from '../../../../models/inventory-module-models/stock-adjustment';
+import { LoginVerificationComponent } from '../login-verification/login-verification.component';
 
 @Component({
   selector: 'app-stock-adjust',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, LoginVerificationComponent],
   templateUrl: './stock-adjust.component.html',
   styleUrl: './stock-adjust.component.scss',
 })
@@ -22,6 +23,7 @@ export class StockAdjustComponent implements OnInit {
   @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
   employee: Employee = new Employee();
+  loginVerify?: Inventory | null;
   boxQuantityChanged: number = 0;
   sheetQuantityChanged: number = 0;
   pieceQuantityChanged: number = 0;
@@ -80,6 +82,10 @@ export class StockAdjustComponent implements OnInit {
       },
     });
   }
+
+  openLoginVerifyForm() {
+    this.loginVerify = new Inventory();
+  } 
 
   closeStockAdjustmentForm() {
     this.closeForm.emit();

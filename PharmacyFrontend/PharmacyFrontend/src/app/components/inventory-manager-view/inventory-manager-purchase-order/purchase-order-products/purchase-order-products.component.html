@@ -105,3 +105,14 @@
     </button>
   </div>
 </div>
+
+<!-- Error Alert Modal -->
+<div class="error-overlay" *ngIf="addItem">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">Please select at least one item.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeAddItemMessage()">OK</button>
+    </div>
+  </div>
+</div>

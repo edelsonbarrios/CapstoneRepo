@@ -18,6 +18,7 @@ export class PurchaseOrderProductsComponent implements OnInit {
 
   products: Product[] = [];
   searchQuery: string = '';
+  addItem: boolean = false;
 
   // Pagination
   paginatedProducts: Product[] = [];
@@ -101,11 +102,15 @@ export class PurchaseOrderProductsComponent implements OnInit {
     const selected = this.supplierProudcts.filter(p => p.selected);
 
     if (selected.length === 0) {
-      alert('Please select at least one product.');
+      this.addItem = true;
       return;
     }
 
     this.productsSelected.emit(selected);
+  }
+
+  closeAddItemMessage() {
+    this.addItem = false;
   }
 
   cancel() {
