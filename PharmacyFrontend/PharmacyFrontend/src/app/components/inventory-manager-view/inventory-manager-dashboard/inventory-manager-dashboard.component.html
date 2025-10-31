@@ -45,7 +45,7 @@
           <tr>
             <th>Product</th>
             <th>Batch</th>
-            <th>Stock</th>
+            <th>BoxQuantity</th>
             <th>Reorder</th>
           </tr>
         </thead>
@@ -56,7 +56,7 @@
           <tr *ngFor="let i of paginatedCriticalItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
-            <td><span class="badge badge-danger">{{i.totalPiecesAvailable}}</span></td>
+            <td><span class="badge badge-danger">{{i.boxQuantity}}</span></td>
             <td>{{i.reorderLevel}}</td>
           </tr>
         </tbody>

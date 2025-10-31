@@ -2,6 +2,7 @@
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
+using PharmacyBackend.DTOs.StockHistoryDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 
@@ -177,6 +178,21 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         Task<BackupListResponse> GetAllBackupsAsync();
         Task<byte[]?> DownloadBackupAsync(string fileName);
         string GetBackupDirectory();
+        #endregion
+
+        #region StockHistory
+
+        Task<IEnumerable<StockMovement>> GetStockHistoryAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            string? transactionType,
+            string? searchTerm);
+
+        Task<StockHistorySummaryDto> GetStockHistorySummaryAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            string? transactionType);
+
         #endregion
     }
 }

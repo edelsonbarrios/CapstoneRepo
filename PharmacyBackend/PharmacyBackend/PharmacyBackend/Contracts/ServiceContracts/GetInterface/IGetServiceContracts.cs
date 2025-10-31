@@ -19,6 +19,7 @@ using PharmacyBackend.DTOs.DailySaleDTOs;
 using System.Runtime.CompilerServices;
 using PharmacyBackend.DTOs.ReportsDTOs;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
+using PharmacyBackend.DTOs.StockHistoryDTOs;
 namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
 {
     public interface IGetServiceContracts
@@ -206,6 +207,14 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         Task<BackupListResponse> GetAllBackupsAsync();
         Task<BackupSettingsDto> GetBackupSettingsAsync();
         Task<byte[]?> DownloadBackupAsync(string fileName);
+        #endregion
+
+        #region StockHistory
+        Task<StockHistoryResponse> GetStockHistoryAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            string? transactionType,
+            string? searchTerm);
         #endregion
     }
 }

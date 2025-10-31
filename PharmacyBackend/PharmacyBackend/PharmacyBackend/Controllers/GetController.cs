@@ -1018,6 +1018,38 @@ namespace PharmacyBackend.Controllers
             return Ok(topSellingProducts);
         }
         #endregion
+
+        #region StockHistory
+        [HttpGet("StockHistory")]
+        public async Task<IActionResult> GetStockHistory(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] string? transactionType = null,
+            [FromQuery] string? searchTerm = null)
+        {
+            try
+            {
+                // Validate dates if both are provided
+                if (startDate.HasValue && endDate.HasValue && startDate > endDate)
+                {
+                    return BadRequest(new { message = "Start date cannot be after end date" });
+                }
+
+                var response = await _getService.GetStockHistoryAsync(
+                    startDate,
+                    endDate,
+                    transactionType,
+                    searchTerm);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error retrieving stock history", error = ex.Message });
+            }
+        }
+
+        #endregion
     }
 }
 

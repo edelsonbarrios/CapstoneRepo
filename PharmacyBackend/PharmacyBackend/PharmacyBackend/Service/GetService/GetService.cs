@@ -26,6 +26,7 @@ using System.Drawing;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Repository.GET;
 using Microsoft.EntityFrameworkCore.Update;
+using PharmacyBackend.DTOs.StockHistoryDTOs;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -2222,6 +2223,60 @@ namespace PharmacyBackend.Service.GetService
             };
         }
 
+        #endregion
+
+        #region StockHistory
+        public async Task<StockHistoryResponse> GetStockHistoryAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            string? transactionType,
+            string? searchTerm)
+        {
+            // Get filtered stock movements
+            var movements = await _getRepo.GetStockHistoryAsync(
+                startDate,
+                endDate,
+                transactionType,
+                searchTerm);
+
+            // Get summary data
+            var summary = await _getRepo.GetStockHistorySummaryAsync(
+                startDate,
+                endDate,
+                transactionType);
+
+            // Map to DTOs
+            var transactionDtos = movements.Select(sm => new StockHistoryDto
+            {
+                StockMovementID = sm.StockMovementID,
+                MovementDate = sm.MovementDate,
+                ProductName = sm.Inventory?.Product?.ProductName ?? string.Empty,
+                BatchNumber = sm.Inventory?.BatchNumber ?? string.Empty,
+                MovementType = sm.MovementType,
+                ReferenceNumber = sm.ReferenceNumber,
+
+                BoxQuantityBefore = sm.BoxQuantityBefore,
+                SheetQuantityBefore = sm.SheetQuantityBefore,
+                PieceQuantityBefore = sm.PieceQuantityBefore,
+
+                BoxQuantityChanged = sm.BoxQuantityChanged,
+                SheetQuantityChanged = sm.SheetQuantityChanged,
+                PieceQuantityChanged = sm.PieceQuantityChanged,
+
+                BoxQuantityAfter = sm.BoxQuantityAfter,
+                SheetQuantityAfter = sm.SheetQuantityAfter,
+                PieceQuantityAfter = sm.PieceQuantityAfter,
+
+                PerformedBy = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : "System",
+                Notes = sm.Notes
+            }).ToList();
+
+            return new StockHistoryResponse
+            {
+                Summary = summary,
+                Transactions = transactionDtos
+            };
+        }
         #endregion
     }
 }

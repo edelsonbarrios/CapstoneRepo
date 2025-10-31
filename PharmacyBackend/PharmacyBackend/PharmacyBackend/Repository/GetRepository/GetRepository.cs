@@ -8,6 +8,7 @@ using PharmacyBackend.DTOs.DailySaleDTOs;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.DTOs.InventoryDTOs;
 using PharmacyBackend.DTOs.ReportsDTOs;
+using PharmacyBackend.DTOs.StockHistoryDTOs;
 using PharmacyBackend.Models;
 using PharmacyBackend.Models.CashierViewModel;
 using System.Runtime.InteropServices;
@@ -1192,6 +1193,120 @@ namespace PharmacyBackend.Repository.GET
             return backupPath;
         }
 
+        #endregion
+
+        #region StockHistory 
+        public async Task<IEnumerable<StockMovement>> GetStockHistoryAsync(
+    DateTime? startDate,
+    DateTime? endDate,
+    string? transactionType,
+    string? searchTerm)
+        {
+            var query = _context.StockMovement
+                .Include(sm => sm.Inventory)
+                    .ThenInclude(i => i.Product)
+                .Include(sm => sm.Employee)
+                .AsQueryable();
+
+            // Apply date filter
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+                query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
+            }
+            else if (startDate.HasValue)
+            {
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                query = query.Where(sm => sm.MovementDate >= startDateUtc);
+            }
+
+            // Apply transaction type filter
+            if (!string.IsNullOrEmpty(transactionType) &&
+                !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
+            {
+                // Map UI transaction types to database movement types
+                var movementType = transactionType switch
+                {
+                    "Stock Entry" => "Stock In",
+                    "Adjustment" => "Adjustment",
+                    "Sale" => "Sale",
+                    "Damaged" => "Damaged",
+                    "Expired" => "Expired",
+                    _ => transactionType
+                };
+
+                query = query.Where(sm => sm.MovementType.Equals(movementType, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                var lowerSearchTerm = searchTerm.ToLower();
+                query = query.Where(sm =>
+                    sm.Inventory.Product.ProductName.ToLower().Contains(lowerSearchTerm) ||
+                    sm.Inventory.BatchNumber.ToLower().Contains(lowerSearchTerm) ||
+                    (sm.ReferenceNumber != null && sm.ReferenceNumber.ToLower().Contains(lowerSearchTerm))
+                );
+            }
+
+            return await query
+                .OrderByDescending(sm => sm.MovementDate)
+                .ToListAsync();
+        }
+
+        public async Task<StockHistorySummaryDto> GetStockHistorySummaryAsync(
+            DateTime? startDate,
+            DateTime? endDate,
+            string? transactionType)
+        {
+            var query = _context.StockMovement.AsQueryable();
+
+            // Apply date filter
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+                query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
+            }
+            else if (startDate.HasValue)
+            {
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+                query = query.Where(sm => sm.MovementDate >= startDateUtc);
+            }
+
+            // Apply transaction type filter if not "All Transaction"
+            if (!string.IsNullOrEmpty(transactionType) &&
+                !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
+            {
+                var movementType = transactionType switch
+                {
+                    "Stock Entry" => "Stock In",
+                    "Adjustment" => "Adjustment",
+                    "Sale" => "Sale",
+                    "Damaged" => "Damaged",
+                    "Expired" => "Expired",
+                    _ => transactionType
+                };
+
+                query = query.Where(sm => sm.MovementType.Equals(movementType, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var movements = await query.ToListAsync();
+
+            return new StockHistorySummaryDto
+            {
+                TotalTransactions = movements.Count,
+                StockEntries = movements.Count(sm => sm.MovementType.Equals("Stock In", StringComparison.OrdinalIgnoreCase)),
+                Adjustments = movements.Count(sm => sm.MovementType.Equals("Adjustment", StringComparison.OrdinalIgnoreCase)),
+                SalesRemovals = movements.Count(sm =>
+                    sm.MovementType.Equals("Sale", StringComparison.OrdinalIgnoreCase) ||
+                    sm.MovementType.Equals("Damaged", StringComparison.OrdinalIgnoreCase) ||
+                    sm.MovementType.Equals("Expired", StringComparison.OrdinalIgnoreCase) ||
+                    sm.MovementType.Equals("Loss", StringComparison.OrdinalIgnoreCase)
+                )
+            };
+        }
         #endregion
     }
 }
