@@ -35,6 +35,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         #region Sales
         public Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto);
         public Task<SalesItemDto> CreateSalesItemAsync(CreateSalesItemDto dto);
+        public Task<string> GenerateNewInvoiceNumberAsync();
         #endregion
 
         #region Discount

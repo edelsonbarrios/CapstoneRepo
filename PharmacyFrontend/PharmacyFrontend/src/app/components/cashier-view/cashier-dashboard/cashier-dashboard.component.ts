@@ -20,7 +20,13 @@ import { ViewInventoryComponent } from '../view-inventory/view-inventory.compone
 @Component({
   selector: 'app-cashier-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ViewSettleComponent, PrintReceiptComponent, ViewInventoryComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ViewSettleComponent,
+    PrintReceiptComponent,
+    ViewInventoryComponent,
+  ],
   templateUrl: './cashier-dashboard.component.html',
   styleUrls: ['./cashier-dashboard.component.scss'],
 })
@@ -31,6 +37,7 @@ export class CashierDashboardComponent implements OnInit {
   viewInventory: any;
   finishedTransac: boolean = false;
   receipt: any;
+  newInvoice: string = '';
 
   products: (Product & {
     selected?: boolean;
@@ -50,7 +57,6 @@ export class CashierDashboardComponent implements OnInit {
     reorderLevel: number;
   })[] = [];
 
-
   selectedProducts: {
     productID: number;
     productName: string;
@@ -66,20 +72,46 @@ export class CashierDashboardComponent implements OnInit {
 
   constructor(
     private getService: GetService,
-    private postService: PostService,
+    private postService: PostService
   ) {}
-
 
   ngOnInit(): void {
     this.getLoggedInUser();
     this.getAllProducts();
     this.getAllCategories();
+    this.generateNewInvoiceNumber();
   }
 
   resetComponent(): void {
-    this.getService.getAllInventoriesAsync().subscribe(response => {
-      this.products = response.message
-    })
+    this.getService.getAllInventoriesAsync().subscribe((response) => {
+      this.products = response.message;
+    });
+  }
+
+  generateNewInvoiceNumber() {
+    this.postService.generateNewInvoiceNumberAsync().subscribe({
+      next: (res) => {
+        console.log('✅ Raw API Response:', res);
+        console.log('✅ Response type:', typeof res);
+
+        // Handle different response formats
+        if (typeof res === 'string') {
+          this.newInvoice = res;
+        } else if (res && (res as any).message) {
+          this.newInvoice = (res as any).message;
+        } else if (res && (res as any).value) {
+          this.newInvoice = (res as any).value;
+        } else {
+          this.newInvoice = String(res);
+        }
+
+        console.log('✅ Final newInvoice:', this.newInvoice);
+        this.newInvoice = res;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
   }
 
   closeTransactionMessage() {
@@ -110,22 +142,21 @@ export class CashierDashboardComponent implements OnInit {
           unitMeasurement: p.product?.unitMeasurement,
           product: p.product,
           piecePerBox: p.piecePerBox,
-          reorderLevel: p.reorderLevel
+          reorderLevel: p.reorderLevel,
         }));
-        console.log(this.products);
       },
       error: (err) => console.error(err.error),
     });
   }
 
-  getAvailableUnitMeasurements(product: any) : string[] {
-    if(!product) return [];
-    if(product.unitMeasurement == 'Multi-Level') {
-      return ['Piece','Sheet','Box'];
-    }else if(product.unitMeasurement == 'Dual-Level'){
-      return ['Piece', 'Box']
-    }else {
-      return ['Piece']
+  getAvailableUnitMeasurements(product: any): string[] {
+    if (!product) return [];
+    if (product.unitMeasurement == 'Multi-Level') {
+      return ['Piece', 'Sheet', 'Box'];
+    } else if (product.unitMeasurement == 'Dual-Level') {
+      return ['Piece', 'Box'];
+    } else {
+      return ['Piece'];
     }
   }
 
@@ -147,11 +178,11 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
-
   get filteredProducts() {
     const term = this.searchTerm?.toLowerCase()?.trim();
     return this.products.filter((p) => {
-      if (this.selectedCategory && p.categoryName !== this.selectedCategory) return false;
+      if (this.selectedCategory && p.categoryName !== this.selectedCategory)
+        return false;
       if (!term) return true;
       return (
         (p.productName || '').toLowerCase().includes(term) ||
@@ -165,13 +196,15 @@ export class CashierDashboardComponent implements OnInit {
     this.receipt = null;
   }
 
-
   getProductUnitPriceDisplay(product: any): number {
     const unit = product.tempUnitType || 'Box';
     return this.resolveUnitPriceFromProduct(product, unit);
   }
 
-  resolveUnitPriceFromProduct(product: any, unit: 'Box' | 'Sheet' | 'Piece'): number {
+  resolveUnitPriceFromProduct(
+    product: any,
+    unit: 'Box' | 'Sheet' | 'Piece'
+  ): number {
     const boxPrice = product.boxPrice ?? 0;
     const sheetPrice =
       product.sheetPrice ??
@@ -179,17 +212,21 @@ export class CashierDashboardComponent implements OnInit {
     const piecePrice =
       product.piecePrice ??
       (product.piecesPerSheet
-        ? (sheetPrice ?? boxPrice / (product.sheetsPerBox ?? 1)) / product.piecesPerSheet
+        ? (sheetPrice ?? boxPrice / (product.sheetsPerBox ?? 1)) /
+          product.piecesPerSheet
         : undefined);
 
     switch (unit) {
-      case 'Box': return boxPrice;
-      case 'Sheet': return sheetPrice ?? boxPrice;
-      case 'Piece': return piecePrice ?? sheetPrice ?? boxPrice;
-      default: return boxPrice;
+      case 'Box':
+        return boxPrice;
+      case 'Sheet':
+        return sheetPrice ?? boxPrice;
+      case 'Piece':
+        return piecePrice ?? sheetPrice ?? boxPrice;
+      default:
+        return boxPrice;
     }
   }
-
 
   addSelectedProducts() {
     const toAdd = this.products.filter((p) => p.selected);
@@ -215,7 +252,7 @@ export class CashierDashboardComponent implements OnInit {
           unitType,
           quantity: qtyToAdd,
           unitPrice: price,
-          unitMeasurement: p.unitMeasurement
+          unitMeasurement: p.unitMeasurement,
         });
       }
 
@@ -225,7 +262,6 @@ export class CashierDashboardComponent implements OnInit {
       p.tempUnitType = 'Piece';
     });
   }
-
 
   onCartItemChange(item: any) {
     if (!item.quantity || item.quantity < 1) item.quantity = 1;
@@ -254,7 +290,6 @@ export class CashierDashboardComponent implements OnInit {
     this.selectedProducts = [];
   }
 
-
   getTotalItems(): number {
     return this.selectedProducts.reduce((acc, p) => acc + (p.quantity || 0), 0);
   }
@@ -271,19 +306,22 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   getMaxQuantity(item: any): number {
-    const product = this.products.find(p => p.productID === item.productID);
+    const product = this.products.find((p) => p.productID === item.productID);
     if (!product) return Infinity;
 
     switch (item.unitType) {
-      case 'Box': return product.boxQuantity || 0;
-      case 'Sheet': return product.sheetQuantity || 0;
-      case 'Piece': return product.pieceQuantity || 0;
-      default: return Infinity;
+      case 'Box':
+        return product.boxQuantity || 0;
+      case 'Sheet':
+        return product.sheetQuantity || 0;
+      case 'Piece':
+        return product.pieceQuantity || 0;
+      default:
+        return Infinity;
     }
   }
 
   handlePayment(event: any) {
-
     const employeeId = event.employeeID;
     if (!employeeId || employeeId <= 0) {
       console.error('No valid employeeID from payment event');
@@ -291,7 +329,7 @@ export class CashierDashboardComponent implements OnInit {
       return;
     }
 
-    const invoiceNumber = this.generateInvoiceNumber();
+    const invoiceNumber = this.newInvoice;
 
     const items = this.selectedProducts.map((sp) => ({
       ProductId: sp.productID,
@@ -326,7 +364,6 @@ export class CashierDashboardComponent implements OnInit {
       netAmount: totalAmount - discountAmount + vatAmount,
     };
 
-
     this.postService.createSalesTransactionAsync(event).subscribe({
       next: () => {
         this.receipt = event;
@@ -353,19 +390,6 @@ export class CashierDashboardComponent implements OnInit {
 
   openPrintReceiptForm() {
     this.printReceipt = new Product();
-  }
-
-  private generateInvoiceNumber(): string {
-    const now = new Date();
-    const ts =
-      now.getFullYear().toString().slice(2) +
-      ('0' + (now.getMonth() + 1)).slice(-2) +
-      ('0' + now.getDate()).slice(-2) +
-      ('0' + now.getHours()).slice(-2) +
-      ('0' + now.getMinutes()).slice(-2) +
-      ('0' + now.getSeconds()).slice(-2);
-    const random = Math.floor(Math.random() * 9000) + 1000;
-    return `INV-${ts}-${random}`;
   }
 
   openViewInventoryForm(inv: any) {

@@ -47,19 +47,16 @@ export class PrintReceiptComponent implements OnInit {
   itemsPerPage: number = 3;
   totalPages: number = 0;
 
-  constructor(
-    private getService : GetService
-  ) {}
+  constructor(private getService: GetService) {}
 
   ngOnInit(): void {
-    this.receiptData?.items.forEach(i => {
+    this.receiptData?.items.forEach((i) => {
       this.getProductById(i.productId);
     });
 
     if (this.receiptData && this.receiptData.items) {
       this.updatePagination();
     }
-
 
     this.getCashier();
   }
@@ -91,42 +88,39 @@ export class PrintReceiptComponent implements OnInit {
     }, 1000);
   }
 
-  getCashier() : Employee{
-    if(this.receiptData!.employeeID == 0)
-      return new Employee();
+  getCashier(): Employee {
+    if (this.receiptData!.employeeID == 0) return new Employee();
     this.getService.GetEmployeeById(this.receiptData!.employeeID).subscribe({
-      next: res => {
+      next: (res) => {
         this.cashier = res;
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
-    })
+      },
+    });
     return this.cashier;
   }
 
-  getProduct(product : number) {
-    if(product == 0)
-      return;
+  getProduct(product: number) {
+    if (product == 0) return;
     this.getProductById(product);
     this.receiptData.product = this.products;
   }
 
   getProductById(id: number) {
     this.getService.getProductByIdAsync(id).subscribe({
-      next: res => {
+      next: (res) => {
         this.products.push(res);
       },
-      error: err => {
-        console.log(`${err.error  }`);
-      }
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
     });
   }
 
-  getProductName(id: number) : string | null{
-    if(id == 0 || id == null)
-      return '';
-    var product = this.products.find(p => p.productID == id);
+  getProductName(id: number): string | null {
+    if (id == 0 || id == null) return '';
+    var product = this.products.find((p) => p.productID == id);
     return product ? product.productName : '';
   }
 

@@ -136,6 +136,14 @@ namespace PharmacyBackend.Controllers
                 return BadRequest($"Error creating sales item: {ex.Message}");
             }
         }
+        [HttpPost("NewInvoiceNumber")]
+        public async Task<ActionResult<string>> GenerateNewInvoiceNumberAsync() 
+        {
+          string newInvoiceNumber = await _postService.GenerateNewInvoiceNumberAsync();
+          if(string.IsNullOrEmpty(newInvoiceNumber)) 
+            return NotFound("Invoice Generation failed. Please refresh the page.");
+          return Ok(newInvoiceNumber);
+        }
         #endregion
 
         #region Discount

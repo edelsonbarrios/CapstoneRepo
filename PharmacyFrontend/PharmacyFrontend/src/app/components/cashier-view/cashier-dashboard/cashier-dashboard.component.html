@@ -1,4 +1,4 @@
- <main class="wrapper modern">
+<main class="wrapper modern">
   <div class="containers">
     <!-- LEFT: Product Display -->
     <section class="grid-items product-display">
@@ -9,11 +9,7 @@
       <div class="prod-control">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input
-            type="text"
-            placeholder="Search by name or item code"
-            [(ngModel)]="searchTerm"
-          />
+          <input type="text" placeholder="Search by name or item code" [(ngModel)]="searchTerm" />
         </div>
 
         <select [(ngModel)]="selectedCategory">
@@ -44,14 +40,14 @@
               </td>
               <td class="product-details">
                 <div class="product-name">{{ product.productName }}</div>
-                <div class="product-formulation" *ngIf="product.product?.formulationName">
-                  {{ product.product?.formulationName }}
+                <div class="product-formulation" *ngIf="product.product.formulationName">
+                  {{ product.product.formulationName }}
                 </div>
               </td>
-              <td>{{ product.product?.brandName }}</td>
+              <td>{{ product.product.brandName }}</td>
               <td>
-                <span *ngIf="product.product?.typeName">{{ product.product?.typeName }}</span>
-                <span *ngIf="!product.product?.typeName" class="na-text">N/A</span>
+                <span *ngIf="product.product.typeName">{{ product.product.typeName }}</span>
+                <span *ngIf="!product.product.typeName" class="na-text">N/A</span>
               </td>
               <td>
                 <select [(ngModel)]="product.tempUnitType" class="unit-select">
@@ -99,31 +95,20 @@
               <td class="index-cell">{{ i + 1 }}</td>
               <td class="product-name-cell">{{ item.productName }}</td>
               <td>
-                <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemUnitTypeChange(item)" class="unit-select">
+                <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemUnitTypeChange(item)"
+                  class="unit-select">
                   <option *ngFor="let unit of getAvailableUnitMeasurements(item)" [value]="unit">
                     {{ unit }}
                   </option>
                 </select>
               </td>
               <td>
-                <input
-                  type="number"
-                  min="1"
-                  [(ngModel)]="item.quantity"
-                  (ngModelChange)="onCartItemChange(item)"
-                  class="qty-input"
-                />
+                <input type="number" min="1" [(ngModel)]="item.quantity" (ngModelChange)="onCartItemChange(item)"
+                  class="qty-input" />
               </td>
               <td>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  [(ngModel)]="item.unitPrice"
-                  (ngModelChange)="onCartItemChange(item)"
-                  readonly
-                  class="price-input"
-                />
+                <input type="number" min="0" step="0.01" [(ngModel)]="item.unitPrice"
+                  (ngModelChange)="onCartItemChange(item)" readonly class="price-input" />
               </td>
               <td class="subtotal-cell">{{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}</td>
             </tr>
@@ -152,6 +137,15 @@
             <span class="label">Gross (inc. 12% VAT):</span>
             <span class="value">{{ getGrossPrice() | currency:'PHP':'symbol':'1.2-2' }}</span>
           </div>
+          <div class="total-row">
+            <span class="label">Cashier Name:</span>
+            <span class="value">{{loggedInEmployee.fullName}}</span>
+          </div>
+          <div class="total-row">
+            <span class="label">Invoice Number:</span>
+            <span class="value">{{newInvoice}}</span>
+          </div>
+
         </div>
 
         <div class="bottom-btn">
@@ -171,29 +165,18 @@
 </main>
 
 <div class="modal-overlay" *ngIf="viewSettle">
-  <app-view-settle
-    *ngIf="viewSettle"
-    [cartItems]="selectedProducts"
-    [subtotal]="getTotalPrice()"
-    (paymentConfirmed)="handlePayment($event)"
-    (modalClosed)="closeViewSettle()"
-  ></app-view-settle>
+  <app-view-settle *ngIf="viewSettle" [cartItems]="selectedProducts" [newInvoice]="newInvoice"
+    [subtotal]="getTotalPrice()" (paymentConfirmed)="handlePayment($event)"
+    (modalClosed)="closeViewSettle()"></app-view-settle>
 </div>
 
 <div class="modal-overlay" *ngIf="receipt">
-  <app-print-receipt
-    *ngIf="receipt"
-    [receiptData]="receipt"
-    (closeForm)="closeReceiptForm()"
-  ></app-print-receipt>
+  <app-print-receipt *ngIf="receipt" [receiptData]="receipt" (closeForm)="closeReceiptForm()"></app-print-receipt>
 </div>
 
 <div class="modal-overlay" *ngIf="viewInventory">
-  <app-view-inventory
-    *ngIf="viewInventory"
-    [viewInventory]="viewInventory"
-    (closeForm)="closeViewInventoryForm()"
-  ></app-view-inventory>
+  <app-view-inventory *ngIf="viewInventory" [viewInventory]="viewInventory"
+    (closeForm)="closeViewInventoryForm()"></app-view-inventory>
 </div>
 
 <div class="success-overlay" *ngIf="finishedTransac">

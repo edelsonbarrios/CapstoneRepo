@@ -250,6 +250,13 @@ namespace PharmacyBackend.Service.PostService
                 throw new Exception($"Error creating sales item: {ex.Message}", ex);
             }
         }
+        public async Task<string> GenerateNewInvoiceNumberAsync() 
+        {
+          var newInvoiceNumber = await _postRepo.GenerateNewInvoiceNumberAsync();
+          if(newInvoiceNumber == "") 
+            return "";
+          return newInvoiceNumber;
+        }
         #endregion
 
         #region Discount

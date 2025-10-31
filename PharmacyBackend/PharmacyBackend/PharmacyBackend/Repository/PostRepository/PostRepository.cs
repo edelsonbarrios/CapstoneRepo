@@ -435,10 +435,28 @@ namespace PharmacyBackend.Repository.POST
             }
             return remainingToDeduct;
         }
+        
+        public async Task<string> GenerateNewInvoiceNumberAsync() 
+        {
+          int currentYear = DateTime.Now.Year;
+          int newNumber = 1;
 
+          var lastInvoiceNumber = await _context.SalesTransaction
+            .Where(s => s.InvoiceNumber.StartsWith($"INV-{currentYear}-"))
+            .OrderByDescending(s => s.InvoiceNumber)
+            .Select(s => s.InvoiceNumber)
+            .FirstOrDefaultAsync();
 
-
-
+          if(!string.IsNullOrEmpty(lastInvoiceNumber)) {
+            var match = System.Text.RegularExpressions.Regex.Match(lastInvoiceNumber, @"(\d+)$");
+            if(match.Success && int.TryParse(match.Value, out int lastNumber)) {
+              newNumber = lastNumber + 1;
+            }
+          }
+          
+          string newInvoiceNumber = $"INV-{currentYear}-{newNumber:D4}";
+          return newInvoiceNumber;
+        }
         #endregion
 
         #region Discount

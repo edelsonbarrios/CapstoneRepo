@@ -50,7 +50,7 @@ export class PostService {
     return this.httpClient.post<{message: string}>(`${this.apiUrl}/Post/Account`, account);
   }
   //Account Service End
-  
+
   //VAT Service
   createVatAsync(newVat: CreateVatRequest) : Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/VAT`, newVat);
@@ -112,15 +112,18 @@ export class PostService {
   createNewTypeAsync(type : TypeModel) : Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Type`, type);
   }
-  //Type Service End  
+  //Type Service End
 
   //Sales Service
   createSalesTransactionAsync(transaction: any) : Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/Transaction`, transaction);
   }
+  generateNewInvoiceNumberAsync() : Observable<string> {
+    return this.httpClient.post(`${this.apiUrl}/Post/NewInvoiceNumber`, {}, {responseType : 'text'});
+  }
   //Sales Service End
 
-  //Inventory Service 
+  //Inventory Service
   createNewInventoryAsync(request: CreateInventory) : Observable<boolean> {
     return this.httpClient.post<boolean>(`${this.apiUrl}/Post/Inventory`, request);
   }
@@ -130,7 +133,7 @@ export class PostService {
   createNewStockMovementAsync(request : CreateStockMovement) : Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}/Post/StockMovement`, request);
   }
-  //Stock Movement Service End 
+  //Stock Movement Service End
 
 
   //Category Service

@@ -19,6 +19,7 @@ import { Discount } from '../../../models/discount-models/discount';
 export class ViewSettleComponent implements OnInit {
   @Input() cartItems: CartItem[] = [];
   @Input() subtotal: number = 0;
+  @Input() newInvoice : string = '';
   vats: VAT[] = [];
   discounts: Discount[] = [];
   loggedInEmployee: Employee = new Employee();
@@ -95,9 +96,10 @@ export class ViewSettleComponent implements OnInit {
     this.change = this.payment - total;
   }
 
+
   confirmPayment() {
     const eventPayload = {
-      invoiceNumber: 'INV-' + new Date().getTime(), // or however you generate it
+      invoiceNumber: this.newInvoice, // or however you generate it
       paymentMethod: 'Cash', // or user selection
       amountPaid: this.payment,
       changeAmount: this.change,
