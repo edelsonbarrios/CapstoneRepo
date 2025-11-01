@@ -396,6 +396,16 @@ export const routes: Routes = [
             canActivate: [authGuard],
             data: { roles: ['Inventory Manager'] },
           },
+          {
+            path: 'stock-history',
+            loadComponent: () => {
+              return import (
+                './components/inventory-manager-view/manage-inventory-module/stock-history/stock-history.component'
+              ).then((m) => m.StockHistoryComponent);
+            },
+            canActivate: [authGuard],
+            data: {roles: ['Inventory Manager']},
+          }
         ],
       },
       {
