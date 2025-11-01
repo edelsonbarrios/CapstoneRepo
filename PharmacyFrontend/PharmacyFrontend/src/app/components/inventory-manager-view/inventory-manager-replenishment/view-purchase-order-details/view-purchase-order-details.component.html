@@ -39,10 +39,10 @@
     <!-- Receipt Number Input -->
     <div class="receipt-section">
       <label>Receipt Number</label>
-      <input 
-        type="text" 
-        [(ngModel)]="receiptNumber" 
-        placeholder="Enter receipt number" 
+      <input
+        type="text"
+        [(ngModel)]="receiptNumber"
+        placeholder="Enter receipt number"
         class="receipt-input"
       />
     </div>
@@ -54,15 +54,10 @@
         <thead>
           <tr>
             <th>Product</th>
-            <th>Batch No.</th>
-            <th>MFG Date</th>
-            <th>EXP Date</th>
-            <th>Unit Type</th>
-            <th>Ordered</th>
-            <th>Received</th>
-            <th>Damaged Pcs</th>
-            <th>Unit Price</th>
+            <th>Order Unit Type</th>
+            <th>Order Unit Price</th>
             <th>Total</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -73,52 +68,12 @@
           </tr>
           <tr *ngFor="let item of paginatedItems">
             <td>{{ item.productName }}</td>
-            <td>
-              <input 
-                type="text" 
-                [(ngModel)]="item.batchNumber" 
-                placeholder="Batch No." 
-              />
-            </td>
-            <td [class.error]="item.mfgDateError">
-              <input 
-                type="date" 
-                [(ngModel)]="item.manufacturingDate" 
-                (ngModelChange)="validateMfgDate(item)" 
-              />
-              <p class="error-message" *ngIf="item.mfgDateError">{{ item.mfgDateError }}</p>
-            </td>
-            <td [class.error]="item.expDateError">
-              <input 
-                type="date" 
-                [(ngModel)]="item.expirationDate" 
-                (ngModelChange)="validateExpDate(item)" 
-              />
-              <p class="error-message" *ngIf="item.expDateError">{{ item.expDateError }}</p>
-            </td>
             <td>{{ item.poUnitType }}</td>
-            <td>{{ item.boxQuantityOrdered || item.pieceQuantityOrdered }}</td>
-            <td>
-              <input
-                type="number"
-                [(ngModel)]="item.quantityReceived"
-                [max]="item.quantityOrdered"
-                min="0"
-                (ngModelChange)="updateItemTotal(item)"
-                placeholder="0"
-              />
-            </td>
-            <td>
-              <input
-                type="number"
-                [(ngModel)]="item.damagedPiecesCount"
-                min="0"
-                (ngModelChange)="updateItemTotal(item)"
-                placeholder="0"
-              />
-            </td>
             <td>{{ getDisplayUnitPrice(item) | currency: 'PHP' }}</td>
             <td>{{ item.totalCost | currency: 'PHP' }}</td>
+            <td>
+              <button class="btn-view" (click)="openViewPurchaseOrderItem(item)">View</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -167,4 +122,13 @@
       <button class="ok-btn" (click)="closeReceiedMessage()">OK</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="viewPurchaseOrderItem">
+  <app-view-purchase-order-item
+    *ngIf="viewPurchaseOrderItem"
+    [item]="viewPurchaseOrderItem"
+    (closeModal)="closeViewPurchaseOrderItem()"
+    (saveItem)="saveItemChanges($event)"
+  ></app-view-purchase-order-item>
 </div>

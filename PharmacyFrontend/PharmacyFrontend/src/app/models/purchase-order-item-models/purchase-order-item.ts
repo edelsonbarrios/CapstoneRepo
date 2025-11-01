@@ -17,6 +17,8 @@ export class PurchaseOrderItem {
   expirationDate: Date = new Date();
   unitMeasurement: string = '';
   damagedPiecesCount: number = 0;
+  expiredPiecesCount : number = 0;
+  defectPiecesCount : number = 0;
 
   category: string = '';
   type: string = '';

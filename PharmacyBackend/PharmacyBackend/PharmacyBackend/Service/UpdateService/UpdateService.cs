@@ -883,12 +883,15 @@ namespace PharmacyBackend.Service.UpdateService
                 var sheetsPerBox = product?.SheetsPerBox ?? 0;
                 var piecesPerSheet = product?.PiecesPerSheet ?? 0;
                 var damagedPieces = item.DamagedPiecesCount;
+                var expiredPieces = item.ExpiredPiecesCount;
+                var defectPieces = item.DefectPiecesCount;
+                var totalDeduction = damagedPieces + expiredPieces + defectPieces;
 
                 if (inventory is null) 
                 {
                     if (product.UnitMeasurement == "Multi-Level")
                     {
-                        int computedPieceQty = (item.BoxQuantityReceived * sheetsPerBox * piecesPerSheet) - damagedPieces;
+                        int computedPieceQty = (item.BoxQuantityReceived * sheetsPerBox * piecesPerSheet) - totalDeduction;
                         int computedSheetQty = computedPieceQty /piecesPerSheet;
 
                         int loosePieces = computedPieceQty % piecesPerSheet;

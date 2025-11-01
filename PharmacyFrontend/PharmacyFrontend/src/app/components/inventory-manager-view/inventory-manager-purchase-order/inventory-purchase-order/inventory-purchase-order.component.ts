@@ -145,7 +145,9 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         poUnitType: p.poUnitType,
         quantityOrdered: initialQuantity,
         quantityReceived: 0,
-        damagedPiecesCount: 0
+        damagedPiecesCount: 0,
+        expiredPiecesCount: 0,
+        defectPiecesCount: 0
       };
     });
 

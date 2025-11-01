@@ -23,11 +23,12 @@ import { LogInToken } from '../../../shared/token';
 import { GetService } from '../../../../services/GetService/get.service';
 import { PurchaseOrderItem } from '../../../../models/purchase-order-item-models/purchase-order-item';
 import { Product } from '../../../../models/product-models/product';
+import { ViewPurchaseOrderItemComponent } from '../view-purchase-order-item/view-purchase-order-item.component';
 
 @Component({
   selector: 'app-view-purchase-order-details',
   standalone: true,
-  imports: [NgIf, DatePipe, FormsModule, CurrencyPipe, NgFor],
+  imports: [NgIf, DatePipe, FormsModule, CurrencyPipe, NgFor, ViewPurchaseOrderItemComponent],
   templateUrl: './view-purchase-order-details.component.html',
   styleUrl: './view-purchase-order-details.component.scss',
 })
@@ -39,6 +40,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   paginatedItems: PurchaseOrderItem[] = [];
   markReceivedError: string = '';
   transactionReceived: boolean = false;
+  viewPurchaseOrderItem ?: PurchaseOrderItem | null;
 
   // Pagination properties
   currentPage: number = 1;
@@ -53,8 +55,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getLoggedInEmployee();
     this.updatePagination();
-    
-    console.log(`${JSON.stringify(this.purchaseOrder.purchaseOrderItems)}`);
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -81,6 +82,14 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       startIndex,
       endIndex
     );
+  }
+
+  openViewPurchaseOrderItem(poItem: PurchaseOrderItem) {
+    this.viewPurchaseOrderItem = poItem;
+  }
+
+  closeViewPurchaseOrderItem() {
+    this.viewPurchaseOrderItem = null;
   }
 
   goToPage(page: number) {
@@ -235,12 +244,14 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
         pieceQuantityOrdered: item.pieceQuantityOrdered,
         pieceQuantityReceived: item.pieceQuantityReceived || 0,
         damagedPiecesCount: item.damagedPiecesCount || 0,
+        expiredPiecesCount: item.expiredPiecesCount || 0,
+        defectPiecesCount: item.defectPiecesCount || 0,
+        quantityReceived: item.quantityReceived || 0,
         batchNumber: item.batchNumber,
         manufacturingDate: new Date(item.manufacturingDate).toISOString(),
         expirationDate: new Date(item.expirationDate).toISOString(),
       })),
     };
-    console.log(JSON.stringify(requestPayload));
 
     this.updateService
       .markPurchaseOrderAsReceivedAsync(requestPayload)
@@ -251,6 +262,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
         error: (err) => {
           this.markReceivedError = err.error || 'An error occurred while processing the request';
           console.log('Error payload:', requestPayload);
+
         },
       });
   }
@@ -282,5 +294,25 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
         console.log(`${err.error}`);
       },
     });
+  }
+
+  saveItemChanges(updatedItem: PurchaseOrderItem) {
+    // Find the item in the purchaseOrder and update it
+    if(updatedItem.poUnitType == 'Box') {
+      updatedItem.quantityReceived = updatedItem.boxQuantityReceived;
+    } else if (updatedItem.poUnitType === 'Pieces') {
+    updatedItem.pieceQuantityReceived = updatedItem.quantityReceived;
+    }
+    const index = this.purchaseOrder.purchaseOrderItems.findIndex(
+      i => i.id === updatedItem.id
+    );
+
+    if (index !== -1) {
+      this.purchaseOrder.purchaseOrderItems[index] = updatedItem;
+      this.computeTotalAmount();
+      this.updatePagination();
+    }
+
+    this.closeViewPurchaseOrderItem();
   }
 }

@@ -11,5 +11,7 @@
         public DateTime ManufacturingDate { get; set; }
         public DateTime ExpirationDate { get; set; }
         public int DamagedPiecesCount {get; set; }
+        public int ExpiredPiecesCount {get; set;}
+        public int DefectPiecesCount {get; set;}
     }
 }
