@@ -1048,7 +1048,7 @@ namespace PharmacyBackend.Service.PostService
         {
             try
             {
-                _logger.LogInformation($"Restoring backup: {request.FileName}");
+                _logger.LogInformation($"Restoring backup: {request.fileName}");
                 return await _postRepo.RestoreBackupAsync(request);
             }
             catch (Exception ex)
@@ -1092,11 +1092,6 @@ namespace PharmacyBackend.Service.PostService
             {
                 _logger.LogError(ex, "Error during automated backup");
             }
-        }
-
-        public async Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings)
-        {
-            throw new NotImplementedException("Settings are read from appsettings.json and cannot be updated at runtime");
         }
 
         #endregion

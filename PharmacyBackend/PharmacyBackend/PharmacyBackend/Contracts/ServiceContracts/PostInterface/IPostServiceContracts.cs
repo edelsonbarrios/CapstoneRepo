@@ -105,7 +105,6 @@ namespace PharmacyBackend.Contracts.ServiceContracts.PostInterface
         #region BackUp Database
         Task<CreateBackupResponse> CreateBackupAsync(CreateBackupRequest request);
         Task<RestoreBackupResponse> RestoreBackupAsync(RestoreBackupRequest request);
-        Task<bool> UpdateBackupSettingsAsync(BackupSettingsDto settings);
         Task PerformAutomatedBackupAsync(); // For background service
 
         #endregion

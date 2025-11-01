@@ -1,0 +1,22 @@
+<div class="modal-overlay">
+  <div class="wrapper">
+    <h1>{{message}}</h1>
+    <p class="subtext">This action cannot be undone. Please confirm your choice.</p>
+
+    <div class="button-wrapper">
+      <button class="btn-confirm" (click)="onCommit()">Yes, Restore</button>
+      <button class="btn-cancel" (click)="closeRestoreForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">{{alertMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
+  </div>
+</div>

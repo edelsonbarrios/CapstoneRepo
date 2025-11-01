@@ -823,7 +823,7 @@ namespace PharmacyBackend.Repository.POST
                 var backupDir = GetBackupDirectory();
 
                 // Combine the directory path with the filename to get the full path
-                var backupPath = Path.Combine(backupDir, request.FileName);
+                var backupPath = Path.Combine(backupDir, request.fileName);
 
                 _logger.LogInformation($"Starting restore from: {backupPath}");
 
