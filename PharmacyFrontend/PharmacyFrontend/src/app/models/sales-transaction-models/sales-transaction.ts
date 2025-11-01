@@ -10,6 +10,7 @@ export class SalesTransaction {
   vatAmount: number = 0;
   netAmount: number = 0;
   paymentMethod: string = '';
+  referenceNumber: string = '';
   amountPaid: number = 0;
   changeAmount: number = 0;
   discountId: number = 0;

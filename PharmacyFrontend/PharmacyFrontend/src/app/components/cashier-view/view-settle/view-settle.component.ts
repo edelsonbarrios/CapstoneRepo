@@ -103,12 +103,13 @@ export class ViewSettleComponent implements OnInit {
   confirmPayment() {
     const eventPayload = {
       invoiceNumber: this.newInvoice, // or however you generate it
-      paymentMethod: 'Cash', // or user selection
+      paymentMethod: this.selectedPaymentMethod, // or user selection
       amountPaid: this.payment,
       changeAmount: this.change,
       discountAmount:
         this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
       vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
+      referenceNumber: this.refNum,
       discountId: 1, // use actual discount ID from DB if available
       employeeID: this.loggedInEmployee.id, // pass logged-in user ID
       vatId: this.selectedVat?.vatid, // optional if you don’t track by table

@@ -12,6 +12,7 @@ namespace PharmacyBackend.DTOs.SalesDTOs
         [Required]
         [StringLength(20)]
         public string PaymentMethod { get; set; }
+        public string ReferenceNumber { get; set; }
 
         [Required]
         [Range(0, double.MaxValue)]

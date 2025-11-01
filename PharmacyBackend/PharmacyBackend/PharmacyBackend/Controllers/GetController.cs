@@ -57,6 +57,7 @@ namespace PharmacyBackend.Controllers
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAsync()
         {
             var employees = await _getService.GetAllEmployeesAsync();
+
             if (!employees.Any() || employees.Count() == 0)
                 return NotFound("There is no employees currently registered.");
             return Ok(employees);

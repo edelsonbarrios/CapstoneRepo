@@ -26,6 +26,11 @@
         <label>Payment Method</label>
         <p>{{viewSales.paymentMethod}}</p>
       </div>
+
+      <div class="transaction-info" *ngIf="viewSales.paymentMethod == 'e-Payment'">
+        <label>Reference Number</label>
+        <p>{{viewSales.referenceNumber}}</p>
+      </div>
     </div>
 
     <!-- Items Section -->

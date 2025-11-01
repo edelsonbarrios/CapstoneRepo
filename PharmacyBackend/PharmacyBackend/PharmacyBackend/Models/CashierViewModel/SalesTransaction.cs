@@ -25,6 +25,7 @@ namespace PharmacyBackend.Models.CashierViewModel
         public decimal NetAmount { get; set; }
 
         public string PaymentMethod { get; set; }
+        public string ReferenceNumber { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal AmountPaid { get; set; }

@@ -11,6 +11,7 @@ namespace PharmacyBackend.DTOs.SalesDTOs
         public decimal VATAmount { get; set; }
         public decimal NetAmount { get; set; }
         public string PaymentMethod { get; set; }
+        public string ReferenceNumber { get; set; }
         public decimal AmountPaid { get; set; }
         public decimal ChangeAmount { get; set; }
         public int DiscountId { get; set; }

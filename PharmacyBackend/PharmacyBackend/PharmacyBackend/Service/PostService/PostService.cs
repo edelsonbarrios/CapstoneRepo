@@ -158,6 +158,7 @@ namespace PharmacyBackend.Service.PostService
                     TransactionDate = DateTime.UtcNow,
                     InvoiceNumber = dto.InvoiceNumber,
                     PaymentMethod = dto.PaymentMethod,
+                    ReferenceNumber = dto.ReferenceNumber,
                     AmountPaid = dto.AmountPaid,
                     ChangeAmount = dto.ChangeAmount,
                     DiscountId = dto.DiscountId,

@@ -150,6 +150,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("text");
 
+                    b.Property<string>("ReferenceNumber")
+                        .HasColumnType("text");
+
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
