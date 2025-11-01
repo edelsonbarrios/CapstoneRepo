@@ -6,6 +6,8 @@ import { PostService } from '../../../services/PostService/post.service';
 import { Product } from '../../../models/product-models/product';
 import { CreateSalesItemDto } from '../../../models/sales-transaction-models/create-sales-item';
 import { FormsModule } from '@angular/forms';
+import { LogInToken } from '../../shared/token';
+import { jwtDecode } from 'jwt-decode';
 import {
   CommonModule,
   CurrencyPipe,
@@ -67,7 +69,7 @@ export class CashierTransactionComponent implements OnInit {
     this.startDate = this.formatDate(today);
     this.endDate = this.formatDate(today);
 
-    this.getAllSalesTransactions();
+    this.getLoggedInEmployee();
     this.getSummarySalesForToday();
     this.getProductSalesSummary();
   }
@@ -81,7 +83,7 @@ export class CashierTransactionComponent implements OnInit {
   }
 
   getAllSalesTransactions() {
-    this.getService.getAllSalesTransactionsAsync().subscribe({
+    this.getService.getSalesTransactionByCashier(this.loggedInEmployee.id).subscribe({
       next: (res) => {
         this.transactions = res;
         this.updateSalesPagination();
@@ -89,6 +91,7 @@ export class CashierTransactionComponent implements OnInit {
       },
       error: (err) => {
         console.log(`${err.error}`);
+        console.log(`${this.loggedInEmployee.id}`);
       },
     });
   }
@@ -257,4 +260,26 @@ export class CashierTransactionComponent implements OnInit {
   closeViewSalesForm() {
     this.viewSales = null;
   }
+
+  getLoggedInEmployee() {
+      const token = localStorage.getItem(LogInToken);
+      if (!token) {
+      console.log(`Token does not exist.`);
+      return;
+      }
+
+      const employee: any = jwtDecode(token);
+      const employeeId = parseInt(employee.EmployeeId);
+
+      this.getService.GetEmployeeById(employeeId).subscribe({
+        next: (employee) => {
+          this.loggedInEmployee = employee;
+          this.getAllSalesTransactions();
+        },
+        error: (err) => {
+          console.log(`${err.error}`);
+        },
+      });
+    }
+
 }

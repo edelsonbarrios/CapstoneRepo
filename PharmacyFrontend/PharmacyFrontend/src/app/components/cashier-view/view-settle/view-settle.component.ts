@@ -29,6 +29,9 @@ export class ViewSettleComponent implements OnInit {
   totalPages: number = 0;
   itemsPerPage: number = 2;
   paginateItems: CartItem[] = [];
+  paymentMethods: string[] = ['Cash', 'e-Payment'];
+  selectedPaymentMethod: string = '';
+  refNum : string = '';
 
   @Output() paymentConfirmed = new EventEmitter<any>();
   @Output() modalClosed = new EventEmitter<void>();

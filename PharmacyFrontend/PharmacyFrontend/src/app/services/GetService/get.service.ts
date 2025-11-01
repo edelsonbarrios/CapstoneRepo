@@ -187,6 +187,9 @@ export class GetService {
       `${this.apiUrl}/Get/TransactionAll`
     );
   }
+  getSalesTransactionByCashier(id: number) : Observable<SalesTransaction[]> {
+    return this.httpClient.get<SalesTransaction[]>(`${this.apiUrl}/Get/TransactionByEmployeeId?employeeId=${id}`);
+  }
   getDailySalesSummaryAsync(): Observable<DailySalesSummary> {
     return this.httpClient.get<DailySalesSummary>(
       `${this.apiUrl}/Get/daily-sales/summary`
@@ -220,13 +223,13 @@ export class GetService {
       { params }
     );
   }
-  
+
   getSummarySalesForTodayAsync(): Observable<DailySalesSummary> {
     return this.httpClient.get<DailySalesSummary>(
       `${this.apiUrl}/Get/DailySalesSummary`
     );
   }
-  
+
   getProductSalesSummaryAsync(
     startDate?: Date | string,
     endDate?: Date | string
