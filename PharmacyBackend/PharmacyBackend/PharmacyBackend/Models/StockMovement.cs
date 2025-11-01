@@ -10,7 +10,7 @@ namespace PharmacyBackend.Models
         public int InventoryID { get; set; }
         public Inventory Inventory { get; set; } // Navigation
 
-        public string MovementType { get; set; } = string.Empty; // "Stock In", "Sale", "Adjustment", "Expired", "Damaged"
+        public string MovementType { get; set; } = string.Empty; // "Stock In", "Sale", "Adjustment", "Expired", "Damaged", "Count Correction"
 
         // Multi-unit changes
         public int BoxQuantityChanged { get; set; } = 0;

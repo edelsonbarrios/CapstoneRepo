@@ -468,4 +468,31 @@ export class GetService {
     });
   }
   //Database-BackUp Services End
+
+  //StockHistory Services
+
+  getStockHistory(
+    startDate?: string,
+    endDate?: string,
+    transactionType?: string,
+    searchTerm?: string
+  ): Observable<any> {
+    let params = new HttpParams();
+
+    if (startDate) {
+      params = params.set('startDate', startDate);
+    }
+    if (endDate) {
+      params = params.set('endDate', endDate);
+    }
+    if (transactionType) {
+      params = params.set('transactionType', transactionType);
+    }
+    if (searchTerm) {
+      params = params.set('searchTerm', searchTerm);
+    }
+
+    return this.httpClient.get<any>(`${this.apiUrl}/GET/StockHistory`, { params });
+  }
+  //StockHistory Services end
 }

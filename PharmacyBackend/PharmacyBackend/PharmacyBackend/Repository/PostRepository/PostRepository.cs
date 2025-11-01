@@ -359,6 +359,31 @@ namespace PharmacyBackend.Repository.POST
                     remainingToDeduct = await DeductFromBoxesFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
                     break;
             }
+            var stockMovement = new StockMovement
+            {
+                InventoryID = inventory.InventoryID,
+                MovementType = "Sale", // This matches your frontend filter options
+
+                // Calculate the actual changes (negative values for deductions)
+                BoxQuantityChanged = inventory.BoxQuantity - beforeBox,
+                SheetQuantityChanged = inventory.SheetQuantity - beforeSheet,
+                PieceQuantityChanged = inventory.PieceQuantity - beforePiece,
+
+                // Before quantities
+                BoxQuantityBefore = beforeBox,
+                SheetQuantityBefore = beforeSheet,
+                PieceQuantityBefore = beforePiece,
+
+                // After quantities
+                BoxQuantityAfter = inventory.BoxQuantity,
+                SheetQuantityAfter = inventory.SheetQuantity,
+                PieceQuantityAfter = inventory.PieceQuantity,
+
+                ReferenceNumber = referenceNumber, // This will be the invoice number (e.g., INV-2025-0001)
+                Notes = $"Sale transaction - {unitType} unit type deduction",
+                MovementDate = DateTime.UtcNow,
+                EmployeeID = employeeId // The cashier/employee who made the sale
+            };
 
             _context.Inventory.Update(inventory);
             await _context.SaveChangesAsync();

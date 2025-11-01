@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CreateStockMovement } from '../../../../models/inventory-module-models/createStockMovement';
 import { PostService } from '../../../../services/PostService/post.service';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
 import { GetService } from '../../../../services/GetService/get.service';
@@ -22,16 +21,23 @@ import { LoginVerificationComponent } from '../login-verification/login-verifica
 export class StockAdjustComponent implements OnInit {
   @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
+  
   employee: Employee = new Employee();
-  loginVerify?: Inventory | null;
+  loginVerify: boolean = false;
+  
+  // Form fields
   boxQuantityChanged: number = 0;
   sheetQuantityChanged: number = 0;
   pieceQuantityChanged: number = 0;
-  notes : string = '';
+  notes: string = '';
   refNumber: string = '';
   movementType: string = '';
-  movementTypes : string[] = ['Damaged', 'Expired', 'Loss', 'Found', 'Count Correction', 'Transfer', 'Return'];
+  movementTypes: string[] = ['Damaged', 'Expired', 'Count Correction'];
+  
+  // UI states
   showSuccessAlert: boolean = false;
+  isSubmitting: boolean = false;
+  errorMessage: string = '';
 
   constructor(
     private postService: PostService,
@@ -43,57 +49,124 @@ export class StockAdjustComponent implements OnInit {
   }
 
   createNewStockMovement() {
-    if(!this.stockAdjust) return;
-    const requestPayload : StockAdjustment = {
-      inventoryID : this.stockAdjust.inventoryID,
-      movementType : this.movementType,
-      boxQuantityAdjustment: this.boxQuantityChanged,
-      sheetQuantityAdjustment: this.sheetQuantityChanged,
-      pieceQuantityAdjustment: this.pieceQuantityChanged,
-      referenceNumber : this.refNumber,
-      notes: this.notes,
-      employeeID : this.employee.id
+    // Validation
+    if (!this.validateForm()) {
+      return;
     }
+
+    if (!this.stockAdjust) {
+      this.errorMessage = 'No inventory selected';
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
+    // ✅ FIXED: Use PascalCase property names to match backend DTO
+    const requestPayload: StockAdjustment = {
+      InventoryID: this.stockAdjust.inventoryID,
+      MovementType: this.movementType,
+      BoxQuantityAdjustment: this.boxQuantityChanged,
+      SheetQuantityAdjustment: this.sheetQuantityChanged,
+      PieceQuantityAdjustment: this.pieceQuantityChanged,
+      ReferenceNumber: this.refNumber,
+      Notes: this.notes,
+      EmployeeID: this.employee.id
+    };
+
     this.postService.adjustInventoryStockAsync(requestPayload).subscribe({
-      next: res => {
+      next: (res) => {
+        this.isSubmitting = false;
         this.showSuccessAlert = true;
       },
-      error: err => {
-        console.log(`${err.error}`);
+      error: (err) => {
+        this.isSubmitting = false;
+        this.errorMessage = err.error?.message || err.error || 'Failed to adjust stock. Please try again.';
+        console.error('Stock adjustment error:', err);
       }
     });
   }
 
+  validateForm(): boolean {
+    // Check if movement type is selected
+    if (!this.movementType) {
+      this.errorMessage = 'Please select a movement type';
+      return false;
+    }
+
+    // Check if at least one quantity is adjusted
+    const hasAdjustment = this.boxQuantityChanged !== 0 || 
+                          this.sheetQuantityChanged !== 0 || 
+                          this.pieceQuantityChanged !== 0;
+
+    if (!hasAdjustment) {
+      this.errorMessage = 'Please adjust at least one quantity (Box, Sheet, or Piece)';
+      return false;
+    }
+
+    // Check if reference number is provided
+    if (!this.refNumber || this.refNumber.trim() === '') {
+      this.errorMessage = 'Please provide a reference number';
+      return false;
+    }
+
+    this.errorMessage = '';
+    return true;
+  }
+
   getLoggedInUser() {
-    var token = localStorage.getItem(LogInToken);
-    if (!token) return;
+    const token = localStorage.getItem(LogInToken);
+    if (!token) {
+      console.error('No authentication token found');
+      return;
+    }
 
-    var employee: any = jwtDecode(token);
+    try {
+      const decodedToken: any = jwtDecode(token);
+      const employeeId = parseInt(decodedToken.EmployeeId);
+      
+      if (!employeeId) {
+        console.error('Employee ID does not exist in token');
+        return;
+      }
 
-    const employeeId = parseInt(employee.EmployeeId);
-    if (!employeeId) console.log(`Employee Id does not exist.`);
-
-    this.getService.GetEmployeeById(employeeId).subscribe({
-      next: (res) => {
-        this.employee = res;
-      },
-      error: (err) => {
-        console.log(`Logged-in user does not exist.`);
-      },
-    });
+      this.getService.GetEmployeeById(employeeId).subscribe({
+        next: (res) => {
+          this.employee = res;
+        },
+        error: (err) => {
+          console.error('Failed to fetch logged-in user:', err);
+        },
+      });
+    } catch (error) {
+      console.error('Failed to decode token:', error);
+    }
   }
 
   openLoginVerifyForm() {
-    this.loginVerify = new Inventory();
-  } 
+    this.loginVerify = true;
+  }
+
+  closeLoginVerifyForm() {
+    this.loginVerify = false;
+  }
 
   closeStockAdjustmentForm() {
     this.closeForm.emit();
-    console.log(this.stockAdjust);
   }
 
   closeSuccessAlert() {
     this.showSuccessAlert = false;
     this.closeStockAdjustmentForm();
+  }
+
+  clearForm() {
+    this.boxQuantityChanged = 0;
+    this.sheetQuantityChanged = 0;
+    this.pieceQuantityChanged = 0;
+    this.notes = '';
+    this.refNumber = '';
+    this.movementType = '';
+    this.errorMessage = '';
   }
 }

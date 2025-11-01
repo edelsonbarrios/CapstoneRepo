@@ -2263,7 +2263,8 @@ namespace PharmacyBackend.Service.GetService
                 SheetQuantityAfter = sm.SheetQuantityAfter,
                 PieceQuantityAfter = sm.PieceQuantityAfter,
 
-                PerformedBy = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : "System",
+                EmployeeID = sm.EmployeeID,
+                PerformedBy = sm.Employee != null ? $"{sm.Employee.FirstName} {sm.Employee.LastName}" : string.Empty,
                 Notes = sm.Notes
             }).ToList();
 

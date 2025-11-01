@@ -21,6 +21,7 @@ export class CreateStockComponent implements OnInit{
   @Output() closeForm = new EventEmitter<void>();
   products : Product[] = [];
   employee: Employee = new Employee();
+  employeeId: number = 0;
   selectedProduct : Product = new Product();
   showSuccessAlert: boolean = false;
 
@@ -136,7 +137,7 @@ export class CreateStockComponent implements OnInit{
       piecePrice : this.createStock.piecePrice,
       referenceNumber : '',
       notes: '',
-      employeeID: this.employee.id,
+      employeeID: this.employeeId,
       piecePerBox: this.selectedProduct.piecePerBox
     }
     this.postService.createNewInventoryAsync(requestPayload).subscribe({
@@ -150,6 +151,7 @@ export class CreateStockComponent implements OnInit{
     });
   }
 
+  
   closeCreateInventoryForm() {
     this.productError = '';
     this.batchNumberError = '';
