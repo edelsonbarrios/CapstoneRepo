@@ -359,10 +359,14 @@ namespace PharmacyBackend.Repository.POST
                     remainingToDeduct = await DeductFromBoxesFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
                     break;
             }
+            _context.Inventory.Update(inventory);
+            await _context.SaveChangesAsync();
+
+
             var stockMovement = new StockMovement
             {
                 InventoryID = inventory.InventoryID,
-                MovementType = "Sale", // This matches your frontend filter options
+                MovementType = "Sale",
 
                 // Calculate the actual changes (negative values for deductions)
                 BoxQuantityChanged = inventory.BoxQuantity - beforeBox,
@@ -385,7 +389,7 @@ namespace PharmacyBackend.Repository.POST
                 EmployeeID = employeeId // The cashier/employee who made the sale
             };
 
-            _context.Inventory.Update(inventory);
+            await _context.StockMovement.AddAsync(stockMovement);
             await _context.SaveChangesAsync();
 
             return piecesNeeded - remainingToDeduct;
