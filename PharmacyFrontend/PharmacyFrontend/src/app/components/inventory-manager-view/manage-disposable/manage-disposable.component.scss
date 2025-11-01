@@ -1,0 +1,96 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: #f9fbfe;
+  padding: 1.25rem;
+  gap: 1rem;
+
+  .header {
+    width: 100%;
+    
+    h2 {
+      color: #f15252;
+      font-size: 1.75rem;
+      margin: 0;
+    }
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+
+      .search-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f1f3f6;
+
+        .search-box {
+          width: 420px;
+          padding: 0.6rem 1rem;
+          border: none;
+          background: transparent;
+          font-size: 0.95rem;
+          outline: none;
+
+          &:focus {
+            background: #fff;
+          }
+        }
+
+        .btn.search-btn {
+          background: #4a90e2;
+          color: #fff;
+          padding: 0.6rem 1rem;
+          border: none;
+          cursor: pointer;
+          font-weight: 600;
+          transition: background 0.3s;
+
+          &:hover {
+            background: #357ab7;
+          }
+        }
+      }
+    }
+
+    .modern-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td {
+        padding: 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid #e6e6e6;
+        font-size: 14px;
+      }
+
+      th {
+        background: #f1f3f6;
+        font-weight: 600;
+        color: #333;
+      }
+
+      tr:hover {
+        background: #f9fafb;
+      }
+    }
+  }
+}

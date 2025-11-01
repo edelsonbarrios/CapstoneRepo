@@ -167,8 +167,14 @@
       .top-meds-table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 16px;
-        margin-top: 12px;
+
+        th {
+          padding: 14px 12px;
+          text-align: left;
+          font-weight: 600;
+          font-size: 14px;
+          border-bottom: 1px solid rgb(235, 235, 235);
+        }
 
         td {
           padding: 14px 12px;
@@ -182,7 +188,8 @@
           &:first-child {
             font-weight: 600;
             color: #3498ff;
-            width: 50px;
+            width: 100px;
+            
           }
 
           &:last-child {
