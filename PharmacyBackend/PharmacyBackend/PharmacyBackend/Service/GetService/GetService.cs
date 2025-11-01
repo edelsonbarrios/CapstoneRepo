@@ -452,6 +452,7 @@ namespace PharmacyBackend.Service.GetService
                 VATAmount = t.VATAmount,
                 NetAmount = t.NetAmount,
                 PaymentMethod = t.PaymentMethod,
+                ReferenceNumber = t.ReferenceNumber,
                 AmountPaid = t.AmountPaid,
                 ChangeAmount = t.ChangeAmount,
                 DiscountId = t.DiscountId,
