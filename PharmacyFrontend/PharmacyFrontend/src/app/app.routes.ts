@@ -479,6 +479,16 @@ export const routes: Routes = [
         },
         canActivate: [authGuard],
         data: { roles: ['Inventory Manager'] },
+      },
+      {
+        path: 'manage-disposable',
+        loadComponent: () => {
+          return import (
+            './components/inventory-manager-view/manage-disposable/manage-disposable.component'
+          ).then((m) => m.ManageDisposableComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Inventory Manager'] },
       }
     ],
   },
