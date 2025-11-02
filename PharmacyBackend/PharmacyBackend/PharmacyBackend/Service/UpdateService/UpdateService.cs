@@ -929,6 +929,13 @@ namespace PharmacyBackend.Service.UpdateService
                         int computedPieceQty = (item.BoxQuantityReceived * product.PiecePerBox) - damagedPieces;
                         int totalBoxes = computedPieceQty / product.PiecePerBox;
                         int loosePieces = computedPieceQty % product.PiecePerBox;
+                        if(computedPieceQty <= 0)
+                            return new MarkAsReceivedResult
+                            {
+                                Success = false,
+                                ProductName = product.ProductName,
+                                Message = $"The total pieces of {product.ProductName} is less than 0"
+                            };
 
                         var newInventory = new Inventory
                         {

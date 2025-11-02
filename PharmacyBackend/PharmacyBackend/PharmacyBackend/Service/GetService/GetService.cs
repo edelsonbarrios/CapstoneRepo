@@ -27,6 +27,8 @@ using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Repository.GET;
 using Microsoft.EntityFrameworkCore.Update;
 using PharmacyBackend.DTOs.StockHistoryDTOs;
+using System.Runtime.Intrinsics.Arm;
+using PharmacyBackend.Helper;
 
 namespace PharmacyBackend.Service.GetService
 {
@@ -307,7 +309,7 @@ namespace PharmacyBackend.Service.GetService
             {
                 Id = account.Id,
                 Username = account.Username,
-                Password = account.EncryptedPassword,
+                Password = AesHelper.Decrypt(account.EncryptedPassword),
                 EmployeeId = account.EmployeeId
             };
             return modifEmployee;
