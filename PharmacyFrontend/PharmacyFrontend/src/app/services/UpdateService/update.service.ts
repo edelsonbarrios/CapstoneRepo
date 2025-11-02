@@ -114,8 +114,8 @@ export class UpdateService {
   //Purchase Order Service
   markPurchaseOrderAsReceivedAsync(
     purchaseOrder: PurchaseOrderReceivedRequest
-  ): Observable<boolean> {
-    return this.httpClient.put<boolean>(
+  ): Observable<{message: string, productName: string, success: boolean}> {
+    return this.httpClient.put<{message: string, productName: string, success: boolean}>(
       `${this.apiUrl}/Put/MarkAsReceived`,
       purchaseOrder
     );

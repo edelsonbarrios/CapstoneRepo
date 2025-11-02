@@ -45,13 +45,8 @@
               Batch Number
               <span class="required">*</span>
             </label>
-            <input
-              id="batchNumber"
-              type="text"
-              [(ngModel)]="localItem.batchNumber"
-              placeholder="Enter batch number"
-              class="form-input"
-            />
+            <input id="batchNumber" type="text" [(ngModel)]="localItem.batchNumber" placeholder="Enter batch number"
+              class="form-input" />
           </div>
 
           <div class="form-group" [class.error]="localItem.mfgDateError">
@@ -60,13 +55,8 @@
               Manufacturing Date
               <span class="required">*</span>
             </label>
-            <input
-              id="mfgDate"
-              type="date"
-              [(ngModel)]="localItem.manufacturingDate"
-              (ngModelChange)="validateMfgDate()"
-              class="form-input"
-            />
+            <input id="mfgDate" type="date" [(ngModel)]="localItem.manufacturingDate"
+              (ngModelChange)="validateMfgDate()" class="form-input" />
             <p class="error-message" *ngIf="localItem.mfgDateError">
               {{ localItem.mfgDateError }}
             </p>
@@ -78,13 +68,8 @@
               Expiration Date
               <span class="required">*</span>
             </label>
-            <input
-              id="expDate"
-              type="date"
-              [(ngModel)]="localItem.expirationDate"
-              (ngModelChange)="validateExpDate()"
-              class="form-input"
-            />
+            <input id="expDate" type="date" [(ngModel)]="localItem.expirationDate" (ngModelChange)="validateExpDate()"
+              class="form-input" />
             <p class="error-message" *ngIf="localItem.expDateError">
               {{ localItem.expDateError }}
             </p>
@@ -105,14 +90,8 @@
           <div class="quantity-card received">
             <i class="fas fa-check-circle"></i>
             <label>Received</label>
-            <input
-              type="number"
-              [(ngModel)]="localItem.quantityReceived"
-              [max]="localItem.quantityOrdered"
-              min="0"
-              placeholder="0"
-              class="quantity-input"
-            />
+            <input type="number" [(ngModel)]="localItem.quantityReceived" [max]="localItem.quantityOrdered" min="0"
+              placeholder="0" class="quantity-input" />
           </div>
         </div>
       </div>
@@ -126,14 +105,8 @@
               <i class="fas fa-box-damage"></i>
               Damaged Pieces
             </label>
-            <input
-              id="damaged"
-              type="number"
-              [(ngModel)]="localItem.damagedPiecesCount"
-              min="0"
-              placeholder="0"
-              class="form-input"
-            />
+            <input id="damaged" type="number" [(ngModel)]="localItem.damagedPiecesCount" min="0" placeholder="0"
+              class="form-input" />
           </div>
 
           <div class="form-group">
@@ -141,14 +114,8 @@
               <i class="fas fa-exclamation-triangle"></i>
               Expired Pieces
             </label>
-            <input
-              id="expired"
-              type="number"
-              [(ngModel)]="localItem.expiredPiecesCount"
-              min="0"
-              placeholder="0"
-              class="form-input"
-            />
+            <input id="expired" type="number" [(ngModel)]="localItem.expiredPiecesCount" min="0" placeholder="0"
+              class="form-input" />
           </div>
 
           <div class="form-group">
@@ -156,45 +123,43 @@
               <i class="fas fa-ban"></i>
               Defect Pieces
             </label>
-            <input
-              id="defect"
-              type="number"
-              [(ngModel)]="localItem.defectPiecesCount"
-              min="0"
-              placeholder="0"
-              class="form-input"
-            />
+            <input id="defect" type="number" [(ngModel)]="localItem.defectPiecesCount" min="0" placeholder="0"
+              class="form-input" />
+          </div>
+
+        </div>
+        <!-- Total Cost -->
+        <div class="section total-section">
+          <div class="total-display">
+            <label>
+              <i class="fas fa-calculator"></i>
+              Total Cost
+            </label>
+            <p class="total-amount">{{ calculateTotal() | currency: 'PHP' }}</p>
           </div>
         </div>
-
-        <div class="deductions-summary" *ngIf="validateQuantities()">
-          <i class="fas fa-exclamation-circle"></i>
-          <p>{{ validateQuantities() }}</p>
-        </div>
       </div>
 
-      <!-- Total Cost -->
-      <div class="section total-section">
-        <div class="total-display">
-          <label>
-            <i class="fas fa-calculator"></i>
-            Total Cost
-          </label>
-          <p class="total-amount">{{ calculateTotal() | currency: 'PHP' }}</p>
-        </div>
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="onCancel()">
+          <i class="fas fa-times"></i>
+          Cancel
+        </button>
+        <button class="btn btn-save" (click)="onSave()">
+          <i class="fas fa-save"></i>
+          Save Changes
+        </button>
       </div>
-    </div>
-
-    <!-- Modal Footer -->
-    <div class="modal-footer">
-      <button class="btn btn-cancel" (click)="onCancel()">
-        <i class="fas fa-times"></i>
-        Cancel
-      </button>
-      <button class="btn btn-save" (click)="onSave()">
-        <i class="fas fa-save"></i>
-        Save Changes
-      </button>
     </div>
   </div>
-</div>
+
+  <div class="error-overlay" *ngIf="errorMessage">
+    <div class="error-alert">
+      <div class="alert-icon">X</div>
+      <p class="alert-message">{{errorMessage}}</p>
+      <div class="alert-footer">
+        <button class="ok-btn" (click)="closeErrorMessageForm()">OK</button>
+      </div>
+    </div>
+  </div>

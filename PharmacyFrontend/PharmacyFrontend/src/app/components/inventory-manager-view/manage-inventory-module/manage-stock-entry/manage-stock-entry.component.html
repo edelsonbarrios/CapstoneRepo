@@ -20,8 +20,9 @@
           <th>Batch No.</th>
           <th>Product Name</th>
           <th>Box Qty</th>
+          <th>Sheet Qty</th>
+          <th>Piece Qty</th>
           <th>Expiration</th>
-          <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -35,10 +36,9 @@
           <td>{{i.batchNumber}}</td>
           <td>{{i.productName}}</td>
           <td>{{i.boxQuantity}}</td>
+          <td>{{i.sheetQuantity}}</td>
+          <td>{{i.pieceQuantity}}</td>
           <td>{{i.expirationDate | date: 'dd-MM-yyyy'}}</td>
-          <td>
-            <span class="status in-stock">In Stock</span>
-          </td>
           <td>
             <button class="btn-view" (click)="openViewEntryForm(i)">View Details</button>
             <button class="btn-delete" (click)="openDeleteConfirmation(i)">Delete</button>

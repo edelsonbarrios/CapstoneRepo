@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PurchaseOrderItem } from '../../../../models/purchase-order-item-models/purchase-order-item';
+import { GetService } from '../../../../services/GetService/get.service';
+import { Product } from '../../../../models/product-models/product';
 
 @Component({
   selector: 'app-view-purchase-order-item',
@@ -14,6 +16,12 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
   @Input() item: PurchaseOrderItem = new PurchaseOrderItem();
   @Output() closeModal = new EventEmitter<void>();
   @Output() saveItem = new EventEmitter<PurchaseOrderItem>();
+  product: Product = new Product();
+  errorMessage : string = '';
+
+  constructor(
+    private getService : GetService,
+  ) {}
 
   // Local copy to prevent direct mutation until save
   localItem: PurchaseOrderItem = new PurchaseOrderItem();
@@ -62,19 +70,15 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
     }
   }
 
-  validateQuantities() {
-    const received = this.localItem.quantityReceived || 0;
-    const damaged = this.localItem.damagedPiecesCount || 0;
-    const expired = this.localItem.expiredPiecesCount || 0;
-    const defect = this.localItem.defectPiecesCount || 0;
-
-    const totalDeductions = damaged + expired + defect;
-
-    if (totalDeductions > received) {
-      return 'Total damaged, expired, and defect pieces cannot exceed received quantity';
-    }
-
-    return '';
+  getProductInfo() {
+    this.getService.getProductByIdAsync(this.localItem.productId).subscribe({
+      next: res => {
+        this.product = res;
+      },
+      error: err => {
+        console.log(`Product does not exist.`);
+      }
+    });
   }
 
   calculateTotal() {
@@ -108,19 +112,32 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
     // Validate all fields
     this.validateMfgDate();
     this.validateExpDate();
-    const quantityError = this.validateQuantities();
 
-    if (this.localItem.mfgDateError || this.localItem.expDateError || quantityError) {
-      alert(quantityError || 'Please correct the errors before saving');
+    if (this.localItem.mfgDateError || this.localItem.expDateError) {
+      this.errorMessage = 'Please fix the Manufacturing Date & Expiration Date';
+      return;
+    }
+
+    if(this.localItem.quantityReceived <= 0 || !this.localItem.quantityReceived) {
+      this.errorMessage = `Quantity Received of ${this.localItem.productName} is 0`;
       return;
     }
 
     // Update total cost
     this.localItem.totalCost = this.calculateTotal();
 
+    if(this.localItem.totalCost <= 0)  {
+      this.errorMessage = 'There is no more pieces left. Please try again.';
+      return;
+    }
+
     // Emit the updated item
     this.saveItem.emit(this.localItem);
     console.log(`${JSON.stringify(this.localItem)}`);
+  }
+
+  closeErrorMessageForm() {
+    this.errorMessage = '';
   }
 
   onCancel() {

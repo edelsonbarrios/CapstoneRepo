@@ -17,6 +17,7 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.VatEntryDTOs;
+using PharmacyBackend.Models;
 using PharmacyBackend.Helper;
 using System.Diagnostics.Contracts;
 
@@ -412,7 +413,7 @@ namespace PharmacyBackend.Controllers
             return Ok("Purchase Order updated successfully.");
         }
         [HttpPut("MarkAsReceived")]
-        public async Task<ActionResult<bool>> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
+        public async Task<ActionResult<MarkAsReceivedResult>> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
         {
             if (request is null)
                 return BadRequest("Purchase order is empty");
@@ -427,8 +428,8 @@ namespace PharmacyBackend.Controllers
             }
 
             var purchaseOrder = await _updateService.MarkAsReceivedAsync(request);
-            if (!purchaseOrder)
-                return BadRequest("Please fill all the required properties.");
+            if (!purchaseOrder.Success)
+                return BadRequest(purchaseOrder);
 
             return Ok(purchaseOrder);
         }

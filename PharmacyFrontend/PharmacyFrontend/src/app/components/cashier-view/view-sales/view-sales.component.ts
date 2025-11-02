@@ -41,7 +41,7 @@ export class ViewSalesComponent implements OnInit, OnChanges {
     this.updatePagination();
     this.getCashier();
   }
-
+ 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['items']) {
       this.currentPage = 1;

@@ -857,17 +857,17 @@ namespace PharmacyBackend.Service.UpdateService
             return true;
 
         }
-        public async Task<bool> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
+        public async Task<MarkAsReceivedResult> MarkAsReceivedAsync(PurchaseOrderReceivedRequest request)
         {
             var purchaseOrder = await _getRepo.GetPurchaseOrderByIdAsync(request.PurchaseOrderId);
             purchaseOrder.ReceiptNumber = request.ReceiptNumber;
             if (purchaseOrder is null)
-                return false;
+                return new MarkAsReceivedResult { Success = false, ProductName = "", Message = "Purchase Order does not exist."};
 
             foreach (var item in request.PurchaseOrderItems)
             {
                 if (item.BoxQuantityReceived <= 0 && item.PieceQuantityReceived <= 0)
-                    return false;
+                    return new MarkAsReceivedResult {Success = false, Message = "Quantity Received is 0", ProductName = ""};
                 var poItem = purchaseOrder.PurchaseOrderItems
                     .FirstOrDefault(po => po.Id == item.Id);
                 if (poItem is null)
@@ -892,6 +892,9 @@ namespace PharmacyBackend.Service.UpdateService
                     if (product.UnitMeasurement == "Multi-Level")
                     {
                         int computedPieceQty = (item.BoxQuantityReceived * sheetsPerBox * piecesPerSheet) - totalDeduction;
+                        if(computedPieceQty <= 0) 
+                          return new MarkAsReceivedResult {Success = false, ProductName = product.ProductName, 
+                            Message = $"The total pieces of {product.ProductName} is less than 0"};
                         int computedSheetQty = computedPieceQty /piecesPerSheet;
 
                         int loosePieces = computedPieceQty % piecesPerSheet;
@@ -952,6 +955,13 @@ namespace PharmacyBackend.Service.UpdateService
                     else // Single-level
                     {
                         int actualPieces = item.PieceQuantityReceived - damagedPieces;
+                        if (actualPieces <= damagedPieces)
+                            return new MarkAsReceivedResult
+                            {
+                                Success = false,
+                                ProductName = product.ProductName,
+                                Message = "The total pieces of {product.ProductName} is less than 0"
+                            };
                         var newInventory = new Inventory
                         {
                             ProductID = item.ProductID,
@@ -1002,7 +1012,7 @@ namespace PharmacyBackend.Service.UpdateService
             purchaseOrder.TotalAmount = request.TotalAmount;
             await _context.SaveChangesAsync();
 
-            return true;
+            return new MarkAsReceivedResult {Message = "Purchase Order successfully received.", Success = true,};
         }
 
         public async Task<bool> ArchivePurchaseOrderByIdAsync(int id)
