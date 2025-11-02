@@ -114,7 +114,7 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
     this.validateExpDate();
 
     if (this.localItem.mfgDateError || this.localItem.expDateError) {
-      this.errorMessage = 'Please fix the Manufacturing Date & Expiration Date';
+      this.errorMessage = 'Fix the Manufacturing Date & Expiration Date';
       return;
     }
 

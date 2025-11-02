@@ -3,32 +3,44 @@
     <div class="modal-header">
       <h2>Verification</h2>
     </div>
-    
+
     <div class="modal-body">
       <div class="form-group">
-        <label for="user">User</label>
-        <input 
-          type="text" 
-          id="user" 
-          name="user" 
+        <label>User</label>
+        <input
+          type="text"
+          id="user"
+          name="user"
           placeholder="Enter username"
+          [(ngModel)]="enteredUserName"
         />
       </div>
-      
+
       <div class="form-group">
-        <label for="password">Password</label>
-        <input 
-          type="password" 
-          id="password" 
-          name="password" 
+        <label>Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
           placeholder="Enter password"
+          [(ngModel)]="enteredPassword"
         />
       </div>
     </div>
-    
+
     <div class="modal-footer">
-      <button class="btn btn-cancel">Cancel</button>
-      <button class="btn btn-verify">Verify</button>
+      <button class="btn btn-cancel" (click)="closeVerificationForm()">Cancel</button>
+      <button class="btn btn-verify" (click)="verification()">Verify</button>
+    </div>
+  </div>
+</div>
+
+<div class="error-overlay" *ngIf="errorMessage">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">{{errorMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeErrorMessageForm()">OK</button>
     </div>
   </div>
 </div>

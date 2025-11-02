@@ -96,4 +96,8 @@ export class StockAdjustComponent implements OnInit {
     this.showSuccessAlert = false;
     this.closeStockAdjustmentForm();
   }
+
+  closeVerificationForm() {
+    this.loginVerify = null;
+  }
 }
