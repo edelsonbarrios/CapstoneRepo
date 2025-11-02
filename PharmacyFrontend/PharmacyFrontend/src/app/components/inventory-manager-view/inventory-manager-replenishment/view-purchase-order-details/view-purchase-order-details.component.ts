@@ -299,7 +299,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   saveItemChanges(updatedItem: PurchaseOrderItem) {
     // Find the item in the purchaseOrder and update it
     if(updatedItem.poUnitType == 'Box') {
-      updatedItem.quantityReceived = updatedItem.boxQuantityReceived;
+      updatedItem.boxQuantityReceived = updatedItem.quantityReceived;
     } else if (updatedItem.poUnitType === 'Pieces') {
     updatedItem.pieceQuantityReceived = updatedItem.quantityReceived;
     }

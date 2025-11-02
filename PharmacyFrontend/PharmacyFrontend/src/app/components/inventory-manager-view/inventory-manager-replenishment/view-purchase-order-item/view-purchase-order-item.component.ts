@@ -105,7 +105,6 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
   }
 
   onSave() {
-    console.log('✅ Modal saving quantityReceived:', this.localItem.quantityReceived);
     // Validate all fields
     this.validateMfgDate();
     this.validateExpDate();
