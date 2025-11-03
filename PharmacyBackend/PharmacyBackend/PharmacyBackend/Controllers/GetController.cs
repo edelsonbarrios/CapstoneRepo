@@ -11,6 +11,8 @@ using PharmacyBackend.DTOs.PuchaseOrderDTOs;
 using PharmacyBackend.DTOs.SalesDTOs;
 using PharmacyBackend.DTOs.SupplierDTOs;
 using PharmacyBackend.DTOs.DailySaleDTOs;
+using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.CategoryDTOs;
 using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
@@ -372,6 +374,14 @@ namespace PharmacyBackend.Controllers
 
             return Ok(product);
         }
+        [HttpGet("InactiveProducts")]
+        public async Task<ActionResult<List<ProductDto>>> GetAllInactiveProductsAsync() 
+        {
+          var inactiveProducts = await _getService.GetAllInactiveProductsAsync();
+          if(!inactiveProducts.Any() || inactiveProducts.Count() == 0)
+            return NotFound(new List<ProductDto>());
+          return Ok(inactiveProducts);
+        }
         #endregion
 
         #region Category
@@ -393,6 +403,15 @@ namespace PharmacyBackend.Controllers
                 return NotFound(new { Message = "Category not found." });
 
             return Ok(category);
+        }
+
+        [HttpGet("InactiveCategories")]
+        public async Task<ActionResult<List<CategoryDto>>> GetAllInactiveCategoriesAsync() 
+        {
+          var inactiveCategories = await _getService.GetAllInactiveCategoriesAsync();
+          if(!inactiveCategories.Any() || inactiveCategories.Count() == 0)
+            return NotFound(new List<CategoryDto>());
+          return Ok(inactiveCategories);
         }
         #endregion
 

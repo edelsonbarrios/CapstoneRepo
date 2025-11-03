@@ -99,6 +99,9 @@ export class GetService {
   getAllCategoriesAsync(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(`${this.apiUrl}/Get/CategoryAll`);
   }
+  getAllInactiveCategoriesAsync() : Observable<Category[]> {
+    return this.httpClient.get<Category[]>(`${this.apiUrl}/Get/InactiveCategories`);
+  }
   //CategoryService End
 
   //Brand Service
@@ -150,6 +153,9 @@ export class GetService {
   }
   getProductByIdAsync(id: number) : Observable<Product> {
     return this.httpClient.get<Product>(`${this.apiUrl}/Get/Product?id=${id}`);
+  }
+  getAllInactiveProductsAsync() : Observable<Product[]>{
+    return this.httpClient.get<Product[]>(`${this.apiUrl}/Get/InactiveProducts`);
   }
   //Product Service End
 

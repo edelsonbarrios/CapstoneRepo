@@ -1,35 +1,199 @@
 <div class="wrapper">
-  <div class="header">
-    <h2>Disposables</h2>
+  <div class="page-header">
+    <div class="header-content">
+      <div class="icon-title">
+        <div class="icon-wrapper">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="title-section">
+          <h1>Manage Disposables</h1>
+          <p>View and manage all disposable items</p>
+        </div>
+      </div>
+    </div>
   </div>
-  
+
   <div class="card">
-    <!-- Search & Add Disposable -->
-    <div class="table-header">
+    <!-- Search Bar -->
+    <div class="search-section">
       <div class="search-wrapper">
-        <input type="text" placeholder="🔍 Search Disposable" class="search-box"/>
-        <button class="btn search-btn">Search</button>
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="Search by name..."
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()">
+        <span class="result-count" *ngIf="searchQuery">
+          {{filteredItems.length}} results
+        </span>
       </div>
     </div>
 
-    <!-- Disposable Table -->
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Action Performed</th>
-          <th>Performed by</th>
-          <th>Time Stamp</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Sample Item</td>
-          <td>Sample Action</td>
-          <td>Sample Performed</td>
-          <td>Sample Time</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Table -->
+    <div class="table-container">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of paginatedItems" class="table-row">
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-product': item.entityType === 'product',
+                  'badge-category': item.entityType === 'category'
+                }">
+                <i [class]="item.entityType === 'product' ? 'fas fa-box' : 'fas fa-tag'"></i>
+                {{getItemType(item)}}
+              </span>
+            </td>
+            <td class="item-name">{{getItemName(item)}}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-action btn-edit" (click)="editItem(item)" title="Edit">
+                  Restore
+                </button>
+             </div>
+            </td>
+          </tr>
+          <tr *ngIf="paginatedItems.length === 0" class="no-data-row">
+            <td colspan="3">
+              <div class="no-data">
+                <i class="fas fa-inbox"></i>
+                <p>No items found</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-section" *ngIf="totalPages > 1">
+      <div class="pagination-info">
+        Showing {{((currentPage - 1) * itemsPerPage) + 1}} to {{Math.min(currentPage * itemsPerPage, filteredItems.length)}} of {{filteredItems.length}} items
+      </div>
+      <div class="pagination-controls">
+        <button
+          class="page-btn"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <button
+          *ngFor="let page of pageNumbers"
+          class="page-btn page-number"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)">
+          {{page}}
+        </button>
+
+        <button
+          class="page-btn"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="icon-title">
+        <div class="icon-wrapper">
+          <i [class]="isEditMode ? 'fas fa-edit' : 'fas fa-plus'"></i>
+        </div>
+        <div class="title">
+          <h2>{{isEditMode ? 'Edit Item' : 'Add New Item'}}</h2>
+          <p>{{isEditMode ? 'Update item details' : 'Create a new disposable item'}}</p>
+        </div>
+      </div>
+      <button class="btn-close" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <fieldset>
+        <legend>
+          <i class="fas fa-info-circle"></i>
+          Item Details
+        </legend>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>
+              Type
+              <span class="required">*</span>
+            </label>
+            <select [(ngModel)]="formData.entityType" class="form-select">
+              <option value="product">Product</option>
+              <option value="category">Category</option>
+            </select>
+          </div>
+          <div class="form-group" [class.error]="!formData.name.trim() && formData.name !== ''">
+            <label>
+              Name
+              <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="formData.name"
+              placeholder="Enter item name"
+              class="form-input">
+            <span class="error-message" *ngIf="!formData.name.trim() && formData.name !== ''">
+              <i class="fas fa-exclamation-circle"></i>
+              Name is required
+            </span>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+        Cancel
+      </button>
+      <button
+        class="btn btn-save"
+        (click)="saveItem()"
+        [disabled]="!formData.name.trim()">
+        <i class="fas fa-check"></i>
+        {{isEditMode ? 'Update' : 'Save'}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Alert -->
+<div class="modal-overlay" *ngIf="showSuccessAlert" (click)="closeSuccessAlert()">
+  <div class="success-alert" (click)="$event.stopPropagation()">
+    <div class="alert-icon">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="40" fill="#10b981" opacity="0.1"/>
+        <circle cx="40" cy="40" r="32" fill="#10b981" opacity="0.2"/>
+        <path d="M25 40L35 50L55 30" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">
+      Item has been {{isEditMode ? 'updated' : 'created'}} successfully.
+    </p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">
+        OK
+      </button>
+    </div>
   </div>
 </div>
