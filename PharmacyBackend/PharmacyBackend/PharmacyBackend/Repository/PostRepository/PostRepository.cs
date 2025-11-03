@@ -32,6 +32,12 @@ namespace PharmacyBackend.Repository.POST
             _config = config;
             _logger = logger;
         }
+
+        #region utc convert to local
+        private DateTime GetPhilippineTime() => DateTime.UtcNow.AddHours(8);
+
+        #endregion
+
         #region Account
         public async Task<string> AuthenticationAsync(LogInRequest request)
         {
@@ -146,7 +152,7 @@ namespace PharmacyBackend.Repository.POST
                 {
                     await ProcessSalesItemAsync(item, salesTransaction.InvoiceNumber, salesTransaction.EmployeeID);
                 }
-
+                salesTransaction.TransactionDate = GetPhilippineTime();
                 // Calculate totals
                 salesTransaction.TotalAmount = salesTransaction.Items.Sum(si => si.Subtotal);
                 salesTransaction.NetAmount = salesTransaction.TotalAmount - salesTransaction.DiscountAmount + salesTransaction.VATAmount;

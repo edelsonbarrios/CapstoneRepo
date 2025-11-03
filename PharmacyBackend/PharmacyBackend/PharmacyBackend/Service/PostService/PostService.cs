@@ -58,6 +58,8 @@ namespace PharmacyBackend.Service.PostService
             _deleteServ = deleteServ;
         }
 
+
+
         #region Account
         public async Task<string> AuthenticationAsync(LogInRequest request)
         {
