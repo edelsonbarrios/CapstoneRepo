@@ -253,11 +253,14 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       })),
     };
 
+    console.log(`${JSON.stringify(requestPayload)}`);
+
     this.updateService
       .markPurchaseOrderAsReceivedAsync(requestPayload)
       .subscribe({
         next: (res) => {
           this.transactionReceived = true;
+          console.log(`${JSON.stringify(requestPayload)}`);
         },
         error: (err) => {
           this.markReceivedError = err.error || 'An error occurred while processing the request';

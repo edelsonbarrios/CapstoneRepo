@@ -525,7 +525,6 @@ namespace PharmacyBackend.Controllers
         /// Create a manual backup
         /// </summary>
         [HttpPost("backups/create")]
-        //[Authorize] // Add role if needed: [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CreateBackupResponse>> CreateBackup(
             [FromBody] CreateBackupRequest request)
         {

@@ -959,9 +959,9 @@ namespace PharmacyBackend.Service.UpdateService
 
                         await _postRepo.CreateInventoryAsync(newInventory);
                     }
-                    else // Single-level
+                    else if(product.UnitMeasurement == "Single-Level") // Single-level
                     {
-                        int actualPieces = item.PieceQuantityReceived - damagedPieces;
+                        int actualPieces = item.PieceQuantityReceived - totalDeduction;
                         if (actualPieces <= damagedPieces)
                             return new MarkAsReceivedResult
                             {
