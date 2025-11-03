@@ -15,6 +15,12 @@
 
   <!-- MODAL BODY -->
   <div class="modal-body">
+    <!-- Error Alert -->
+    <div class="error-alert" *ngIf="errorMessage">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
     <fieldset>
       <legend>
         <i class="fas fa-edit"></i>
@@ -25,56 +31,79 @@
 
         <!-- Box Quantity Adjustment -->
         <div class="form-group">
-          <label for="boxQuantity">Box Quantity Adjustment</label>
+          <label for="boxQuantity">
+            Box Quantity Adjustment
+            <span class="hint">(Use negative numbers to reduce)</span>
+          </label>
           <input 
             type="number" 
             id="boxQuantity"
             [(ngModel)]="boxQuantityChanged"
+            placeholder="e.g., -5 or +10"
           />
         </div>
 
         <!-- Sheet Quantity Adjustment -->
         <div class="form-group">
-          <label for="sheetQuantity">Sheet Quantity Adjustment</label>
+          <label for="sheetQuantity">
+            Sheet Quantity Adjustment
+            <span class="hint">(Use negative numbers to reduce)</span>
+          </label>
           <input 
             type="number" 
             id="sheetQuantity"
             [(ngModel)]="sheetQuantityChanged"
+            placeholder="e.g., -5 or +10"
           />
         </div>
 
         <!-- Piece Quantity Adjustment -->
         <div class="form-group">
-          <label for="pieceQuantity">Piece Quantity Adjustment</label>
+          <label for="pieceQuantity">
+            Piece Quantity Adjustment
+            <span class="hint">(Use negative numbers to reduce)</span>
+          </label>
           <input 
             type="number" 
             id="pieceQuantity"
             [(ngModel)]="pieceQuantityChanged"
+            placeholder="e.g., -5 or +10"
           />
         </div>
 
         <!-- Movement Type -->
         <div class="form-group">
-          <label for="movementType">Movement Type</label>
-          <select id="movementType" [(ngModel)]="movementType">
-            <option *ngFor="let mt of movementTypes" [value]="mt">{{mt}}</option>
+          <label for="movementType">
+            Movement Type <span class="required">*</span>
+          </label>
+          <select 
+            id="movementType" 
+            [(ngModel)]="movementType"
+            [class.error-border]="!movementType && errorMessage"
+          >
+            <option value="" disabled selected>Select movement type</option>
+            <option *ngFor="let mt of movementTypes" [value]="mt">{{ mt }}</option>
           </select>
         </div>
 
         <!-- Reference Number -->
         <div class="form-group">
-          <label for="refNumber">Reference Number</label>
+          <label for="refNumber">
+            Reference Number <span class="required">*</span>
+          </label>
           <input 
             type="text" 
             id="refNumber"
             [(ngModel)]="refNumber"
+            placeholder="e.g., ADJ-2025-001"
+            [class.error-border]="!refNumber && errorMessage"
           />
         </div>
 
         <!-- Employee Name -->
         <div class="form-group">
           <label>Employee Name</label>
-          <div class="display-value">{{employee.fullName}}</div>
+          <div class="display-value">{{ employee.fullName || 'Loading...' }}</div>
         </div>
 
       </div>
@@ -94,12 +123,22 @@
 
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn btn-cancel" (click)="closeStockAdjustmentForm()">
+    <button 
+      class="btn btn-cancel" 
+      (click)="closeStockAdjustmentForm()"
+      [disabled]="isSubmitting"
+    >
+      <i class="fas fa-times"></i>
       Cancel
     </button>
-    <button class="btn btn-save" (click)="createNewStockMovement()" (click)="openLoginVerifyForm()">
-      <i class="fas fa-save"></i>
-      Save Adjustment
+    <button 
+      class="btn btn-save" 
+      (click)="createNewStockMovement()"
+      [disabled]="isSubmitting"
+    >
+      <i class="fas fa-spinner fa-spin" *ngIf="isSubmitting"></i>
+      <i class="fas fa-save" *ngIf="!isSubmitting"></i>
+      {{ isSubmitting ? 'Saving...' : 'Save Adjustment' }}
     </button>
   </div>
 </div>
@@ -122,6 +161,7 @@
   </div>
 </div>
 
+<!-- Login Verification Modal (if needed) -->
 <div class="modal-overlay" *ngIf="loginVerify">
   <app-login-verification
   *ngIf="loginVerify"

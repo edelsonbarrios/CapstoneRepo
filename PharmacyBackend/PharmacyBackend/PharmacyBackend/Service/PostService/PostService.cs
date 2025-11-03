@@ -732,7 +732,8 @@ namespace PharmacyBackend.Service.PostService
                         SheetQuantityChanged = dto.SheetQuantity,
                         PieceQuantityChanged = dto.PieceQuantity,
                         ReferenceNumber = dto.ReferenceNumber,
-                        Notes = dto.Notes ?? $"Stock addition to batch {dto.BatchNumber}"
+                        Notes = dto.Notes ?? $"Stock addition to batch {dto.BatchNumber}",
+                        EmployeeID = dto.EmployeeID
                     };
 
                     await CreateStockMovementAsync(movement);
@@ -817,7 +818,9 @@ namespace PharmacyBackend.Service.PostService
                         SheetQuantityChanged = dto.SheetQuantity,
                         PieceQuantityChanged = dto.PieceQuantity,
                         ReferenceNumber = dto.ReferenceNumber,
-                        Notes = dto.Notes ?? $"New batch {dto.BatchNumber} created."
+                        Notes = dto.Notes ?? $"New batch {dto.BatchNumber} created.",
+                        EmployeeID = dto.EmployeeID
+
                     };
 
                     await CreateStockMovementAsync(movement);
@@ -834,6 +837,7 @@ namespace PharmacyBackend.Service.PostService
 
         public async Task<bool> AdjustInventoryStockAsync(StockAdjustmentDto dto)
         {
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
@@ -843,7 +847,7 @@ namespace PharmacyBackend.Service.PostService
                     throw new ArgumentException($"Inventory with ID {dto.InventoryID} not found");
 
                 // Validate movement type
-                var validTypes = new[] { "Damaged", "Expired", "Loss", "Found", "Count Correction", "Transfer", "Return" };
+                var validTypes = new[] { "Damaged", "Expired", "Count Correction", "Sale" };
                 if (!validTypes.Contains(dto.MovementType, StringComparer.OrdinalIgnoreCase))
                     throw new ArgumentException($"Invalid movement type. Valid types: {string.Join(", ", validTypes)}");
 
@@ -866,6 +870,7 @@ namespace PharmacyBackend.Service.PostService
                     PieceQuantityChanged = dto.PieceQuantityAdjustment,
                     ReferenceNumber = dto.ReferenceNumber,
                     Notes = dto.Notes,
+                    EmployeeID = dto.EmployeeID
                 };
 
                 await CreateStockMovementAsync(stockMovement);
@@ -916,6 +921,8 @@ namespace PharmacyBackend.Service.PostService
         #region PurchaseOrder
         public async Task<bool> CreatePurchaseOrderAsync(CreatePurchaseOrderDto dto)
         {
+
+
             var supplier = await _context.Supplier.FirstOrDefaultAsync(s => s.SupplierName == dto.SupplierName);
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.LastName == dto.EmployeeLastName);
 

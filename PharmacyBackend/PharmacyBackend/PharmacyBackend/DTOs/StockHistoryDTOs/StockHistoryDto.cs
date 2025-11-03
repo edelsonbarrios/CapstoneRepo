@@ -24,6 +24,7 @@
         public int SheetQuantityAfter { get; set; }
         public int PieceQuantityAfter { get; set; }
 
+        public int? EmployeeID { get; set; }
         public string PerformedBy { get; set; } = string.Empty;
         public string? Notes { get; set; }
     }

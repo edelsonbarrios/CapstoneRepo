@@ -1196,10 +1196,10 @@ namespace PharmacyBackend.Repository.GET
 
         #region StockHistory 
         public async Task<IEnumerable<StockMovement>> GetStockHistoryAsync(
-    DateTime? startDate,
-    DateTime? endDate,
-    string? transactionType,
-    string? searchTerm)
+            DateTime? startDate,
+            DateTime? endDate,
+            string? transactionType,
+            string? searchTerm)
         {
             var query = _context.StockMovement
                 .Include(sm => sm.Inventory)
@@ -1220,22 +1220,21 @@ namespace PharmacyBackend.Repository.GET
                 query = query.Where(sm => sm.MovementDate >= startDateUtc);
             }
 
-            // Apply transaction type filter
             if (!string.IsNullOrEmpty(transactionType) &&
                 !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
             {
-                // Map UI transaction types to database movement types
                 var movementType = transactionType switch
                 {
                     "Stock Entry" => "Stock In",
                     "Adjustment" => "Adjustment",
+                    "Count Correction" => "Count Correction",
                     "Sale" => "Sale",
                     "Damaged" => "Damaged",
                     "Expired" => "Expired",
                     _ => transactionType
                 };
 
-                query = query.Where(sm => sm.MovementType.Equals(movementType, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(sm => sm.MovementType.ToLower() == movementType.ToLower());
             }
 
             // Apply search filter
@@ -1283,12 +1282,13 @@ namespace PharmacyBackend.Repository.GET
                     "Stock Entry" => "Stock In",
                     "Adjustment" => "Adjustment",
                     "Sale" => "Sale",
+                    "Count Correction" => "Count Correction",
                     "Damaged" => "Damaged",
                     "Expired" => "Expired",
                     _ => transactionType
                 };
 
-                query = query.Where(sm => sm.MovementType.Equals(movementType, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(sm => sm.MovementType.ToLower() == movementType.ToLower());
             }
 
             var movements = await query.ToListAsync();
@@ -1296,13 +1296,13 @@ namespace PharmacyBackend.Repository.GET
             return new StockHistorySummaryDto
             {
                 TotalTransactions = movements.Count,
-                StockEntries = movements.Count(sm => sm.MovementType.Equals("Stock In", StringComparison.OrdinalIgnoreCase)),
-                Adjustments = movements.Count(sm => sm.MovementType.Equals("Adjustment", StringComparison.OrdinalIgnoreCase)),
+                StockEntries = movements.Count(sm => sm.MovementType.ToLower() == "stock in"),
+                Adjustments = movements.Count(sm => sm.MovementType.ToLower() == "adjustment" || sm.MovementType.ToLower() == "count correction"),
                 SalesRemovals = movements.Count(sm =>
-                    sm.MovementType.Equals("Sale", StringComparison.OrdinalIgnoreCase) ||
-                    sm.MovementType.Equals("Damaged", StringComparison.OrdinalIgnoreCase) ||
-                    sm.MovementType.Equals("Expired", StringComparison.OrdinalIgnoreCase) ||
-                    sm.MovementType.Equals("Loss", StringComparison.OrdinalIgnoreCase)
+                    sm.MovementType.ToLower() == "sale" ||
+                    sm.MovementType.ToLower() == "damaged" ||
+                    sm.MovementType.ToLower() == "expired" ||
+                    sm.MovementType.ToLower() == "loss"
                 )
             };
         }

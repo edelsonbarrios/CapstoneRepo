@@ -1,10 +1,10 @@
 export class StockAdjustment {
-  inventoryID : number = 0;
-  boxQuantityAdjustment : number = 0;
-  sheetQuantityAdjustment: number = 0;
-  pieceQuantityAdjustment: number = 0;
-  movementType: string = '';
-  referenceNumber: string = '';
-  notes: string = '';
-  employeeID: number = 0;
+  InventoryID: number = 0;
+  BoxQuantityAdjustment: number = 0;
+  SheetQuantityAdjustment: number = 0;
+  PieceQuantityAdjustment: number = 0;
+  MovementType: string = '';
+  ReferenceNumber: string = '';
+  Notes: string = '';
+  EmployeeID: number = 0;
 }

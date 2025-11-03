@@ -42,11 +42,21 @@ export class ManageStockAdjustmentComponent implements OnInit {
   }
 
   get filteredStockMovements(): StockMovement[] {
+    let movements = this.stockMovements;
+    
+    // ✅ FILTER OUT "Sale" and "Stock In" types - only show manual adjustments
+    movements = movements.filter(sm => {
+      const type = sm.movementType.toLowerCase();
+      return type !== 'sale';
+    });
+
+    // Apply search filter
     if (!this.searchQuery.trim()) {
-      return this.stockMovements;
+      return movements;
     }
+    
     const query = this.searchQuery.toLowerCase();
-    return this.stockMovements.filter(sm => 
+    return movements.filter(sm => 
       sm.productName.toLowerCase().includes(query) ||
       sm.referenceNumber.toLowerCase().includes(query)
     );
