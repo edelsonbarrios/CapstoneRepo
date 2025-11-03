@@ -30,7 +30,7 @@ export class ViewSettleComponent implements OnInit {
   itemsPerPage: number = 2;
   paginateItems: CartItem[] = [];
   paymentMethods: string[] = ['Cash', 'e-Payment'];
-  selectedPaymentMethod: string = '';
+  selectedPaymentMethod: string = 'Cash';
   refNum : string = '';
 
   @Output() paymentConfirmed = new EventEmitter<any>();
