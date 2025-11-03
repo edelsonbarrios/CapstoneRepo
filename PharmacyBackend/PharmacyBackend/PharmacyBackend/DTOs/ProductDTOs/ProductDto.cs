@@ -39,5 +39,6 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public string ClassificationName { get; set; } = string.Empty;
         public string TypeName { get; set; } = string.Empty;
         public string SupplierName { get; set; } = string.Empty;
+        public string PoUnitType {get; set;}
     }
 }

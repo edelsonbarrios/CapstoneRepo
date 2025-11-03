@@ -38,6 +38,8 @@ export class CashierDashboardComponent implements OnInit {
   finishedTransac: boolean = false;
   receipt: any;
   newInvoice: string = '';
+  timeNow: Date = new Date();
+  timer : any;
 
   products: (Product & {
     selected?: boolean;
@@ -80,6 +82,10 @@ export class CashierDashboardComponent implements OnInit {
     this.getAllProducts();
     this.getAllCategories();
     this.generateNewInvoiceNumber();
+
+    this.timer = setInterval(() => {
+      this.timeNow = new Date();
+    }, 1000);
   }
 
   resetComponent(): void {

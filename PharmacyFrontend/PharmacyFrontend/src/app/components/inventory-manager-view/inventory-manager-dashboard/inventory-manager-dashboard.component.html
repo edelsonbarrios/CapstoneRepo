@@ -39,13 +39,14 @@
   <div class="second-container">
     <div class="table-card">
       <p class="card-title">Critical Stock Items</p>
-      
+
       <table class="modern-table">
         <thead>
           <tr>
             <th>Product</th>
             <th>Batch</th>
-            <th>Box Quantity</th>
+            <th>Unit Type</th>
+            <th>Quantity</th>
             <th>Reorder</th>
           </tr>
         </thead>
@@ -56,7 +57,9 @@
           <tr *ngFor="let i of paginatedCriticalItems">
             <td>{{i.productName}}</td>
             <td>{{i.batchNumber}}</td>
-            <td><span class="badge badge-danger">{{i.boxQuantity}}</span></td>
+            <td *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">Box</td>
+            <td *ngIf="i.product.unitMeasurement == 'Single-Level'">Pieces</td>
+            <td><span class="badge badge-danger">{{i.boxQuantity || i.pieceQuantity}}</span></td>
             <td>{{i.reorderLevel}}</td>
           </tr>
         </tbody>
@@ -72,14 +75,14 @@
 
     <div class="table-card">
       <p class="card-title">Near Expiry Items</p>
-      
+
       <table class="modern-table">
         <thead>
           <tr>
             <th>Product</th>
             <th>Batch</th>
             <th>Expiry Date</th>
-            <th>Stock</th>  
+            <th>Stock</th>
           </tr>
         </thead>
         <tbody>

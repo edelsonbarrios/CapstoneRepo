@@ -3,6 +3,7 @@ import { GetService } from '../../../services/GetService/get.service';
 import { InventoryDashboard } from '../../../models/inventory-module-models/inventory-dashboard';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Inventory } from '../../../models/inventory-module-models/inventory';
 
 @Component({
   selector: 'app-inventory-manager-dashboard',
@@ -15,7 +16,7 @@ export class InventoryManagerDashboardComponent implements OnInit{
   inventoryDashboard: InventoryDashboard = new InventoryDashboard();
 
   // Paginated arrays
-  paginatedCriticalItems: any[] = [];
+  paginatedCriticalItems: Inventory[] = [];
   paginatedNearExpiryItems: any[] = [];
   paginatedExpiredItems: any[] = [];
 

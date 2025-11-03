@@ -22,7 +22,7 @@ export class Product {
 
   totalStock: number = 0;
   expiredStock: number = 0;
-  nearExpiryStock: number = 0;  
+  nearExpiryStock: number = 0;
   isCriticalStock: boolean = false;
   hasExpiredStock: boolean = false;
 
