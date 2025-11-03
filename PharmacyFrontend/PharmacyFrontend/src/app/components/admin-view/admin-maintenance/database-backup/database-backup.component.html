@@ -12,16 +12,8 @@
             Enable Automatic Backups
           </label>
         </div>
-        
-        <div class="setting-item">
-          <label>Schedule Type</label>
-          <select [(ngModel)]="settings.scheduleType" class="input-field">
-            <option value="Daily">Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Monthly">Monthly</option>
-          </select>
-        </div>
 
+    
         <div class="setting-item">
           <label>Backup Time</label>
           <input type="time" [(ngModel)]="settings.scheduleTime" class="input-field">
