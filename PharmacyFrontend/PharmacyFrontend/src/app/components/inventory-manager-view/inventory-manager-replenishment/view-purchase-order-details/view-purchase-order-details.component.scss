@@ -172,25 +172,25 @@
 
   .items-section {
     margin-bottom: 1.25rem;
-    overflow-x: auto;
   }
 
   .item-table {
     width: 100%;
-    min-width: 1100px;
     border-collapse: separate;
     border-spacing: 0;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 0.75rem;
+    table-layout: fixed;
 
     th,
     td {
       padding: 0.625rem 0.75rem;
       text-align: left;
       font-size: 0.8125rem;
-      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     thead tr {
@@ -205,7 +205,12 @@
       letter-spacing: 0.05em;
       border-bottom: 2px solid #e2e8f0;
       white-space: nowrap;
-      min-width: fit-content;
+
+      &:nth-child(1) { width: 35%; } // Product
+      &:nth-child(2) { width: 20%; } // Order Unit Type
+      &:nth-child(3) { width: 18%; } // Order Unit Price
+      &:nth-child(4) { width: 15%; } // Total
+      &:nth-child(5) { width: 12%; } // Action
     }
 
     tbody tr {
@@ -226,12 +231,11 @@
       font-size: 0.8125rem;
       color: #334155;
       font-weight: 500;
-      min-width: fit-content;
 
-      &:last-child {
+      &:nth-child(3),
+      &:nth-child(4) {
         font-weight: 600;
         color: #006dba;
-        min-width: 100px;
       }
 
       input[type="text"],
@@ -608,23 +612,23 @@
 
 // Animations
 @keyframes fadeIn {
-from {
-  opacity: 0;
-}
-to {
-  opacity: 1;
-}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-to {
-  opacity: 1;
-  transform: translateY(0);
-}
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // Responsive Design
@@ -675,4 +679,3 @@ to {
   backdrop-filter: blur(4px);
   z-index: 999;
 }
-
