@@ -384,17 +384,11 @@ namespace PharmacyBackend.Service.PostService
 
         public async Task<ProductDto> CreateProductAsync(CreateProductDto dto)
         {
-            // Resolve category first to determine if it's medicine
-            var categoryId = await GetCategoryIdByNameAsync(dto.CategoryName);
-            if (categoryId == null)
-                throw new ArgumentException($"Category '{dto.CategoryName}' not found.");
-
-            // Get category to check if it's medicine
-            var category = await _context.Category.FindAsync(categoryId.Value);
+            var category = await _context.Category.FirstOrDefaultAsync(c => c.CategoryName.Equals(dto.CategoryName));
             if (category == null)
                 throw new ArgumentException($"Category not found in database.");
 
-            bool isMedicine = category.CategoryName.Equals("Medicine", StringComparison.OrdinalIgnoreCase);
+            bool isMultiLevel = dto.UnitMeasurement.Equals("Multi-Level", StringComparison.OrdinalIgnoreCase);
 
             // Medicine-specific fields - only resolve and validate if category is Medicine
             int? brandId = null;
@@ -403,7 +397,7 @@ namespace PharmacyBackend.Service.PostService
             int? classificationId = null;
             int? typeId = null;
 
-            if (isMedicine)
+            if (isMultiLevel)
             {
                 brandId = await GetBrandIdByNameAsync(dto.BrandName);
                 genericId = await GetGenericIdByNameAsync(dto.GenericName);
@@ -462,7 +456,7 @@ namespace PharmacyBackend.Service.PostService
             var product = new Product
             {
                 ProductName = dto.ProductName,
-                CategoryID = categoryId.Value,
+                CategoryID = category.CategoryID,
                 BrandID = brandId,
                 GenericID = genericId,
                 FormulationID = formulationId,

@@ -1,5 +1,5 @@
 <div class="modal" *ngIf="!showSuccessAlert">
-  
+
   <!-- MODAL HEADER -->
   <div class="modal-header">
     <div class="icon-title">
@@ -29,10 +29,10 @@
             Product Name
             <span class="required">*</span>
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="productName"
-            placeholder="Enter Product Name" 
+            placeholder="Enter Product Name"
             [(ngModel)]="newProduct.productName"
           />
           <span class="error-message" *ngIf="productNameError">
@@ -84,7 +84,7 @@
         </div>
 
         <!-- Generic Name -->
-        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
           <label for="genericName">Generic Name</label>
           <select id="genericName" [(ngModel)]="newProduct.genericName">
             <option value="">Select Generic</option>
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Classification -->
-        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
           <label for="classificationName">Classification</label>
           <select id="classificationName" [(ngModel)]="newProduct.classificationName">
             <option value="">Select Classification</option>
@@ -102,7 +102,7 @@
         </div>
 
         <!-- Type -->
-        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
           <label for="typeName">Type of Medicine</label>
           <select id="typeName" [(ngModel)]="newProduct.typeName">
             <option value="">Select Type</option>
@@ -111,7 +111,7 @@
         </div>
 
         <!-- Formulation -->
-        <div class="form-group" *ngIf="newProduct.categoryName === 'Medicine'">
+        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
           <label for="formulationName">Formulation</label>
           <select id="formulationName" [(ngModel)]="newProduct.formulationName">
             <option value="">Select Formulation</option>
@@ -125,10 +125,10 @@
             Sheets Per Box
             <span class="required">*</span>
           </label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="sheetsPerBox"
-            placeholder="Enter Sheets Per Box" 
+            placeholder="Enter Sheets Per Box"
             [(ngModel)]="newProduct.sheetsPerBox"
           />
           <span class="error-message" *ngIf="sheetsPerBoxError">
@@ -143,10 +143,10 @@
             Piece Per Box
             <span class="required">*</span>
           </label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="piecePerBox"
-            placeholder="Enter Piece Per Box" 
+            placeholder="Enter Piece Per Box"
             [(ngModel)]="newProduct.piecePerBox"
           />
           <span class="error-message" *ngIf="piecePerBoxError">
@@ -161,10 +161,10 @@
             Pieces Per Sheet
             <span class="required">*</span>
           </label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="piecesPerSheet"
-            placeholder="Enter Pieces Per Sheet" 
+            placeholder="Enter Pieces Per Sheet"
             [(ngModel)]="newProduct.piecesPerSheet"
           />
           <span class="error-message" *ngIf="piecesPerSheetError">
@@ -179,10 +179,10 @@
             Box Price (&#8369;)
             <span class="required">*</span>
           </label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="boxPrice"
-            placeholder="Enter Box Price" 
+            placeholder="Enter Box Price"
             [(ngModel)]="newProduct.boxPrice"
           />
           <span class="error-message" *ngIf="boxPriceError">
@@ -194,10 +194,10 @@
         <!-- Sheet Price -->
         <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
           <label for="sheetPrice">Sheet Price (&#8369;)</label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="sheetPrice"
-            placeholder="Enter Sheet Price" 
+            placeholder="Enter Sheet Price"
             [(ngModel)]="newProduct.sheetPrice"
           />
         </div>
@@ -208,10 +208,10 @@
             Piece Price (&#8369;)
             <span class="required">*</span>
           </label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="piecePrice"
-            placeholder="Enter Piece Price" 
+            placeholder="Enter Piece Price"
             [(ngModel)]="newProduct.piecePrice"
           />
           <span class="error-message" *ngIf="piecePriceError">
@@ -226,10 +226,10 @@
             Reorder Level
             <span class="required">*</span>
           </label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="reorderLevel"
-            placeholder="Enter Reorder Level" 
+            placeholder="Enter Reorder Level"
             [(ngModel)]="newProduct.reorderLevel"
           />
           <span class="error-message" *ngIf="reorderLevelError">
