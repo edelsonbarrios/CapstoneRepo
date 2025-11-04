@@ -246,6 +246,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
       next: () => {
         this.showSuccessAlert = true;
         this.clearFields();
+        this.generateNewPurchaseOrderNumber();
       },
       error: (err) => {
         console.error(err.error);
