@@ -10,6 +10,10 @@
           <p>View and manage all disposable items</p>
         </div>
       </div>
+      <button class="btn-add" (click)="openAddModal()">
+        <i class="fas fa-plus"></i>
+        Add New Item
+      </button>
     </div>
   </div>
 
@@ -56,10 +60,11 @@
             <td class="item-name">{{getItemName(item)}}</td>
             <td>
               <div class="action-buttons">
-                <button class="btn-action btn-edit" (click)="editItem(item)" title="Edit">
+                <button class="btn-action btn-restore" title="Restore">
+                  <i class="fas fa-undo"></i>
                   Restore
                 </button>
-             </div>
+              </div>
             </td>
           </tr>
           <tr *ngIf="paginatedItems.length === 0" class="no-data-row">

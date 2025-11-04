@@ -251,34 +251,29 @@
   gap: 8px;
 
   .btn-action {
-    width: 36px;
-    height: 36px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 14px;
+    font-weight: 500;
 
-    &.btn-edit {
-      background: rgba(59, 130, 246, 0.1);
-      color: #2563eb;
-
-      &:hover {
-        background: rgba(59, 130, 246, 0.2);
-        transform: translateY(-2px);
-      }
+    i {
+      font-size: 14px;
     }
 
-    &.btn-delete {
-      background: rgba(239, 68, 68, 0.1);
-      color: #dc2626;
+    &.btn-restore {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
 
       &:hover {
-        background: rgba(239, 68, 68, 0.2);
+        background: rgba(16, 185, 129, 0.2);
         transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
       }
     }
 
