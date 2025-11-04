@@ -21,10 +21,11 @@ import { LoginVerificationComponent } from '../login-verification/login-verifica
 export class StockAdjustComponent implements OnInit {
   @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
-  
+
   employee: Employee = new Employee();
   loginVerify: boolean = false;
-  
+  loginVerifRes : boolean = false;
+
   // Form fields
   boxQuantityChanged: number = 0;
   sheetQuantityChanged: number = 0;
@@ -33,7 +34,7 @@ export class StockAdjustComponent implements OnInit {
   refNumber: string = '';
   movementType: string = '';
   movementTypes: string[] = ['Damaged', 'Expired', 'Count Correction'];
-  
+
   // UI states
   showSuccessAlert: boolean = false;
   isSubmitting: boolean = false;
@@ -78,6 +79,7 @@ export class StockAdjustComponent implements OnInit {
       next: (res) => {
         this.isSubmitting = false;
         this.showSuccessAlert = true;
+        this.loginVerify = false;
       },
       error: (err) => {
         this.isSubmitting = false;
@@ -95,8 +97,8 @@ export class StockAdjustComponent implements OnInit {
     }
 
     // Check if at least one quantity is adjusted
-    const hasAdjustment = this.boxQuantityChanged !== 0 || 
-                          this.sheetQuantityChanged !== 0 || 
+    const hasAdjustment = this.boxQuantityChanged !== 0 ||
+                          this.sheetQuantityChanged !== 0 ||
                           this.pieceQuantityChanged !== 0;
 
     if (!hasAdjustment) {
@@ -124,7 +126,7 @@ export class StockAdjustComponent implements OnInit {
     try {
       const decodedToken: any = jwtDecode(token);
       const employeeId = parseInt(decodedToken.EmployeeId);
-      
+
       if (!employeeId) {
         console.error('Employee ID does not exist in token');
         return;
@@ -147,8 +149,11 @@ export class StockAdjustComponent implements OnInit {
     this.loginVerify = true;
   }
 
-  closeLoginVerifyForm() {
-    this.loginVerify = false;
+  closeLoginVerifyForm(result: boolean) {
+    this.loginVerify = result;
+    if(result) {
+      this.createNewStockMovement();
+    }
   }
 
   closeStockAdjustmentForm() {

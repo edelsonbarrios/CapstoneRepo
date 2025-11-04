@@ -18,7 +18,7 @@ export class LoginVerificationComponent implements OnInit {
   enteredUserName: string = '';
   enteredPassword: string = '';
   employee: Employee = new Employee();
-  @Output() closeForm = new EventEmitter<void>();
+  @Output() closeForm = new EventEmitter<boolean>();
   account: Account = new Account();
   errorMessage: string = '';
 
@@ -62,7 +62,7 @@ export class LoginVerificationComponent implements OnInit {
   }
 
   closeVerificationForm() {
-    this.closeForm.emit();
+    this.closeForm.emit(false);
   }
 
   verification() {
@@ -79,7 +79,7 @@ export class LoginVerificationComponent implements OnInit {
       return;
     }
 
-    this.closeForm.emit();
+    this.closeForm.emit(true);
   }
 
   clearFields() {
