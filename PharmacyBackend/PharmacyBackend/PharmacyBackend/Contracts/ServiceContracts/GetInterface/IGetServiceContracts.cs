@@ -92,11 +92,13 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #region Product
         public Task<IEnumerable<ProductDto>> GetAllProductAsync();
         public Task<ProductDto> GetProductByIdAsync(int id);
+        public Task<List<ProductDto>> GetAllInactiveProductsAsync();
         #endregion
 
         #region Category
         public Task<IEnumerable<CategoryDto>> GetAllCategoryAsync();
         public Task<CategoryDto> GetCategoryByIdAsync(int id);
+        public Task<List<CategoryDto>> GetAllInactiveCategoriesAsync();
         #endregion
 
         #region Brand

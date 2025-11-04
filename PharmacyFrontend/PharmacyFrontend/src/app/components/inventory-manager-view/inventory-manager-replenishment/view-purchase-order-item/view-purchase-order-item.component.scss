@@ -121,7 +121,8 @@
     &.total-section {
       background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
       border-color: #93c5fd;
-      margin-top: 1rem;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
     }
   }
 
@@ -164,6 +165,7 @@
         font-weight: 600;
         color: #1e293b;
         margin: 0;
+        word-wrap: break-word;
       }
     }
   }
@@ -177,6 +179,7 @@
   .form-group {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 
     &.error {
       .form-input {
@@ -197,16 +200,21 @@
       font-weight: 600;
       color: #475569;
       margin-bottom: 0.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       i {
         color: #006dba;
         font-size: 0.9rem;
+        flex-shrink: 0;
       }
 
       .required {
         color: #dc2626;
         font-size: 1rem;
         margin-left: auto;
+        flex-shrink: 0;
       }
     }
 
@@ -219,6 +227,8 @@
       font-weight: 500;
       background: #ffffff;
       transition: all 0.2s ease;
+      width: 100%;
+      min-width: 0;
 
       &::placeholder {
         color: #94a3b8;

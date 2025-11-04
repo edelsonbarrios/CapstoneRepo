@@ -126,17 +126,17 @@
             <input id="defect" type="number" [(ngModel)]="localItem.defectPiecesCount" min="0" placeholder="0"
               class="form-input" />
           </div>
-
         </div>
-        <!-- Total Cost -->
-        <div class="section total-section">
-          <div class="total-display">
-            <label>
-              <i class="fas fa-calculator"></i>
-              Total Cost
-            </label>
-            <p class="total-amount">{{ calculateTotal() | currency: 'PHP' }}</p>
-          </div>
+      </div>
+
+      <!-- Total Cost -->
+      <div class="section total-section">
+        <div class="total-display">
+          <label>
+            <i class="fas fa-calculator"></i>
+            Total Cost
+          </label>
+          <p class="total-amount">{{ calculateTotal() | currency: 'PHP' }}</p>
         </div>
       </div>
 
@@ -163,3 +163,4 @@
       </div>
     </div>
   </div>
+</div>

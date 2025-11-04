@@ -159,7 +159,6 @@ export class CreateProductComponent implements OnInit{
     };
     this.postService.createProductAsync(requestPayload).subscribe({
       next: res => {
-        debugger;
         console.log(`${JSON.stringify(res)}`);
         this.showSuccessAlert = true;
       },

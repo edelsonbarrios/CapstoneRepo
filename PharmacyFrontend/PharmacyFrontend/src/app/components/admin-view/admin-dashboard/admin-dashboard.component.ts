@@ -20,6 +20,7 @@ export class AdminDashboardComponent implements OnInit {
   topSellingMedicines: ProductSalesSummary[] = [];
   paginatedTopMeds: ProductSalesSummary[] = [];
   dateToday: Date = new Date();
+  timer : any;
 
   // Expiring Soon data
   expiringProducts: Inventory[] = [];
@@ -43,6 +44,10 @@ export class AdminDashboardComponent implements OnInit {
     this.getOutOfStockCount();
     this.getNearExpiryInventory();
     this.getTopSellingProductsMonthly();
+
+    this.timer = setInterval(() => {
+      this.dateToday = new Date();
+    }, 1000);
   }
 
   getTodaySalesAmount() {

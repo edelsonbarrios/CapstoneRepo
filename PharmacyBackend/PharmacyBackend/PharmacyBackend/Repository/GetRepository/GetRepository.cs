@@ -469,328 +469,353 @@ namespace PharmacyBackend.Repository.GET
         {
             return await _context.Product.FindAsync(id);
         }
+
+        public async Task<List<Product>> GetAllInactiveProductsAsync() 
+        {
+          var inactiveProducts = await _context.Product
+            .Where(p => p.IsActive == false)
+            .Include(p => p.Category)
+            .Include(p => p.Brand)
+            .Include(p => p.Generic)
+            .Include(p => p.Formulation) 
+            .Include(p => p.Classification)
+            .Include(p => p.TypeModel)
+            .OrderBy(p => p.ProductName)
+            .ToListAsync();
+
+          return inactiveProducts;
+        }
         #endregion
 
         #region Category
+
         public async Task<IEnumerable<Category>> GetAllCategoryAsync()
         {
-            return await _context.Category
-                .OrderByDescending(c => c.CategoryID)
-                .Where(c => c.IsActive == true)
-                .ToListAsync();
+          return await _context.Category
+            .OrderByDescending(c => c.CategoryID)
+            .Where(c => c.IsActive == true)
+            .ToListAsync();
         }
 
         public async Task<Category?> GetCategoryByIdAsync(int id)
         {
-            return await _context.Category.FindAsync(id);
+          return await _context.Category.FindAsync(id);
         }
+
+        public async Task<List<Category>> GetAllInactiveCategoriesAsync() 
+        {
+          return await _context.Category
+            .Where(c => c.IsActive == false)
+            .ToListAsync();
+        }
+
         #endregion
 
         #region Brand
         public async Task<IEnumerable<Brand>> GetAllBrandAsync()
         {
-            return await _context.Brand
-                .OrderByDescending(b => b.BrandID)
-                .Where(b => b.IsActive == true)
-                .ToListAsync();
+          return await _context.Brand
+            .OrderByDescending(b => b.BrandID)
+            .Where(b => b.IsActive == true)
+            .ToListAsync();
         }
         public async Task<Brand> GetBrandByIdAsync(int id)
         {
-            return await _context.Brand.FindAsync(id);
+          return await _context.Brand.FindAsync(id);
         }
         #endregion
 
         #region Generic
         public async Task<IEnumerable<Generic>> GetAllGenericAsync()
         {
-            return await _context.Generic
-                .OrderByDescending(g =>  g.GenericID)
-                .Where(g => g.IsActive == true)
-                .ToListAsync();
+          return await _context.Generic
+            .OrderByDescending(g =>  g.GenericID)
+            .Where(g => g.IsActive == true)
+            .ToListAsync();
         }
         public async Task<Generic> GetGenericByIdAsync(int id)
         {
-            return await _context.Generic.AsNoTracking().FirstOrDefaultAsync(g => g.GenericID == id);
+          return await _context.Generic.AsNoTracking().FirstOrDefaultAsync(g => g.GenericID == id);
         }
         #endregion
 
         #region Formulation
         public async Task<IEnumerable<Formulation>> GetAllFormulationAsync()
         {
-            return await _context.Formulation
-                .OrderByDescending(f => f.FormulationID)
-                .Where(f => f.IsActive == true)
-                .ToListAsync();
+          return await _context.Formulation
+            .OrderByDescending(f => f.FormulationID)
+            .Where(f => f.IsActive == true)
+            .ToListAsync();
         }
         public async Task<Formulation> GetFormulationByIdAsync(int id)
         {
-            return await _context.Formulation.FindAsync(id);
+          return await _context.Formulation.FindAsync(id);
         }
         #endregion
 
         #region Classification
         public async Task<IEnumerable<Classification>> GetAllClassificationAsync()
         {
-            return await _context.Classification
-                .OrderByDescending(c => c.ClassificationID)
-                .Where(c => c.IsActive == true)
-                .ToListAsync();
+          return await _context.Classification
+            .OrderByDescending(c => c.ClassificationID)
+            .Where(c => c.IsActive == true)
+            .ToListAsync();
         }
         public async Task<Classification> GetClassificationByIdAsync(int id)
         {
-            return await _context.Classification.FindAsync(id);
+          return await _context.Classification.FindAsync(id);
         }
         #endregion
 
         #region Type
         public async Task<IEnumerable<TypeModel>> GetAllTypeModelAsync()
         {
-            return await _context.TypeModel
-                .OrderByDescending(T => T.TypeID)
-                .Where(t => t.IsActive == true)
-                .ToListAsync();
+          return await _context.TypeModel
+            .OrderByDescending(T => T.TypeID)
+            .Where(t => t.IsActive == true)
+            .ToListAsync();
         }
         public async Task<TypeModel> GetTypeModelByIdAsync(int id)
         {
-            return await _context.TypeModel.FindAsync(id);
+          return await _context.TypeModel.FindAsync(id);
         }
         #endregion
 
         #region Role
         public async Task<IEnumerable<Role>> GetAllRolesAsync()
         {
-            return await _context.Roles.ToListAsync();
+          return await _context.Roles.ToListAsync();
         }
         #endregion
 
         #region Supplier
         public async Task<IEnumerable<Supplier>> GetAllSupplierAsync()
         {
-            return await _context.Supplier
-                .Include(s => s.Products)
-                .ThenInclude(p => p.Category)
-                .Include(s => s.Products)
-                .ThenInclude(p => p.Brand)
-                .Include(s => s.Products)
-                .ThenInclude(p => p.Generic)
-                .Include(s => s.Products)
-                .ThenInclude(p => p.Formulation)
-                .Include(s => s.Products)
-                .ThenInclude(p => p.Classification)
-                .Include(s => s.Products)
-                .ThenInclude(p => p.TypeModel)
-                .Include(s => s.Products)
-                .Where(s => s.IsActive == true)
-                .ToListAsync();
+          return await _context.Supplier
+            .Include(s => s.Products)
+            .ThenInclude(p => p.Category)
+            .Include(s => s.Products)
+            .ThenInclude(p => p.Brand)
+            .Include(s => s.Products)
+            .ThenInclude(p => p.Generic)
+            .Include(s => s.Products)
+            .ThenInclude(p => p.Formulation)
+            .Include(s => s.Products)
+            .ThenInclude(p => p.Classification)
+            .Include(s => s.Products)
+            .ThenInclude(p => p.TypeModel)
+            .Include(s => s.Products)
+            .Where(s => s.IsActive == true)
+            .ToListAsync();
         }
 
         public async Task<Supplier> GetSupplierByIdAsync(int id)
         {
-            return await _context.Supplier
-                .Include(s => s.Products)
-                .FirstOrDefaultAsync(s => s.Id == id);
+          return await _context.Supplier
+            .Include(s => s.Products)
+            .FirstOrDefaultAsync(s => s.Id == id);
         }
         #endregion
 
         #region Inventory
         public async Task<IEnumerable<Inventory>> GetAllInventoryAsync()
         {
-            return await _context.Inventory
-                .Where(i => i.IsActive == true)
-                .Include(i => i.Product)
-                .ThenInclude(p => p.Category)
-                .Include(i => i.Product.Brand)
-                .Include(i => i.Product.Generic)
-                .Include(i => i.Product.Formulation)
-                .Include(i => i.Product.Classification)
-                .Include(i => i.Product.TypeModel)
-                .OrderByDescending(i => i.DateAdded)
-                .ThenByDescending(i => i.InventoryID)
-                .ToListAsync();
+          return await _context.Inventory
+            .Where(i => i.IsActive == true)
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Category)
+            .Include(i => i.Product.Brand)
+            .Include(i => i.Product.Generic)
+            .Include(i => i.Product.Formulation)
+            .Include(i => i.Product.Classification)
+            .Include(i => i.Product.TypeModel)
+            .OrderByDescending(i => i.DateAdded)
+            .ThenByDescending(i => i.InventoryID)
+            .ToListAsync();
         }
         public async Task<List<Inventory>> GetAllAvailableInventoryAsync()
         {
-            var inventories = await _context.Inventory
-                .Include(i => i.Product)
-                .ThenInclude(p => p.Category)
-                .Include(i => i.Product.Brand)
-                .Include(i => i.Product.Generic)
-                .Include(i => i.Product.Formulation)
-                .Include(i => i.Product.Classification)
-                .Include(i => i.Product.TypeModel)
-                .OrderByDescending(i => i.DateAdded)
-                .ThenByDescending(i => i.InventoryID)
-                .ToListAsync();
+          var inventories = await _context.Inventory
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Category)
+            .Include(i => i.Product.Brand)
+            .Include(i => i.Product.Generic)
+            .Include(i => i.Product.Formulation)
+            .Include(i => i.Product.Classification)
+            .Include(i => i.Product.TypeModel)
+            .OrderByDescending(i => i.DateAdded)
+            .ThenByDescending(i => i.InventoryID)
+            .ToListAsync();
 
-            return inventories
-                .GroupBy(i => new { i.ProductID })
-                .Select(g =>
-                    g.Where(i => i.TotalPiecesAvailable > 0 && i.IsActive && i.ExpirationDate >= DateTime.Now)
-                    .OrderBy(i => i.ExpirationDate)
-                    .FirstOrDefault()
+          return inventories
+            .GroupBy(i => new { i.ProductID })
+            .Select(g =>
+                g.Where(i => i.TotalPiecesAvailable > 0 && i.IsActive && i.ExpirationDate >= DateTime.Now)
+                .OrderBy(i => i.ExpirationDate)
+                .FirstOrDefault()
                 )
-                .Where(i => i != null)
-                .ToList();
+            .Where(i => i != null)
+            .ToList();
         }
 
         public async Task<Inventory> GetInventoryByIdAsync(int id)
         {
-            return await _context.Inventory
-                .Include(i => i.Product)
-                .FirstOrDefaultAsync(i => i.InventoryID == id);
+          return await _context.Inventory
+            .Include(i => i.Product)
+            .FirstOrDefaultAsync(i => i.InventoryID == id);
         }
 
         public async Task<IEnumerable<Inventory>> GetInventoryByProductIdAsync(int productId)
         {
-            return await _context.Inventory
-                .Include(i => i.Product)
-                .Where(i => i.ProductID == productId)
-                .ToListAsync();
+          return await _context.Inventory
+            .Include(i => i.Product)
+            .Where(i => i.ProductID == productId)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<Inventory>> GetExpiredInventoryAsync()
         {
 
-            return await _context.Inventory
-                .Include(i => i.Product)
-                .Where(i => i.ExpirationDate < DateTime.UtcNow)
-                .Take(4)
-                .ToListAsync();
+          return await _context.Inventory
+            .Include(i => i.Product)
+            .Where(i => i.ExpirationDate < DateTime.UtcNow)
+            .Take(4)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<Inventory>> GetNearExpiryInventoryAsync()
         {
-            var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
-            var nearExpiryDate = DateTime.SpecifyKind(DateTime.Now.AddDays(90), DateTimeKind.Utc);
+          var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+          var nearExpiryDate = DateTime.SpecifyKind(DateTime.Now.AddDays(90), DateTimeKind.Utc);
 
-            return await _context.Inventory
-                .Include(i => i.Product)
-                .ThenInclude(p => p.Category)
-                .Include(i => i.Product.Brand)
-                .Include(i => i.Product.Generic)
-                .Include(i => i.Product.Formulation)
-                .Include(i => i.Product.Classification)
-                .Include(i => i.Product.TypeModel)
-                .OrderByDescending(i => i.DateAdded)
-                .ThenByDescending(i => i.InventoryID)
-                .Where(i => i.ExpirationDate <= nearExpiryDate && i.ExpirationDate > now)
-                .ToListAsync();
+          return await _context.Inventory
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Category)
+            .Include(i => i.Product.Brand)
+            .Include(i => i.Product.Generic)
+            .Include(i => i.Product.Formulation)
+            .Include(i => i.Product.Classification)
+            .Include(i => i.Product.TypeModel)
+            .OrderByDescending(i => i.DateAdded)
+            .ThenByDescending(i => i.InventoryID)
+            .Where(i => i.ExpirationDate <= nearExpiryDate && i.ExpirationDate > now)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<Inventory>> GetCriticalStockInventoryAsync()
         {
-            return await _context.Inventory
-                .Include(i => i.Product)
-                .Where(i => i.BoxQuantity <= i.ReorderLevel && i.IsActive == true)
-                .ToListAsync();
+          return await _context.Inventory
+            .Include(i => i.Product)
+            .Where(i => i.BoxQuantity <= i.ReorderLevel && i.IsActive == true)
+            .ToListAsync();
         }
         #endregion
 
         #region VAT
         public async Task<IEnumerable<VAT>> GetAllVATAsync()
         {
-            return await _context.VAT
-                .Where(v => v.IsActive == true)
-                .ToListAsync();
+          return await _context.VAT
+            .Where(v => v.IsActive == true)
+            .ToListAsync();
         }
 
         public async Task<VAT> GetVATByIdAsync(int id)
         {
-            return await _context.VAT.FindAsync(id);
+          return await _context.VAT.FindAsync(id);
         }
         #endregion
 
         #region PurchaseOrder
         public async Task<IEnumerable<PurchaseOrder>> GetAllPurchaseOrderAsync()
         {
-            return await _context.PurchaseOrder
-                .Include(po => po.Supplier)
-                .Include(po => po.PurchaseOrderItems)
-                    .ThenInclude(poi => poi.Product)
-                .ToListAsync();
+          return await _context.PurchaseOrder
+            .Include(po => po.Supplier)
+            .Include(po => po.PurchaseOrderItems)
+            .ThenInclude(poi => poi.Product)
+            .ToListAsync();
         }
 
         public async Task<PurchaseOrder> GetPurchaseOrderByIdAsync(int id)
         {
-            return await _context.PurchaseOrder
-                .Include(po => po.Supplier)
-                .Include(po => po.PurchaseOrderItems)
-                    .ThenInclude(poi => poi.Product)
-                .FirstOrDefaultAsync(po => po.Id == id);
+          return await _context.PurchaseOrder
+            .Include(po => po.Supplier)
+            .Include(po => po.PurchaseOrderItems)
+            .ThenInclude(poi => poi.Product)
+            .FirstOrDefaultAsync(po => po.Id == id);
         }
 
         public async Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderBySupplierIdAsync(int supplierId)
         {
-            return await _context.PurchaseOrder
-                .Include(po => po.Supplier)
-                .Include(po => po.PurchaseOrderItems)
-                    .ThenInclude(poi => poi.Product)
-                .Where(po => po.SupplierID == supplierId)
-                .ToListAsync();
+          return await _context.PurchaseOrder
+            .Include(po => po.Supplier)
+            .Include(po => po.PurchaseOrderItems)
+            .ThenInclude(poi => poi.Product)
+            .Where(po => po.SupplierID == supplierId)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<PurchaseOrder>> GetPurchaseOrderByStatusAsync(string status)
         {
-            return await _context.PurchaseOrder
-                .Include(po => po.Supplier)
-                .Include(po => po.PurchaseOrderItems)
-                    .ThenInclude(poi => poi.Product)
-                .Where(po => po.Status == status)
-                .ToListAsync();
+          return await _context.PurchaseOrder
+            .Include(po => po.Supplier)
+            .Include(po => po.PurchaseOrderItems)
+            .ThenInclude(poi => poi.Product)
+            .Where(po => po.Status == status)
+            .ToListAsync();
         }
         public async Task<List<PurchaseOrder>> GetPendingPurchaseOrdersAsync()
         {
-            var pendings = await _context.PurchaseOrder
-                .Include(po => po.Supplier)
-                .Include(po => po.PurchaseOrderItems)
-                    .ThenInclude(poi => poi.Product)
-                .Where(po => po.Status.Equals("Pending") && po.IsActive == true)
-                .ToListAsync();
+          var pendings = await _context.PurchaseOrder
+            .Include(po => po.Supplier)
+            .Include(po => po.PurchaseOrderItems)
+            .ThenInclude(poi => poi.Product)
+            .Where(po => po.Status.Equals("Pending") && po.IsActive == true)
+            .ToListAsync();
 
-            return pendings;
+          return pendings;
         }
         #endregion
 
         #region StockMovement
         public async Task<IEnumerable<StockMovement>> GetAllStockMovementAsync()
         {
-            return await _context.StockMovement
-                .Include(sm => sm.Inventory)
-                    .ThenInclude(i => i.Product)
-                .Include(sm => sm.Employee)
-                .OrderByDescending(sm => sm.MovementDate)
-                .ToListAsync();
+          return await _context.StockMovement
+            .Include(sm => sm.Inventory)
+            .ThenInclude(i => i.Product)
+            .Include(sm => sm.Employee)
+            .OrderByDescending(sm => sm.MovementDate)
+            .ToListAsync();
         }
 
         public async Task<StockMovement> GetStockMovementByIdAsync(int id)
         {
-            return await _context.StockMovement
-                .Include(sm => sm.Inventory)
-                    .ThenInclude(i => i.Product)
-                .Include(sm => sm.Employee)
-                .FirstOrDefaultAsync(sm => sm.StockMovementID == id);
+          return await _context.StockMovement
+            .Include(sm => sm.Inventory)
+            .ThenInclude(i => i.Product)
+            .Include(sm => sm.Employee)
+            .FirstOrDefaultAsync(sm => sm.StockMovementID == id);
         }
 
         public async Task<IEnumerable<StockMovement>> GetStockMovementByInventoryIdAsync(int inventoryId)
         {
-            return await _context.StockMovement
-                .Include(sm => sm.Inventory)
-                    .ThenInclude(i => i.Product)
-                .Include(sm => sm.Employee)
-                .Where(sm => sm.InventoryID == inventoryId)
-                .OrderByDescending(sm => sm.MovementDate)
-                .ToListAsync();
+          return await _context.StockMovement
+            .Include(sm => sm.Inventory)
+            .ThenInclude(i => i.Product)
+            .Include(sm => sm.Employee)
+            .Where(sm => sm.InventoryID == inventoryId)
+            .OrderByDescending(sm => sm.MovementDate)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<StockMovement>> GetStockMovementByProductIdAsync(int productId)
         {
-            return await _context.StockMovement
-                .Include(sm => sm.Inventory)
-                    .ThenInclude(i => i.Product)
-                .Include(sm => sm.Employee)
-                .Where(sm => sm.Inventory.ProductID == productId)
-                .OrderByDescending(sm => sm.MovementDate)
-                .ToListAsync();
+          return await _context.StockMovement
+            .Include(sm => sm.Inventory)
+            .ThenInclude(i => i.Product)
+            .Include(sm => sm.Employee)
+            .Where(sm => sm.Inventory.ProductID == productId)
+            .OrderByDescending(sm => sm.MovementDate)
+            .ToListAsync();
         }
         #endregion
 
@@ -802,42 +827,42 @@ namespace PharmacyBackend.Repository.GET
             int? employeeId,
             string paymentMethod)
         {
-            var query = _context.SalesTransaction
-                .Include(st => st.Employee)
-                .Include(st => st.Discount)
-                .Include(st => st.VAT)
-                .Include(st => st.Items)
-                    .ThenInclude(si => si.Product)
-                .AsQueryable();
+          var query = _context.SalesTransaction
+            .Include(st => st.Employee)
+            .Include(st => st.Discount)
+            .Include(st => st.VAT)
+            .Include(st => st.Items)
+            .ThenInclude(si => si.Product)
+            .AsQueryable();
 
-            // Apply date filter only if BOTH dates are provided
-            if(startDate.HasValue && !endDate.HasValue)
-            {
-                var startDateUtc = startDate.Value.Date;
-                query = query.Where(st => st.TransactionDate.Date >= startDateUtc);
-            }
+          // Apply date filter only if BOTH dates are provided
+          if(startDate.HasValue && !endDate.HasValue)
+          {
+            var startDateUtc = startDate.Value.Date;
+            query = query.Where(st => st.TransactionDate.Date >= startDateUtc);
+          }
 
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                var startDateUtc = startDate.Value.Date;
-                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
-                query = query.Where(st => st.TransactionDate >= startDateUtc && st.TransactionDate <= endDateUtc);
-            }
-            // If no dates provided, show ALL transactions (no date filter)
+          if (startDate.HasValue && endDate.HasValue)
+          {
+            var startDateUtc = startDate.Value.Date;
+            var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+            query = query.Where(st => st.TransactionDate >= startDateUtc && st.TransactionDate <= endDateUtc);
+          }
+          // If no dates provided, show ALL transactions (no date filter)
 
-            if (employeeId.HasValue)
-            {
-                query = query.Where(st => st.EmployeeID == employeeId.Value);
-            }
+          if (employeeId.HasValue)
+          {
+            query = query.Where(st => st.EmployeeID == employeeId.Value);
+          }
 
-            if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
-            {
-                query = query.Where(st => st.PaymentMethod.ToLower() == paymentMethod.ToLower());
-            }
+          if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
+          {
+            query = query.Where(st => st.PaymentMethod.ToLower() == paymentMethod.ToLower());
+          }
 
-            return await query
-                .OrderByDescending(st => st.TransactionDate)
-                .ToListAsync();
+          return await query
+            .OrderByDescending(st => st.TransactionDate)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<Inventory>> GetInventoryReportDataAsync(
@@ -845,75 +870,75 @@ namespace PharmacyBackend.Repository.GET
             DateTime? endDate,
             string filterType)
         {
-            var now = DateTime.UtcNow.Date;
+          var now = DateTime.UtcNow.Date;
 
-            var query = _context.Inventory
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Category)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Brand)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Generic)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Formulation)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.Classification)
-                .Include(i => i.Product)
-                    .ThenInclude(p => p.TypeModel)
-                .AsQueryable();
+          var query = _context.Inventory
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Category)
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Brand)
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Generic)
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Formulation)
+            .Include(i => i.Product)
+            .ThenInclude(p => p.Classification)
+            .Include(i => i.Product)
+            .ThenInclude(p => p.TypeModel)
+            .AsQueryable();
 
-            // Apply date filter only if dates are provided
+          // Apply date filter only if dates are provided
 
-            if(startDate.HasValue && !endDate.HasValue)
-            {
-                var startingDate = startDate.Value.Date;
-                query = query.Where(i => i.DateAdded >= startingDate);
-            }
+          if(startDate.HasValue && !endDate.HasValue)
+          {
+            var startingDate = startDate.Value.Date;
+            query = query.Where(i => i.DateAdded >= startingDate);
+          }
 
-            if(startDate.HasValue && !endDate.HasValue)
-            {
-                var startingDate = startDate.Value.Date;
-                query = query.Where(i => i.DateAdded.Date >= startingDate);
-            }
+          if(startDate.HasValue && !endDate.HasValue)
+          {
+            var startingDate = startDate.Value.Date;
+            query = query.Where(i => i.DateAdded.Date >= startingDate);
+          }
 
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                var startDateUtc = startDate.Value.Date;
-                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
-                query = query.Where(i => i.DateAdded >= startDateUtc && i.DateAdded <= endDateUtc);
-            }
+          if (startDate.HasValue && endDate.HasValue)
+          {
+            var startDateUtc = startDate.Value.Date;
+            var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+            query = query.Where(i => i.DateAdded >= startDateUtc && i.DateAdded <= endDateUtc);
+          }
 
-            // Apply status filters
-            switch (filterType?.ToLower() ?? "all")
-            {
-                case "critical":
-                case "critical stock":
-                    query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel);
-                    break;
+          // Apply status filters
+          switch (filterType?.ToLower() ?? "all")
+          {
+            case "critical":
+            case "critical stock":
+              query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel);
+              break;
 
-                case "near expiry":
-                case "nearexpiry":
-                    query = query.Where(i => i.IsActive &&
-                        i.ExpirationDate > now &&
-                        i.ExpirationDate <= now.AddDays(90));
-                    break;
+            case "near expiry":
+            case "nearexpiry":
+              query = query.Where(i => i.IsActive &&
+                  i.ExpirationDate > now &&
+                  i.ExpirationDate <= now.AddDays(90));
+              break;
 
-                case "expired":
-                    query = query.Where(i => i.IsActive &&
-                        i.ExpirationDate <= now);
-                    break;
+            case "expired":
+              query = query.Where(i => i.IsActive &&
+                  i.ExpirationDate <= now);
+              break;
 
-                case "all":
-                case "all inventory":
-                default:
-                    query = query.Where(i => i.IsActive);
-                    break;
-            }
+            case "all":
+            case "all inventory":
+            default:
+              query = query.Where(i => i.IsActive);
+              break;
+          }
 
-            return await query
-                .OrderBy(i => i.Product.ProductName)
-                .ThenBy(i => i.ExpirationDate)
-                .ToListAsync();
+          return await query
+            .OrderBy(i => i.Product.ProductName)
+            .ThenBy(i => i.ExpirationDate)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<FastMovingProductDataDto>> GetFastMovingProductsDataAsync(
@@ -921,103 +946,103 @@ namespace PharmacyBackend.Repository.GET
             DateTime? endDate,
             int topN)
         {
-            // Step 1: Get sales data (with optional date filter)
-            var salesQuery = _context.SalesItem
-                .Include(si => si.Product)
-                    .ThenInclude(p => p.Category)
-                .Include(si => si.SalesTransaction)
-                .AsQueryable();
+          // Step 1: Get sales data (with optional date filter)
+          var salesQuery = _context.SalesItem
+            .Include(si => si.Product)
+            .ThenInclude(p => p.Category)
+            .Include(si => si.SalesTransaction)
+            .AsQueryable();
 
-            // Apply date filter only if dates are provided
+          // Apply date filter only if dates are provided
 
-            if(startDate.HasValue && !endDate.HasValue)
-            {
-                var startingDate = startDate.Value.Date;
-                salesQuery = salesQuery.Where(si => si.SalesTransaction.TransactionDate.Date >= startingDate);
-            }
+          if(startDate.HasValue && !endDate.HasValue)
+          {
+            var startingDate = startDate.Value.Date;
+            salesQuery = salesQuery.Where(si => si.SalesTransaction.TransactionDate.Date >= startingDate);
+          }
 
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                var startDateUtc = startDate.Value.Date;
-                var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
-                salesQuery = salesQuery.Where(si =>
-                    si.SalesTransaction.TransactionDate >= startDateUtc &&
-                    si.SalesTransaction.TransactionDate <= endDateUtc);
-            }
+          if (startDate.HasValue && endDate.HasValue)
+          {
+            var startDateUtc = startDate.Value.Date;
+            var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
+            salesQuery = salesQuery.Where(si =>
+                si.SalesTransaction.TransactionDate >= startDateUtc &&
+                si.SalesTransaction.TransactionDate <= endDateUtc);
+          }
 
-            var salesData = await salesQuery
-                .GroupBy(si => new
+          var salesData = await salesQuery
+            .GroupBy(si => new
                 {
-                    si.ProductId,
-                    si.Product.ProductName,
-                    CategoryName = si.Product.Category.CategoryName
+                si.ProductId,
+                si.Product.ProductName,
+                CategoryName = si.Product.Category.CategoryName
                 })
-                .Select(g => new
+          .Select(g => new
+              {
+              g.Key.ProductId,
+              g.Key.ProductName,
+              g.Key.CategoryName,
+              QuantitySold = g.Sum(si => si.Quantity),
+              TransactionCount = g.Select(si => si.SalesTransactionId).Distinct().Count(),
+              Revenue = g.Sum(si => si.Subtotal)
+              })
+          .OrderByDescending(p => p.QuantitySold)
+            .ThenByDescending(p => p.TransactionCount)
+            .Take(topN)
+            .ToListAsync(); // Materialize here to avoid complex translation
+
+          // Step 2: Get product IDs
+          var productIds = salesData.Select(s => s.ProductId).ToList();
+
+          // Step 3: Fetch inventory data using ONLY database columns
+          var now = DateTime.UtcNow;
+
+          var inventoryData = await _context.Inventory
+            .Where(i => productIds.Contains(i.ProductID)
+                && i.IsActive
+                && i.ExpirationDate >= now) // Using actual DB column
+            .Select(i => new
                 {
-                    g.Key.ProductId,
-                    g.Key.ProductName,
-                    g.Key.CategoryName,
-                    QuantitySold = g.Sum(si => si.Quantity),
-                    TransactionCount = g.Select(si => si.SalesTransactionId).Distinct().Count(),
-                    Revenue = g.Sum(si => si.Subtotal)
+                i.ProductID,
+                i.BoxQuantity,
+                i.SheetQuantity,
+                i.PieceQuantity,
+                i.SheetsPerBox,
+                i.PiecesPerSheet,
+                i.PiecePerBox
                 })
-                .OrderByDescending(p => p.QuantitySold)
-                .ThenByDescending(p => p.TransactionCount)
-                .Take(topN)
-                .ToListAsync(); // Materialize here to avoid complex translation
+          .ToListAsync(); // Materialize before calculating TotalPiecesAvailable
 
-            // Step 2: Get product IDs
-            var productIds = salesData.Select(s => s.ProductId).ToList();
-
-            // Step 3: Fetch inventory data using ONLY database columns
-            var now = DateTime.UtcNow;
-
-            var inventoryData = await _context.Inventory
-                .Where(i => productIds.Contains(i.ProductID)
-                         && i.IsActive
-                         && i.ExpirationDate >= now) // Using actual DB column
-                .Select(i => new
-                {
-                    i.ProductID,
+          // Step 4: Calculate total pieces in memory (client-side)
+          var stockByProduct = inventoryData
+            .GroupBy(i => i.ProductID)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Sum(i => CalculateTotalPieces(
                     i.BoxQuantity,
                     i.SheetQuantity,
                     i.PieceQuantity,
                     i.SheetsPerBox,
                     i.PiecesPerSheet,
                     i.PiecePerBox
-                })
-                .ToListAsync(); // Materialize before calculating TotalPiecesAvailable
-
-            // Step 4: Calculate total pieces in memory (client-side)
-            var stockByProduct = inventoryData
-                .GroupBy(i => i.ProductID)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Sum(i => CalculateTotalPieces(
-                        i.BoxQuantity,
-                        i.SheetQuantity,
-                        i.PieceQuantity,
-                        i.SheetsPerBox,
-                        i.PiecesPerSheet,
-                        i.PiecePerBox
                     ))
                 );
 
-            // Step 5: Combine results
-            var result = salesData.Select(s => new FastMovingProductDataDto
-            {
-                ProductId = s.ProductId,
-                ProductName = s.ProductName,
-                CategoryName = s.CategoryName,
-                QuantitySold = s.QuantitySold,
-                TransactionCount = s.TransactionCount,
-                Revenue = s.Revenue,
-                CurrentStock = stockByProduct.ContainsKey(s.ProductId)
-                    ? stockByProduct[s.ProductId]
-                    : 0
-            }).ToList();
+          // Step 5: Combine results
+          var result = salesData.Select(s => new FastMovingProductDataDto
+              {
+              ProductId = s.ProductId,
+              ProductName = s.ProductName,
+              CategoryName = s.CategoryName,
+              QuantitySold = s.QuantitySold,
+              TransactionCount = s.TransactionCount,
+              Revenue = s.Revenue,
+              CurrentStock = stockByProduct.ContainsKey(s.ProductId)
+              ? stockByProduct[s.ProductId]
+              : 0
+              }).ToList();
 
-            return result;
+          return result;
         }
 
         // Helper method to calculate total pieces (same logic as your Inventory model)
@@ -1029,23 +1054,23 @@ namespace PharmacyBackend.Repository.GET
             int? piecesPerSheet,
             int? piecePerBox)
         {
-            // Case 1: Multi-level (Box → Sheet → Piece)
-            if (sheetsPerBox.HasValue && piecesPerSheet.HasValue && piecesPerSheet.Value > 0)
-            {
-                return (boxQuantity * sheetsPerBox.Value * piecesPerSheet.Value)
-                     + (sheetQuantity * piecesPerSheet.Value)
-                     + pieceQuantity;
-            }
-            // Case 2: Dual-level (Box → Piece)
-            else if (piecePerBox.HasValue && (!piecesPerSheet.HasValue || piecesPerSheet.Value == 0))
-            {
-                return (boxQuantity * piecePerBox.Value) + pieceQuantity;
-            }
-            // Case 3: Single-level (Only pieces)
-            else
-            {
-                return pieceQuantity;
-            }
+          // Case 1: Multi-level (Box → Sheet → Piece)
+          if (sheetsPerBox.HasValue && piecesPerSheet.HasValue && piecesPerSheet.Value > 0)
+          {
+            return (boxQuantity * sheetsPerBox.Value * piecesPerSheet.Value)
+              + (sheetQuantity * piecesPerSheet.Value)
+              + pieceQuantity;
+          }
+          // Case 2: Dual-level (Box → Piece)
+          else if (piecePerBox.HasValue && (!piecesPerSheet.HasValue || piecesPerSheet.Value == 0))
+          {
+            return (boxQuantity * piecePerBox.Value) + pieceQuantity;
+          }
+          // Case 3: Single-level (Only pieces)
+          else
+          {
+            return pieceQuantity;
+          }
         }
 
         #endregion
@@ -1053,143 +1078,143 @@ namespace PharmacyBackend.Repository.GET
         #region AdminDashboard
         public async Task<decimal> GetTodaySalesAmountAsync()
         {
-            var today = DateTime.UtcNow.Date;
-            var tommorow = today.AddDays(1);
-            return await _context.SalesTransaction
-                .Where(st => st.TransactionDate.Date >= today
+          var today = DateTime.UtcNow.Date;
+          var tommorow = today.AddDays(1);
+          return await _context.SalesTransaction
+            .Where(st => st.TransactionDate.Date >= today
                 && st.TransactionDate <= tommorow)
-                .SumAsync(st => st.NetAmount);
+            .SumAsync(st => st.NetAmount);
         }
         public async Task<int> GetInventoryLowStockCountAsync()
         {
-            return await _context.Inventory
-                .Where(iv => iv.BoxQuantity <= iv.ReorderLevel)
-                .CountAsync();
+          return await _context.Inventory
+            .Where(iv => iv.BoxQuantity <= iv.ReorderLevel)
+            .CountAsync();
         }
         public async Task<int> GetInventoryOutOfStockCountAsync()
         {
-            return await _context.Inventory
-                .Where(iv => iv.BoxQuantity == 0)
-                .CountAsync();
+          return await _context.Inventory
+            .Where(iv => iv.BoxQuantity == 0)
+            .CountAsync();
         }
         public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()
         {
-            var currentMonth = DateTime.Today.Month;
-            var topSellingProducts = await _context.SalesItem
-                .Include(si => si.SalesTransaction)
-                .Include(si => si.Product)
-                  .ThenInclude(p => p.Inventory)
-                .Where(si => si.SalesTransaction.TransactionDate.Month == currentMonth)
-                .GroupBy(si => new {si.Product.ProductID, si.Product.ProductName})
-                .Select(g => new
+          var currentMonth = DateTime.Today.Month;
+          var topSellingProducts = await _context.SalesItem
+            .Include(si => si.SalesTransaction)
+            .Include(si => si.Product)
+            .ThenInclude(p => p.Inventory)
+            .Where(si => si.SalesTransaction.TransactionDate.Month == currentMonth)
+            .GroupBy(si => new {si.Product.ProductID, si.Product.ProductName})
+            .Select(g => new
                 {
-                    g.Key.ProductID,
-                    g.Key.ProductName,
-                    QuantitySold = g.Sum(si => si.Quantity),
-                    TotalSales = g.Sum(si => si.Subtotal),
-                    g.FirstOrDefault().Product
+                g.Key.ProductID,
+                g.Key.ProductName,
+                QuantitySold = g.Sum(si => si.Quantity),
+                TotalSales = g.Sum(si => si.Subtotal),
+                g.FirstOrDefault().Product
                 }).ToListAsync();
-            var result = topSellingProducts.Select(ts => new ProductSalesSummaryDto
-            {
-                ProductId = ts.ProductID,
-                ProductName = ts.ProductName,
-                QuantitySold = ts.QuantitySold,
-                AvailableStock = ts.Product.Inventory
-                .Where(i => i.IsActive && !i.IsExpired)
-                .Sum(i => i.TotalPiecesAvailable),
-                TotalSales = ts.TotalSales
-            }).ToList();
-            return result;
+          var result = topSellingProducts.Select(ts => new ProductSalesSummaryDto
+              {
+              ProductId = ts.ProductID,
+              ProductName = ts.ProductName,
+              QuantitySold = ts.QuantitySold,
+              AvailableStock = ts.Product.Inventory
+              .Where(i => i.IsActive && !i.IsExpired)
+              .Sum(i => i.TotalPiecesAvailable),
+              TotalSales = ts.TotalSales
+              }).ToList();
+          return result;
         }
         #endregion
-        
+
         #region BackUp Database
 
         public async Task<BackupListResponse> GetAllBackupsAsync()
         {
-            try
+          try
+          {
+            var backupDir = GetBackupDirectory();
+            if (!Directory.Exists(backupDir))
             {
-                var backupDir = GetBackupDirectory();
-                if (!Directory.Exists(backupDir))
-                {
-                    Directory.CreateDirectory(backupDir);
-                    return new BackupListResponse
-                    {
-                        Success = true,
-                        Backups = new List<BackupDto>(),
-                        TotalCount = 0,
-                        TotalSizeMB = "0.00 MB"
-                    };
-                }
+              Directory.CreateDirectory(backupDir);
+              return new BackupListResponse
+              {
+                Success = true,
+                Backups = new List<BackupDto>(),
+                TotalCount = 0,
+                TotalSizeMB = "0.00 MB"
+              };
+            }
 
-                var backupFiles = Directory.GetFiles(backupDir, "*.backup")
-                    .Select(file => new FileInfo(file))
-                    .OrderByDescending(f => f.CreationTime)
-                    .ToList();
+            var backupFiles = Directory.GetFiles(backupDir, "*.backup")
+              .Select(file => new FileInfo(file))
+              .OrderByDescending(f => f.CreationTime)
+              .ToList();
 
-                var backups = backupFiles.Select(file => new BackupDto
+            var backups = backupFiles.Select(file => new BackupDto
                 {
-                    FileName = file.Name,
-                    CreatedDate = file.CreationTime,
-                    FileSizeBytes = file.Length,
-                    BackupType = file.Name.Contains("_AUTO_") ? "Automated" : "Manual",
-                    Status = "Success"
+                FileName = file.Name,
+                CreatedDate = file.CreationTime,
+                FileSizeBytes = file.Length,
+                BackupType = file.Name.Contains("_AUTO_") ? "Automated" : "Manual",
+                Status = "Success"
                 }).ToList();
 
-                var totalSize = backupFiles.Sum(f => f.Length);
+            var totalSize = backupFiles.Sum(f => f.Length);
 
-                return new BackupListResponse
-                {
-                    Success = true,
-                    Backups = backups,
-                    TotalCount = backups.Count,
-                    TotalSizeMB = $"{totalSize / (1024.0 * 1024.0):F2} MB"
-                };
-            }
-            catch (Exception ex)
+            return new BackupListResponse
             {
-                return new BackupListResponse
-                {
-                    Success = false,
-                    Backups = new List<BackupDto>(),
-                    TotalCount = 0,
-                    TotalSizeMB = "0.00 MB"
-                };
-            }
+              Success = true,
+              Backups = backups,
+              TotalCount = backups.Count,
+              TotalSizeMB = $"{totalSize / (1024.0 * 1024.0):F2} MB"
+            };
+          }
+          catch (Exception ex)
+          {
+            return new BackupListResponse
+            {
+              Success = false,
+              Backups = new List<BackupDto>(),
+              TotalCount = 0,
+              TotalSizeMB = "0.00 MB"
+            };
+          }
         }
 
         public async Task<byte[]?> DownloadBackupAsync(string fileName)
         {
-            try
-            {
-                var backupDir = GetBackupDirectory();
-                var filePath = Path.Combine(backupDir, fileName);
+          try
+          {
+            var backupDir = GetBackupDirectory();
+            var filePath = Path.Combine(backupDir, fileName);
 
-                if (!File.Exists(filePath))
-                {
-                    return null;
-                }
-
-                return await File.ReadAllBytesAsync(filePath);
-            }
-            catch
+            if (!File.Exists(filePath))
             {
-                return null;
+              return null;
             }
+
+            return await File.ReadAllBytesAsync(filePath);
+          }
+          catch
+          {
+            return null;
+          }
         }
 
         public string GetBackupDirectory()
         {
-            // Get the backup directory from configuration or use default
-            var backupPath = _config.GetValue<string>("BackupSettings:BackupPath");
+          // Get the backup directory from configuration or use default
+          var backupPath = _config.GetValue<string>("BackupSettings:BackupPath");
 
-            if (string.IsNullOrEmpty(backupPath))
-            {
-                // Default to a Backups folder in the application directory
-                backupPath = Path.Combine(Directory.GetCurrentDirectory(), "Backups");
-            }
+          if (string.IsNullOrEmpty(backupPath))
+          {
+            // Default to a Backups folder in the application directory
+            backupPath = Path.Combine(Directory.GetCurrentDirectory(), "Backups");
+          }
 
-            return backupPath;
+          return backupPath;
         }
 
         #endregion
@@ -1201,56 +1226,56 @@ namespace PharmacyBackend.Repository.GET
             string? transactionType,
             string? searchTerm)
         {
-            var query = _context.StockMovement
-                .Include(sm => sm.Inventory)
-                    .ThenInclude(i => i.Product)
-                .Include(sm => sm.Employee)
-                .AsQueryable();
+          var query = _context.StockMovement
+            .Include(sm => sm.Inventory)
+            .ThenInclude(i => i.Product)
+            .Include(sm => sm.Employee)
+            .AsQueryable();
 
-            // Apply date filter
-            if (startDate.HasValue && endDate.HasValue)
-            {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
-                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
-                query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
-            }
-            else if (startDate.HasValue)
-            {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
-                query = query.Where(sm => sm.MovementDate >= startDateUtc);
-            }
+          // Apply date filter
+          if (startDate.HasValue && endDate.HasValue)
+          {
+            var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+            var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
+          }
+          else if (startDate.HasValue)
+          {
+            var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+            query = query.Where(sm => sm.MovementDate >= startDateUtc);
+          }
 
-            if (!string.IsNullOrEmpty(transactionType) &&
-                !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
+          if (!string.IsNullOrEmpty(transactionType) &&
+              !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
+          {
+            var movementType = transactionType switch
             {
-                var movementType = transactionType switch
-                {
-                    "Stock Entry" => "Stock In",
-                    "Adjustment" => "Adjustment",
-                    "Count Correction" => "Count Correction",
-                    "Sale" => "Sale",
-                    "Damaged" => "Damaged",
-                    "Expired" => "Expired",
-                    _ => transactionType
-                };
+              "Stock Entry" => "Stock In",
+              "Adjustment" => "Adjustment",
+              "Count Correction" => "Count Correction",
+              "Sale" => "Sale",
+              "Damaged" => "Damaged",
+              "Expired" => "Expired",
+              _ => transactionType
+            };
 
-                query = query.Where(sm => sm.MovementType.ToLower() == movementType.ToLower());
-            }
+            query = query.Where(sm => sm.MovementType.ToLower() == movementType.ToLower());
+          }
 
-            // Apply search filter
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                var lowerSearchTerm = searchTerm.ToLower();
-                query = query.Where(sm =>
-                    sm.Inventory.Product.ProductName.ToLower().Contains(lowerSearchTerm) ||
-                    sm.Inventory.BatchNumber.ToLower().Contains(lowerSearchTerm) ||
-                    (sm.ReferenceNumber != null && sm.ReferenceNumber.ToLower().Contains(lowerSearchTerm))
+          // Apply search filter
+          if (!string.IsNullOrEmpty(searchTerm))
+          {
+            var lowerSearchTerm = searchTerm.ToLower();
+            query = query.Where(sm =>
+                sm.Inventory.Product.ProductName.ToLower().Contains(lowerSearchTerm) ||
+                sm.Inventory.BatchNumber.ToLower().Contains(lowerSearchTerm) ||
+                (sm.ReferenceNumber != null && sm.ReferenceNumber.ToLower().Contains(lowerSearchTerm))
                 );
-            }
+          }
 
-            return await query
-                .OrderByDescending(sm => sm.MovementDate)
-                .ToListAsync();
+          return await query
+            .OrderByDescending(sm => sm.MovementDate)
+            .ToListAsync();
         }
 
         public async Task<StockHistorySummaryDto> GetStockHistorySummaryAsync(
@@ -1258,53 +1283,53 @@ namespace PharmacyBackend.Repository.GET
             DateTime? endDate,
             string? transactionType)
         {
-            var query = _context.StockMovement.AsQueryable();
+          var query = _context.StockMovement.AsQueryable();
 
-            // Apply date filter
-            if (startDate.HasValue && endDate.HasValue)
+          // Apply date filter
+          if (startDate.HasValue && endDate.HasValue)
+          {
+            var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+            var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
+          }
+          else if (startDate.HasValue)
+          {
+            var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
+            query = query.Where(sm => sm.MovementDate >= startDateUtc);
+          }
+
+          // Apply transaction type filter if not "All Transaction"
+          if (!string.IsNullOrEmpty(transactionType) &&
+              !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
+          {
+            var movementType = transactionType switch
             {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
-                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
-                query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
-            }
-            else if (startDate.HasValue)
-            {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
-                query = query.Where(sm => sm.MovementDate >= startDateUtc);
-            }
-
-            // Apply transaction type filter if not "All Transaction"
-            if (!string.IsNullOrEmpty(transactionType) &&
-                !transactionType.Equals("All Transaction", StringComparison.OrdinalIgnoreCase))
-            {
-                var movementType = transactionType switch
-                {
-                    "Stock Entry" => "Stock In",
-                    "Adjustment" => "Adjustment",
-                    "Sale" => "Sale",
-                    "Count Correction" => "Count Correction",
-                    "Damaged" => "Damaged",
-                    "Expired" => "Expired",
-                    _ => transactionType
-                };
-
-                query = query.Where(sm => sm.MovementType.ToLower() == movementType.ToLower());
-            }
-
-            var movements = await query.ToListAsync();
-
-            return new StockHistorySummaryDto
-            {
-                TotalTransactions = movements.Count,
-                StockEntries = movements.Count(sm => sm.MovementType.ToLower() == "stock in"),
-                Adjustments = movements.Count(sm => sm.MovementType.ToLower() == "adjustment" || sm.MovementType.ToLower() == "count correction"),
-                SalesRemovals = movements.Count(sm =>
-                    sm.MovementType.ToLower() == "sale" ||
-                    sm.MovementType.ToLower() == "damaged" ||
-                    sm.MovementType.ToLower() == "expired" ||
-                    sm.MovementType.ToLower() == "loss"
-                )
+              "Stock Entry" => "Stock In",
+              "Adjustment" => "Adjustment",
+              "Sale" => "Sale",
+              "Count Correction" => "Count Correction",
+              "Damaged" => "Damaged",
+              "Expired" => "Expired",
+              _ => transactionType
             };
+
+            query = query.Where(sm => sm.MovementType.ToLower() == movementType.ToLower());
+          }
+
+          var movements = await query.ToListAsync();
+
+          return new StockHistorySummaryDto
+          {
+            TotalTransactions = movements.Count,
+            StockEntries = movements.Count(sm => sm.MovementType.ToLower() == "stock in"),
+            Adjustments = movements.Count(sm => sm.MovementType.ToLower() == "adjustment" || sm.MovementType.ToLower() == "count correction"),
+            SalesRemovals = movements.Count(sm =>
+                sm.MovementType.ToLower() == "sale" ||
+                sm.MovementType.ToLower() == "damaged" ||
+                sm.MovementType.ToLower() == "expired" ||
+                sm.MovementType.ToLower() == "loss"
+                )
+          };
         }
         #endregion
     }

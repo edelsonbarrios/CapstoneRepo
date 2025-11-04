@@ -15,10 +15,10 @@ import { ArchiveConfirmationComponent } from '../../../shared/archive-confirmati
   selector: 'app-manage-employees',
   standalone: true,
   imports: [
-    NgForOf, 
-    ViewEmployeeComponent, 
-    NgIf, 
-    CreateEmployeeComponent, 
+    NgForOf,
+    ViewEmployeeComponent,
+    NgIf,
+    CreateEmployeeComponent,
     FormsModule,
     ArchiveConfirmationComponent
   ],
@@ -36,7 +36,7 @@ export class ManageEmployeesComponent implements OnInit{
   showArchiveForm: number = 0;
   employeeToArchive: Employee = new Employee();
   searchQuery: string = '';
-  
+
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 5;
@@ -171,7 +171,7 @@ export class ManageEmployeesComponent implements OnInit{
         console.log('Token does not exist.');
         return;
       }
-  
+
       var employee : any = jwtDecode(token);
       console.log("Decoded token:", employee);
       var employeeId = parseInt(employee.EmployeeId);
