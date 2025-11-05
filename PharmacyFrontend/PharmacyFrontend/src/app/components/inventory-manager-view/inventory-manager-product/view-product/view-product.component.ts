@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from '../../../../models/product-models/product';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-view-product',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf, CommonModule],
   templateUrl: './view-product.component.html',
   styleUrl: './view-product.component.scss'
 })
