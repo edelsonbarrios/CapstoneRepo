@@ -72,6 +72,19 @@ export class CreateProductComponent implements OnInit{
     });
   }
 
+  calculateBoxSheetPrice() {
+    if(this.newProduct.unitMeasurement == 'Multi-Level') {
+      if(this.newProduct.sheetsPerBox == 0 || this.newProduct.piecesPerSheet == 0) {
+        this.sheetsPerBoxError = 'Sheets Per Box cannot be empty.';
+        this.piecesPerSheetError = 'Pieces Per Sheet cannot be empty.';
+      }
+      this.newProduct.sheetPrice = this.newProduct.piecePrice * this.newProduct.piecesPerSheet;
+      this.newProduct.boxPrice = this.newProduct.sheetPrice * this.newProduct.sheetsPerBox;
+    }else if(this.newProduct.unitMeasurement == 'Dual-Level') {
+      this.newProduct.boxPrice = this.newProduct.piecePrice * this.newProduct.piecePerBox;
+    }
+  }
+
   getAllBrands() {
     this.getService.getAllBrandsAsync().subscribe({
       next: brands => {

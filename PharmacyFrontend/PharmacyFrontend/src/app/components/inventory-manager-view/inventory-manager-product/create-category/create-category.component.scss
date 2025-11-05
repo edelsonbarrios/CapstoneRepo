@@ -4,7 +4,7 @@
   padding: 0;
   width: 500px;
   max-width: 95vw;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
               0 10px 10px -5px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
@@ -179,7 +179,7 @@
 
         &:hover:not(:disabled) {
           background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
                       0 2px 4px -1px rgba(0, 0, 0, 0.06);
           transform: translateY(-1px);
         }
@@ -213,7 +213,6 @@
   animation: fadeIn 0.2s ease;
 }
 
-// Success Alert Styling (from vat-entry)
 .success-alert {
   background: #ffffff;
   border-radius: 20px;
@@ -229,7 +228,7 @@
     align-items: center;
     justify-content: center;
     animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     svg {
       filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     }
@@ -314,7 +313,6 @@
   }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   .modal {
     width: 100%;

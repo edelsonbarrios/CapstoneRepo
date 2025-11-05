@@ -47,7 +47,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
 
                     b.HasData(
                         new
@@ -76,7 +76,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("BrandID");
 
-                    b.ToTable("Brand", (string)null);
+                    b.ToTable("Brand");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesItem", b =>
@@ -178,7 +178,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("VATId");
 
-                    b.ToTable("SalesTransaction", (string)null);
+                    b.ToTable("SalesTransaction");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Category", b =>
@@ -200,7 +200,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("CategoryName")
                         .IsUnique();
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Classification", b =>
@@ -219,7 +219,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("ClassificationID");
 
-                    b.ToTable("Classification", (string)null);
+                    b.ToTable("Classification");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Discount", b =>
@@ -241,7 +241,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Discounts", (string)null);
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>
@@ -316,7 +316,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
 
                     b.HasData(
                         new
@@ -367,7 +367,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("PerformedBy");
 
-                    b.ToTable("EmployeeHistory", (string)null);
+                    b.ToTable("EmployeeHistory");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Formulation", b =>
@@ -386,7 +386,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("FormulationID");
 
-                    b.ToTable("Formulation", (string)null);
+                    b.ToTable("Formulation");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Generic", b =>
@@ -405,7 +405,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("GenericID");
 
-                    b.ToTable("Generic", (string)null);
+                    b.ToTable("Generic");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Inventory", b =>
@@ -475,7 +475,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("ProductID", "BatchNumber");
 
-                    b.ToTable("Inventory", (string)null);
+                    b.ToTable("Inventory");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
@@ -497,6 +497,9 @@ namespace PharmacyBackend.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int?>("ClassificationID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CostPrice")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateCreated")
@@ -559,7 +562,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("TypeID");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrder", b =>
@@ -611,7 +614,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SupplierID");
 
-                    b.ToTable("PurchaseOrder", (string)null);
+                    b.ToTable("PurchaseOrder");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrderItem", b =>
@@ -678,7 +681,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("PurchaseOrderID");
 
-                    b.ToTable("PurchaseOrderItem", (string)null);
+                    b.ToTable("PurchaseOrderItem");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Role", b =>
@@ -694,7 +697,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -782,7 +785,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("StockMovement", (string)null);
+                    b.ToTable("StockMovement");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
@@ -819,7 +822,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("SupplierName")
                         .IsUnique();
 
-                    b.ToTable("Supplier", (string)null);
+                    b.ToTable("Supplier");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.TypeModel", b =>
@@ -838,7 +841,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("TypeID");
 
-                    b.ToTable("TypeModel", (string)null);
+                    b.ToTable("TypeModel");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.VAT", b =>
@@ -867,7 +870,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("VATName")
                         .IsUnique();
 
-                    b.ToTable("VAT", (string)null);
+                    b.ToTable("VAT");
                 });
 
             modelBuilder.Entity("ProductSupplier", b =>

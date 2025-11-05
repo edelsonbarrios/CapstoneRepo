@@ -19,5 +19,6 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public string Description { get; set; } = string.Empty;
         public string UnitMeasurement { get; set; }
         public int PiecePerBox { get; set; }
+        public int CostPrice {get; set;}
     }
 }

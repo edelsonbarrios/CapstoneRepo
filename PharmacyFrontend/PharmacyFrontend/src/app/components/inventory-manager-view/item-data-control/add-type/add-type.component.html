@@ -1,5 +1,5 @@
 <div class="modal" *ngIf="!showSuccessAlert">
-  
+
   <!-- MODAL HEADER -->
   <div class="modal-header">
     <div class="icon-title">
@@ -20,7 +20,6 @@
         <i class="fas fa-clipboard-list"></i>
         Type Details
       </legend>
-
       <div class="form-grid">
         <!-- Type Name -->
         <div class="form-group" [class.error]="typeNameError">
@@ -28,10 +27,10 @@
             Type
             <span class="required">*</span>
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="typeName"
-            placeholder="(e.g. Tablet...)" 
+            placeholder="(e.g. Tablet...)"
             [(ngModel)]="addType.typeName"
           />
           <span class="error-message" *ngIf="typeNameError">

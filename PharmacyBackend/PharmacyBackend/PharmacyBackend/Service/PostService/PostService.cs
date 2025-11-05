@@ -485,7 +485,8 @@ namespace PharmacyBackend.Service.PostService
         UnitMeasurement = dto.UnitMeasurement,
         Description = dto.Description,
         DateCreated = DateTime.UtcNow,
-        PiecePerBox = dto.PiecePerBox
+        PiecePerBox = dto.PiecePerBox,
+        CostPrice = dto.CostPrice,
       };
 
       var created = await _postRepo.CreateProductAsync(product);

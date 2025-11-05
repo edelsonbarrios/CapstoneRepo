@@ -667,6 +667,8 @@ namespace PharmacyBackend.Service.GetService
           UnitMeasurement = p.UnitMeasurement,
           Description = p.Description,
           PiecePerBox = p.PiecePerBox,
+          CostPrice = p.CostPrice,
+
 
 
           // Inventory calculations

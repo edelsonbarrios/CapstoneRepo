@@ -33,6 +33,7 @@ namespace PharmacyBackend.Models
         public int SheetsPerBox { get; set; }
         public int PiecePerBox { get; set; }
         public int PiecesPerSheet { get; set; }
+        public int CostPrice {get; set;}
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal BoxPrice { get; set; }

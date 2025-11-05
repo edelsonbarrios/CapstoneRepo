@@ -21,6 +21,7 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public decimal PiecePrice { get; set; }
         public int ReorderLevel { get; set; }
         public string UnitMeasurement { get; set; }
+        public int CostPrice {get; set;}
 
         public string Description { get; set; } = string.Empty;
         public int? PiecePerBox { get; set; }
