@@ -50,6 +50,27 @@ export class CreateEmployeeComponent implements OnInit{
       this.getLoggedInEmployee();
   }
 
+  // New method to calculate age from birth date
+  onBirthDateChange() {
+    if (!this.newEmployee || !this.newEmployee.birthDate) {
+      if (this.newEmployee) {
+        this.newEmployee.age = 0;
+      }
+      return;
+    }
+
+    const birthDate = new Date(this.newEmployee.birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    this.newEmployee.age = age;
+  }
+
   createNewEmployee() {
     if (!this.newEmployee) return;
 

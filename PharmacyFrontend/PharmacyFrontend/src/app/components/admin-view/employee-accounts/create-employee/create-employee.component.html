@@ -107,6 +107,7 @@
             id="age"
             placeholder="Age" 
             [(ngModel)]="newEmployee.age"
+            [disabled]="true"
           />
           <span class="error-message" *ngIf="ageError">
             <i class="fas fa-exclamation-circle"></i>
@@ -120,6 +121,7 @@
             type="date" 
             id="birthDate"
             [(ngModel)]="newEmployee.birthDate"
+            (change)="onBirthDateChange()"
           />
           <span class="error-message" *ngIf="birthDateError">
             <i class="fas fa-exclamation-circle"></i>
