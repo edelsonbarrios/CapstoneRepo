@@ -783,7 +783,6 @@ namespace PharmacyBackend.Service.PostService
         }
         else
         {
-          // 🔸 Single-Level fallback (Box only)
           inventory = new Inventory
           {
             ProductID = product.ProductID,
@@ -797,7 +796,7 @@ namespace PharmacyBackend.Service.PostService
             PiecePrice = dto.PiecePrice,
             CostPrice = dto.CostPrice,
             IsActive = true,
-            DateAdded = DateTime.UtcNow
+            DateAdded = DateTime.UtcNow,
           };
 
         }

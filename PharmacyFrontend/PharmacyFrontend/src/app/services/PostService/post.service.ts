@@ -124,8 +124,8 @@ export class PostService {
   //Sales Service End
 
   //Inventory Service
-  createNewInventoryAsync(request: CreateInventory) : Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.apiUrl}/Post/Inventory`, request);
+  createNewInventoryAsync(request: CreateInventory) : Observable< {message : string}> {
+    return this.httpClient.post<{message : string}>(`${this.apiUrl}/Post/Inventory`, request);
   }
   //Inventory Service End
 

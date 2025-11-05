@@ -904,7 +904,7 @@ namespace PharmacyBackend.Service.UpdateService
                         int loosePieces = computedPieceQty % piecesPerSheet;
 
                         int totalBoxes = computedSheetQty / sheetsPerBox;
-                        int looseSheets = computedPieceQty % sheetsPerBox;
+                        int looseSheets = computedSheetQty % sheetsPerBox;
 
 
                         var newInventory = new Inventory
@@ -931,7 +931,7 @@ namespace PharmacyBackend.Service.UpdateService
                     }
                     else if (product.UnitMeasurement == "Dual-Level")
                     {
-                        int computedPieceQty = (item.BoxQuantityReceived * product.PiecePerBox) - damagedPieces;
+                        int computedPieceQty = (item.BoxQuantityReceived * product.PiecePerBox) - totalDeduction;
                         int totalBoxes = computedPieceQty / product.PiecePerBox;
                         int loosePieces = computedPieceQty % product.PiecePerBox;
                         if(computedPieceQty <= 0)

@@ -137,12 +137,13 @@ export class CreateStockComponent implements OnInit{
       piecePrice : this.createStock.piecePrice,
       referenceNumber : '',
       notes: '',
-      employeeID: this.employeeId,
+      employeeID: this.employee.id,
       piecePerBox: this.selectedProduct.piecePerBox
     }
     this.postService.createNewInventoryAsync(requestPayload).subscribe({
       next: res => {
         this.showSuccessAlert = true;
+        console.log('✅ Inventory created:', res);
       },
       error: err => {
         console.log(`${err.error}`);
@@ -151,7 +152,7 @@ export class CreateStockComponent implements OnInit{
     });
   }
 
-  
+
   closeCreateInventoryForm() {
     this.productError = '';
     this.batchNumberError = '';
@@ -178,22 +179,22 @@ export class CreateStockComponent implements OnInit{
   }
 
   getLoggedInEmployee() {
-      const token = localStorage.getItem(LogInToken);
-      if (!token) {
-        console.log(`Token does not exist.`);
-        return;
-      }
-
-      const employee: any = jwtDecode(token);
-      const employeeId = parseInt(employee.EmployeeId);
-
-      this.getService.GetEmployeeById(employeeId).subscribe({
-        next: (employee) => {
-          this.employee = employee;
-        },
-        error: (err) => {
-          console.log(`${err.error}`);
-        },
-      });
+    const token = localStorage.getItem(LogInToken);
+    if (!token) {
+      console.log(`Token does not exist.`);
+      return;
     }
+
+    const employee: any = jwtDecode(token);
+    const employeeId = parseInt(employee.EmployeeId);
+
+    this.getService.GetEmployeeById(employeeId).subscribe({
+      next: (employee) => {
+        this.employee = employee;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
+  }
 }

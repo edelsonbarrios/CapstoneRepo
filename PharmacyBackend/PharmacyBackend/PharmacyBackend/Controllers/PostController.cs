@@ -379,19 +379,19 @@ namespace PharmacyBackend.Controllers
 
         #region Inventory
         [HttpPost("Inventory")]
-        public async Task<ActionResult<bool>> CreateInventoryAsync(CreateInventoryDto dto)
+        public async Task<ActionResult<object>> CreateInventoryAsync(CreateInventoryDto dto)
         {
              if (!ModelState.IsValid)
-                 return BadRequest("Invalid inventory data.");
+                 return BadRequest(new {Message = "Invalid inventory data."});
 
              if (dto == null)
-                 return BadRequest("Inventory data is required.");
+                 return BadRequest(new {Message = "Inventory data is required."});
 
              try
              {
                  var result = await _postService.CreateInventoryAsync(dto);
                  if (!result)
-                     return BadRequest("Inventory could not be created.");
+                     return BadRequest(new {Message = "Inventory could not be created."});
 
                  return Ok(new { Message = "Inventory successfully created." });
              }
