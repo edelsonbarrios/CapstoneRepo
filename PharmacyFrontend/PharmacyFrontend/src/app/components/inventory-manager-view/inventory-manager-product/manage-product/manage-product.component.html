@@ -22,7 +22,8 @@
           <th>Category</th>
           <th>Brand</th>
           <th>Box Price</th>
-          <th>Action</th>
+          <th>Piece Price</th>
+          <th style="text-align: center;">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -37,6 +38,7 @@
           <td *ngIf="p.brandName">{{p.brandName}}</td>
           <td *ngIf="p.brandName == ''">N/A</td>
           <td>{{p.boxPrice}}</td>
+          <td>{{p.piecePrice}}</td>
           <td>
             <button class="btn-view" (click)="openViewProductForm(p)">See Details</button>
             <button class="btn-update" (click)="openUpdateProductForm(p)">Update</button>
@@ -56,14 +58,14 @@
 </div>
 
 <div class="modal-overlay" *ngIf="newProduct">
-  <app-create-product 
+  <app-create-product
   *ngIf="newProduct"
   (closeForm)="closeCreateProductForm()"
   ></app-create-product>
 </div>
 
 <div class="modal-overlay" *ngIf="viewProduct">
-  <app-view-product 
+  <app-view-product
   *ngIf="viewProduct"
   [viewProduct]="viewProduct"
   (closeForm)="closeViewProductForm()"
@@ -71,7 +73,7 @@
 </div>
 
 <div class="modal-overlay" *ngIf="updateProduct">
-  <app-update-product 
+  <app-update-product
   [productToUpdate]="updateProduct"
   *ngIf="updateProduct"
   (closeForm)="closeUpdateProductForm()"

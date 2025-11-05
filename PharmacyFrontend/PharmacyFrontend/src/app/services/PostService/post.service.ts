@@ -1,18 +1,13 @@
-import { Injectable } from '@angular/core';
 import { BaseApiUrl } from '../../shared/apiUrl';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, ObservedValueOf, tap,  } from 'rxjs';
-import { LogInToken } from '../../components/shared/token';
-import { Employee } from '../../models/employee-models/employee';
 import { Account } from '../../models/account';
 import { CreateEmployeeRequest } from '../../models/employee-models/createEmployeeRequest';
-import { VAT } from '../../models/vat-models/vat';
 import { CreateVatRequest } from '../../models/vat-models/createVatRequest';
 import { CreateDiscountRequest } from '../../models/discount-models/create-discount';
 import { CreateProductRequest } from '../../models/product-models/create-product-request';
 import { Supplier } from '../../models/supplier-models/supplier';
-import { PurchaseOrder } from '../../models/purchase-order-models/purchase-order';
 import { CreatePurchaseOrder } from '../../models/purchase-order-models/create-purchase-order';
 import { Brand } from '../../models/brand-models/brand';
 import { Generic } from '../../models/generic-models/generic';
@@ -23,6 +18,7 @@ import { CreateInventory } from '../../models/inventory-module-models/createInve
 import { CreateStockMovement } from '../../models/inventory-module-models/createStockMovement';
 import { CreateCategory } from '../../models/product-models/createCategory';
 import { StockAdjustment } from '../../models/inventory-module-models/stock-adjustment';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'

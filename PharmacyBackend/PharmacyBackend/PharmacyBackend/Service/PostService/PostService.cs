@@ -399,6 +399,17 @@ namespace PharmacyBackend.Service.PostService
       int? classificationId = null;
       int? typeId = null;
 
+      if (!string.IsNullOrWhiteSpace(dto.TypeName))
+      {
+        typeId = await GetTypeIdByNameAsync(dto.TypeName);
+      }
+
+      // ✅ Resolve Brand for ALL unit measurements (optional)
+      if (!string.IsNullOrWhiteSpace(dto.BrandName))
+      {
+        brandId = await GetBrandIdByNameAsync(dto.BrandName);
+      }
+
       if (isMultiLevel)
       {
         brandId = await GetBrandIdByNameAsync(dto.BrandName);
