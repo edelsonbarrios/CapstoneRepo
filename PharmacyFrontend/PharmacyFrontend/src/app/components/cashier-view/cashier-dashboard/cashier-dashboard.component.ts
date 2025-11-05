@@ -374,6 +374,7 @@ export class CashierDashboardComponent implements OnInit {
       next: () => {
         this.receipt = event;
         this.getAllProducts();
+        this.generateNewInvoiceNumber();
       },
       error: (err) => {
         console.error('Error creating transaction:', err);

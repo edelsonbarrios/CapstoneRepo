@@ -26,13 +26,13 @@
         <!-- Employee Code -->
         <div class="form-group" [class.error]="employeeCodeError">
           <label for="employeeCode">
-            Employee Code 
+            Employee Code
             <span class="required">*</span>
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="employeeCode"
-            placeholder="Enter Employee Code" 
+            placeholder="Enter Employee Code"
             [(ngModel)]="newEmployee.employeeCode"
           />
           <span class="error-message" *ngIf="employeeCodeError">
@@ -43,13 +43,13 @@
 
         <div class="form-group" [class.error]="lastNameError">
           <label for="lastName">
-            Last Name 
+            Last Name
             <span class="required">*</span>
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="lastName"
-            placeholder="Enter Last Name" 
+            placeholder="Enter Last Name"
             [(ngModel)]="newEmployee.lastName"
           />
           <span class="error-message" *ngIf="lastNameError">
@@ -63,10 +63,10 @@
             First Name
             <span class="required">*</span>
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="firstName"
-            placeholder="Enter First Name" 
+            placeholder="Enter First Name"
             [(ngModel)]="newEmployee.firstName"
           />
           <span class="error-message" *ngIf="firstNameError">
@@ -77,10 +77,10 @@
 
         <div class="form-group">
           <label for="middleName">Middle Name</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="middleName"
-            placeholder="Enter Middle Name" 
+            placeholder="Enter Middle Name"
             [(ngModel)]="newEmployee.middleName"
           />
         </div>
@@ -102,10 +102,11 @@
 
         <div class="form-group small" [class.error]="ageError">
           <label for="age">Age</label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             id="age"
-            placeholder="Age" 
+            placeholder="Age"
+            readonly
             [(ngModel)]="newEmployee.age"
           />
           <span class="error-message" *ngIf="ageError">
@@ -116,8 +117,8 @@
 
         <div class="form-group small" [class.error]="birthDateError">
           <label for="birthDate">Birth Date</label>
-          <input 
-            type="date" 
+          <input
+            type="date"
             id="birthDate"
             [(ngModel)]="newEmployee.birthDate"
           />
@@ -129,10 +130,10 @@
 
         <div class="form-group small" [class.error]="phoneNumberError">
           <label for="phoneNumber">Phone Number</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="phoneNumber"
-            placeholder="Enter Phone No." 
+            placeholder="Enter Phone No."
             [(ngModel)]="newEmployee.phoneNumber"
           />
           <span class="error-message" *ngIf="phoneNumberError">
@@ -170,10 +171,10 @@
 
         <div class="form-group" [class.error]="emailError">
           <label for="email">Email</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="email"
-            placeholder="Enter Email" 
+            placeholder="Enter Email"
             [(ngModel)]="newEmployee.email"
           />
           <span class="error-message" *ngIf="emailError">
@@ -184,13 +185,13 @@
 
         <div class="form-group wide" [class.error]="addressError">
           <label for="address">
-            Address 
+            Address
             <span class="required">*</span>
           </label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             id="address"
-            placeholder="Enter Address" 
+            placeholder="Enter Address"
             [(ngModel)]="newEmployee.address"
           />
           <span class="error-message" *ngIf="addressError">

@@ -694,7 +694,6 @@ namespace PharmacyBackend.Service.PostService
     {
       try
       {
-
         var product = await GetProductByNameAsync(dto.ProductName);
         if (product == null)
           throw new ArgumentException($"Product '{dto.ProductName}' not found.");
