@@ -212,6 +212,10 @@ namespace PharmacyBackend.Controllers
             if (dto == null)
                 return BadRequest("Category data is required.");
 
+            var categoryNameValidation = await _postService.ValidateCategoryNameAsync(dto.CategoryName);
+            if(!categoryNameValidation)
+              return BadRequest("Category already exist.");
+
             try
             {
                 var result = await _postService.CreateCategoryAsync(dto);
@@ -236,6 +240,10 @@ namespace PharmacyBackend.Controllers
 
             if (dto == null)
                 return BadRequest("Brand data is required.");
+
+            var brandNameValidation = await _postService.ValidateBrandNameAsync(dto.BrandName);
+            if(!brandNameValidation)
+              return BadRequest("Brand already exist.");
 
             try
             {
@@ -262,6 +270,10 @@ namespace PharmacyBackend.Controllers
             if (dto == null)
                 return BadRequest("Generic data is required.");
 
+            var genericNameValidation = await _postService.ValidateGenericNameAsync(dto.GenericName);
+            if(!genericNameValidation)
+              return BadRequest("Generic already exist.");
+
             try
             {
                 var result = await _postService.CreateGenericAsync(dto);
@@ -286,6 +298,11 @@ namespace PharmacyBackend.Controllers
 
             if (dto == null)
                 return BadRequest("Formulation data is required.");
+
+            var formulationNameValidation = await _postService.ValidateFormulationNameAsync(dto.FormulationName);
+
+            if(!formulationNameValidation)
+              return BadRequest("Formulation already exist.");
 
             try
             {
@@ -312,6 +329,11 @@ namespace PharmacyBackend.Controllers
             if (dto == null)
                 return BadRequest("Classification data is required.");
 
+            var classificationNameValidation = await _postService.ValidateClassificationNameAsync(dto.ClassificationName);
+
+            if(!classificationNameValidation)
+              return BadRequest("Classification already exist.");
+
             try
             {
                 var result = await _postService.CreateClassificationAsync(dto);
@@ -336,6 +358,11 @@ namespace PharmacyBackend.Controllers
 
             if (dto == null)
                 return BadRequest("Type data is required.");
+
+            var typeNameValidation = await _postService.ValidateTypeNameAsync(dto.TypeName);
+            
+            if(!typeNameValidation)
+              return BadRequest("Type already exist.");
 
             try
             {

@@ -13,8 +13,8 @@ import { ViewAdjustmentComponent } from '../view-adjustment/view-adjustment.comp
   standalone: true,
   imports: [
     StockAdjustComponent,
-    NgIf, 
-    CommonModule, 
+    NgIf,
+    CommonModule,
     FormsModule,
     ViewAdjustmentComponent,
   ],
@@ -27,7 +27,7 @@ export class ManageStockAdjustmentComponent implements OnInit {
   stockMovements: StockMovement[] = [];
   paginatedStockMovements: StockMovement[] = [];
   searchQuery: string = '';
-  
+
   // Pagination properties
   currentPage: number = 1;
   itemsPerPage: number = 6;
@@ -43,7 +43,7 @@ export class ManageStockAdjustmentComponent implements OnInit {
 
   get filteredStockMovements(): StockMovement[] {
     let movements = this.stockMovements;
-    
+
     // ✅ FILTER OUT "Sale" and "Stock In" types - only show manual adjustments
     movements = movements.filter(sm => {
       const type = sm.movementType.toLowerCase();
@@ -54,9 +54,9 @@ export class ManageStockAdjustmentComponent implements OnInit {
     if (!this.searchQuery.trim()) {
       return movements;
     }
-    
+
     const query = this.searchQuery.toLowerCase();
-    return movements.filter(sm => 
+    return movements.filter(sm =>
       sm.productName.toLowerCase().includes(query) ||
       sm.referenceNumber.toLowerCase().includes(query)
     );

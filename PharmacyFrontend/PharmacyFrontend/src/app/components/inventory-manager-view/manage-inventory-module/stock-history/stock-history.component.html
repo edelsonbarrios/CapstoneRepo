@@ -3,98 +3,183 @@
   <div class="upper-container">
     <div class="sub-container">
       <div class="content">
-        <label>Total Transaction</label>
-        <p>1,245</p>
+        <div class="icon-wrapper total">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+        <div class="stats">
+          <label>Total Transaction</label>
+          <p>1,245</p>
+        </div>
       </div>
     </div>
-
     <div class="sub-container">
       <div class="content">
-        <label>Stock Entries</label>
-        <p>423</p>
+        <div class="icon-wrapper entries">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+        <div class="stats">
+          <label>Stock Entries</label>
+          <p>423</p>
+        </div>
       </div>
     </div>
-
     <div class="sub-container">
       <div class="content">
-        <label>Adjustment</label>
-        <p>187</p>
+        <div class="icon-wrapper adjustment">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </div>
+        <div class="stats">
+          <label>Adjustment</label>
+          <p>187</p>
+        </div>
       </div>
     </div>
-
     <div class="sub-container">
       <div class="content">
-        <label>Sales/Removals</label>
-        <p>635</p>
+        <div class="icon-wrapper sales">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        <div class="stats">
+          <label>Sales/Removals</label>
+          <p>635</p>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Middle Filter Controls -->
   <div class="middle container">
-    <h2>Stock History</h2>
+    <div class="header-section">
+      <div class="title-group">
+        <i class="fa-solid fa-filter"></i>
+        <h2>Stock History</h2>
+      </div>
+      <button class="btn-export">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        <span>Export Excel</span>
+      </button>
+    </div>
 
     <div class="cntr-control">
       <div class="control">
-        <label>Start Date</label>
+        <label>
+          <i class="fa-regular fa-calendar"></i>
+          Start Date
+        </label>
         <input type="date" />
       </div>
-
       <div class="control">
-        <label>End Date</label>
+        <label>
+          <i class="fa-regular fa-calendar"></i>
+          End Date
+        </label>
         <input type="date" />
       </div>
-
       <div class="control">
-        <label>Transaction Type</label>
+        <label>
+          <i class="fa-solid fa-tag"></i>
+          Transaction Type
+        </label>
         <select id="transaction">
           <option value="">All Transaction</option>
         </select>
       </div>
-
       <div class="control">
-        <label>Search</label>
-        <input type="text" placeholder="Search..." />
+        <label>
+          <i class="fa-solid fa-magnifying-glass"></i>
+          Search
+        </label>
+        <input type="text" placeholder="Search products, batches..." />
       </div>
     </div>
-
-    <button class="btn-export">
-      <span><i class="fa-solid fa-file-arrow-down"></i></span>
-      Export Excel
-    </button>
   </div>
 
   <!-- Lower Table -->
   <div class="lower container">
-    <h2>Transaction Details</h2>
+    <div class="table-header">
+      <div class="title-group">
+        <i class="fa-solid fa-table"></i>
+        <h2>Transaction Details</h2>
+      </div>
+      <div class="table-info">
+        <span class="badge">9 Records</span>
+      </div>
+    </div>
 
-    <table class="stock-history">
-      <thead>
-        <tr>
-          <th>Date & Time</th>
-          <th>Product</th>
-          <th>Batch</th>
-          <th>Type</th>
-          <th>Reference</th>
-          <th>Before</th>
-          <th>Changed</th>
-          <th>After</th>
-          <th>Performed By</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Sample date</td>
-          <td>Sample product</td>
-          <td>Sample batch</td>
-          <td>Sample type</td>
-          <td>Sample reference</td>
-          <td>Sample before</td>
-          <td>Sample changed</td>
-          <td>Sample after</td>
-          <td>Sample performedby</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <table class="stock-history">
+        <thead>
+          <tr>
+            <th>
+              <div class="th-content">
+                <i class="fa-regular fa-clock"></i>
+                Date & Time
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-box"></i>
+                Product
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-layer-group"></i>
+                Batch
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-tag"></i>
+                Type
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-hashtag"></i>
+                Reference
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-arrow-left"></i>
+                Before
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                Changed
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-arrow-right"></i>
+                After
+              </div>
+            </th>
+            <th>
+              <div class="th-content">
+                <i class="fa-solid fa-user"></i>
+                Performed By
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="cell-content">Sample date</span></td>
+            <td><span class="cell-content product-name">Sample product</span></td>
+            <td><span class="cell-content">Sample batch</span></td>
+            <td><span class="badge-type entry">Sample type</span></td>
+            <td><span class="cell-content reference">Sample reference</span></td>
+            <td><span class="cell-content number">Sample before</span></td>
+            <td><span class="cell-content number positive">Sample changed</span></td>
+            <td><span class="cell-content number">Sample after</span></td>
+            <td><span class="cell-content user">Sample performedby</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </main>
