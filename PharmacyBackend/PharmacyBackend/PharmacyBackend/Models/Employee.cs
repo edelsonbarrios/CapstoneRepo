@@ -27,6 +27,7 @@ namespace PharmacyBackend.Models
         public DateTime? ArchivedAt { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool IsSuperAdmin {get; set;} = false;
 
 
 

@@ -3,7 +3,7 @@
     <!-- Search & Add Employee -->
     <div class="table-header">
       <div class="search-wrapper">
-        <input type="text" placeholder="Search Last Name" class="search-box" 
+        <input type="text" placeholder="Search Last Name" class="search-box"
          [(ngModel)]="this.searchQuery"
          (input)="onSearchChange()"
           />
@@ -36,7 +36,9 @@
           <td>{{ e.rolePosition }}</td>
           <td style="text-align: center;">
             <button class="btn details" (click)="openViewEmployeeForm(e)">See Details</button>
-            <button class="btn details" id="red" (click)="openArchiveForm(e.id)">Delete</button>
+            <button class="btn details" id="red" (click)="openArchiveForm(e.id)" *ngIf="e.isSuperAdmin == false">
+              Delete
+              </button>
           </td>
         </tr>
       </tbody>
@@ -52,7 +54,7 @@
 </div>
 
 <div class="modal-overlay" *ngIf="viewEmployee">
-  <app-view-employee 
+  <app-view-employee
   *ngIf="viewEmployee"
   [employee]="viewEmployee"
   (closeForm)="closeViewEmployeeForm()"

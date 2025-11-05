@@ -101,6 +101,7 @@ namespace PharmacyBackend.Service.GetService
           Address = e.Address,
           FullName = e.FullName,
           RolePosition = e.Role.RolePosition,
+          IsSuperAdmin = e.IsSuperAdmin,
           Account = new AccountDTO
           {
           Id = e.Account.Id,

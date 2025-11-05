@@ -20,4 +20,5 @@ export class Employee {
   archivedAt: Date = new Date();
   updatedBy: number = 0;
   updatedAt: Date = new Date();
+  isSuperAdmin: boolean = false;
 }

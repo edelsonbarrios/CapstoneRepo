@@ -47,7 +47,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
 
                     b.HasData(
                         new
@@ -76,7 +76,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("BrandID");
 
-                    b.ToTable("Brand");
+                    b.ToTable("Brand", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.CashierViewModel.SalesItem", b =>
@@ -178,7 +178,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("VATId");
 
-                    b.ToTable("SalesTransaction");
+                    b.ToTable("SalesTransaction", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Category", b =>
@@ -200,7 +200,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("CategoryName")
                         .IsUnique();
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Classification", b =>
@@ -219,7 +219,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("ClassificationID");
 
-                    b.ToTable("Classification");
+                    b.ToTable("Classification", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Discount", b =>
@@ -241,7 +241,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Discounts");
+                    b.ToTable("Discounts", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>
@@ -291,6 +291,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LastName")
                         .HasColumnType("text");
 
@@ -313,7 +316,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
 
                     b.HasData(
                         new
@@ -330,6 +333,7 @@ namespace PharmacyBackend.Migrations
                             FirstName = "Admin",
                             Gender = "",
                             IsActive = true,
+                            IsSuperAdmin = true,
                             LastName = "Main",
                             MiddleName = "",
                             PhoneNumber = "0000000000",
@@ -363,7 +367,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("PerformedBy");
 
-                    b.ToTable("EmployeeHistory");
+                    b.ToTable("EmployeeHistory", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Formulation", b =>
@@ -382,7 +386,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("FormulationID");
 
-                    b.ToTable("Formulation");
+                    b.ToTable("Formulation", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Generic", b =>
@@ -401,7 +405,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("GenericID");
 
-                    b.ToTable("Generic");
+                    b.ToTable("Generic", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Inventory", b =>
@@ -471,7 +475,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("ProductID", "BatchNumber");
 
-                    b.ToTable("Inventory");
+                    b.ToTable("Inventory", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Product", b =>
@@ -555,7 +559,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("TypeID");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrder", b =>
@@ -607,7 +611,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("SupplierID");
 
-                    b.ToTable("PurchaseOrder");
+                    b.ToTable("PurchaseOrder", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.PurchaseOrderItem", b =>
@@ -674,7 +678,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("PurchaseOrderID");
 
-                    b.ToTable("PurchaseOrderItem");
+                    b.ToTable("PurchaseOrderItem", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Role", b =>
@@ -690,7 +694,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -778,7 +782,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("StockMovement");
+                    b.ToTable("StockMovement", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
@@ -815,7 +819,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("SupplierName")
                         .IsUnique();
 
-                    b.ToTable("Supplier");
+                    b.ToTable("Supplier", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.TypeModel", b =>
@@ -834,7 +838,7 @@ namespace PharmacyBackend.Migrations
 
                     b.HasKey("TypeID");
 
-                    b.ToTable("TypeModel");
+                    b.ToTable("TypeModel", (string)null);
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.VAT", b =>
@@ -863,7 +867,7 @@ namespace PharmacyBackend.Migrations
                     b.HasIndex("VATName")
                         .IsUnique();
 
-                    b.ToTable("VAT");
+                    b.ToTable("VAT", (string)null);
                 });
 
             modelBuilder.Entity("ProductSupplier", b =>

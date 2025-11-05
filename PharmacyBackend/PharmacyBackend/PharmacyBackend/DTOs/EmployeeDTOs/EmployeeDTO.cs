@@ -1,5 +1,4 @@
 ﻿using PharmacyBackend.DTOs.AccountDTOs;
-using PharmacyBackend.Models;
 
 namespace PharmacyBackend.DTOs.EmployeeDTOs
 {
@@ -19,6 +18,7 @@ namespace PharmacyBackend.DTOs.EmployeeDTOs
         public string Address { get; set; }
         public string RolePosition { get; set; }
         public string FullName { get; set; }
+        public bool IsSuperAdmin {get; set;}
         public AccountDTO Account { get; set; }
     }
 }

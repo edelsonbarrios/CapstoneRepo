@@ -312,7 +312,8 @@ namespace PharmacyBackend.DataContext
                     Address = "Main Office",
                     CreatedBy = 0,
                     CreatedAt = DateTime.SpecifyKind(new DateTime(2000, 1, 1), DateTimeKind.Utc),
-                    IsActive = true
+                    IsActive = true,
+                    IsSuperAdmin = true,
                 }
             );
 
