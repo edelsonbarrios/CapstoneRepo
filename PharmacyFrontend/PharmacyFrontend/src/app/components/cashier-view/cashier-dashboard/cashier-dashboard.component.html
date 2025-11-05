@@ -1,4 +1,32 @@
 <main class="wrapper modern">
+  <!-- Error Message Alert -->
+  <div class="alert-message error-alert" *ngIf="showError" [@slideDown]>
+    <div class="alert-content">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div class="alert-text">
+        <strong>Error!</strong>
+        <span>{{ errorMessage }}</span>
+      </div>
+      <button class="alert-close" (click)="clearMessages()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Message Alert -->
+  <div class="alert-message success-alert" *ngIf="showSuccess" [@slideDown]>
+    <div class="alert-content">
+      <i class="fa-solid fa-circle-check"></i>
+      <div class="alert-text">
+        <strong>Success!</strong>
+        <span>{{ successMessage }}</span>
+      </div>
+      <button class="alert-close" (click)="clearMessages()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
   <div class="containers">
     <!-- LEFT: Product Display -->
     <section class="grid-items product-display">

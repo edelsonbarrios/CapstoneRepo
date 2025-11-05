@@ -98,22 +98,33 @@ namespace PharmacyBackend.Controllers
         public async Task<IActionResult> CreateSalesTransactionAsync([FromBody] CreateSalesTransactionDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Invalid sales transaction data.");
+                return BadRequest(new { Message = "Invalid sales transaction data." });
 
             if (dto == null)
-                return BadRequest("Sales transaction data is required.");
+                return BadRequest(new { Message = "Sales transaction data is required." });
 
             try
             {
                 var result = await _postService.CreateSalesTransactionAsync(dto);
                 if (result == null)
-                    return BadRequest("Sales transaction could not be created.");
+                    return BadRequest(new { Message = "Sales transaction could not be created." });
 
                 return Ok(new { Message = "Transaction successfully created." });
             }
+            catch (InvalidOperationException ex)
+            {
+                // Catch insufficient stock errors
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                // Catch validation errors
+                return BadRequest(new { Message = ex.Message });
+            }
             catch (Exception ex)
             {
-                return BadRequest($"Error creating sales transaction: {ex.Message}");
+                _logger.LogError(ex, "Error creating sales transaction");
+                return BadRequest(new { Message = $"Error creating sales transaction: {ex.Message}" });
             }
         }
 
@@ -121,28 +132,40 @@ namespace PharmacyBackend.Controllers
         public async Task<IActionResult> CreateSalesItemAsync([FromBody] CreateSalesItemDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest("Invalid sales item data.");
+                return BadRequest(new { Message = "Invalid sales item data." });
 
             try
             {
                 var result = await _postService.CreateSalesItemAsync(dto);
                 if (result == null)
-                    return BadRequest("Sales item could not be created.");
+                    return BadRequest(new { Message = "Sales item could not be created." });
 
                 return Ok(new { Message = "Sales item successfully created." });
             }
+            catch (InvalidOperationException ex)
+            {
+                // Catch insufficient stock errors
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                // Catch validation errors
+                return BadRequest(new { Message = ex.Message });
+            }
             catch (Exception ex)
             {
-                return BadRequest($"Error creating sales item: {ex.Message}");
+                _logger.LogError(ex, "Error creating sales item");
+                return BadRequest(new { Message = $"Error creating sales item: {ex.Message}" });
             }
         }
+
         [HttpPost("NewInvoiceNumber")]
-        public async Task<ActionResult<string>> GenerateNewInvoiceNumberAsync() 
+        public async Task<ActionResult<string>> GenerateNewInvoiceNumberAsync()
         {
-          string newInvoiceNumber = await _postService.GenerateNewInvoiceNumberAsync();
-          if(string.IsNullOrEmpty(newInvoiceNumber)) 
-            return NotFound("Invoice Generation failed. Please refresh the page.");
-          return Ok(newInvoiceNumber);
+            string newInvoiceNumber = await _postService.GenerateNewInvoiceNumberAsync();
+            if (string.IsNullOrEmpty(newInvoiceNumber))
+                return NotFound("Invoice Generation failed. Please refresh the page.");
+            return Ok(newInvoiceNumber);
         }
         #endregion
 

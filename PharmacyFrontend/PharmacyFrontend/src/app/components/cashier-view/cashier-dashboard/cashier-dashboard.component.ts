@@ -40,6 +40,10 @@ export class CashierDashboardComponent implements OnInit {
   newInvoice: string = '';
   timeNow: Date = new Date();
   timer : any;
+  errorMessage: string = '';
+  successMessage: string = '';
+  showError: boolean = false;
+  showSuccess: boolean = false;
 
   products: (Product & {
     selected?: boolean;
@@ -235,17 +239,40 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   addSelectedProducts() {
+    this.clearMessages(); // Clear any existing messages
+    
     const toAdd = this.products.filter((p) => p.selected);
+
+    if (toAdd.length === 0) {
+      this.showErrorMessage('Please select at least one product to add.');
+      return;
+    }
 
     toAdd.forEach((p) => {
       const unitType = p.tempUnitType || 'Piece';
       const price = this.resolveUnitPriceFromProduct(p, unitType);
       const qtyToAdd = p.quantity && p.quantity > 0 ? p.quantity : 1;
 
+      // Get max available quantity
+      const maxQty = this.getMaxQuantityForProduct(p, unitType);
+      
       // Check if product with same ID and unit type already exists in cart
       const existing = this.selectedProducts.find(
         (sp) => sp.productID === p.productID && sp.unitType === unitType
       );
+
+      const totalQtyInCart = (existing?.quantity || 0) + qtyToAdd;
+
+      // Validate stock availability
+      if (totalQtyInCart > maxQty) {
+        this.showErrorMessage(
+          `Insufficient stock for '${p.productName}'. ` +
+          `Available: ${maxQty} ${unitType}(s), ` +
+          `Attempting to add: ${totalQtyInCart} ${unitType}(s)`
+        );
+        p.selected = false;
+        return;
+      }
 
       if (existing) {
         // Add to existing quantity
@@ -267,6 +294,24 @@ export class CashierDashboardComponent implements OnInit {
       p.quantity = 0;
       p.tempUnitType = 'Piece';
     });
+
+    if (this.selectedProducts.length > 0) {
+      this.showSuccessMessage('Products added to cart successfully!');
+    }
+  }
+
+  // Helper to get max quantity for a specific unit type
+  getMaxQuantityForProduct(product: any, unitType: string): number {
+    switch (unitType) {
+      case 'Box':
+        return product.boxQuantity || 0;
+      case 'Sheet':
+        return product.sheetQuantity || 0;
+      case 'Piece':
+        return product.pieceQuantity || 0;
+      default:
+        return 0;
+    }
   }
 
   onCartItemChange(item: any) {
@@ -274,8 +319,20 @@ export class CashierDashboardComponent implements OnInit {
     if (!item.unitPrice || item.unitPrice < 0) item.unitPrice = 0;
 
     const product = this.products.find((p) => p.productID === item.productID);
-    if (product && (!item.unitPrice || item.unitPrice === 0)) {
-      item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
+    if (product) {
+      if (!item.unitPrice || item.unitPrice === 0) {
+        item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
+      }
+
+      // Validate quantity against available stock
+      const maxQty = this.getMaxQuantityForProduct(product, item.unitType);
+      if (item.quantity > maxQty) {
+        this.showErrorMessage(
+          `Insufficient stock for '${product.productName}'. ` +
+          `Available: ${maxQty} ${item.unitType}(s)`
+        );
+        item.quantity = maxQty;
+      }
     }
   }
 
@@ -330,8 +387,7 @@ export class CashierDashboardComponent implements OnInit {
   handlePayment(event: any) {
     const employeeId = event.employeeID;
     if (!employeeId || employeeId <= 0) {
-      console.error('No valid employeeID from payment event');
-      alert('No logged-in employee found. Please login again.');
+      this.showErrorMessage('No logged-in employee found. Please login again.');
       return;
     }
 
@@ -371,20 +427,68 @@ export class CashierDashboardComponent implements OnInit {
     };
 
     this.postService.createSalesTransactionAsync(event).subscribe({
-      next: () => {
+      next: (response) => {
+        this.showSuccessMessage('Transaction completed successfully!');
         this.receipt = event;
         this.getAllProducts();
         this.generateNewInvoiceNumber();
+        this.clearSelection();
+        this.closeViewSettle();
+        
+        // Show success overlay
+        this.finishedTransac = true;
       },
       error: (err) => {
-        console.error('Error creating transaction:', err);
+        console.error('❌ Transaction Error:', err);
+        
+        // Extract error message from backend
+        let errorMsg = 'An error occurred while processing the transaction.';
+        
+        if (err.error && err.error.message) {
+          errorMsg = err.error.message;
+        } else if (err.error && typeof err.error === 'string') {
+          errorMsg = err.error;
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+        
+        this.showErrorMessage(errorMsg);
       },
     });
-
-    this.clearSelection();
-    this.closeViewSettle();
   }
 
+  showErrorMessage(message: string) {
+    this.errorMessage = message;
+    this.showError = true;
+    this.showSuccess = false;
+    
+    // Auto-hide after 7 seconds
+    setTimeout(() => {
+      this.clearMessages();
+    }, 7000);
+    
+    // Scroll to top to show the message
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  showSuccessMessage(message: string) {
+    this.successMessage = message;
+    this.showSuccess = true;
+    this.showError = false;
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      this.clearMessages();
+    }, 3000);
+  }
+
+   clearMessages() {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.showError = false;
+    this.showSuccess = false;
+  }
+  
   openViewSettleForm() {
     this.viewSettle = new Product();
   }

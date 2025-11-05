@@ -240,11 +240,54 @@ namespace PharmacyBackend.Repository.POST
             // Calculate pieces needed based on unit type
             var totalPiecesNeeded = CalculatePiecesNeeded(salesItem.UnitType, salesItem.Quantity, availableInventories.First());
 
-            // Check total availability
             var totalAvailablePieces = availableInventories.Sum(i => i.TotalPiecesAvailable);
-            if (totalAvailablePieces < totalPiecesNeeded)
-                throw new InvalidOperationException($"Insufficient stock for {product.ProductName}. Available: {totalAvailablePieces} pieces, Required: {totalPiecesNeeded} pieces");
 
+            if (totalAvailablePieces < totalPiecesNeeded)
+            {
+                var sampleInventory = availableInventories.First();
+                var hasSheets = (sampleInventory.SheetsPerBox ?? 0) > 0;
+                var hasPieces = (sampleInventory.PiecesPerSheet ?? 0) > 0;
+
+                // Calculate available quantity in the requested unit type
+                int availableInRequestedUnit = 0;
+                string unitName = salesItem.UnitType.ToLower();
+
+                if (hasSheets && hasPieces)
+                {
+                    var sheetsPerBox = sampleInventory.SheetsPerBox ?? 1;
+                    var piecesPerSheet = sampleInventory.PiecesPerSheet ?? 1;
+
+                    availableInRequestedUnit = unitName switch
+                    {
+                        "box" => totalAvailablePieces / (sheetsPerBox * piecesPerSheet),
+                        "sheet" => totalAvailablePieces / piecesPerSheet,
+                        "piece" => totalAvailablePieces,
+                        _ => totalAvailablePieces
+                    };
+                }
+                else if (hasSheets && !hasPieces)
+                {
+                    var sheetsPerBox = sampleInventory.SheetsPerBox ?? 1;
+
+                    availableInRequestedUnit = unitName switch
+                    {
+                        "box" => totalAvailablePieces / sheetsPerBox,
+                        "sheet" => totalAvailablePieces,
+                        "piece" => totalAvailablePieces,
+                        _ => totalAvailablePieces
+                    };
+                }
+                else
+                {
+                    availableInRequestedUnit = totalAvailablePieces;
+                }
+
+                throw new InvalidOperationException(
+                    $"Insufficient stock for '{product.ProductName}'. " +
+                    $"Requested: {salesItem.Quantity} {unitName}(s), " +
+                    $"Available: {availableInRequestedUnit} {unitName}(s)"
+                );
+            }
             // Set unit price if not provided
             if (salesItem.UnitPrice <= 0)
             {
