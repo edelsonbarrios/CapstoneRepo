@@ -38,8 +38,10 @@
         <input 
           type="text" 
           id="contactNumber" 
-          placeholder="e.g., 09xx xxx xxxx" 
+          placeholder="09xx-xxx-xxxx" 
           [(ngModel)]="newSupplier.contactNumber"
+          maxlength="11"
+          (input)="onContactNumberInput($event)"
         >
         <span class="error-message" *ngIf="contactNumberError">
           <i class="fas fa-exclamation-circle"></i>
@@ -47,7 +49,7 @@
         </span>
       </div>
 
-      <div class="form-group" [class.error]="supplierNameError">
+      <div class="form-group" [class.error]="contactPersonError">
         <label for="contactPerson">
           Contact Person 
           <span class="required">*</span>
@@ -58,13 +60,13 @@
           placeholder="e.g., John Doe" 
           [(ngModel)]="newSupplier.contactPerson"
         >
-        <span class="error-message" *ngIf="supplierNameError">
+        <span class="error-message" *ngIf="contactPersonError">
           <i class="fas fa-exclamation-circle"></i>
-          {{ supplierNameError }}
+          {{ contactPersonError }}
         </span>
       </div>
 
-      <div class="form-group" [class.error]="contactNumberError">
+      <div class="form-group" [class.error]="contactPersonNumberError">
         <label for="contactPersonNumber">
           Contact Person Number 
           <span class="required">*</span>
@@ -72,12 +74,14 @@
         <input 
           type="text" 
           id="contactPersonNumber" 
-          placeholder="e.g., 09xx xxx xxxx" 
+          placeholder="09xx-xxx-xxxx" 
           [(ngModel)]="newSupplier.contactPersonNumber"
+          maxlength="11"
+          (input)="onContactPersonNumberInput($event)"
         >
-        <span class="error-message" *ngIf="contactNumberError">
+        <span class="error-message" *ngIf="contactPersonNumberError">
           <i class="fas fa-exclamation-circle"></i>
-          {{ contactNumberError }}
+          {{ contactPersonNumberError }}
         </span>
       </div>
 

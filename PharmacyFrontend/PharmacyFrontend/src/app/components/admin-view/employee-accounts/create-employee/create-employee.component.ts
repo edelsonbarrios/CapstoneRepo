@@ -50,6 +50,23 @@ export class CreateEmployeeComponent implements OnInit{
       this.getLoggedInEmployee();
   }
 
+  // Method to handle phone number input - only allow numbers
+  onPhoneNumberInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
+    // Remove any non-numeric characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Update the model with numeric value only
+    if (this.newEmployee) {
+      this.newEmployee.phoneNumber = numericValue;
+    }
+    
+    // Update the input display value
+    input.value = numericValue;
+  }
+
   // New method to calculate age from birth date
   onBirthDateChange() {
     if (!this.newEmployee || !this.newEmployee.birthDate) {
@@ -113,6 +130,19 @@ export class CreateEmployeeComponent implements OnInit{
     if (!this.newEmployee.address || this.newEmployee.address.trim() === '') {
       this.addressError = 'Address is required';
       hasErrors = true;
+    }
+
+    // Validate phone number
+    if (!this.newEmployee.phoneNumber || this.newEmployee.phoneNumber.trim() === '') {
+      this.phoneNumberError = 'Phone number is required';
+      hasErrors = true;
+    } else {
+      // Check if phone number is exactly 11 digits and starts with 09
+      const phoneNumber = this.newEmployee.phoneNumber.trim();
+      if (phoneNumber.length !== 11 || !phoneNumber.startsWith('09')) {
+        this.phoneNumberError = 'Invalid contact';
+        hasErrors = true;
+      }
     }
 
     // Validate birthdate age range (21-60 years old)
