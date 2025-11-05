@@ -171,16 +171,14 @@ export class CashierTransactionComponent implements OnInit {
         let filtered = allTransactions;
 
         // Filter by date range
-        if (this.startDate && this.endDate) {
-          const start = new Date(this.startDate);
-          const end = new Date(this.endDate);
-          end.setHours(23, 59, 59, 999); // Include entire end date
-
-          filtered = filtered.filter((transaction) => {
-            const transactionDate = new Date(transaction.transactionDate);
-            return transactionDate >= start && transactionDate <= end;
-          });
-        }
+      if (this.startDate && this.endDate) {
+        filtered = filtered.filter((transaction) => {
+          const transactionDateStr = new Date(transaction.transactionDate)
+            .toISOString()
+            .split('T')[0];
+          return transactionDateStr >= this.startDate && transactionDateStr <= this.endDate;
+        });
+      }
 
         // Filter by payment method
         if (

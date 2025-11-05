@@ -39,10 +39,9 @@
         <div class="tab-container">
           <div class="text-item">Payment Method</div>
           <select id="cashier-option" class="text-item" [(ngModel)]="selectedPaymentMethod" (change)="getDailySalesByFilter()">
-            <option value="">Payment</option>
-            <option value="all">All</option>
-            <option value="cash">Cash</option>
-            <option value="online">Online</option>
+            <option value="">All</option>
+            <option value="Cash">Cash</option>
+            <option value="e-Payment">e-Payment</option>
           </select>
         </div>
 

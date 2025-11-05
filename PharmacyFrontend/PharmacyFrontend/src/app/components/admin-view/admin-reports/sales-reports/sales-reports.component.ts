@@ -29,7 +29,7 @@ export class SalesReportsComponent implements OnInit {
   exporting: boolean = false;
 
   // Dropdowns
-  paymentMethods: string[] = ['Cash', 'Online'];
+  paymentMethods: string[] = ['Cash', 'e-Payment'];
 
   // Pagination
   currentPage: number = 1;
