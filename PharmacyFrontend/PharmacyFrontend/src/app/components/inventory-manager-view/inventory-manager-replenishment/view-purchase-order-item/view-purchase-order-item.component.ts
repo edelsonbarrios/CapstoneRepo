@@ -17,11 +17,12 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
   @Output() saveItem = new EventEmitter<PurchaseOrderItem>();
   product: Product = new Product();
-  errorMessage : string = '';
+  errorMessage: string = '';
+  batchNumberError: string = '';
 
   constructor(
-    private getService : GetService,
-  ) {}
+    private getService: GetService,
+  ) { }
 
   // Local copy to prevent direct mutation until save
   localItem: PurchaseOrderItem = new PurchaseOrderItem();
@@ -81,6 +82,14 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
     });
   }
 
+  validateBatchNumber() {
+    if (!this.localItem.batchNumber || this.localItem.batchNumber.trim() === '') {
+      this.batchNumberError = 'Batch number is required';
+    } else {
+      this.batchNumberError = '';
+    }
+  }
+
   calculateTotal() {
     const quantityReceived = this.localItem.quantityReceived || 0;
     const damagedPiecesCount = this.localItem.damagedPiecesCount || 0;
@@ -110,6 +119,7 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
 
   onSave() {
     // Validate all fields
+    this.validateBatchNumber();
     this.validateMfgDate();
     this.validateExpDate();
 
@@ -118,15 +128,20 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
       return;
     }
 
-    if(this.localItem.quantityReceived <= 0 || !this.localItem.quantityReceived) {
+    if (this.localItem.quantityReceived <= 0 || !this.localItem.quantityReceived) {
       this.errorMessage = `Quantity Received of ${this.localItem.productName} is 0`;
+      return;
+    }
+
+    if (this.batchNumberError || this.localItem.mfgDateError || this.localItem.expDateError) {
+      this.errorMessage = 'Please fix all validation errors';
       return;
     }
 
     // Update total cost
     this.localItem.totalCost = this.calculateTotal();
 
-    if(this.localItem.totalCost <= 0)  {
+    if (this.localItem.totalCost <= 0) {
       this.errorMessage = 'There is no more pieces left. Please try again.';
       return;
     }

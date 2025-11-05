@@ -83,6 +83,7 @@
           <th>Items</th>
           <th>Total</th>
           <th>Payment</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -93,6 +94,9 @@
           <td>{{ transaction.items?.length || 0 }}</td>
           <td>{{ transaction.totalAmount | currency:'PHP':'symbol-narrow' }}</td>
           <td>{{ transaction.paymentMethod }}</td>
+          <td>
+            <button class="btn-view" (click)="openViewSalesForm(transaction)">View</button>
+          </td>
         </tr>
         <tr *ngIf="paginatedTransactions.length === 0">
           <td colspan="6" style="text-align: center;">No transactions found</td>
@@ -119,4 +123,8 @@
       <button class="btn-cancel" (click)="cancelExport()">Cancel</button>
     </div>
   </div>
+</div>
+
+<div class="modal-overlay" *ngIf="viewSales">
+  <app-view-sales *ngIf="viewSales" [viewSales]="viewSales" (closeForm)="closeViewSalesForm()"></app-view-sales>
 </div>

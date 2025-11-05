@@ -4,16 +4,19 @@ import { NgFor, NgIf, CurrencyPipe, DatePipe } from '@angular/common';
 import { GetService } from '../../../../services/GetService/get.service';
 import { SalesReport } from '../../../../models/report-models/sales-report';
 import { Employee } from '../../../../models/employee-models/employee';
+import { SalesTransaction } from '../../../../models/sales-transaction-models/sales-transaction';
+import { ViewSalesComponent } from '../../../cashier-view/view-sales/view-sales.component';
 
 @Component({
   selector: 'app-sales-reports',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, CurrencyPipe, DatePipe],
+  imports: [FormsModule, NgFor, NgIf, CurrencyPipe, DatePipe, ViewSalesComponent],
   templateUrl: './sales-reports.component.html',
   styleUrl: './sales-reports.component.scss'
 })
 export class SalesReportsComponent implements OnInit {
   // Filters
+  viewSales?: SalesTransaction | null;
   startDate: string = '';
   endDate: string = '';
   selectedEmployeeId: number | null = null;
@@ -167,5 +170,13 @@ export class SalesReportsComponent implements OnInit {
         console.log(`${err.error}`);
       }
     });
+  }
+
+  openViewSalesForm(view: SalesTransaction) {
+    this.viewSales = view;
+  }
+
+  closeViewSalesForm() {
+    this.viewSales = null;
   }
 }
