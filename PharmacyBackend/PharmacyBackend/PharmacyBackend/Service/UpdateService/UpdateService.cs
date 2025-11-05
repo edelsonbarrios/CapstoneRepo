@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Text.Json;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
+using PharmacyBackend.Contracts.ServiceContracts.PostInterface;
 
 namespace PharmacyBackend.Service.UpdateService
 {
@@ -35,6 +36,7 @@ namespace PharmacyBackend.Service.UpdateService
         private readonly AccountHelper _accountHelper;
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
+        private readonly IPostServiceContracts _postService;
 
         public UpdateService(IUpdateRepositoryContracts updateRepo,
             IGetRepositoryContracts getRepo,
@@ -42,7 +44,8 @@ namespace PharmacyBackend.Service.UpdateService
             PharmacyContext context,
             AccountHelper accountHelper,
             IConfiguration configuration,
-            IWebHostEnvironment env
+            IWebHostEnvironment env,
+            IPostServiceContracts postService
             )
         {
             _updateRepo = updateRepo;
@@ -52,6 +55,7 @@ namespace PharmacyBackend.Service.UpdateService
             _accountHelper = accountHelper;
             _configuration = configuration;
             _env = env;
+            _postService = postService;
         }
         #region Account
         public async Task<bool> UpdateAccountAsync(UpdateAccountRequest request)
@@ -923,6 +927,7 @@ namespace PharmacyBackend.Service.UpdateService
                         };
 
                         await _postRepo.CreateInventoryAsync(newInventory);
+
                     }
                     else if (product.UnitMeasurement == "Dual-Level")
                     {
