@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule} from '@angular/forms'
 import { PostService } from '../../services/PostService/post.service';
 import { Router } from '@angular/router';
@@ -13,22 +13,36 @@ import { NgIf } from '@angular/common';
   templateUrl: './login-view.component.html',
   styleUrl: './login-view.component.scss'
 })
-export class LoginViewComponent {
+export class LoginViewComponent implements OnInit {
   userName: string = '';
   password: string = '';
   loginError: string = '';
+  isPreLoading: boolean = true;
+  isLoggingIn: boolean = false;
 
   constructor(
     private postService: PostService,
     private router: Router
   ) {}
 
+  ngOnInit() {
+    // Pre-loading screen duration (2 seconds)
+    setTimeout(() => {
+      this.isPreLoading = false;
+    }, 2000);
+  }
+
   @HostListener('document:keydown.enter', ['$event'])
   onEnterPressed(event: KeyboardEvent) {
-    this.Authenticate();
+    if (!this.isPreLoading && !this.isLoggingIn) {
+      this.Authenticate();
+    }
   }
 
   Authenticate() {
+    if (this.isLoggingIn) return;
+    
+    this.isLoggingIn = true;
     this.postService.Authentication(this.userName, this.password).subscribe({
       next: res => {
         this.loginError = '';
@@ -36,6 +50,7 @@ export class LoginViewComponent {
         var token = localStorage.getItem(LogInToken);
         if(!token) {
           console.log('Token does not exist.');
+          this.isLoggingIn = false;
           return
         }
         const employee: any = jwtDecode(token);
@@ -53,6 +68,7 @@ export class LoginViewComponent {
         this.userName = '';
         this.password = '';
         this.loginError = "Invalid username or password";
+        this.isLoggingIn = false;
       }
     });
   }
