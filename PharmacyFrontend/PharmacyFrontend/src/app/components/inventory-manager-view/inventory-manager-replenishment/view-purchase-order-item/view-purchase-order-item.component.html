@@ -39,7 +39,7 @@
       <div class="section">
         <h3 class="section-title">Batch & Dates</h3>
         <div class="form-grid">
-          <div class="form-group">
+          <div class="form-group" [class.error]="batchNumberError">
             <label for="batchNumber">
               <i class="fas fa-barcode"></i>
               Batch Number
@@ -47,6 +47,9 @@
             </label>
             <input id="batchNumber" type="text" [(ngModel)]="localItem.batchNumber" placeholder="Enter batch number"
               class="form-input" />
+            <p class="error-message" *ngIf="batchNumberError">
+              {{ batchNumberError }}
+            </p>
           </div>
 
           <div class="form-group" [class.error]="localItem.mfgDateError">
