@@ -109,7 +109,6 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
   }
 
   onSave() {
-    // Validate all fields
     this.validateMfgDate();
     this.validateExpDate();
 
@@ -129,6 +128,10 @@ export class ViewPurchaseOrderItemComponent implements OnInit {
     if(this.localItem.totalCost <= 0)  {
       this.errorMessage = 'There is no more pieces left. Please try again.';
       return;
+    }
+
+    if(this.localItem.quantityReceived > this.localItem.quantityOrdered) {
+      this.localItem.quantityReceived = this.localItem.quantityOrdered;
     }
 
     // Emit the updated item
