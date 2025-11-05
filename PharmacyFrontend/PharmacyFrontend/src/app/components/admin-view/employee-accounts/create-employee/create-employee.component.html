@@ -4,7 +4,7 @@
       <div class="icon-wrapper">
         <i class="fas fa-user-plus"></i>
       </div>
-      <div class="title">
+      <div class="title"> 
         <h2>Add New Employee</h2>
         <p>Fill in employee information below</p>
       </div>
@@ -108,6 +108,7 @@
             placeholder="Age"
             readonly
             [(ngModel)]="newEmployee.age"
+            [disabled]="true"
           />
           <span class="error-message" *ngIf="ageError">
             <i class="fas fa-exclamation-circle"></i>
@@ -121,6 +122,7 @@
             type="date"
             id="birthDate"
             [(ngModel)]="newEmployee.birthDate"
+            (change)="onBirthDateChange()"
           />
           <span class="error-message" *ngIf="birthDateError">
             <i class="fas fa-exclamation-circle"></i>
@@ -129,12 +131,17 @@
         </div>
 
         <div class="form-group small" [class.error]="phoneNumberError">
-          <label for="phoneNumber">Phone Number</label>
-          <input
-            type="text"
+          <label for="phoneNumber">
+            Phone Number
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
             id="phoneNumber"
-            placeholder="Enter Phone No."
+            placeholder="09xx-xxx-xxxx" 
             [(ngModel)]="newEmployee.phoneNumber"
+            maxlength="11"
+            (input)="onPhoneNumberInput($event)"
           />
           <span class="error-message" *ngIf="phoneNumberError">
             <i class="fas fa-exclamation-circle"></i>

@@ -19,16 +19,50 @@ export class CreateSupplierComponent {
   // Error properties
   supplierNameError: string = '';
   contactNumberError: string = '';
+  contactPersonError: string = '';
+  contactPersonNumberError: string = '';
   addressError: string = '';
 
   constructor(
     private postService : PostService
   ) {}
 
+  // Method to handle contact number input - only allow numbers
+  onContactNumberInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
+    // Remove any non-numeric characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Update the model with numeric value only
+    this.newSupplier.contactNumber = numericValue;
+    
+    // Update the input display value
+    input.value = numericValue;
+  }
+
+  // Method to handle contact person number input - only allow numbers
+  onContactPersonNumberInput(event: any) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
+    // Remove any non-numeric characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Update the model with numeric value only
+    this.newSupplier.contactPersonNumber = numericValue;
+    
+    // Update the input display value
+    input.value = numericValue;
+  }
+
   createNewSupplier() {
     // Clear previous errors
     this.supplierNameError = '';
     this.contactNumberError = '';
+    this.contactPersonError = '';
+    this.contactPersonNumberError = '';
     this.addressError = '';
 
     let hasErrors = false;
@@ -43,6 +77,32 @@ export class CreateSupplierComponent {
     if (!this.newSupplier.contactNumber || this.newSupplier.contactNumber.trim() === '') {
       this.contactNumberError = 'Contact number is required';
       hasErrors = true;
+    } else {
+      // Check if contact number is exactly 11 digits and starts with 09
+      const contactNumber = this.newSupplier.contactNumber.trim();
+      if (contactNumber.length !== 11 || !contactNumber.startsWith('09')) {
+        this.contactNumberError = 'Invalid contact';
+        hasErrors = true;
+      }
+    }
+
+    // Validate contact person
+    if (!this.newSupplier.contactPerson || this.newSupplier.contactPerson.trim() === '') {
+      this.contactPersonError = 'Contact person is required';
+      hasErrors = true;
+    }
+
+    // Validate contact person number
+    if (!this.newSupplier.contactPersonNumber || this.newSupplier.contactPersonNumber.trim() === '') {
+      this.contactPersonNumberError = 'Contact person number is required';
+      hasErrors = true;
+    } else {
+      // Check if contact person number is exactly 11 digits and starts with 09
+      const contactPersonNumber = this.newSupplier.contactPersonNumber.trim();
+      if (contactPersonNumber.length !== 11 || !contactPersonNumber.startsWith('09')) {
+        this.contactPersonNumberError = 'Invalid contact';
+        hasErrors = true;
+      }
     }
 
     // Validate address
@@ -71,6 +131,8 @@ export class CreateSupplierComponent {
     // Clear errors when closing form
     this.supplierNameError = '';
     this.contactNumberError = '';
+    this.contactPersonError = '';
+    this.contactPersonNumberError = '';
     this.addressError = '';
     this.closeForm.emit();
   }

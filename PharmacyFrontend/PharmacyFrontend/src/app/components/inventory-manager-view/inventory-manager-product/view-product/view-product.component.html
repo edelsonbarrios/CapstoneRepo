@@ -23,75 +23,95 @@
 
       <div class="form-grid">
 
+        <!-- Product Name - Always shown -->
         <div class="form-group">
-          <label>Generic Name</label>
-          <p>{{viewProduct.genericName}}</p>
+          <label>Product Name</label>
+          <p>{{viewProduct.productName}}</p>
         </div>
 
-        <div class="form-group">
-          <label>Brand Name</label>
-          <p>{{viewProduct.brandName}}</p>
-        </div>
-
-        <div class="form-group">
-          <label>Classification</label>
-          <p>{{viewProduct.classificationName}}</p>
-        </div>
-
-        <div class="form-group">
-          <label>Type</label>
-          <p>{{viewProduct.typeName}}</p>
-        </div>
-
-        <div class="form-group">
-          <label>Formulation</label>
-          <p>{{viewProduct.formulationName}}</p>
-        </div>
-
+        <!-- Category Name - Always shown -->
         <div class="form-group">
           <label>Category</label>
           <p>{{viewProduct.categoryName}}</p>
         </div>
 
+        <!-- Unit Packaging - Always shown -->
         <div class="form-group">
-          <label>Unit Measurement</label>
+          <label>Unit Packaging</label>
           <p>{{viewProduct.unitMeasurement}}</p>
         </div>
 
+        <!-- Brand Name - Always shown -->
         <div class="form-group">
+          <label>Brand Name</label>
+          <p>{{viewProduct.brandName}}</p>
+        </div>
+
+        <!-- Generic Name - Multi-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
+          <label>Generic Name</label>
+          <p>{{viewProduct.genericName}}</p>
+        </div>
+
+        <!-- Classification - Multi-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
+          <label>Classification</label>
+          <p>{{viewProduct.classificationName}}</p>
+        </div>
+
+        <!-- Type - Always shown -->
+        <div class="form-group">
+          <label>Type</label>
+          <p>{{viewProduct.typeName}}</p>
+        </div>
+
+        <!-- Formulation - Multi-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
+          <label>Formulation</label>
+          <p>{{viewProduct.formulationName}}</p>
+        </div>
+
+        <!-- Sheets Per Box - Multi-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Sheets Per Box</label>
           <p>{{viewProduct.sheetsPerBox}}</p>
         </div>
 
-        <div class="form-group">
+        <!-- Piece Per Sheet - Multi-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Piece Per Sheet</label>
           <p>{{viewProduct.piecesPerSheet}}</p>
         </div>
 
-        <div class="form-group">
+        <!-- Piece Per Box - Dual-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Dual-Level'">
           <label>Piece Per Box</label>
           <p>{{viewProduct.piecePerBox}}</p>
         </div>
 
-        <div class="form-group">
+        <!-- Box Price - Multi-Level and Dual-Level -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level' || viewProduct.unitMeasurement === 'Dual-Level'">
           <label>Box Price (&#8369;)</label>
           <p>{{viewProduct.boxPrice}}</p>
         </div>
 
-        <div class="form-group">
+        <!-- Sheet Price - Multi-Level only -->
+        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Sheet Price (&#8369;)</label>
           <p>{{viewProduct.sheetPrice}}</p>
         </div>
 
+        <!-- Piece Price - Always shown -->
         <div class="form-group">
           <label>Piece Price (&#8369;)</label>
           <p>{{viewProduct.piecePrice}}</p>
         </div>
 
+        <!-- Reorder Level - Always shown -->
         <div class="form-group">
-        <label>Reorder Level</label>
-        <p>{{viewProduct.reorderLevel}}</p>
-      </div>
+          <label>Reorder Level</label>
+          <p>{{viewProduct.reorderLevel}}</p>
+        </div>
 
       </div>
     </fieldset>

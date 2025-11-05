@@ -15,7 +15,7 @@
   <hr>
 
   <main>
-    <div class="employee-property">
+    <div class="employee-property" [class.error]="employeeCodeError">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="Employee Code">
         <h1>Employee Code:</h1>
@@ -23,10 +23,14 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.employeeCode }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.employeeCode" placeholder="Employee Code">
+        <span class="error-message" *ngIf="employeeCodeError && isEditMode">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ employeeCodeError }}
+        </span>
       </div>
     </div>
 
-    <div class="employee-property">
+    <div class="employee-property" [class.error]="lastNameError">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="Last Name">
         <h1>Last Name:</h1>
@@ -34,10 +38,14 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.lastName }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.lastName" placeholder="Last Name">
+        <span class="error-message" *ngIf="lastNameError && isEditMode">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ lastNameError }}
+        </span>
       </div>
     </div>
 
-    <div class="employee-property">
+    <div class="employee-property" [class.error]="firstNameError">
       <div class="label">
         <img src="/images/view-employee-images/employee-code.png" alt="First Name">
         <h1>First Name:</h1>
@@ -45,6 +53,10 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.firstName }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.firstName" placeholder="First Name">
+        <span class="error-message" *ngIf="firstNameError && isEditMode">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ firstNameError }}
+        </span>
       </div>
     </div>
 
@@ -81,7 +93,7 @@
       </div>
     </div>
 
-    <div class="employee-property">
+    <div class="employee-property" [class.error]="birthDateError">
       <div class="label">
         <img src="/images/view-employee-images/cake.png" alt="Birth Date">
         <h1>Birth Date:</h1>
@@ -89,6 +101,10 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.birthDate | date: 'yyyy-MM-dd'}}</span>
         <input *ngIf="isEditMode" type="date" [(ngModel)]="employee.birthDate" placeholder="Birth Date">
+        <span class="error-message" *ngIf="birthDateError && isEditMode">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ birthDateError }}
+        </span>
       </div>
     </div>
 
@@ -103,7 +119,7 @@
       </div>
     </div>
 
-    <div class="employee-property">
+    <div class="employee-property" [class.error]="genderError">
       <div class="label">
         <img src="/images/view-employee-images/gender.png" alt="Gender">
         <h1>Gender:</h1>
@@ -111,6 +127,10 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.gender }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.gender" placeholder="Gender">
+        <span class="error-message" *ngIf="genderError && isEditMode">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ genderError }}
+        </span>
       </div>
     </div>
 
@@ -129,7 +149,7 @@
       </div>
     </div>
 
-    <div class="employee-property">
+    <div class="employee-property" [class.error]="addressError">
       <div class="label">
         <img src="/images/view-employee-images/address.png" alt="Address">
         <h1>Address:</h1>
@@ -137,6 +157,10 @@
       <div class="input-wrapper">
         <span *ngIf="!isEditMode">{{ employee.address }}</span>
         <input *ngIf="isEditMode" type="text" [(ngModel)]="employee.address" placeholder="Address">
+        <span class="error-message" *ngIf="addressError && isEditMode">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ addressError }}
+        </span>
       </div>
     </div>
   </main>

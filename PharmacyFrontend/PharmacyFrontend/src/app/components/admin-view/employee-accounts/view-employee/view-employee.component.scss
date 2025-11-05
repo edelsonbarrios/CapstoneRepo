@@ -103,6 +103,10 @@
       }
 
       .input-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
         span {
           display: block;
           padding: 0.5rem 0.75rem;
@@ -145,6 +149,35 @@
 
         .role-select {
           cursor: pointer;
+        }
+
+        .error-message {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #ef4444;
+          font-size: 13px;
+          margin-top: 2px;
+          font-weight: 500;
+
+          i {
+            font-size: 14px;
+          }
+        }
+      }
+
+      &.error {
+        .input-wrapper {
+          input,
+          select {
+            border-color: #ef4444;
+            background: #fef2f2;
+
+            &:focus {
+              border-color: #ef4444;
+              box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            }
+          }
         }
       }
     }

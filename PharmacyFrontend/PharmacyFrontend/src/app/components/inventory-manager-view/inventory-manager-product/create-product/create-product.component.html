@@ -83,6 +83,15 @@
           </select>
         </div>
 
+        <!-- Type - Now visible for all unit measurements -->
+        <div class="form-group">
+          <label for="typeName">Type</label>
+          <select id="typeName" [(ngModel)]="newProduct.typeName">
+            <option value="">Select Type</option>
+            <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
+          </select>
+        </div>
+
         <!-- Generic Name -->
         <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
           <label for="genericName">Generic Name</label>
@@ -98,15 +107,6 @@
           <select id="classificationName" [(ngModel)]="newProduct.classificationName">
             <option value="">Select Classification</option>
             <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
-          </select>
-        </div>
-
-        <!-- Type -->
-        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
-          <label for="typeName">Type of Medicine</label>
-          <select id="typeName" [(ngModel)]="newProduct.typeName">
-            <option value="">Select Type</option>
-            <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
           </select>
         </div>
 

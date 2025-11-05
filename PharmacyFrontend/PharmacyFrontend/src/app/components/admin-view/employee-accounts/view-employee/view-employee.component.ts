@@ -18,6 +18,14 @@ export class ViewEmployeeComponent {
   isEditMode: boolean = false;
   showSuccessAlert: boolean = false;
 
+  // Error properties
+  employeeCodeError: string = '';
+  lastNameError: string = '';
+  firstNameError: string = '';
+  genderError: string = '';
+  birthDateError: string = '';
+  addressError: string = '';
+
   constructor(
     private updateService: UpdateService
   ) {}
@@ -28,9 +36,64 @@ export class ViewEmployeeComponent {
 
   toggleViewMode() {
     this.isEditMode = !this.isEditMode;
+    // Clear errors when entering edit mode
+    this.clearErrors();
   }
 
   toggleEditMode(employee: Employee) {
+    // Clear previous errors
+    this.clearErrors();
+
+    let hasErrors = false;
+
+    // Validate required fields
+    if (!employee.employeeCode || employee.employeeCode.trim() === '') {
+      this.employeeCodeError = 'Employee code is required';
+      hasErrors = true;
+    }
+
+    if (!employee.lastName || employee.lastName.trim() === '') {
+      this.lastNameError = 'Last name is required';
+      hasErrors = true;
+    }
+
+    if (!employee.firstName || employee.firstName.trim() === '') {
+      this.firstNameError = 'First name is required';
+      hasErrors = true;
+    }
+
+    if (!employee.gender || employee.gender.trim() === '') {
+      this.genderError = 'Gender is required';
+      hasErrors = true;
+    }
+
+    if (!employee.address || employee.address.trim() === '') {
+      this.addressError = 'Address is required';
+      hasErrors = true;
+    }
+
+    // Validate birthdate age range (21-60 years old)
+    if (employee.birthDate) {
+      const birthDate = new Date(employee.birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 21 || age > 60) {
+        this.birthDateError = 'Employee must be between 21 and 60 years old';
+        hasErrors = true;
+      }
+    }
+
+    // If there are validation errors, don't proceed
+    if (hasErrors) {
+      return;
+    }
+
     // Handle birthDate conversion properly
     let birthDateISO: string;
     
@@ -76,9 +139,19 @@ export class ViewEmployeeComponent {
     });
   }
 
+  clearErrors() {
+    this.employeeCodeError = '';
+    this.lastNameError = '';
+    this.firstNameError = '';
+    this.genderError = '';
+    this.birthDateError = '';
+    this.addressError = '';
+  }
+
   closeSuccessAlert() {
     this.showSuccessAlert = false;
     this.isEditMode = false;
+    this.clearErrors();
     this.closeForm.emit();
   }
 }
