@@ -30,7 +30,7 @@
       <div class="form-grid">
 
         <!-- Box Quantity Adjustment -->
-        <div class="form-group">
+        <div class="form-group" *ngIf="product.unitMeasurement == 'Multi-Level' || product.unitMeasurement == 'Dual-Level'">
           <label for="boxQuantity">
             Box Quantity Adjustment
             <span class="hint">(Use negative numbers to reduce)</span>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Sheet Quantity Adjustment -->
-        <div class="form-group">
+        <div class="form-group" *ngIf="product.unitMeasurement == 'Multi-Level'" >
           <label for="sheetQuantity">
             Sheet Quantity Adjustment
             <span class="hint">(Use negative numbers to reduce)</span>

@@ -778,6 +778,51 @@ namespace PharmacyBackend.Service.GetService
       }).ToList();
       return modifInactiveProducts;
     }
+
+    public async Task<ProductDto> GetProductByNameAsync(string name) 
+    {
+      var product = await _getRepo.GetProductByNameAsync(name);
+      if(product is null)
+        return new ProductDto();
+      return new ProductDto
+      {
+        ProductID = product.ProductID,
+        ProductName = product.ProductName,
+        CategoryID = product.CategoryID,
+        BrandID = product.BrandID,
+        GenericID = product.GenericID,
+        FormulationID = product.FormulationID,
+        ClassificationID = product.ClassificationID,
+        TypeID = product.TypeID,
+        IsActive = product.IsActive,
+        DateCreated = product.DateCreated,
+        SheetsPerBox = product.SheetsPerBox,
+        PiecesPerSheet = product.PiecesPerSheet,
+        BoxPrice = product.BoxPrice,
+        SheetPrice = product.SheetPrice,
+        PiecePrice = product.PiecePrice,
+        ReorderLevel = product.ReorderLevel,
+        UnitMeasurement = product.UnitMeasurement,
+        Description = product.Description,
+        PiecePerBox = product.PiecePerBox,
+
+        // Inventory calculations
+        //TotalStock = p.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,
+        ExpiredStock = product.Inventory?.Where(i => i.IsActive && i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,
+        NearExpiryStock = product.Inventory?.Where(i => i.IsActive && i.IsNearExpiry && !i.IsExpired).Sum(i => i.BoxQuantity) ?? 0,
+        IsCriticalStock = product.Inventory?.Where(i => i.IsActive && !i.IsExpired).Sum(i => i.BoxQuantity) <= product.Inventory?.FirstOrDefault()?.ReorderLevel,
+        HasExpiredStock = product.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,
+
+        // Related entity names
+        CategoryName = product.Category?.CategoryName ?? string.Empty,
+        BrandName = product.Brand?.BrandName ?? string.Empty,
+        GenericName = product.Generic?.GenericName ?? string.Empty,
+        FormulationName = product.Formulation?.FormulationName ?? string.Empty,
+        ClassificationName = product.Classification?.ClassificationName ?? string.Empty,
+        TypeName = product.TypeModel?.TypeName ?? string.Empty,
+      };
+
+    }
     #endregion
 
     #region Category

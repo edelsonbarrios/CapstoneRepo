@@ -157,6 +157,9 @@ export class GetService {
   getAllInactiveProductsAsync() : Observable<Product[]>{
     return this.httpClient.get<Product[]>(`${this.apiUrl}/Get/InactiveProducts`);
   }
+  getProductByNameAsync(name: string): Observable<Product> {
+    return this.httpClient.get<Product>(`${this.apiUrl}/Get/ProductName?name=${name}`);
+  }
   //Product Service End
 
   //Purchase Order Service
@@ -444,15 +447,15 @@ export class GetService {
     let params = new HttpParams();
 
     if (startDate) {
-      const dateStr = startDate instanceof Date 
-        ? startDate.toISOString() 
+      const dateStr = startDate instanceof Date
+        ? startDate.toISOString()
         : new Date(startDate).toISOString();
       params = params.append('startDate', dateStr);
     }
 
     if (endDate) {
-      const date = endDate instanceof Date 
-        ? endDate 
+      const date = endDate instanceof Date
+        ? endDate
         : new Date(endDate);
       date.setHours(23, 59, 59, 999);
       params = params.append('endDate', date.toISOString());

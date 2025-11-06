@@ -34,7 +34,7 @@ namespace PharmacyBackend.Models
 
         public string? ReferenceNumber { get; set; } // Sales invoice, PO number, etc.
         public string? Notes { get; set; }
-        public DateTime MovementDate { get; set; } = DateTime.UtcNow;
+        public DateTime MovementDate { get; set; } = DateTime.UtcNow.AddHours(8);
         public int? EmployeeID { get; set; } // Who made the movement
         public Employee? Employee { get; set; } // Navigation
     }

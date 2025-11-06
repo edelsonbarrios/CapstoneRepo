@@ -6,21 +6,23 @@ import { Employee } from '../../../../models/employee-models/employee';
 import { jwtDecode } from 'jwt-decode';
 import { LogInToken } from '../../../shared/token';
 import { FormsModule } from '@angular/forms';
-import { NgClass, CommonModule } from "@angular/common";
+import { NgClass, CommonModule, NgIf } from "@angular/common";
 import { StockMovement } from '../../../../models/inventory-module-models/stock-movement';
 import { StockAdjustment } from '../../../../models/inventory-module-models/stock-adjustment';
 import { LoginVerificationComponent } from '../login-verification/login-verification.component';
+import { Product } from '../../../../models/product-models/product';
 
 @Component({
   selector: 'app-stock-adjust',
   standalone: true,
-  imports: [FormsModule, CommonModule, LoginVerificationComponent],
+  imports: [FormsModule, CommonModule, LoginVerificationComponent, NgIf],
   templateUrl: './stock-adjust.component.html',
   styleUrl: './stock-adjust.component.scss',
 })
 export class StockAdjustComponent implements OnInit {
   @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
+  product: Product = new Product();
 
   employee: Employee = new Employee();
   loginVerify: boolean = false;
@@ -46,6 +48,18 @@ export class StockAdjustComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLoggedInUser();
+    this.getProduct();
+  }
+
+  getProduct() {
+    this.getService.getProductByNameAsync(this.stockAdjust.productName).subscribe({
+      next: res => {
+        this.product = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 
   // This is the entry point - called when user clicks "Save Adjustment"
@@ -84,6 +98,7 @@ export class StockAdjustComponent implements OnInit {
       next: (res) => {
         this.isSubmitting = false;
         this.showSuccessAlert = true;
+        this.getProduct();
       },
       error: (err) => {
         this.isSubmitting = false;

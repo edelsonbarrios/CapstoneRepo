@@ -490,6 +490,13 @@ namespace PharmacyBackend.Repository.GET
 
           return inactiveProducts;
         }
+
+        public async Task<Product> GetProductByNameAsync(string name) 
+        {
+          return await _context.Product
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.ProductName.Equals(name));
+        }
         #endregion
 
         #region Category

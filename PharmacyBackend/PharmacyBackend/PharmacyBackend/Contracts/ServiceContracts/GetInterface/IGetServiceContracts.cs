@@ -93,6 +93,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<IEnumerable<ProductDto>> GetAllProductAsync();
         public Task<ProductDto> GetProductByIdAsync(int id);
         public Task<List<ProductDto>> GetAllInactiveProductsAsync();
+        public Task<ProductDto> GetProductByNameAsync(string name);
         #endregion
 
         #region Category

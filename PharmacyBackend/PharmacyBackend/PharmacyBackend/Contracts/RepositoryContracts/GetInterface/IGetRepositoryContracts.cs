@@ -78,6 +78,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<IEnumerable<Product>> GetAllProductAsync();
         public Task<Product> GetProductByIdAsync(int id);
         public Task<List<Product>> GetAllInactiveProductsAsync();
+        public Task<Product> GetProductByNameAsync(string name);
         #endregion
 
         #region Category

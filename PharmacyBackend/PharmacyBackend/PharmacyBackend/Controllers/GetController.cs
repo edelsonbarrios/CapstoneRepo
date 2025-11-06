@@ -382,6 +382,20 @@ namespace PharmacyBackend.Controllers
             return NotFound(new List<ProductDto>());
           return Ok(inactiveProducts);
         }
+
+        [HttpGet("ProductName")]
+        public async Task<ActionResult<ProductDto>> GetProductByNameAsync(string name) 
+        {
+          if(string.IsNullOrEmpty(name))
+            return NotFound(new ProductDto());
+
+          var product = await _getService.GetProductByNameAsync(name);
+          if(product is null)
+            return NotFound(new ProductDto());
+
+          return Ok(product);
+        }
+
         #endregion
 
         #region Category
