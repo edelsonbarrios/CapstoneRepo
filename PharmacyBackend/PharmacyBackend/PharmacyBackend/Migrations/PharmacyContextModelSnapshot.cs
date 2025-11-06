@@ -499,8 +499,17 @@ namespace PharmacyBackend.Migrations
                     b.Property<int?>("ClassificationID")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("CostBoxPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CostPiecePrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("CostPrice")
                         .HasColumnType("integer");
+
+                    b.Property<decimal>("CostSheetPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");

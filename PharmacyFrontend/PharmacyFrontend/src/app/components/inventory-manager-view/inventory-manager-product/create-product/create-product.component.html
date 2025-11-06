@@ -1,5 +1,4 @@
 <div class="modal" *ngIf="!showSuccessAlert">
-
   <!-- MODAL HEADER -->
   <div class="modal-header">
     <div class="icon-title">
@@ -22,12 +21,10 @@
       </legend>
 
       <div class="form-grid">
-
         <!-- Product Name -->
         <div class="form-group" [class.error]="productNameError">
           <label for="productName">
-            Product Name
-            <span class="required">*</span>
+            Product Name <span class="required">*</span>
           </label>
           <input
             type="text"
@@ -44,12 +41,13 @@
         <!-- Category Name -->
         <div class="form-group" [class.error]="categoryNameError">
           <label for="categoryName">
-            Category Name
-            <span class="required">*</span>
+            Category Name <span class="required">*</span>
           </label>
           <select id="categoryName" [(ngModel)]="newProduct.categoryName">
             <option value="">Select Category</option>
-            <option *ngFor="let c of categories" [value]="c.categoryName">{{c.categoryName}}</option>
+            <option *ngFor="let c of categories" [value]="c.categoryName">
+              {{ c.categoryName }}
+            </option>
           </select>
           <span class="error-message" *ngIf="categoryNameError">
             <i class="fas fa-exclamation-circle"></i>
@@ -60,13 +58,16 @@
         <!-- Unit Packaging -->
         <div class="form-group" [class.error]="unitMeasurementError">
           <label for="unitMeasurement">
-            Unit Packaging
-            <span class="required">*</span>
+            Unit Packaging <span class="required">*</span>
           </label>
-          <select id="unitMeasurement" [(ngModel)]="newProduct.unitMeasurement" (ngModelChange)="selectUnitOfMeasurement($event)">
-            <option value="Multi-Level">Multi Level</option>
-            <option value="Dual-Level">Dual Level</option>
-            <option value="Single-Level">Single Level</option>
+          <select
+            id="unitMeasurement"
+            [(ngModel)]="newProduct.unitMeasurement"
+            (ngModelChange)="selectUnitOfMeasurement($event)"
+          >
+            <option value="Multi-Level">Multi Level (Box → Sheet → Piece)</option>
+            <option value="Dual-Level">Dual Level (Box → Piece)</option>
+            <option value="Single-Level">Single Level (Piece Only)</option>
           </select>
           <span class="error-message" *ngIf="unitMeasurementError">
             <i class="fas fa-exclamation-circle"></i>
@@ -79,57 +80,74 @@
           <label for="brandName">Brand Name</label>
           <select id="brandName" [(ngModel)]="newProduct.brandName">
             <option value="">Select Brand</option>
-            <option *ngFor="let b of brands" [value]="b.brandName">{{b.brandName}}</option>
+            <option *ngFor="let b of brands" [value]="b.brandName">
+              {{ b.brandName }}
+            </option>
           </select>
         </div>
 
-        <!-- Type - Now visible for all unit measurements -->
+        <!-- Type -->
         <div class="form-group">
           <label for="typeName">Type</label>
           <select id="typeName" [(ngModel)]="newProduct.typeName">
             <option value="">Select Type</option>
-            <option *ngFor="let t of types" [value]="t.typeName">{{t.typeName}}</option>
+            <option *ngFor="let t of types" [value]="t.typeName">
+              {{ t.typeName }}
+            </option>
           </select>
         </div>
 
-        <!-- Generic Name -->
-        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
+        <!-- Generic Name (Multi-Level only) -->
+        <div class="form-group" *ngIf="unitMeasurement === 'Multi-Level'">
           <label for="genericName">Generic Name</label>
           <select id="genericName" [(ngModel)]="newProduct.genericName">
             <option value="">Select Generic</option>
-            <option *ngFor="let g of generics" [value]="g.genericName">{{g.genericName}}</option>
+            <option *ngFor="let g of generics" [value]="g.genericName">
+              {{ g.genericName }}
+            </option>
           </select>
         </div>
 
-        <!-- Classification -->
-        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
+        <!-- Classification (Multi-Level only) -->
+        <div class="form-group" *ngIf="unitMeasurement === 'Multi-Level'">
           <label for="classificationName">Classification</label>
-          <select id="classificationName" [(ngModel)]="newProduct.classificationName">
+          <select
+            id="classificationName"
+            [(ngModel)]="newProduct.classificationName"
+          >
             <option value="">Select Classification</option>
-            <option *ngFor="let c of classifications" [value]="c.classificationName">{{c.classificationName}}</option>
+            <option *ngFor="let c of classifications" [value]="c.classificationName">
+              {{ c.classificationName }}
+            </option>
           </select>
         </div>
 
-        <!-- Formulation -->
-        <div class="form-group" *ngIf="newProduct.unitMeasurement === 'Multi-Level'">
+        <!-- Formulation (Multi-Level only) -->
+        <div class="form-group" *ngIf="unitMeasurement === 'Multi-Level'">
           <label for="formulationName">Formulation</label>
           <select id="formulationName" [(ngModel)]="newProduct.formulationName">
             <option value="">Select Formulation</option>
-            <option *ngFor="let f of formulations" [value]="f.formulationName">{{f.formulationName}}</option>
+            <option *ngFor="let f of formulations" [value]="f.formulationName">
+              {{ f.formulationName }}
+            </option>
           </select>
         </div>
 
-        <!-- Sheets Per Box -->
-        <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="sheetsPerBoxError">
+        <!-- Sheets Per Box (Multi-Level only) -->
+        <div
+          class="form-group"
+          *ngIf="unitMeasurement === 'Multi-Level'"
+          [class.error]="sheetsPerBoxError"
+        >
           <label for="sheetsPerBox">
-            Sheets Per Box
-            <span class="required">*</span>
+            Sheets Per Box <span class="required">*</span>
           </label>
           <input
             type="number"
             id="sheetsPerBox"
             placeholder="Enter Sheets Per Box"
             [(ngModel)]="newProduct.sheetsPerBox"
+            (input)="calculateBoxSheetPrice()"
           />
           <span class="error-message" *ngIf="sheetsPerBoxError">
             <i class="fas fa-exclamation-circle"></i>
@@ -137,36 +155,21 @@
           </span>
         </div>
 
-        <!-- Piece Per Box -->
-        <div class="form-group" *ngIf="unitMeasurement == 'Dual-Level'" [class.error]="piecePerBoxError">
-          <label for="piecePerBox">
-            Piece Per Box
-            <span class="required">*</span>
-          </label>
-          <input
-            (input)="calculateBoxSheetPrice()"
-            type="number"
-            id="piecePerBox"
-            placeholder="Enter Piece Per Box"
-            [(ngModel)]="newProduct.piecePerBox"
-          />
-          <span class="error-message" *ngIf="piecePerBoxError">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ piecePerBoxError }}
-          </span>
-        </div>
-
-        <!-- Pieces Per Sheet -->
-        <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'" [class.error]="piecesPerSheetError">
+        <!-- Pieces Per Sheet (Multi-Level only) -->
+        <div
+          class="form-group"
+          *ngIf="unitMeasurement === 'Multi-Level'"
+          [class.error]="piecesPerSheetError"
+        >
           <label for="piecesPerSheet">
-            Pieces Per Sheet
-            <span class="required">*</span>
+            Pieces Per Sheet <span class="required">*</span>
           </label>
           <input
             type="number"
             id="piecesPerSheet"
             placeholder="Enter Pieces Per Sheet"
             [(ngModel)]="newProduct.piecesPerSheet"
+            (input)="calculateBoxSheetPrice()"
           />
           <span class="error-message" *ngIf="piecesPerSheetError">
             <i class="fas fa-exclamation-circle"></i>
@@ -174,78 +177,32 @@
           </span>
         </div>
 
-        <!-- Piece Price -->
-        <div class="form-group" [class.error]="piecePriceError">
-          <label for="piecePrice">
-            Piece Price (&#8369;)
-            <span class="required">*</span>
+        <!-- Pieces Per Box (Dual-Level only) -->
+        <div
+          class="form-group"
+          *ngIf="unitMeasurement === 'Dual-Level'"
+          [class.error]="piecePerBoxError"
+        >
+          <label for="piecePerBox">
+            Pieces Per Box <span class="required">*</span>
           </label>
           <input
             type="number"
-            id="piecePrice"
-            placeholder="Enter Piece Price"
+            id="piecePerBox"
+            placeholder="Enter Pieces Per Box"
+            [(ngModel)]="newProduct.piecePerBox"
             (input)="calculateBoxSheetPrice()"
-            [(ngModel)]="newProduct.piecePrice"
           />
-          <span class="error-message" *ngIf="piecePriceError">
+          <span class="error-message" *ngIf="piecePerBoxError">
             <i class="fas fa-exclamation-circle"></i>
-            {{ piecePriceError }}
+            {{ piecePerBoxError }}
           </span>
-        </div>
-
-        <!-- Box Price -->
-        <div class="form-group" [class.error]="boxPriceError" *ngIf="unitMeasurement == 'Multi-Level' || unitMeasurement == 'Dual-Level'">
-          <label for="boxPrice">
-            Box Price (&#8369;)
-            <span class="required">*</span>
-          </label>
-          <input
-            readonly
-            type="number"
-            id="boxPrice"
-            placeholder="Enter Box Price"
-            [(ngModel)]="newProduct.boxPrice"
-          />
-          <span class="error-message" *ngIf="boxPriceError">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ boxPriceError }}
-          </span>
-        </div>
-
-        <div class="form-group" [class.error]="boxPriceError" *ngIf="unitMeasurement == 'Multi-Level' || unitMeasurement == 'Dual-Level'">
-          <label for="boxPrice">
-            Cost Price (&#8369;)
-            <span class="required">*</span>
-          </label>
-          <input
-            type="number"
-            id="boxPrice"
-            placeholder="Enter Cost Price"
-            [(ngModel)]="newProduct.costPrice"
-          />
-          <span class="error-message" *ngIf="boxPriceError">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ boxPriceError }}
-          </span>
-        </div>
-
-        <!-- Sheet Price -->
-        <div class="form-group" *ngIf="unitMeasurement == 'Multi-Level'">
-          <label for="sheetPrice">Sheet Price (&#8369;)</label>
-          <input
-            readonly
-            type="number"
-            id="sheetPrice"
-            placeholder="Enter Sheet Price"
-            [(ngModel)]="newProduct.sheetPrice"
-          />
         </div>
 
         <!-- Reorder Level -->
         <div class="form-group" [class.error]="reorderLevelError">
           <label for="reorderLevel">
-            Reorder Level
-            <span class="required">*</span>
+            Reorder Level <span class="required">*</span>
           </label>
           <input
             type="number"
@@ -258,19 +215,135 @@
             {{ reorderLevelError }}
           </span>
         </div>
+      </div>
+    </fieldset>
 
+    <!-- PRICING SECTION -->
+    <fieldset class="pricing-fieldset">
+      <legend>
+        <i class="fas fa-dollar-sign"></i>
+        Pricing Information
+      </legend>
+
+      <div class="pricing-grid">
+        <!-- LEFT COLUMN: COST PRICES -->
+        <div class="pricing-column">
+          <div class="column-header">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cost Prices (Supplier/Purchase)</span>
+          </div>
+
+          <!-- Cost Box Price (Multi-Level & Dual-Level) -->
+          <div
+            class="form-group"
+            *ngIf="unitMeasurement === 'Multi-Level' || unitMeasurement === 'Dual-Level'"
+            [class.error]="costBoxPriceError"
+          >
+            <label for="costBoxPrice">
+              Cost Box Price (&#8369;) <span class="required">*</span>
+            </label>
+            <input
+              type="number"
+              id="costBoxPrice"
+              placeholder="Enter Cost Box Price"
+              [(ngModel)]="newProduct.costBoxPrice"
+              step="0.01"
+            />
+            <span class="error-message" *ngIf="costBoxPriceError">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ costBoxPriceError }}
+            </span>
+          </div>
+
+          <!-- Cost Piece Price -->
+          <div class="form-group" [class.error]="costPiecePriceError">
+            <label for="costPiecePrice">
+              Cost Piece Price (&#8369;) <span class="required">*</span>
+            </label>
+            <input
+              type="number"
+              id="costPiecePrice"
+              placeholder="Enter Cost Piece Price"
+              [(ngModel)]="newProduct.costPiecePrice"
+              step="0.01"
+            />
+            <span class="error-message" *ngIf="costPiecePriceError">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ costPiecePriceError }}
+            </span>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: SELLING PRICES -->
+        <div class="pricing-column">
+          <div class="column-header">
+            <i class="fas fa-cash-register"></i>
+            <span>Selling Prices (Retail/Customer)</span>
+          </div>
+
+          <!-- Box Selling Price (Multi-Level & Dual-Level - Auto-calculated) -->
+          <div
+            class="form-group"
+            *ngIf="unitMeasurement === 'Multi-Level' || unitMeasurement === 'Dual-Level'"
+          >
+            <label for="boxPrice">
+              Box Selling Price (&#8369;)
+              <span class="auto-calc">(Auto-calculated)</span>
+            </label>
+            <input
+              readonly
+              type="number"
+              id="boxPrice"
+              placeholder="Auto-calculated"
+              [(ngModel)]="newProduct.boxPrice"
+              step="0.01"
+            />
+          </div>
+
+          <!-- Sheet Selling Price (Multi-Level only - Auto-calculated) -->
+          <div class="form-group" *ngIf="unitMeasurement === 'Multi-Level'">
+            <label for="sheetPrice">
+              Sheet Selling Price (&#8369;)
+              <span class="auto-calc">(Auto-calculated)</span>
+            </label>
+            <input
+              readonly
+              type="number"
+              id="sheetPrice"
+              placeholder="Auto-calculated"
+              [(ngModel)]="newProduct.sheetPrice"
+              step="0.01"
+            />
+          </div>
+
+          <!-- Piece Selling Price -->
+          <div class="form-group" [class.error]="piecePriceError">
+            <label for="piecePrice">
+              Piece Selling Price (&#8369;) <span class="required">*</span>
+            </label>
+            <input
+              type="number"
+              id="piecePrice"
+              placeholder="Enter Piece Selling Price"
+              [(ngModel)]="newProduct.piecePrice"
+              (input)="calculateBoxSheetPrice()"
+              step="0.01"
+            />
+            <span class="error-message" *ngIf="piecePriceError">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ piecePriceError }}
+            </span>
+          </div>
+        </div>
       </div>
     </fieldset>
   </div>
 
   <!-- MODAL FOOTER -->
   <div class="modal-footer">
-    <button class="btn btn-cancel" (click)="closeCreateProductForm()">
-      Cancel
-    </button>
+    <button class="btn btn-cancel" (click)="closeCreateProductForm()">Cancel</button>
     <button class="btn btn-save" (click)="createProduct()">
-      <i class="fas fa-save"></i>
-      Save Product
+      <i class="fas fa-save"></i> Save Product
     </button>
   </div>
 </div>
@@ -280,9 +353,15 @@
   <div class="success-alert">
     <div class="alert-icon success">
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1"/>
-        <circle cx="24" cy="24" r="18" fill="#10b981"/>
-        <path d="M16 24L21 29L32 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="24" r="22" fill="#10b981" opacity="0.1" />
+        <circle cx="24" cy="24" r="18" fill="#10b981" />
+        <path
+          d="M16 24L21 29L32 18"
+          stroke="white"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </svg>
     </div>
     <h3 class="alert-title">Success!</h3>

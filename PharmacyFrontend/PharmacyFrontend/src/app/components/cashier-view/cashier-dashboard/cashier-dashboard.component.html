@@ -146,11 +146,6 @@
             <span class="value">{{newInvoice}}</span>
           </div>
 
-          <div class="total-row">
-            <span class="label">Date & Time:</span>
-            <span class="value">{{timeNow | date : 'medium'}}</span>
-          </div>
-
         </div>
 
         <div class="bottom-btn">
@@ -190,6 +185,16 @@
     <p class="alert-message">Transaction completed successfully!</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeTransactionMessage()">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="error-overlay" *ngIf="errorMessage">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">{{errorMessage}}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeErrorMessageForm()">OK</button>
     </div>
   </div>
 </div>

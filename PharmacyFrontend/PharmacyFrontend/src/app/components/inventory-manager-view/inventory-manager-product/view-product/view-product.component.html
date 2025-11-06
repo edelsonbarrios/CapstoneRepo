@@ -1,5 +1,4 @@
 <div class="modal">
-
   <!-- MODAL HEADER -->
   <div class="modal-header">
     <div class="icon-title">
@@ -15,6 +14,7 @@
 
   <!-- MODAL BODY -->
   <div class="modal-body">
+    <!-- PRODUCT DETAILS SECTION -->
     <fieldset>
       <legend>
         <i class="fas fa-clipboard-list"></i>
@@ -22,97 +22,139 @@
       </legend>
 
       <div class="form-grid">
-
-        <!-- Product Name - Always shown -->
+        <!-- Product Name -->
         <div class="form-group">
           <label>Product Name</label>
-          <p>{{viewProduct.productName}}</p>
+          <p>{{viewProduct.productName || 'N/A'}}</p>
         </div>
 
-        <!-- Category Name - Always shown -->
+        <!-- Category Name -->
         <div class="form-group">
           <label>Category</label>
-          <p>{{viewProduct.categoryName}}</p>
+          <p>{{viewProduct.categoryName || 'N/A'}}</p>
         </div>
 
-        <!-- Unit Packaging - Always shown -->
+        <!-- Unit Packaging -->
         <div class="form-group">
           <label>Unit Packaging</label>
-          <p>{{viewProduct.unitMeasurement}}</p>
+          <p>{{viewProduct.unitMeasurement || 'N/A'}}</p>
         </div>
 
-        <!-- Brand Name - Always shown -->
+        <!-- Brand Name -->
         <div class="form-group">
           <label>Brand Name</label>
-          <p>{{viewProduct.brandName}}</p>
+          <p>{{viewProduct.brandName || 'N/A'}}</p>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+          <label>Type</label>
+          <p>{{viewProduct.typeName || 'N/A'}}</p>
         </div>
 
         <!-- Generic Name - Multi-Level only -->
         <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Generic Name</label>
-          <p>{{viewProduct.genericName}}</p>
+          <p>{{viewProduct.genericName || 'N/A'}}</p>
         </div>
 
         <!-- Classification - Multi-Level only -->
         <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Classification</label>
-          <p>{{viewProduct.classificationName}}</p>
-        </div>
-
-        <!-- Type - Always shown -->
-        <div class="form-group">
-          <label>Type</label>
-          <p>{{viewProduct.typeName}}</p>
+          <p>{{viewProduct.classificationName || 'N/A'}}</p>
         </div>
 
         <!-- Formulation - Multi-Level only -->
         <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Formulation</label>
-          <p>{{viewProduct.formulationName}}</p>
+          <p>{{viewProduct.formulationName || 'N/A'}}</p>
         </div>
 
         <!-- Sheets Per Box - Multi-Level only -->
         <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
           <label>Sheets Per Box</label>
-          <p>{{viewProduct.sheetsPerBox}}</p>
+          <p>{{viewProduct.sheetsPerBox || 'N/A'}}</p>
         </div>
 
-        <!-- Piece Per Sheet - Multi-Level only -->
+        <!-- Pieces Per Sheet - Multi-Level only -->
         <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
-          <label>Piece Per Sheet</label>
-          <p>{{viewProduct.piecesPerSheet}}</p>
+          <label>Pieces Per Sheet</label>
+          <p>{{viewProduct.piecesPerSheet || 'N/A'}}</p>
         </div>
 
-        <!-- Piece Per Box - Dual-Level only -->
+        <!-- Pieces Per Box - Dual-Level only -->
         <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Dual-Level'">
-          <label>Piece Per Box</label>
-          <p>{{viewProduct.piecePerBox}}</p>
+          <label>Pieces Per Box</label>
+          <p>{{viewProduct.piecePerBox || 'N/A'}}</p>
         </div>
 
-        <!-- Box Price - Multi-Level and Dual-Level -->
-        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level' || viewProduct.unitMeasurement === 'Dual-Level'">
-          <label>Box Price (&#8369;)</label>
-          <p>{{viewProduct.boxPrice}}</p>
-        </div>
-
-        <!-- Sheet Price - Multi-Level only -->
-        <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
-          <label>Sheet Price (&#8369;)</label>
-          <p>{{viewProduct.sheetPrice}}</p>
-        </div>
-
-        <!-- Piece Price - Always shown -->
-        <div class="form-group">
-          <label>Piece Price (&#8369;)</label>
-          <p>{{viewProduct.piecePrice}}</p>
-        </div>
-
-        <!-- Reorder Level - Always shown -->
+        <!-- Reorder Level -->
         <div class="form-group">
           <label>Reorder Level</label>
-          <p>{{viewProduct.reorderLevel}}</p>
+          <p>{{viewProduct.reorderLevel || 'N/A'}}</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- PRICING SECTION -->
+    <fieldset class="pricing-fieldset">
+      <legend>
+        <i class="fas fa-dollar-sign"></i>
+        Pricing Information
+      </legend>
+
+      <div class="pricing-grid">
+        <!-- LEFT COLUMN: COST PRICES -->
+        <div class="pricing-column">
+          <div class="column-header">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cost Prices (Supplier/Purchase)</span>
+          </div>
+
+          <!-- Cost Box Price - Multi-Level & Dual-Level -->
+          <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level' || viewProduct.unitMeasurement === 'Dual-Level'">
+            <label>Cost Box Price (&#8369;)</label>
+            <p>{{viewProduct.costBoxPrice || 'N/A'}}</p>
+          </div>
+
+          <!-- Cost Sheet Price - Multi-Level only -->
+          <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
+            <label>Cost Sheet Price (&#8369;)</label>
+            <p>{{viewProduct.costSheetPrice || 'N/A'}}</p>
+          </div>
+
+          <!-- Cost Piece Price -->
+          <div class="form-group">
+            <label>Cost Piece Price (&#8369;)</label>
+            <p>{{viewProduct.costPiecePrice || 'N/A'}}</p>
+          </div>
         </div>
 
+        <!-- RIGHT COLUMN: SELLING PRICES -->
+        <div class="pricing-column">
+          <div class="column-header">
+            <i class="fas fa-cash-register"></i>
+            <span>Selling Prices (Retail/Customer)</span>
+          </div>
+
+          <!-- Box Selling Price - Multi-Level & Dual-Level -->
+          <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level' || viewProduct.unitMeasurement === 'Dual-Level'">
+            <label>Box Selling Price (&#8369;)</label>
+            <p>{{viewProduct.boxPrice || 'N/A'}}</p>
+          </div>
+
+          <!-- Sheet Selling Price - Multi-Level only -->
+          <div class="form-group" *ngIf="viewProduct.unitMeasurement === 'Multi-Level'">
+            <label>Sheet Selling Price (&#8369;)</label>
+            <p>{{viewProduct.sheetPrice || 'N/A'}}</p>
+          </div>
+
+          <!-- Piece Selling Price -->
+          <div class="form-group">
+            <label>Piece Selling Price (&#8369;)</label>
+            <p>{{viewProduct.piecePrice || 'N/A'}}</p>
+          </div>
+        </div>
       </div>
     </fieldset>
   </div>

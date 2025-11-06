@@ -668,6 +668,9 @@ namespace PharmacyBackend.Service.GetService
           Description = p.Description,
           PiecePerBox = p.PiecePerBox,
           CostPrice = p.CostPrice,
+          CostBoxPrice = p.CostBoxPrice,
+          CostSheetPrice = p.CostSheetPrice,
+          CostPiecePrice = p.CostPiecePrice,
 
 
 
@@ -966,6 +969,9 @@ namespace PharmacyBackend.Service.GetService
               ReorderLevel = p.ReorderLevel,
               UnitMeasurement = p.UnitMeasurement,
               PiecePerBox = p.PiecePerBox,
+              CostBoxPrice = p.CostBoxPrice,
+              CostSheetPrice = p.CostSheetPrice,
+              CostPiecePrice = p.CostPiecePrice,
 
               // Inventory calculations
               HasExpiredStock = p.Inventory?.Any(i => i.IsActive && i.IsExpired) ?? false,

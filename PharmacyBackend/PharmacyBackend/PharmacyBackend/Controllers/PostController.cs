@@ -111,9 +111,16 @@ namespace PharmacyBackend.Controllers
 
                 return Ok(new { Message = "Transaction successfully created." });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest($"Error creating sales transaction: {ex.Message}");
+                Console.WriteLine($"InvalidOperationException: {ex.Message}");
+                return BadRequest(new {Message = ex.Message});
+            }catch(ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }catch(Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
             }
         }
 
@@ -131,9 +138,15 @@ namespace PharmacyBackend.Controllers
 
                 return Ok(new { Message = "Sales item successfully created." });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest($"Error creating sales item: {ex.Message}");
+                return BadRequest(new {Message = ex.Message});
+            }catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = $"An error occured: {ex.Message}" });
             }
         }
         [HttpPost("NewInvoiceNumber")]

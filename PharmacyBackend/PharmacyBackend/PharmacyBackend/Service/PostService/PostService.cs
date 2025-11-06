@@ -140,88 +140,80 @@ namespace PharmacyBackend.Service.PostService
 
       return employeeId;
     }
-    #endregion
+        #endregion
 
-    #region EmployeeHistory
+        #region EmployeeHistory
 
-    #endregion
+        #endregion
 
-    #region Sales
-    public async Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto)
-    {
-      try
-      {
-        if (dto == null || dto.Items == null || !dto.Items.Any())
-          throw new ArgumentException("Sales transaction must have at least one item");
-
-        // Create the sales transaction entity
-        var transaction = new SalesTransaction
+        #region Sales
+        public async Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto)
         {
-          TransactionDate = DateTime.UtcNow,
-          InvoiceNumber = dto.InvoiceNumber,
-          PaymentMethod = dto.PaymentMethod,
-          ReferenceNumber = dto.ReferenceNumber,
-          AmountPaid = dto.AmountPaid,
-          ChangeAmount = dto.ChangeAmount,
-          DiscountId = dto.DiscountId,
-          EmployeeID = dto.EmployeeID,
-          VATId = dto.VATId,
-          DiscountAmount = dto.DiscountAmount,
-          VATAmount = dto.VATAmount,
-          Items = dto.Items.Select(i => new SalesItem
-              {
-              ProductId = i.ProductId,
-              UnitType = i.UnitType,
-              Quantity = i.Quantity,
-              UnitPrice = i.UnitPrice,
-              Subtotal = i.Quantity * i.UnitPrice
-              }).ToList(),
-          TotalAmount = dto.TotalAmount
-        };
+            if (dto == null || dto.Items == null || !dto.Items.Any())
+                throw new ArgumentException("Sales transaction must have at least one item");
 
-        // Repository will handle inventory deduction and stock movements
-        var createdTransaction = await _postRepo.CreateSalesTransactionAsync(transaction);
+            // Create the sales transaction entity
+            var transaction = new SalesTransaction
+            {
+                TransactionDate = DateTime.UtcNow,
+                InvoiceNumber = dto.InvoiceNumber,
+                PaymentMethod = dto.PaymentMethod,
+                ReferenceNumber = dto.ReferenceNumber,
+                AmountPaid = dto.AmountPaid,
+                ChangeAmount = dto.ChangeAmount,
+                DiscountId = dto.DiscountId,
+                EmployeeID = dto.EmployeeID,
+                VATId = dto.VATId,
+                DiscountAmount = dto.DiscountAmount,
+                VATAmount = dto.VATAmount,
+                Items = dto.Items.Select(i => new SalesItem
+                {
+                    ProductId = i.ProductId,
+                    UnitType = i.UnitType,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Quantity * i.UnitPrice
+                }).ToList(),
+                TotalAmount = dto.TotalAmount
+            };
 
-        var validateInventory = await _updateRepo.ValidateInventoryStocksAsync();
+            // Repository will handle inventory deduction and stock movements
+            // Don't catch here - let exceptions bubble up naturally
+            var createdTransaction = await _postRepo.CreateSalesTransactionAsync(transaction);
+            var validateInventory = await _updateRepo.ValidateInventoryStocksAsync();
 
-        // Return DTO
-        return new SalesTransactionDto
-        {
-          Id = createdTransaction.Id,
-          TransactionDate = createdTransaction.TransactionDate,
-          InvoiceNumber = createdTransaction.InvoiceNumber,
-          TotalAmount = createdTransaction.TotalAmount,
-          DiscountAmount = createdTransaction.DiscountAmount,
-          VATAmount = createdTransaction.VATAmount,
-          NetAmount = createdTransaction.NetAmount,
-          PaymentMethod = createdTransaction.PaymentMethod,
-          AmountPaid = createdTransaction.AmountPaid,
-          ChangeAmount = createdTransaction.ChangeAmount,
-          DiscountId = createdTransaction.DiscountId,
-          EmployeeID = createdTransaction.EmployeeID,
-          VATId = createdTransaction.VATId,
-          DiscountName = createdTransaction.Discount?.DiscountName ?? string.Empty,
-          EmployeeName = createdTransaction.Employee != null ? $"{createdTransaction.Employee.FirstName} {createdTransaction.Employee.LastName}" : string.Empty,
-          VATRate = createdTransaction.VAT?.VATRate,
-          Items = createdTransaction.Items.Select(i => new SalesItemDto
-              {
-              Id = i.Id,
-              ProductId = i.ProductId,
-              UnitType = i.UnitType,
-              ProductName = i.Product?.ProductName ?? string.Empty,
-              Quantity = i.Quantity,
-              UnitPrice = i.UnitPrice,
-              Subtotal = i.Subtotal
-              }).ToList()
-        };
-      }
-      catch (Exception ex)
-      {
-        throw new Exception($"Error creating sales transaction: {ex.Message}", ex);
-      }
-    }
-
-    public async Task<SalesItemDto> CreateSalesItemAsync(CreateSalesItemDto dto)
+            // Return DTO
+            return new SalesTransactionDto
+            {
+                Id = createdTransaction.Id,
+                TransactionDate = createdTransaction.TransactionDate,
+                InvoiceNumber = createdTransaction.InvoiceNumber,
+                TotalAmount = createdTransaction.TotalAmount,
+                DiscountAmount = createdTransaction.DiscountAmount,
+                VATAmount = createdTransaction.VATAmount,
+                NetAmount = createdTransaction.NetAmount,
+                PaymentMethod = createdTransaction.PaymentMethod,
+                AmountPaid = createdTransaction.AmountPaid,
+                ChangeAmount = createdTransaction.ChangeAmount,
+                DiscountId = createdTransaction.DiscountId,
+                EmployeeID = createdTransaction.EmployeeID,
+                VATId = createdTransaction.VATId,
+                DiscountName = createdTransaction.Discount?.DiscountName ?? string.Empty,
+                EmployeeName = createdTransaction.Employee != null ? $"{createdTransaction.Employee.FirstName} {createdTransaction.Employee.LastName}" : string.Empty,
+                VATRate = createdTransaction.VAT?.VATRate,
+                Items = createdTransaction.Items.Select(i => new SalesItemDto
+                {
+                    Id = i.Id,
+                    ProductId = i.ProductId,
+                    UnitType = i.UnitType,
+                    ProductName = i.Product?.ProductName ?? string.Empty,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Subtotal = i.Subtotal
+                }).ToList()
+            };
+        }
+        public async Task<SalesItemDto> CreateSalesItemAsync(CreateSalesItemDto dto)
     {
       try
       {
@@ -250,7 +242,8 @@ namespace PharmacyBackend.Service.PostService
       }
       catch (Exception ex)
       {
-        throw new Exception($"Error creating sales item: {ex.Message}", ex);
+
+                throw;
       }
     }
     public async Task<string> GenerateNewInvoiceNumberAsync() 
@@ -487,6 +480,9 @@ namespace PharmacyBackend.Service.PostService
         DateCreated = DateTime.UtcNow,
         PiecePerBox = dto.PiecePerBox,
         CostPrice = dto.CostPrice,
+        CostBoxPrice = dto.CostBoxPrice,
+        CostSheetPrice = dto.CostSheetPrice,
+        CostPiecePrice = dto.CostPiecePrice
       };
 
       var created = await _postRepo.CreateProductAsync(product);

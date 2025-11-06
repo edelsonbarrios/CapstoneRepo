@@ -14,4 +14,7 @@ export class CreateProductRequest {
   reorderLevel: number = 0;
   unitMeasurement: string = '';
   piecePerBox: number = 0;
+  costBoxPrice : number = 0;
+  costSheetPrice : number = 0;
+  costPiecePrice: number = 0;
 }

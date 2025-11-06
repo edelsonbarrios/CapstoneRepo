@@ -19,6 +19,9 @@ export class Product {
   unitMeasurement: string = '';
   piecePerBox: number = 0;
   costPrice: number = 0;
+  costBoxPrice : number = 0;
+  costSheetPrice : number = 0;
+  costPiecePrice : number = 0;
 
 
   totalStock: number = 0;

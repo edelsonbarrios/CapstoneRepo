@@ -133,8 +133,8 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         piecePrice: p.piecePrice,
         // Calculate total based on unit type
         totalCost: isBoxOrder
-          ? p.boxPrice * initialQuantity
-          : p.piecePrice * initialQuantity,
+          ? p.costBoxPrice * initialQuantity
+          : p.costPiecePrice * initialQuantity,
         batchNumber: '',
         manufacturingDate: new Date(),
         expirationDate: new Date(),
@@ -147,7 +147,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
         quantityReceived: 0,
         damagedPiecesCount: 0,
         expiredPiecesCount: 0,
-        defectPiecesCount: 0
+        defectPiecesCount: 0,
       };
     });
 

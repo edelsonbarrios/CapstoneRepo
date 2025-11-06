@@ -41,6 +41,12 @@ namespace PharmacyBackend.Models
         public decimal SheetPrice { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal PiecePrice { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal CostBoxPrice {get; set;}
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal CostSheetPrice {get; set;}
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal CostPiecePrice {get; set;}
         public int ReorderLevel { get; set; }
 
         public string Description { get; set; } = string.Empty;

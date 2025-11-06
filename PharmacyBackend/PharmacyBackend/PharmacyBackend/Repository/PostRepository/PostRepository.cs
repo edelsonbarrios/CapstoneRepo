@@ -172,7 +172,7 @@ namespace PharmacyBackend.Repository.POST
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw new Exception($"Error creating sales transaction: {ex.Message}", ex);
+                throw;
             }
         }
 
@@ -243,7 +243,7 @@ namespace PharmacyBackend.Repository.POST
             // Check total availability
             var totalAvailablePieces = availableInventories.Sum(i => i.TotalPiecesAvailable);
             if (totalAvailablePieces < totalPiecesNeeded)
-                throw new InvalidOperationException($"Insufficient stock for {product.ProductName}. Available: {totalAvailablePieces} pieces, Required: {totalPiecesNeeded} pieces");
+                throw new InvalidOperationException($"Insufficient stock for {product.ProductName}. Short by {totalPiecesNeeded - totalAvailablePieces} pieces");
 
             // Set unit price if not provided
             if (salesItem.UnitPrice <= 0)
@@ -300,11 +300,14 @@ namespace PharmacyBackend.Repository.POST
         {
             var sheetsPerBox = sampleInventory.SheetsPerBox ?? 0;
             var piecesPerSheet = sampleInventory.PiecesPerSheet ?? 0;
+            var piecePerBox = sampleInventory.PiecePerBox ?? 0;
 
-            var hasSheets = (sampleInventory.SheetsPerBox ?? 0) > 0;
-            var hasPieces = (sampleInventory.PiecesPerSheet ?? 0) > 0;
+            var hasMultiLevel = sheetsPerBox > 0 && piecesPerSheet > 0;
+            var hasDualLevel = piecePerBox > 0 && sheetsPerBox == 0 && piecesPerSheet == 0;
+            var isSingleLevel = sheetsPerBox == 0 && piecesPerSheet == 0 && piecePerBox == 0;
 
-            if(hasSheets && hasPieces)
+            // Multi-Level: Box → Sheet → Piece
+            if (hasMultiLevel)
             {
                 return unitType.ToLower() switch
                 {
@@ -314,20 +317,30 @@ namespace PharmacyBackend.Repository.POST
                     _ => quantity
                 };
             }
-            if(hasSheets && !hasPieces)
+
+            // Dual-Level: Box → Piece
+            if (hasDualLevel)
             {
                 return unitType.ToLower() switch
                 {
-                    "box" => quantity * sheetsPerBox,
-                    "sheet" => quantity,
+                    "box" => quantity * piecePerBox,
+                    "sheet" => throw new InvalidOperationException("Sheet unit is not available for this product. Only Box and Piece units are supported."),
                     "piece" => quantity,
                     _ => quantity
                 };
             }
-            if (!hasSheets && !hasPieces)
+
+            // Single-Level: Piece only
+            if (isSingleLevel)
             {
+                if (unitType.ToLower() != "piece")
+                {
+                    throw new InvalidOperationException($"{unitType} unit is not available for this product. Only Piece unit is supported.");
+                }
                 return quantity;
             }
+
+            // Fallback (should not reach here)
             return quantity;
         }
 

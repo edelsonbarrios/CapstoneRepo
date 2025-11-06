@@ -20,5 +20,8 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public string UnitMeasurement { get; set; }
         public int PiecePerBox { get; set; }
         public int CostPrice {get; set;}
+        public decimal CostBoxPrice {get; set;}
+        public decimal CostSheetPrice {get; set;}
+        public decimal CostPiecePrice {get; set;}
     }
 }

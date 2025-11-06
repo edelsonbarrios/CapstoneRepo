@@ -12,9 +12,6 @@ import { PostService } from '../../../services/PostService/post.service';
 
 import { ViewSettleComponent } from '../view-settle/view-settle.component';
 import { PrintReceiptComponent } from '../print-receipt/print-receipt.component';
-import { Subscription } from 'rxjs';
-import { ResetService } from '../../../services/ResetService/reset.service';
-import { Inventory } from '../../../models/inventory-module-models/inventory';
 import { ViewInventoryComponent } from '../view-inventory/view-inventory.component';
 
 @Component({
@@ -39,7 +36,8 @@ export class CashierDashboardComponent implements OnInit {
   receipt: any;
   newInvoice: string = '';
   timeNow: Date = new Date();
-  timer : any;
+  timer: any;
+  errorMessage: string = '';
 
   products: (Product & {
     selected?: boolean;
@@ -97,10 +95,6 @@ export class CashierDashboardComponent implements OnInit {
   generateNewInvoiceNumber() {
     this.postService.generateNewInvoiceNumberAsync().subscribe({
       next: (res) => {
-        console.log('✅ Raw API Response:', res);
-        console.log('✅ Response type:', typeof res);
-
-        // Handle different response formats
         if (typeof res === 'string') {
           this.newInvoice = res;
         } else if (res && (res as any).message) {
@@ -111,7 +105,6 @@ export class CashierDashboardComponent implements OnInit {
           this.newInvoice = String(res);
         }
 
-        console.log('✅ Final newInvoice:', this.newInvoice);
         this.newInvoice = res;
       },
       error: (err) => {
@@ -377,7 +370,32 @@ export class CashierDashboardComponent implements OnInit {
         this.generateNewInvoiceNumber();
       },
       error: (err) => {
-        console.error('Error creating transaction:', err);
+        console.error('Full error object:', err);
+        console.error('Error status:', err.status);
+        console.error('Error error:', err.error);
+
+        let errorMsg = 'An unexpected error occurred';
+
+        // Try to extract error message from different possible locations
+        if (err.error) {
+          if (typeof err.error === 'string') {
+            try {
+              // Sometimes the error is a JSON string
+              const parsed = JSON.parse(err.error);
+              errorMsg = parsed.Message || parsed.message || err.error;
+            } catch {
+              errorMsg = err.error;
+            }
+          } else if (err.error.Message) {
+            errorMsg = err.error.Message;
+          } else if (err.error.message) {
+            errorMsg = err.error.message;
+          }
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+
+        this.errorMessage = errorMsg;
       },
     });
 
@@ -404,5 +422,9 @@ export class CashierDashboardComponent implements OnInit {
   }
   closeViewInventoryForm() {
     this.viewInventory = null;
+  }
+
+  closeErrorMessageForm() {
+    this.errorMessage = '';
   }
 }

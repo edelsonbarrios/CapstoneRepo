@@ -19,6 +19,9 @@ namespace PharmacyBackend.DTOs.ProductDTOs
         public decimal BoxPrice { get; set; }
         public decimal SheetPrice { get; set; }
         public decimal PiecePrice { get; set; }
+        public decimal CostBoxPrice {get; set;}
+        public decimal CostSheetPrice {get; set;}
+        public decimal CostPiecePrice {get; set;}
         public int ReorderLevel { get; set; }
         public string UnitMeasurement { get; set; }
         public int CostPrice {get; set;}
