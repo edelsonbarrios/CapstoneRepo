@@ -256,7 +256,7 @@
           </div>
 
           <!-- Cost Piece Price -->
-          <div class="form-group" [class.error]="costPiecePriceError">
+          <div class="form-group" [class.error]="costPiecePriceError" *ngIf="unitMeasurement == 'Single-Level'">
             <label for="costPiecePrice">
               Cost Piece Price (&#8369;) <span class="required">*</span>
             </label>

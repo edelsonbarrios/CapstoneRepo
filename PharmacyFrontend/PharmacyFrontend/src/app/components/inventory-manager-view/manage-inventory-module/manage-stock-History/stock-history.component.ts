@@ -71,7 +71,7 @@ export class ManageStockHistoryComponent implements OnInit {
 
   // Pagination
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 6;
   totalPages: number = 0;
   paginatedTransactions: StockHistoryTransaction[] = [];
 
@@ -93,7 +93,7 @@ export class ManageStockHistoryComponent implements OnInit {
 
     this.loading = true;
     this.error = '';
-    
+
     this.getService
       .getStockHistory(
         requestPayload.startDate,
