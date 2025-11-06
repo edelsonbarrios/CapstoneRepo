@@ -1,19 +1,43 @@
 <div class="wrapper">
-  
+
   <nav class="left-nav">
-    <a routerLink="/cashier-main/cashier-dashboard"><span><i class="fa-solid fa-desktop"></i></span>POS</a>
-    <a routerLink="/cashier-main/cashier-transaction"><span><i class="fa-solid fa-chart-simple"></i></span>Daily Sales</a>
+    <a routerLink="/cashier-main/cashier-dashboard">
+      <span><i class="fa-solid fa-desktop"></i></span>
+      POS
+    </a>
+    <a routerLink="/cashier-main/cashier-transaction">
+      <span><i class="fa-solid fa-chart-simple"></i></span>
+      Daily Sales
+    </a>
   </nav>
 
+  <!-- Date & Time Display -->
+  <div class="datetime-display">
+    <div class="date-section">
+      <i class="fa-regular fa-calendar"></i>
+      <span class="date">{{ dateTime | date:'EEEE, MMMM d, yyyy' }}</span>
+    </div>
+    <div class="time-section">
+      <i class="fa-regular fa-clock"></i>
+      <span class="time">{{ dateTime | date:'hh:mm:ss a' }}</span>
+    </div>
+  </div>
+
   <nav class="right-nav">
-    <a routerLink="/cashier-main/your-account"><span><i class="fa-solid fa-gear"></i></span>Your Account</a>
-    <a (click)="logOut()"><span><i class="fa-solid fa-right-from-bracket"></i></span>Logout</a>
+    <a routerLink="/cashier-main/your-account">
+      <span><i class="fa-solid fa-gear"></i></span>
+      Your Account
+    </a>
+    <a (click)="logOut()">
+      <span><i class="fa-solid fa-right-from-bracket"></i></span>
+      Logout
+    </a>
   </nav>
 </div>
 
 <div class="modal-overlay" *ngIf="viewCashierProduct">
-  <app-view-cashier-products 
-  *ngIf="viewCashierProduct"
-  (closeForm)="closeCashierProductForm()"
+  <app-view-cashier-products
+    *ngIf="viewCashierProduct"
+    (closeForm)="closeCashierProductForm()"
   ></app-view-cashier-products>
 </div>

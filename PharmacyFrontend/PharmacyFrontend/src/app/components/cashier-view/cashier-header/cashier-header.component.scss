@@ -2,10 +2,11 @@
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0.75rem 1.5rem;
   border-bottom: 2px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  gap: 10px;
+  gap: 1rem;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -70,6 +71,73 @@
         &::before {
           width: 100%;
         }
+      }
+    }
+  }
+
+  // ========== DATE & TIME DISPLAY ==========
+  .datetime-display {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.625rem 1.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    .date-section,
+    .time-section {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+
+      i {
+        font-size: 1.125rem;
+        color: #3b82f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+        border-radius: 8px;
+      }
+
+      .date,
+      .time {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #1e293b;
+        letter-spacing: -0.2px;
+      }
+
+      .time {
+        font-variant-numeric: tabular-nums;
+        min-width: 100px;
+        text-align: center;
+      }
+    }
+
+    .date-section {
+      padding-right: 1.5rem;
+      border-right: 2px solid #f1f5f9;
+
+      .date {
+        font-size: 0.875rem;
+      }
+    }
+
+    .time-section {
+      i {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+        color: #10b981;
+      }
+
+      .time {
+        font-size: 1rem;
+        color: #10b981;
+        font-weight: 700;
       }
     }
   }
@@ -179,17 +247,83 @@
   }
 }
 
-// Responsive design
+// ========== RESPONSIVE DESIGN ==========
+@media (max-width: 1200px) {
+  .wrapper {
+    .datetime-display {
+      .date-section {
+        .date {
+          font-size: 0.813rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .wrapper {
+    .datetime-display {
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+
+      .date-section {
+        padding-right: 1rem;
+      }
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .wrapper {
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 0.75rem;
     padding: 0.75rem;
 
     .left-nav,
     .right-nav {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .datetime-display {
+      order: -1;
       width: 100%;
       justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .wrapper {
+    .left-nav,
+    .right-nav {
+      width: 100%;
+      justify-content: center;
+
+      a {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+
+    .datetime-display {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem;
+
+      .date-section {
+        border-right: none;
+        border-bottom: 2px solid #f1f5f9;
+        padding-right: 0;
+        padding-bottom: 0.5rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .time-section {
+        width: 100%;
+        justify-content: center;
+      }
     }
   }
 }
