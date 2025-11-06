@@ -1119,7 +1119,7 @@ namespace PharmacyBackend.Repository.GET
         #region AdminDashboard
         public async Task<decimal> GetTodaySalesAmountAsync()
         {
-          var today = DateTime.UtcNow.Date;
+          var today = DateTime.UtcNow.Date.AddHours(8);
           var tommorow = today.AddDays(1);
           return await _context.SalesTransaction
             .Where(st => st.TransactionDate.Date >= today
