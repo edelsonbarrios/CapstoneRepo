@@ -4,8 +4,9 @@
     <!-- TYPE CONTROLS/HEADER -->
     <div class="type-control">
       <div class="search-wrapper">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
         <input type="text" name="searchbar" id="searchbar" class="searchbar"
-          placeholder="🔍 Search by Item Code, Brand..." [(ngModel)]="searchQuery" (input)="onSearchChange()">
+          placeholder="Search by Item Code, Brand..." [(ngModel)]="searchQuery" (input)="onSearchChange()">
       </div>
       <button class="btn-type" (click)="openAddTypeForm()">&#43; Add Type</button>
     </div>
