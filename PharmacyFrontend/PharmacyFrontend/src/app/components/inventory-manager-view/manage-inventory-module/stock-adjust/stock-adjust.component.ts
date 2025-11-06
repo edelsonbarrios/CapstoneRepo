@@ -48,6 +48,7 @@ export class StockAdjustComponent implements OnInit {
     this.getLoggedInUser();
   }
 
+  // This is the entry point - called when user clicks "Save Adjustment"
   createNewStockMovement() {
     // Validation
     if (!this.validateForm()) {
@@ -59,10 +60,15 @@ export class StockAdjustComponent implements OnInit {
       return;
     }
 
+    // Show login verification BEFORE processing
+    this.openLoginVerifyForm();
+  }
+
+  // This gets called AFTER successful verification
+  processStockAdjustment() {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    // ✅ FIXED: Use PascalCase property names to match backend DTO
     const requestPayload: StockAdjustment = {
       InventoryID: this.stockAdjust.inventoryID,
       MovementType: this.movementType,
@@ -143,12 +149,16 @@ export class StockAdjustComponent implements OnInit {
     }
   }
 
+  // Opens the login verification modal
   openLoginVerifyForm() {
     this.loginVerify = true;
   }
 
-  closeLoginVerifyForm() {
+  // Closes verification and processes the adjustment
+  closeVerificationForm() {
     this.loginVerify = false;
+    // After successful verification, process the adjustment
+    this.processStockAdjustment();
   }
 
   closeStockAdjustmentForm() {
@@ -158,10 +168,6 @@ export class StockAdjustComponent implements OnInit {
   closeSuccessAlert() {
     this.showSuccessAlert = false;
     this.closeStockAdjustmentForm();
-  }
-
-  closeVerificationForm() {
-    this.loginVerify = false;
   }
 
   clearForm() {
