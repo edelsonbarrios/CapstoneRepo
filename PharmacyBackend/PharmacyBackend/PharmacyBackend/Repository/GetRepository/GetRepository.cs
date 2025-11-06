@@ -1275,13 +1275,13 @@ namespace PharmacyBackend.Repository.GET
             // Apply date filter
             if (startDate.HasValue && endDate.HasValue)
             {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(8);
-                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc).AddHours(8);
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(-8);
+                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc).AddHours(-8);
                 query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
             }
             else if (startDate.HasValue)
             {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(8);
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(-8);
                 query = query.Where(sm => sm.MovementDate >= startDateUtc);
             }
             if (!string.IsNullOrEmpty(transactionType) &&
@@ -1290,6 +1290,7 @@ namespace PharmacyBackend.Repository.GET
                 var movementType = transactionType switch
                 {
                     "Stock Entry" => "Stock In",
+                    "Adjustment" => "Adjustment",
                     "Count Correction" => "Count Correction",
                     "Sale" => "Sale",
                     "Damaged" => "Damaged",
@@ -1321,13 +1322,13 @@ namespace PharmacyBackend.Repository.GET
             // Apply date filter
             if (startDate.HasValue && endDate.HasValue)
             {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(8);
-                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc).AddHours(8);
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(-8);
+                var endDateUtc = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc).AddHours(-8);
                 query = query.Where(sm => sm.MovementDate >= startDateUtc && sm.MovementDate <= endDateUtc);
             }
             else if (startDate.HasValue)
             {
-                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(8);
+                var startDateUtc = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc).AddHours(-8);
                 query = query.Where(sm => sm.MovementDate >= startDateUtc);
             }
             // Apply transaction type filter if not "All Transaction"
