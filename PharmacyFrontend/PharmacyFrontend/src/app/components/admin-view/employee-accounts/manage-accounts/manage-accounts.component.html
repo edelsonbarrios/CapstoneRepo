@@ -4,11 +4,11 @@
     <div class="table-header">
       <div class="search-wrapper">
         <input type="text" 
-        placeholder="🔍 Search Username" class="search-box" 
+        placeholder="Search Username" class="search-box" 
         [(ngModel)]="searchUsername"
         (input)="onSearchChange()"
         >
-        <button class="btn search-btn" (click)="searchAccountByUsername()">Search</button>
+        <button class="btn search-btn" (click)="searchAccountByUsername()"><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
     </div>
 
