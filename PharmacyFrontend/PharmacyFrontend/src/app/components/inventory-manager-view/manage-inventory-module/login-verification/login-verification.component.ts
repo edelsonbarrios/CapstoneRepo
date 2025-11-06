@@ -18,7 +18,11 @@ export class LoginVerificationComponent implements OnInit {
   enteredUserName: string = '';
   enteredPassword: string = '';
   employee: Employee = new Employee();
-  @Output() closeForm = new EventEmitter<void>();
+
+  // Change these to emit boolean values
+  @Output() success = new EventEmitter<boolean>();
+  @Output() failed = new EventEmitter<boolean>();
+
   account: Account = new Account();
   errorMessage: string = '';
 
@@ -34,10 +38,8 @@ export class LoginVerificationComponent implements OnInit {
       console.log(`Token does not exist.`);
       return;
     }
-
     const employee: any = jwtDecode(token);
     const employeeId = parseInt(employee.EmployeeId);
-
     this.getService.GetEmployeeById(employeeId).subscribe({
       next: (employee) => {
         this.employee = employee;
@@ -61,14 +63,16 @@ export class LoginVerificationComponent implements OnInit {
     });
   }
 
+  // Emit false when cancelled
   closeVerificationForm() {
-    this.closeForm.emit();
+    this.failed.emit(false);
   }
 
   verification() {
     console.log(`Account: ${JSON.stringify(this.account)}`);
     console.log(`Entered Username: ${this.enteredUserName}`);
     console.log(`Entered Password: ${this.enteredPassword}`);
+
     if (this.enteredUserName != this.account.username) {
       this.errorMessage = 'Invalid Username. Please try again';
       this.clearFields();
@@ -79,7 +83,8 @@ export class LoginVerificationComponent implements OnInit {
       return;
     }
 
-    this.closeForm.emit();
+    // Emit true when successful
+    this.success.emit(true);
   }
 
   clearFields() {

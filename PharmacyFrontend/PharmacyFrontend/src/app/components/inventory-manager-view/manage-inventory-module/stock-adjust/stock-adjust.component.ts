@@ -21,10 +21,10 @@ import { LoginVerificationComponent } from '../login-verification/login-verifica
 export class StockAdjustComponent implements OnInit {
   @Input() stockAdjust: StockMovement = new StockMovement();
   @Output() closeForm = new EventEmitter<void>();
-  
+
   employee: Employee = new Employee();
   loginVerify: boolean = false;
-  
+
   // Form fields
   boxQuantityChanged: number = 0;
   sheetQuantityChanged: number = 0;
@@ -33,7 +33,7 @@ export class StockAdjustComponent implements OnInit {
   refNumber: string = '';
   movementType: string = '';
   movementTypes: string[] = ['Damaged', 'Expired', 'Count Correction'];
-  
+
   // UI states
   showSuccessAlert: boolean = false;
   isSubmitting: boolean = false;
@@ -101,8 +101,8 @@ export class StockAdjustComponent implements OnInit {
     }
 
     // Check if at least one quantity is adjusted
-    const hasAdjustment = this.boxQuantityChanged !== 0 || 
-                          this.sheetQuantityChanged !== 0 || 
+    const hasAdjustment = this.boxQuantityChanged !== 0 ||
+                          this.sheetQuantityChanged !== 0 ||
                           this.pieceQuantityChanged !== 0;
 
     if (!hasAdjustment) {
@@ -130,7 +130,7 @@ export class StockAdjustComponent implements OnInit {
     try {
       const decodedToken: any = jwtDecode(token);
       const employeeId = parseInt(decodedToken.EmployeeId);
-      
+
       if (!employeeId) {
         console.error('Employee ID does not exist in token');
         return;
@@ -155,10 +155,12 @@ export class StockAdjustComponent implements OnInit {
   }
 
   // Closes verification and processes the adjustment
-  closeVerificationForm() {
+  closeVerificationForm(result : boolean) {
     this.loginVerify = false;
-    // After successful verification, process the adjustment
-    this.processStockAdjustment();
+
+    if(result == true){
+      this.processStockAdjustment();
+    }
   }
 
   closeStockAdjustmentForm() {
