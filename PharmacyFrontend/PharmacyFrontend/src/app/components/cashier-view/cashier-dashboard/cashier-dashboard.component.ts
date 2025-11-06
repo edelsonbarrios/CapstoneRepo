@@ -60,6 +60,9 @@ export class CashierDashboardComponent implements OnInit {
   selectedProducts: {
     productID: number;
     productName: string;
+    categoryName: string;
+    brandName: string;
+    formulationName: string;
     unitType: 'Box' | 'Sheet' | 'Piece';
     quantity: number;
     unitPrice: number;
@@ -244,10 +247,13 @@ export class CashierDashboardComponent implements OnInit {
         // Add to existing quantity
         existing.quantity += qtyToAdd;
       } else {
-        // Add as new item
+        // Add as new item with category, brand, and formulation
         this.selectedProducts.push({
           productID: p.productID,
           productName: p.productName,
+          categoryName: p.categoryName || '',
+          brandName: p.product?.brandName || '',
+          formulationName: p.product?.formulationName || '',
           unitType,
           quantity: qtyToAdd,
           unitPrice: price,
