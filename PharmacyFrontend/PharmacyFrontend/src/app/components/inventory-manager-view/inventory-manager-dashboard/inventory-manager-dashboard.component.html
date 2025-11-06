@@ -37,33 +37,45 @@
 
   <!-- SECOND ROW - CRITICAL & NEAR EXPIRY -->
   <div class="second-container">
-    <div class="table-card">
-      <p class="card-title">Critical Stock Items</p>
+  <div class="table-card">
+    <p class="card-title">Critical Stock Items</p>
 
-      <table class="modern-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Batch</th>
-            <th>Unit Type</th>
-            <th>Quantity</th>
-            <th>Reorder</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="inventoryDashboard.criticalStockItems.length === 0">
-            <td colspan="4" style="text-align: center;">No recent data</td>
-          </tr>
-          <tr *ngFor="let i of paginatedCriticalItems">
-            <td>{{i.productName}}</td>
-            <td>{{i.batchNumber}}</td>
-            <td *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">Box</td>
-            <td *ngIf="i.product.unitMeasurement == 'Single-Level'">Pieces</td>
-            <td><span class="badge badge-danger">{{i.boxQuantity || i.pieceQuantity}}</span></td>
-            <td>{{i.reorderLevel}}</td>
-          </tr>
-        </tbody>
-      </table>
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Batch</th>
+          <th>Unit Type</th>
+          <th>Quantity</th>
+          <th>Reorder</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="inventoryDashboard.criticalStockItems.length === 0">
+          <td colspan="5" style="text-align: center;">No recent data</td>
+        </tr>
+        <tr *ngFor="let i of paginatedCriticalItems">
+          <td>{{i.productName}}</td>
+          <td>{{i.batchNumber}}</td>
+          <!-- Unit Type based on measurement -->
+          <td *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">Box</td>
+          <td *ngIf="i.product.unitMeasurement == 'Single-Level'">Pieces</td>
+          <!-- Quantity based on measurement -->
+          <td>
+            <span class="badge badge-danger" 
+                  *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">
+              {{i.boxQuantity}}
+            </span>
+            <span class="badge badge-danger" 
+                  *ngIf="i.product.unitMeasurement == 'Single-Level'">
+              {{i.pieceQuantity}}
+            </span>
+          </td>
+          <!-- Reorder level -->
+          <td>{{i.reorderLevel}}</td>
+        </tr>
+      </tbody>
+    </table>
 
       <!-- PAGINATION CONTROLS -->
       <div class="pagination-controls" *ngIf="inventoryDashboard.criticalStockItems.length > 0">

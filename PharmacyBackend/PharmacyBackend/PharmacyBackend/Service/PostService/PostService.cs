@@ -142,11 +142,11 @@ namespace PharmacyBackend.Service.PostService
     }
         #endregion
 
-        #region EmployeeHistory
+    #region EmployeeHistory
 
         #endregion
 
-        #region Sales
+    #region Sales
         public async Task<SalesTransactionDto> CreateSalesTransactionAsync(CreateSalesTransactionDto dto)
         {
             if (dto == null || dto.Items == null || !dto.Items.Any())

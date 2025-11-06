@@ -709,10 +709,46 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<IEnumerable<Inventory>> GetCriticalStockInventoryAsync()
         {
-          return await _context.Inventory
-            .Include(i => i.Product)
-            .Where(i => i.BoxQuantity <= i.ReorderLevel && i.IsActive == true)
-            .ToListAsync();
+            var now = DateTime.UtcNow;
+            // Get all active, non-expired inventory grouped by product
+            var inventoryByProduct = await _context.Inventory
+                .Include(i => i.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(i => i.Product.Brand)
+                .Include(i => i.Product.Generic)
+                .Include(i => i.Product.Formulation)
+                .Include(i => i.Product.Classification)
+                .Include(i => i.Product.TypeModel)
+                .Where(i => i.IsActive && i.ExpirationDate >= now)
+                .ToListAsync();
+
+            // Group by product and calculate total stock
+            var criticalProducts = inventoryByProduct
+                .GroupBy(i => i.ProductID)
+                .Where(g =>
+                {
+                    var product = g.First().Product;
+                    var reorderLevel = product.ReorderLevel;
+
+                    // Calculate total stock based on unit measurement
+                    int totalStock;
+                    if (product.UnitMeasurement == "Multi-Level" || product.UnitMeasurement == "Dual-Level")
+                    {
+                        // Sum all box quantities for box-based products
+                        totalStock = g.Sum(i => i.BoxQuantity);
+                    }
+                    else // Single-Level (pieces only)
+                    {
+                        // Sum total pieces available
+                        totalStock = g.Sum(i => i.TotalPiecesAvailable);
+                    }
+
+                    return totalStock <= reorderLevel;
+                })
+                .SelectMany(g => g) // Flatten back to individual inventory items
+                .ToList();
+
+            return criticalProducts;
         }
         #endregion
 
