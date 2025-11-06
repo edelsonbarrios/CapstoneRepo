@@ -135,7 +135,7 @@ namespace PharmacyBackend.Repository.POST
                     if (discount == null)
                         throw new ArgumentException($"Discount with ID {salesTransaction.DiscountId} not found");
                 }
-                
+
                 if (salesTransaction.VATId.HasValue)
                 {
                     var vat = await _context.VAT.FindAsync(salesTransaction.VATId.Value);
@@ -212,7 +212,6 @@ namespace PharmacyBackend.Repository.POST
             if (salesItem.Quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than zero");
 
-
             var product = await _context.Product.FindAsync(salesItem.ProductId);
             if (product == null)
                 throw new ArgumentException($"Product with ID {salesItem.ProductId} not found");
@@ -222,7 +221,7 @@ namespace PharmacyBackend.Repository.POST
             if (string.IsNullOrEmpty(salesItem.UnitType) ||
                 !validUnitTypes.Contains(salesItem.UnitType, StringComparer.OrdinalIgnoreCase))
             {
-                salesItem.UnitType = "Piece"; // Default to piece for backward compatibility
+                salesItem.UnitType = "Piece";
             }
 
             // Get available inventory using FIFO and FEFO
@@ -230,8 +229,8 @@ namespace PharmacyBackend.Repository.POST
                 .Where(i => i.ProductID == salesItem.ProductId &&
                            i.IsActive &&
                            i.ExpirationDate > DateTime.UtcNow)
-                .OrderBy(i => i.ExpirationDate) // First Expiry First Out
-                .ThenBy(i => i.DateAdded) // Then First In First Out
+                .OrderBy(i => i.ExpirationDate)
+                .ThenBy(i => i.DateAdded)
                 .ToListAsync();
 
             if (!availableInventories.Any())
@@ -261,38 +260,23 @@ namespace PharmacyBackend.Repository.POST
             // Calculate subtotal
             salesItem.Subtotal = salesItem.Quantity * salesItem.UnitPrice;
 
-            // Deduct from inventories using FIFO/FEFO with multi-unit logic
-            var remainingPieces = totalPiecesNeeded;
+            // Deduct from inventories using FIFO/FEFO
+            var remainingQuantity = salesItem.Quantity;
+
             foreach (var inventory in availableInventories)
             {
-                if (remainingPieces <= 0) break;
+                if (remainingQuantity <= 0) break;
 
-                // Calculate how many pieces this inventory can provide
-                var availablePieces = inventory.TotalPiecesAvailable;
+                // Calculate how much this inventory can provide in the REQUESTED unit type
+                var availableInRequestedUnit = CalculateAvailableInUnit(inventory, salesItem.UnitType);
 
-                var piecesToDeduct = Math.Min(remainingPieces, availablePieces);
+                var quantityToDeduct = Math.Min(remainingQuantity, availableInRequestedUnit);
 
-                // 🔹 Determine the equivalent unit quantity for deduction
-                var sheetsPerBox = (inventory.SheetsPerBox.HasValue && inventory.SheetsPerBox.Value > 0)
-                    ? inventory.SheetsPerBox.Value
-                    : 1;
-
-                var piecesPerSheet = (inventory.PiecesPerSheet.HasValue && inventory.PiecesPerSheet.Value > 0)
-                    ? inventory.PiecesPerSheet.Value
-                    : 1;
-
-                var unitQuantityToDeduct = salesItem.UnitType.ToLower() switch
+                if (quantityToDeduct > 0)
                 {
-                    "box" => piecesToDeduct / (sheetsPerBox * piecesPerSheet),
-                    "sheet" => piecesToDeduct / piecesPerSheet,
-                    "piece" => piecesToDeduct,
-                    _ => piecesToDeduct
-                };
-
-                // Call the deduction method using the **unit quantity**, not pieces
-                await DeductFromSingleInventory(inventory, unitQuantityToDeduct, invoiceNumber, employeeId, salesItem.UnitType);
-
-                remainingPieces -= piecesToDeduct;
+                    await DeductFromSingleInventory(inventory, quantityToDeduct, invoiceNumber, employeeId, salesItem.UnitType);
+                    remainingQuantity -= quantityToDeduct;
+                }
             }
         }
 
@@ -344,166 +328,297 @@ namespace PharmacyBackend.Repository.POST
             return quantity;
         }
 
+        // Calculate available stock in specific unit type
+        private int CalculateAvailableInUnit(Inventory inventory, string unitType)
+        {
+            var sheetsPerBox = inventory.SheetsPerBox ?? 0;
+            var piecesPerSheet = inventory.PiecesPerSheet ?? 0;
+            var piecePerBox = inventory.PiecePerBox ?? 0;
+
+            // Determine inventory level type
+            var hasMultiLevel = sheetsPerBox > 0 && piecesPerSheet > 0;
+            var hasDualLevel = piecePerBox > 0 && sheetsPerBox == 0 && piecesPerSheet == 0;
+            var isSingleLevel = sheetsPerBox == 0 && piecesPerSheet == 0 && piecePerBox == 0;
+
+            switch (unitType.ToLower())
+            {
+                case "box":
+                    if (isSingleLevel)
+                        throw new InvalidOperationException("Box unit is not available for this product. Only Piece unit is supported.");
+                    return inventory.BoxQuantity;
+
+                case "sheet":
+                    if (!hasMultiLevel)
+                        throw new InvalidOperationException("Sheet unit is not available for this product. Only Box and Piece units are supported.");
+
+                    // Total sheets = existing sheets + (boxes * sheets per box)
+                    return inventory.SheetQuantity + (inventory.BoxQuantity * sheetsPerBox);
+
+                case "piece":
+                    // All levels support pieces
+                    return inventory.TotalPiecesAvailable;
+
+                default:
+                    return inventory.TotalPiecesAvailable;
+            }
+        }
+
+        // Main deduction method
         private async Task<int> DeductFromSingleInventory(
             Inventory inventory,
-            int piecesNeeded,
+            int quantityToDeduct,
             string referenceNumber,
             int? employeeId,
             string unitType = "piece"
-            ) 
-         {
+        )
+        {
             var beforeBox = inventory.BoxQuantity;
             var beforeSheet = inventory.SheetQuantity;
             var beforePiece = inventory.PieceQuantity;
 
-            var remainingToDeduct = piecesNeeded;
             int sheetsPerBox = inventory.SheetsPerBox ?? 0;
             int piecesPerSheet = inventory.PiecesPerSheet ?? 0;
             int piecesPerBox = inventory.PiecePerBox ?? (sheetsPerBox > 0 && piecesPerSheet > 0 ? sheetsPerBox * piecesPerSheet : 0);
 
-            switch (unitType.ToLower())
+            // Determine inventory level type
+            var hasMultiLevel = sheetsPerBox > 0 && piecesPerSheet > 0;
+            var hasDualLevel = piecesPerBox > 0 && sheetsPerBox == 0 && piecesPerSheet == 0;
+            var isSingleLevel = sheetsPerBox == 0 && piecesPerSheet == 0 && piecesPerBox == 0;
+
+            int remainingToDeduct = quantityToDeduct;
+
+            // Route to appropriate deduction method based on level type
+            if (hasMultiLevel)
             {
-                case "piece":
-                    // start from pieces → then sheets → then boxes
-                    remainingToDeduct = await DeductFromPiecesFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
-                    break;
-
-                case "sheet":
-                    // start from sheets → then boxes
-                    remainingToDeduct = await DeductFromSheetsFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
-                    break;
-
-                case "box":
-                    // start directly from boxes
-                    remainingToDeduct = await DeductFromBoxesFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
-                    break;
+                // Multi-Level: Box → Sheet → Piece
+                remainingToDeduct = DeductMultiLevel(inventory, remainingToDeduct, unitType, sheetsPerBox, piecesPerSheet);
             }
+            else if (hasDualLevel)
+            {
+                // Dual-Level: Box → Piece
+                remainingToDeduct = DeductDualLevel(inventory, remainingToDeduct, unitType, piecesPerBox);
+            }
+            else if (isSingleLevel)
+            {
+                // Single-Level: Piece only
+                remainingToDeduct = DeductSingleLevel(inventory, remainingToDeduct, unitType);
+            }
+
             _context.Inventory.Update(inventory);
             await _context.SaveChangesAsync();
-
 
             var stockMovement = new StockMovement
             {
                 InventoryID = inventory.InventoryID,
                 MovementType = "Sale",
-
-                // Calculate the actual changes (negative values for deductions)
                 BoxQuantityChanged = inventory.BoxQuantity - beforeBox,
                 SheetQuantityChanged = inventory.SheetQuantity - beforeSheet,
                 PieceQuantityChanged = inventory.PieceQuantity - beforePiece,
-
-                // Before quantities
                 BoxQuantityBefore = beforeBox,
                 SheetQuantityBefore = beforeSheet,
                 PieceQuantityBefore = beforePiece,
-
-                // After quantities
                 BoxQuantityAfter = inventory.BoxQuantity,
                 SheetQuantityAfter = inventory.SheetQuantity,
                 PieceQuantityAfter = inventory.PieceQuantity,
-
-                ReferenceNumber = referenceNumber, // This will be the invoice number (e.g., INV-2025-0001)
-                Notes = $"Sale transaction - {unitType} unit type deduction",
+                ReferenceNumber = referenceNumber,
+                Notes = $"Sale transaction - {unitType} unit type deduction (Qty: {quantityToDeduct})",
                 MovementDate = DateTime.UtcNow,
-                EmployeeID = employeeId // The cashier/employee who made the sale
+                EmployeeID = employeeId
             };
 
             await _context.StockMovement.AddAsync(stockMovement);
             await _context.SaveChangesAsync();
 
-            return piecesNeeded - remainingToDeduct;
+            return quantityToDeduct - remainingToDeduct;
         }
 
-
-        private async Task<int> DeductFromPiecesFirst(Inventory inventory, int remainingToDeduct, int piecesPerSheet, int piecesPerBox)
+        // ==================== MULTI-LEVEL DEDUCTION (Box → Sheet → Piece) ====================
+        private int DeductMultiLevel(Inventory inventory, int quantity, string unitType, int sheetsPerBox, int piecesPerSheet)
         {
-            // 1️⃣ Deduct from loose pieces
-            if (remainingToDeduct > 0 && inventory.PieceQuantity > 0)
+            switch (unitType.ToLower())
             {
-                var piecesFromLoose = Math.Min(remainingToDeduct, inventory.PieceQuantity);
-                inventory.PieceQuantity -= piecesFromLoose;
-                remainingToDeduct -= piecesFromLoose;
+                case "box":
+                    return DeductBoxes(inventory, quantity);
+
+                case "sheet":
+                    return DeductSheets(inventory, quantity, sheetsPerBox, piecesPerSheet);
+
+                case "piece":
+                    return DeductPieces(inventory, quantity, sheetsPerBox, piecesPerSheet);
+
+                default:
+                    return quantity;
             }
-
-            // 2️⃣ If no more loose pieces, break down sheets
-            if (remainingToDeduct > 0 && inventory.SheetQuantity > 0 && piecesPerSheet > 0)
-            {
-                var sheetsToBreak = Math.Min((int)Math.Ceiling((double)remainingToDeduct / piecesPerSheet), inventory.SheetQuantity);
-                inventory.SheetQuantity -= sheetsToBreak;
-                inventory.PieceQuantity += sheetsToBreak * piecesPerSheet;
-
-                // Try again deducting pieces now that we have more
-                return await DeductFromPiecesFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
-            }
-
-            // 3️⃣ If still not enough, break down boxes
-            if (remainingToDeduct > 0 && inventory.BoxQuantity > 0 && piecesPerBox > 0)
-            {
-                var boxesToBreak = Math.Min((int)Math.Ceiling((double)remainingToDeduct / piecesPerBox), inventory.BoxQuantity);
-                inventory.BoxQuantity -= boxesToBreak;
-                inventory.SheetQuantity += boxesToBreak * (inventory.SheetsPerBox ?? 0);
-                inventory.PieceQuantity += boxesToBreak * piecesPerBox;
-
-                return await DeductFromPiecesFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
-            }
-
-            return remainingToDeduct;
         }
 
-        private async Task<int> DeductFromSheetsFirst(Inventory inventory, int remainingToDeduct, int piecesPerSheet, int piecesPerBox)
+        private int DeductBoxes(Inventory inventory, int boxesNeeded)
         {
-            // 1️⃣ Deduct from sheets first
-            if (remainingToDeduct > 0 && inventory.SheetQuantity > 0)
+            if (boxesNeeded > 0 && inventory.BoxQuantity >= boxesNeeded)
             {
-                var sheetsToUse = Math.Min(remainingToDeduct, inventory.SheetQuantity);
-                inventory.SheetQuantity -= sheetsToUse;
-                remainingToDeduct -= sheetsToUse;
+                inventory.BoxQuantity -= boxesNeeded;
+                return 0;
             }
-
-            // 2️⃣ If not enough sheets, break boxes
-            if (remainingToDeduct > 0 && inventory.BoxQuantity > 0 && (inventory.SheetsPerBox ?? 0) > 0)
-            {
-                var boxesToBreak = Math.Min((int)Math.Ceiling((double)remainingToDeduct / inventory.SheetsPerBox.Value), inventory.BoxQuantity);
-                inventory.BoxQuantity -= boxesToBreak;
-                inventory.SheetQuantity += boxesToBreak * inventory.SheetsPerBox.Value;
-
-                return await DeductFromSheetsFirst(inventory, remainingToDeduct, piecesPerSheet, piecesPerBox);
-            }
-
-            return remainingToDeduct;
+            return boxesNeeded;
         }
 
-        private async Task<int> DeductFromBoxesFirst(Inventory inventory, int remainingToDeduct, int piecesPerSheet, int piecesPerBox)
+        private int DeductSheets(Inventory inventory, int sheetsNeeded, int sheetsPerBox, int piecesPerSheet)
         {
-            if (remainingToDeduct > 0 && inventory.BoxQuantity > 0)
+            // 1️⃣ Use available sheets first
+            if (sheetsNeeded > 0 && inventory.SheetQuantity > 0)
             {
-                var boxesToUse = Math.Min(remainingToDeduct, inventory.BoxQuantity);
-                inventory.BoxQuantity -= boxesToUse;
-                remainingToDeduct -= boxesToUse;
+                var sheetsFromStock = Math.Min(sheetsNeeded, inventory.SheetQuantity);
+                inventory.SheetQuantity -= sheetsFromStock;
+                sheetsNeeded -= sheetsFromStock;
             }
-            return remainingToDeduct;
-        }
-        
-        public async Task<string> GenerateNewInvoiceNumberAsync() 
-        {
-          int currentYear = DateTime.Now.Year;
-          int newNumber = 1;
 
-          var lastInvoiceNumber = await _context.SalesTransaction
+            // 2️⃣ Break boxes if needed
+            while (sheetsNeeded > 0 && inventory.BoxQuantity > 0)
+            {
+                inventory.BoxQuantity -= 1;
+                inventory.SheetQuantity += sheetsPerBox;
+
+                var sheetsToTake = Math.Min(sheetsNeeded, inventory.SheetQuantity);
+                inventory.SheetQuantity -= sheetsToTake;
+                sheetsNeeded -= sheetsToTake;
+            }
+
+            return sheetsNeeded;
+        }
+
+        private int DeductPieces(Inventory inventory, int piecesNeeded, int sheetsPerBox, int piecesPerSheet)
+        {
+            // 1️⃣ Use available pieces first
+            if (piecesNeeded > 0 && inventory.PieceQuantity > 0)
+            {
+                var piecesFromStock = Math.Min(piecesNeeded, inventory.PieceQuantity);
+                inventory.PieceQuantity -= piecesFromStock;
+                piecesNeeded -= piecesFromStock;
+            }
+
+            // 2️⃣ Break sheets if needed
+            while (piecesNeeded > 0 && inventory.SheetQuantity > 0)
+            {
+                inventory.SheetQuantity -= 1;
+                inventory.PieceQuantity += piecesPerSheet;
+
+                var piecesToTake = Math.Min(piecesNeeded, inventory.PieceQuantity);
+                inventory.PieceQuantity -= piecesToTake;
+                piecesNeeded -= piecesToTake;
+            }
+
+            // 3️⃣ Break boxes if still needed
+            while (piecesNeeded > 0 && inventory.BoxQuantity > 0)
+            {
+                inventory.BoxQuantity -= 1;
+                inventory.SheetQuantity += sheetsPerBox;
+
+                // Now break a sheet
+                if (inventory.SheetQuantity > 0)
+                {
+                    inventory.SheetQuantity -= 1;
+                    inventory.PieceQuantity += piecesPerSheet;
+
+                    var piecesToTake = Math.Min(piecesNeeded, inventory.PieceQuantity);
+                    inventory.PieceQuantity -= piecesToTake;
+                    piecesNeeded -= piecesToTake;
+                }
+            }
+
+            return piecesNeeded;
+        }
+
+        // ==================== DUAL-LEVEL DEDUCTION (Box → Piece) ====================
+        private int DeductDualLevel(Inventory inventory, int quantity, string unitType, int piecesPerBox)
+        {
+            switch (unitType.ToLower())
+            {
+                case "box":
+                    return DeductBoxesDual(inventory, quantity);
+
+                case "sheet":
+                    throw new InvalidOperationException("Sheet unit is not available for this product. Only Box and Piece units are supported.");
+
+                case "piece":
+                    return DeductPiecesDual(inventory, quantity, piecesPerBox);
+
+                default:
+                    return quantity;
+            }
+        }
+
+        private int DeductBoxesDual(Inventory inventory, int boxesNeeded)
+        {
+            if (boxesNeeded > 0 && inventory.BoxQuantity >= boxesNeeded)
+            {
+                inventory.BoxQuantity -= boxesNeeded;
+                return 0;
+            }
+            return boxesNeeded;
+        }
+
+        private int DeductPiecesDual(Inventory inventory, int piecesNeeded, int piecesPerBox)
+        {
+            // 1️⃣ Use available pieces first
+            if (piecesNeeded > 0 && inventory.PieceQuantity > 0)
+            {
+                var piecesFromStock = Math.Min(piecesNeeded, inventory.PieceQuantity);
+                inventory.PieceQuantity -= piecesFromStock;
+                piecesNeeded -= piecesFromStock;
+            }
+
+            // 2️⃣ Break boxes if needed
+            while (piecesNeeded > 0 && inventory.BoxQuantity > 0)
+            {
+                inventory.BoxQuantity -= 1;
+                inventory.PieceQuantity += piecesPerBox;
+
+                var piecesToTake = Math.Min(piecesNeeded, inventory.PieceQuantity);
+                inventory.PieceQuantity -= piecesToTake;
+                piecesNeeded -= piecesToTake;
+            }
+
+            return piecesNeeded;
+        }
+
+        // ==================== SINGLE-LEVEL DEDUCTION (Piece only) ====================
+        private int DeductSingleLevel(Inventory inventory, int quantity, string unitType)
+        {
+            if (unitType.ToLower() != "piece")
+            {
+                throw new InvalidOperationException($"{unitType} unit is not available for this product. Only Piece unit is supported.");
+            }
+
+            if (quantity > 0 && inventory.PieceQuantity >= quantity)
+            {
+                inventory.PieceQuantity -= quantity;
+                return 0;
+            }
+
+            return quantity;
+        }
+
+        public async Task<string> GenerateNewInvoiceNumberAsync()
+        {
+            int currentYear = DateTime.Now.Year;
+            int newNumber = 1;
+
+            var lastInvoiceNumber = await _context.SalesTransaction
             .Where(s => s.InvoiceNumber.StartsWith($"INV-{currentYear}-"))
             .OrderByDescending(s => s.InvoiceNumber)
             .Select(s => s.InvoiceNumber)
             .FirstOrDefaultAsync();
 
-          if(!string.IsNullOrEmpty(lastInvoiceNumber)) {
-            var match = System.Text.RegularExpressions.Regex.Match(lastInvoiceNumber, @"(\d+)$");
-            if(match.Success && int.TryParse(match.Value, out int lastNumber)) {
-              newNumber = lastNumber + 1;
+            if (!string.IsNullOrEmpty(lastInvoiceNumber))
+            {
+                var match = System.Text.RegularExpressions.Regex.Match(lastInvoiceNumber, @"(\d+)$");
+                if (match.Success && int.TryParse(match.Value, out int lastNumber))
+                {
+                    newNumber = lastNumber + 1;
+                }
             }
-          }
-          
-          string newInvoiceNumber = $"INV-{currentYear}-{newNumber:D4}";
-          return newInvoiceNumber;
+
+            string newInvoiceNumber = $"INV-{currentYear}-{newNumber:D4}";
+            return newInvoiceNumber;
         }
         #endregion
 
