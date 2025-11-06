@@ -26,6 +26,7 @@
             <tr>
               <th>Select</th>
               <th>Product Details</th>
+              <th>Category</th>
               <th>Brand</th>
               <th>Type</th>
               <th>Unit Type</th>
@@ -44,6 +45,7 @@
                   {{ product.product.formulationName }}
                 </div>
               </td>
+              <td>{{ product.categoryName }}</td>
               <td>{{ product.product.brandName }}</td>
               <td>
                 <span *ngIf="product.product.typeName">{{ product.product.typeName }}</span>

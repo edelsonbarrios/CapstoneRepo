@@ -133,6 +133,8 @@ export class CashierDashboardComponent implements OnInit {
       next: (res) => {
         this.products = res.map((p: any) => ({
           ...p,
+          // Ensure categoryName is properly extracted from response
+          categoryName: p.categoryName || p.product?.categoryName || p.product?.category?.categoryName || '',
           tempUnitType: 'Piece',
           sheetPrice: p.sheetPrice,
           piecePrice: p.piecePrice,
@@ -146,6 +148,13 @@ export class CashierDashboardComponent implements OnInit {
           piecePerBox: p.piecePerBox,
           reorderLevel: p.reorderLevel,
         }));
+        
+        // Log to verify categoryName is populated
+        console.log('Products loaded:', this.products.map(p => ({ 
+          id: p.productID, 
+          name: p.productName, 
+          category: p.categoryName 
+        })));
       },
       error: (err) => console.error(err.error),
     });
@@ -247,7 +256,7 @@ export class CashierDashboardComponent implements OnInit {
         // Add to existing quantity
         existing.quantity += qtyToAdd;
       } else {
-        // Add as new item with category, brand, and formulation
+        // Properly access categoryName from product object
         this.selectedProducts.push({
           productID: p.productID,
           productName: p.productName,
@@ -259,6 +268,13 @@ export class CashierDashboardComponent implements OnInit {
           unitPrice: price,
           unitMeasurement: p.unitMeasurement,
         });
+        
+        // Log added item to verify category
+        console.log('Added to cart:', {
+          name: p.productName,
+          category: p.categoryName,
+          brand: p.product?.brandName
+        });
       }
 
       // Reset product selection state
@@ -266,6 +282,9 @@ export class CashierDashboardComponent implements OnInit {
       p.quantity = 0;
       p.tempUnitType = 'Piece';
     });
+    
+    // Log entire cart
+    console.log('Cart contents:', this.selectedProducts);
   }
 
   onCartItemChange(item: any) {
@@ -426,6 +445,7 @@ export class CashierDashboardComponent implements OnInit {
   openViewInventoryForm(inv: any) {
     this.viewInventory = inv;
   }
+  
   closeViewInventoryForm() {
     this.viewInventory = null;
   }
