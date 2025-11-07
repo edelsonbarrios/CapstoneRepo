@@ -167,3 +167,13 @@
     </button>
   </div>
 </div>
+
+<div class="error-overlay" *ngIf="refNumErrorMessage">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">Reference number is already used..</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeRefNumErrorMessage()">OK</button>
+    </div>
+  </div>
+</div>

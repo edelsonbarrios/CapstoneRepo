@@ -82,6 +82,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         public Task<IEnumerable<SalesTransactionDto>> GetSalesTransactionsByInvoiceNumberAsync(string invoiceNumber);
         public Task<SalesItemDto?> GetSalesItemByIdAsync(int id);
         public Task<IEnumerable<SalesItemDto>> GetSalesItemsByTransactionIdAsync(int transactionId);
+        public Task<bool> ReferenceNumberValidationAsync(string refNum);
         #endregion
 
         #region Discount

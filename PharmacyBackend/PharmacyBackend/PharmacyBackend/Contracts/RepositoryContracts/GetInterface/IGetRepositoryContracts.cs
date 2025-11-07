@@ -65,6 +65,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         // Sales Item methods
         public Task<SalesItem?> GetSalesItemByIdAsync(int id);
         public Task<IEnumerable<SalesItem>> GetSalesItemsByTransactionIdAsync(int transactionId);
+        public Task<bool> ReferenceNumberValidationAsync(string refNum);
 
 
         #endregion

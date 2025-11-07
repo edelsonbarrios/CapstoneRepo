@@ -435,6 +435,13 @@ namespace PharmacyBackend.Repository.GET
                 throw new Exception($"Error retrieving sales items for transaction ID {transactionId}: {ex.Message}", ex);
             }
         }
+
+        public async Task<bool> ReferenceNumberValidationAsync(string refNum) 
+        {
+          return await _context.SalesTransaction
+            .AnyAsync(s => s.ReferenceNumber.Equals(refNum));
+        }
+        
         #endregion
 
         #region Discount

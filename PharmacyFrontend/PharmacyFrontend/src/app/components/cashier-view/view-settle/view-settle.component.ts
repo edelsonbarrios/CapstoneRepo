@@ -19,7 +19,7 @@ import { Discount } from '../../../models/discount-models/discount';
 export class ViewSettleComponent implements OnInit {
   @Input() cartItems: CartItem[] = [];
   @Input() subtotal: number = 0;
-  @Input() newInvoice : string = '';
+  @Input() newInvoice: string = '';
   vats: VAT[] = [];
   discounts: Discount[] = [];
   loggedInEmployee: Employee = new Employee();
@@ -31,7 +31,8 @@ export class ViewSettleComponent implements OnInit {
   paginateItems: CartItem[] = [];
   paymentMethods: string[] = ['Cash', 'e-Payment'];
   selectedPaymentMethod: string = 'Cash';
-  refNum : string = '';
+  refNum: string = '';
+  refNumErrorMessage: string = '';
 
   @Output() paymentConfirmed = new EventEmitter<any>();
   @Output() modalClosed = new EventEmitter<void>();
@@ -48,10 +49,21 @@ export class ViewSettleComponent implements OnInit {
     this.updatePagination();
   }
 
+  validateReferenceNumber() {
+    this.getService.referenceNumberValidationAsync(this.refNum).subscribe({
+      next: (res) => {
+        this.refNumErrorMessage = res.message;
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
+  }
+
   updatePagination() {
     this.totalPages = Math.ceil(this.cartItems.length / this.itemsPerPage);
-    if(this.totalPages == 0) this.totalPages = 1;
-    const startIndex = (this.currentPage -1) * this.itemsPerPage;
+    if (this.totalPages == 0) this.totalPages = 1;
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginateItems = this.cartItems.slice(startIndex, endIndex);
   }
@@ -78,7 +90,7 @@ export class ViewSettleComponent implements OnInit {
     this.getService.getAllVatAsync().subscribe({
       next: (res) => {
         this.vats = res;
-        const defaultVat = res.find(v => v.vatName == 'Standard');
+        const defaultVat = res.find((v) => v.vatName == 'Standard');
         this.selectedVat = defaultVat || null;
       },
       error: (err) => {
@@ -99,32 +111,49 @@ export class ViewSettleComponent implements OnInit {
     this.change = this.payment - total;
   }
 
+  closeRefNumErrorMessage() {
+    this.refNumErrorMessage = '';
+  }
 
   confirmPayment() {
-    const eventPayload = {
-      invoiceNumber: this.newInvoice, // or however you generate it
-      paymentMethod: this.selectedPaymentMethod, // or user selection
-      amountPaid: this.payment,
-      changeAmount: this.change,
-      discountAmount:
-        this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
-      vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
-      referenceNumber: this.refNum,
-      discountId: 1, // use actual discount ID from DB if available
-      employeeID: this.loggedInEmployee.id, // pass logged-in user ID
-      vatId: this.selectedVat?.vatid, // optional if you don’t track by table
-      items: this.cartItems.map((i) => ({
-        productId: i.productID,
-        quantity: i.quantity,
-        unitType: i.unitType,
-        unitPrice: i.unitPrice,
-        salesTransactionId: 0, // backend should ignore or set this
-      })),
-      totalAmount: this.calculateTotals(),
-    };
+    this.getService.referenceNumberValidationAsync(this.refNum).subscribe({
+      next: (res) => {
+        if (res.message === 'Reference number already used') {
+          this.refNumErrorMessage = res.message; // show overlay
+          return; // stop here, don’t emit event
+        }
 
-    this.paymentConfirmed.emit(eventPayload);
-    console.log(eventPayload);
+        // proceed only if it's valid
+        const eventPayload = {
+          invoiceNumber: this.newInvoice,
+          paymentMethod: this.selectedPaymentMethod,
+          amountPaid: this.payment,
+          changeAmount: this.change,
+          discountAmount:
+            this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
+          vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
+          referenceNumber: this.refNum,
+          discountId: 1,
+          employeeID: this.loggedInEmployee.id,
+          vatId: this.selectedVat?.vatid,
+          items: this.cartItems.map((i) => ({
+            productId: i.productID,
+            quantity: i.quantity,
+            unitType: i.unitType,
+            unitPrice: i.unitPrice,
+            salesTransactionId: 0,
+          })),
+          totalAmount: this.calculateTotals(),
+        };
+
+        this.paymentConfirmed.emit(eventPayload);
+        console.log(eventPayload);
+      },
+      error: (err) => {
+        this.refNumErrorMessage = err.error.message;
+        console.error('Error validating reference number:', err);
+      },
+    });
   }
 
   getLoggedInUser() {

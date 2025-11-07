@@ -612,6 +612,15 @@ namespace PharmacyBackend.Service.GetService
           });
     }
 
+
+    public async Task<bool> ReferenceNumberValidationAsync(string refNum) 
+    {
+      var refNumValidation = await _getRepo.ReferenceNumberValidationAsync(refNum);
+      if(refNumValidation)
+        return false;
+            return true;
+    }
+    
     #endregion
 
     #region Discount

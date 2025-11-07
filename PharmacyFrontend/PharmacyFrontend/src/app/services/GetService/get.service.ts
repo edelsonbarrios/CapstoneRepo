@@ -258,6 +258,10 @@ export class GetService {
       { params }
     );
   }
+
+  referenceNumberValidationAsync(refNum : string) : Observable<{message : string}> {
+    return this.httpClient.get<{message : string}>(`${this.apiUrl}/Get/RefNumValidation?refNum=${refNum}`);
+  }
   //Transaction Service End
 
   //Sales Report Service
