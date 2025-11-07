@@ -58,7 +58,7 @@
           <td>{{i.productName}}</td>
           <td>{{i.batchNumber}}</td>
           <!-- Unit Type based on measurement -->
-          <td *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">Box</td>
+          <td *ngIf="i.product?.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">Box</td>
           <td *ngIf="i.product.unitMeasurement == 'Single-Level'">Pieces</td>
           <!-- Quantity based on measurement -->
           <td>

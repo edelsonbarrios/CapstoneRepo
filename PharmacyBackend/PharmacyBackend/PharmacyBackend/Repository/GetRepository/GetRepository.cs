@@ -726,7 +726,8 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Inventory>> GetCriticalStockInventoryAsync()
         {
             var now = DateTime.UtcNow;
-            // Get all active, non-expired inventory grouped by product
+
+            // Get all active, non-expired inventory
             var inventoryByProduct = await _context.Inventory
                 .Include(i => i.Product)
                     .ThenInclude(p => p.Category)
@@ -738,7 +739,7 @@ namespace PharmacyBackend.Repository.GET
                 .Where(i => i.IsActive && i.ExpirationDate >= now)
                 .ToListAsync();
 
-            // Group by product and calculate total stock
+            // Group by product and filter critical products
             var criticalProducts = inventoryByProduct
                 .GroupBy(i => i.ProductID)
                 .Where(g =>
@@ -748,20 +749,25 @@ namespace PharmacyBackend.Repository.GET
 
                     // Calculate total stock based on unit measurement
                     int totalStock;
-                    if (product.UnitMeasurement == "Multi-Level" || product.UnitMeasurement == "Dual-Level")
+                    if (product.UnitMeasurement == "Multi-Level")
                     {
-                        // Sum all box quantities for box-based products
+                        // For Multi-Level: sum all box quantities
                         totalStock = g.Sum(i => i.BoxQuantity);
+                    }
+                    else if (product.UnitMeasurement == "Dual-Level")
+                    {
+                        // For Dual-Level: sum boxes + pieces converted to boxes
+                        totalStock = g.Sum(i => i.BoxQuantity + (i.PieceQuantity / (product.PiecePerBox > 0 ? product.PiecePerBox : 1)));
                     }
                     else // Single-Level (pieces only)
                     {
-                        // Sum total pieces available
-                        totalStock = g.Sum(i => i.TotalPiecesAvailable);
+                        // For Single-Level: sum piece quantities
+                        totalStock = g.Sum(i => i.PieceQuantity);
                     }
 
                     return totalStock <= reorderLevel;
                 })
-                .SelectMany(g => g) // Flatten back to individual inventory items
+                .SelectMany(g => g.OrderBy(i => i.ExpirationDate)) // Return ALL batches per product
                 .ToList();
 
             return criticalProducts;
@@ -1147,15 +1153,26 @@ namespace PharmacyBackend.Repository.GET
         }
         public async Task<int> GetInventoryLowStockCountAsync()
         {
-          return await _context.Inventory
-            .Where(iv => iv.BoxQuantity <= iv.ReorderLevel)
-            .CountAsync();
+            return await _context.Inventory
+                .Include(iv => iv.Product)
+                .Where(iv =>
+                    (iv.Product.UnitMeasurement == "Multi-Level" || iv.Product.UnitMeasurement == "Dual-Level")
+                        ? iv.BoxQuantity <= iv.ReorderLevel
+                        : iv.PieceQuantity <= iv.ReorderLevel
+                )
+                .CountAsync();
         }
         public async Task<int> GetInventoryOutOfStockCountAsync()
         {
-          return await _context.Inventory
-            .Where(iv => iv.BoxQuantity == 0)
-            .CountAsync();
+            return await _context.Inventory
+                .Include(iv => iv.Product)
+                .Where(iv =>
+                    (iv.Product.UnitMeasurement == "Multi-Level" || iv.Product.UnitMeasurement == "Dual-Level")
+                        && iv.BoxQuantity == 0
+                    || iv.Product.UnitMeasurement == "Single-Level"
+                        && iv.PieceQuantity == 0
+                )
+                .CountAsync();
         }
         public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()
         {

@@ -10,9 +10,9 @@ import { Inventory } from '../../../models/inventory-module-models/inventory';
   standalone: true,
   imports: [FormsModule, CommonModule, DatePipe],
   templateUrl: './inventory-manager-dashboard.component.html',
-  styleUrl: './inventory-manager-dashboard.component.scss'
+  styleUrl: './inventory-manager-dashboard.component.scss',
 })
-export class InventoryManagerDashboardComponent implements OnInit{
+export class InventoryManagerDashboardComponent implements OnInit {
   inventoryDashboard: InventoryDashboard = new InventoryDashboard();
 
   // Paginated arrays
@@ -35,9 +35,7 @@ export class InventoryManagerDashboardComponent implements OnInit{
   expiredItemsPerPage: number = 3;
   expiredTotalPages: number = 0;
 
-  constructor(
-    private getService: GetService
-  ) {}
+  constructor(private getService: GetService) {}
 
   ngOnInit(): void {
     this.getInventoryDashboardValues();
@@ -45,25 +43,35 @@ export class InventoryManagerDashboardComponent implements OnInit{
 
   getInventoryDashboardValues() {
     this.getService.getInventoryDashboardValues().subscribe({
-      next: res => {
+      next: (res) => {
         this.inventoryDashboard = res;
+
+        this.criticalCurrentPage = 1;
+        this.nearExpiryCurrentPage = 1;
+        this.expiredCurrentPage = 1;
+
         this.updateCriticalPagination();
         this.updateNearExpiryPagination();
         this.updateExpiredPagination();
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
+      },
     });
   }
 
   // Critical Stock Pagination Methods
   updateCriticalPagination() {
-    this.criticalTotalPages = Math.ceil(this.inventoryDashboard.criticalStockItems.length / this.criticalItemsPerPage);
+    this.criticalTotalPages = Math.ceil(
+      this.inventoryDashboard.criticalStockItems.length /
+        this.criticalItemsPerPage
+    );
     if (this.criticalTotalPages === 0) this.criticalTotalPages = 1;
-    const startIndex = (this.criticalCurrentPage - 1) * this.criticalItemsPerPage;
+    const startIndex =
+      (this.criticalCurrentPage - 1) * this.criticalItemsPerPage;
     const endIndex = startIndex + this.criticalItemsPerPage;
-    this.paginatedCriticalItems = this.inventoryDashboard.criticalStockItems.slice(startIndex, endIndex);
+    this.paginatedCriticalItems =
+      this.inventoryDashboard.criticalStockItems.slice(startIndex, endIndex);
   }
 
   goToCriticalPage(page: number) {
@@ -75,11 +83,16 @@ export class InventoryManagerDashboardComponent implements OnInit{
 
   // Near Expiry Pagination Methods
   updateNearExpiryPagination() {
-    this.nearExpiryTotalPages = Math.ceil(this.inventoryDashboard.nearExpiryItems.length / this.nearExpiryItemsPerPage);
+    this.nearExpiryTotalPages = Math.ceil(
+      this.inventoryDashboard.nearExpiryItems.length /
+        this.nearExpiryItemsPerPage
+    );
     if (this.nearExpiryTotalPages === 0) this.nearExpiryTotalPages = 1;
-    const startIndex = (this.nearExpiryCurrentPage - 1) * this.nearExpiryItemsPerPage;
+    const startIndex =
+      (this.nearExpiryCurrentPage - 1) * this.nearExpiryItemsPerPage;
     const endIndex = startIndex + this.nearExpiryItemsPerPage;
-    this.paginatedNearExpiryItems = this.inventoryDashboard.nearExpiryItems.slice(startIndex, endIndex);
+    this.paginatedNearExpiryItems =
+      this.inventoryDashboard.nearExpiryItems.slice(startIndex, endIndex);
   }
 
   goToNearExpiryPage(page: number) {
@@ -91,11 +104,15 @@ export class InventoryManagerDashboardComponent implements OnInit{
 
   // Expired Stock Pagination Methods
   updateExpiredPagination() {
-    this.expiredTotalPages = Math.ceil(this.inventoryDashboard.expiredStockItems.length / this.expiredItemsPerPage);
+    this.expiredTotalPages = Math.ceil(
+      this.inventoryDashboard.expiredStockItems.length /
+        this.expiredItemsPerPage
+    );
     if (this.expiredTotalPages === 0) this.expiredTotalPages = 1;
     const startIndex = (this.expiredCurrentPage - 1) * this.expiredItemsPerPage;
     const endIndex = startIndex + this.expiredItemsPerPage;
-    this.paginatedExpiredItems = this.inventoryDashboard.expiredStockItems.slice(startIndex, endIndex);
+    this.paginatedExpiredItems =
+      this.inventoryDashboard.expiredStockItems.slice(startIndex, endIndex);
   }
 
   goToExpiredPage(page: number) {
