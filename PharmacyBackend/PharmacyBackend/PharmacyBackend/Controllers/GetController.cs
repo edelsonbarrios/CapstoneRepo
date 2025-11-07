@@ -332,8 +332,6 @@ namespace PharmacyBackend.Controllers
         [HttpGet("RefNumValidation")]
         public async Task<ActionResult<object>> ReferenceNumberValidationAsync(string refNum) 
         {
-          if(string.IsNullOrEmpty(refNum))
-            return BadRequest(new {Message = "Reference number cannot be empty."});
           var referenceNumberValidation = await _getService.ReferenceNumberValidationAsync(refNum);
           if(!referenceNumberValidation)
             return BadRequest(new {Message = "Reference number is already used."});

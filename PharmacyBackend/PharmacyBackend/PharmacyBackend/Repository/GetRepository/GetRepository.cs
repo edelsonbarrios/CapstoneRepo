@@ -1133,12 +1133,15 @@ namespace PharmacyBackend.Repository.GET
         #region AdminDashboard
         public async Task<decimal> GetTodaySalesAmountAsync()
         {
-          var today = DateTime.UtcNow.Date.AddHours(8);
-          var tommorow = today.AddDays(1);
-          return await _context.SalesTransaction
-            .Where(st => st.TransactionDate.Date >= today
-                && st.TransactionDate <= tommorow)
-            .SumAsync(st => st.NetAmount);
+            // Get today's date in your local timezone (Philippines = UTC+8)
+            var localNow = DateTime.UtcNow.AddHours(8);
+            var todayStart = localNow.Date; // Start of today: 00:00:00
+            var todayEnd = todayStart.AddDays(1); // Start of tomorrow: 00:00:00
+
+            return await _context.SalesTransaction
+                .Where(st => st.TransactionDate >= todayStart
+                          && st.TransactionDate < todayEnd)
+                .SumAsync(st => st.NetAmount);
         }
         public async Task<int> GetInventoryLowStockCountAsync()
         {

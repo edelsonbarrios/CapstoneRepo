@@ -215,18 +215,6 @@ export class CreateProductComponent implements OnInit {
       }
     }
 
-    // Cost Piece Price validation
-    if (!this.newProduct.costPiecePrice || this.newProduct.costPiecePrice <= 0) {
-      this.costPiecePriceError = 'Cost piece price is required';
-      hasError = true;
-    }
-
-    // Piece Selling Price validation
-    if (!this.newProduct.piecePrice || this.newProduct.piecePrice <= 0) {
-      this.piecePriceError = 'Piece selling price is required';
-      hasError = true;
-    }
-
     // Reorder Level validation
     if (!this.newProduct.reorderLevel || this.newProduct.reorderLevel < 0) {
       this.reorderLevelError = 'Reorder level is required and cannot be negative';
