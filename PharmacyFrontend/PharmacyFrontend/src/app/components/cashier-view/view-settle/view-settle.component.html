@@ -22,6 +22,9 @@
         <tr>
           <th>#</th>
           <th>Item</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Formulation</th>
           <th>Qty</th>
           <th>Price</th>
           <th>Subtotal</th>
@@ -31,6 +34,9 @@
         <tr *ngFor="let item of paginateItems; let i = index">
           <td>{{ i + 1 }}</td>
           <td>{{ item.productName }}</td>
+          <td>{{ item.categoryName }}</td>
+          <td>{{ item.brandName }}</td>
+          <td>{{ item.formulationName }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}</td>
           <td>{{ item.quantity * (item.unitPrice || 0) | currency:'PHP':'symbol':'1.2-2' }}</td>
@@ -100,7 +106,8 @@
 
       <div class="summary-row total-row">
         <span class="label"><strong>Total:</strong></span>
-        <span class="value total-value"><strong>{{ calculateTotals() | currency:'PHP':'symbol':'1.2-2' }}</strong></span>
+        <span class="value total-value"><strong>{{ calculateTotals() | currency:'PHP':'symbol':'1.2-2'
+            }}</strong></span>
       </div>
 
     </div>
@@ -114,13 +121,8 @@
       </label>
       <div class="reference-input-wrapper">
         <i class="fas fa-receipt input-icon"></i>
-        <input
-          id="refNum"
-          type="text"
-          [(ngModel)]="refNum"
-          placeholder="Enter transaction reference number"
-          maxlength="50"
-        />
+        <input id="refNum" type="text" [(ngModel)]="refNum" placeholder="Enter transaction reference number"
+          maxlength="50" />
       </div>
       <small class="help-text">Enter the reference number from your e-payment transaction</small>
     </div>
@@ -134,13 +136,7 @@
       </label>
       <div class="payment-input-wrapper">
         <span class="currency-symbol">₱</span>
-        <input
-          id="payment"
-          type="number"
-          [(ngModel)]="payment"
-          (input)="onPaymentChange()"
-          placeholder="0.00"
-        />
+        <input id="payment" type="number" [(ngModel)]="payment" (input)="onPaymentChange()" placeholder="0.00" />
       </div>
 
       <div class="change-display" *ngIf="payment > 0">
