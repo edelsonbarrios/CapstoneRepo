@@ -98,7 +98,7 @@
           </tr>
           <tr *ngFor="let product of paginatedExpiringProducts">
             <td>{{product.batchNumber}}</td>
-            <td>{{product.product.productName}}{{product.product.formulationName}}</td>
+            <td>{{product.productName}}{{product.product?.formulationName}}</td>
             <td>{{product.expirationDate | date: 'dd-MM-yyyy'}}</td>
           </tr>
         </tbody>

@@ -63,6 +63,7 @@ export class CashierDashboardComponent implements OnInit {
     categoryName: string;
     brandName: string;
     formulationName: string;
+    batchNumber: string,
     unitType: 'Box' | 'Sheet' | 'Piece';
     quantity: number;
     unitPrice: number;
@@ -267,6 +268,7 @@ export class CashierDashboardComponent implements OnInit {
           quantity: qtyToAdd,
           unitPrice: price,
           unitMeasurement: p.unitMeasurement,
+          batchNumber: p.batchNumber || '',
         });
         console.log(JSON.stringify(this.selectedProducts));
       }

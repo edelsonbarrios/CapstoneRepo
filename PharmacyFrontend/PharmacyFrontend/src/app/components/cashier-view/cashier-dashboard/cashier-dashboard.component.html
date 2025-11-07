@@ -25,6 +25,7 @@
           <thead>
             <tr>
               <th>Select</th>
+              <th>Batch Number</th>
               <th>Product Details</th>
               <th>Category</th>
               <th>Brand</th>
@@ -39,6 +40,7 @@
               <td class="checkbox-cell">
                 <input type="checkbox" [(ngModel)]="product.selected" />
               </td>
+              <td>{{product.batchNumber}}</td>
               <td class="product-details">
                 <div class="product-name">{{ product.productName }}</div>
                 <div class="product-formulation" *ngIf="product.product.formulationName">
@@ -85,6 +87,7 @@
           <thead>
             <tr>
               <th>#</th>
+              <th>Batch Number</th>
               <th>Product</th>
               <th>Category</th>
               <th>Brand</th>
@@ -98,6 +101,7 @@
           <tbody>
             <tr *ngFor="let item of selectedProducts; let i = index">
               <td class="index-cell">{{ i + 1 }}</td>
+              <td>{{item.batchNumber}}</td>
               <td class="product-name-cell">{{ item.productName }}</td>
               <td>{{ item.categoryName }}</td>
               <td>{{ item.brandName }}</td>
