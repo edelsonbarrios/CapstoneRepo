@@ -8,6 +8,7 @@ import { Employee } from '../../../models/employee-models/employee';
 import { GetService } from '../../../services/GetService/get.service';
 import { VAT } from '../../../models/vat-models/vat';
 import { Discount } from '../../../models/discount-models/discount';
+import { Product } from '../../../models/product-models/product';
 
 @Component({
   selector: 'app-view-settle',
@@ -119,11 +120,10 @@ export class ViewSettleComponent implements OnInit {
     this.getService.referenceNumberValidationAsync(this.refNum).subscribe({
       next: (res) => {
         if (res.message === 'Reference number already used') {
-          this.refNumErrorMessage = res.message; // show overlay
-          return; // stop here, don’t emit event
+          this.refNumErrorMessage = res.message;
+          return;
         }
 
-        // proceed only if it's valid
         const eventPayload = {
           invoiceNumber: this.newInvoice,
           paymentMethod: this.selectedPaymentMethod,
@@ -142,12 +142,12 @@ export class ViewSettleComponent implements OnInit {
             unitType: i.unitType,
             unitPrice: i.unitPrice,
             salesTransactionId: 0,
+            product: i.product,
           })),
           totalAmount: this.calculateTotals(),
         };
 
         this.paymentConfirmed.emit(eventPayload);
-        console.log(eventPayload);
       },
       error: (err) => {
         this.refNumErrorMessage = err.error.message;

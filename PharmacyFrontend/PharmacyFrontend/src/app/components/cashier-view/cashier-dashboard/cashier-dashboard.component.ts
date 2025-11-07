@@ -268,13 +268,7 @@ export class CashierDashboardComponent implements OnInit {
           unitPrice: price,
           unitMeasurement: p.unitMeasurement,
         });
-        
-        // Log added item to verify category
-        console.log('Added to cart:', {
-          name: p.productName,
-          category: p.categoryName,
-          brand: p.product?.brandName
-        });
+        console.log(JSON.stringify(this.selectedProducts));
       }
 
       // Reset product selection state
@@ -367,30 +361,11 @@ export class CashierDashboardComponent implements OnInit {
     const discountAmount = event?.discountAmount ?? 0;
     const vatAmount = event?.vatAmount ?? 0;
 
-    const salesTransactionPayload = {
-      invoiceNumber,
-      employeeId,
-      discountId: event.discountId ?? null,
-      discountAmount,
-      vatId: event.vatId ?? null,
-      vatAmount,
-      paymentMethod: event.paymentMethod,
-      amountPaid: event.amountPaid,
-      changeAmount: event.changeAmount,
-      items: event.items.map((i: any) => ({
-        productId: i.productId ?? i.productID,
-        unitType: i.unitType ?? i.UnitType,
-        quantity: i.quantity,
-        unitPrice: i.unitPrice ?? i.UnitPrice,
-        subtotal: i.subtotal ?? i.quantity * (i.unitPrice ?? i.UnitPrice),
-      })),
-      totalAmount,
-      netAmount: totalAmount - discountAmount + vatAmount,
-    };
-
     this.postService.createSalesTransactionAsync(event).subscribe({
       next: () => {
         this.receipt = event;
+        console.log('This is my receipt data:', this.receipt);
+        console.log(JSON.stringify(event));
         this.getAllProducts();
         this.generateNewInvoiceNumber();
       },

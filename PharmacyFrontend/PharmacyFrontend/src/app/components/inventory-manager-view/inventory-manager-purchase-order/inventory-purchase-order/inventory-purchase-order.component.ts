@@ -245,6 +245,7 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
       next: () => {
         this.showSuccessAlert = true;
+        this.generateNewPurchaseOrderNumber();
         this.clearFields();
       },
       error: (err) => {

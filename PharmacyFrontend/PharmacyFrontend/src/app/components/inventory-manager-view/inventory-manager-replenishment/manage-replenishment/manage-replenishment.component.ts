@@ -11,30 +11,30 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
   selector: 'app-manage-replenishment',
   standalone: true,
   imports: [
-    FormsModule, 
-    NgFor, 
+    FormsModule,
+    NgFor,
     DatePipe,
     ViewPurchaseOrderDetailsComponent,
     NgIf,
-    ArchiveConfirmationComponent
+    ArchiveConfirmationComponent,
   ],
   templateUrl: './manage-replenishment.component.html',
-  styleUrl: './manage-replenishment.component.scss'
+  styleUrl: './manage-replenishment.component.scss',
 })
-export class ManageReplenishmentComponent implements OnInit{
-  purchaseOrders : PurchaseOrder[] = [];
+export class ManageReplenishmentComponent implements OnInit {
+  purchaseOrders: PurchaseOrder[] = [];
   paginatedPurchaseOrders: PurchaseOrder[] = [];
-  purchaseOrder ?: PurchaseOrder | null;
-  showArchiveForm : number = 0;
-  
+  purchaseOrder?: PurchaseOrder | null;
+  showArchiveForm: number = 0;
+
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 9;
+  itemsPerPage: number = 6;
   totalPages: number = 0;
-  
+
   constructor(
-    private getService : GetService,
-    private updateService : UpdateService
+    private getService: GetService,
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
@@ -43,13 +43,13 @@ export class ManageReplenishmentComponent implements OnInit{
 
   getAllPendingPurchaseOrders() {
     this.getService.getAllPendingPurchaseOrdersAsync().subscribe({
-      next: res => {
+      next: (res) => {
         this.purchaseOrders = res;
         this.updatePagination();
       },
-      error: err => {
+      error: (err) => {
         console.log(`${err.error}`);
-      }
+      },
     });
   }
 
@@ -58,7 +58,10 @@ export class ManageReplenishmentComponent implements OnInit{
     if (this.totalPages === 0) this.totalPages = 1;
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedPurchaseOrders = this.purchaseOrders.slice(startIndex, endIndex);
+    this.paginatedPurchaseOrders = this.purchaseOrders.slice(
+      startIndex,
+      endIndex
+    );
   }
 
   goToPage(page: number) {
@@ -67,7 +70,7 @@ export class ManageReplenishmentComponent implements OnInit{
       this.updatePagination();
     }
   }
-  
+
   viewPurchaseOrderDetails(purchaseOrder: PurchaseOrder) {
     this.purchaseOrder = purchaseOrder;
   }
@@ -81,21 +84,26 @@ export class ManageReplenishmentComponent implements OnInit{
   }
 
   archivePurchaseOrder() {
-    this.updateService.archivePurchaseOrderByIdAsync(this.showArchiveForm).subscribe({
-      next: res => {
-        console.log(res.message);
-        this.showArchiveForm = 0;
-        this.getAllPendingPurchaseOrders();
-      },
-      error: err => {
-        console.log(`${err.error}`);
-        console.log(this.showArchiveForm);
-      }
-    });
+    this.updateService
+      .archivePurchaseOrderByIdAsync(this.showArchiveForm)
+      .subscribe({
+        next: (res) => {
+          this.showArchiveForm = 0;
+          this.getAllPendingPurchaseOrders();
+        },
+        error: (err) => {
+          console.log(`${err.error}`);
+          console.log(this.showArchiveForm);
+        },
+      });
   }
 
   closeViewPurchaseOrderForm() {
     this.purchaseOrder = null;
     this.getAllPendingPurchaseOrders();
+
+    setTimeout(() => {
+      this.purchaseOrder = null;
+    }, 300);
   }
 }

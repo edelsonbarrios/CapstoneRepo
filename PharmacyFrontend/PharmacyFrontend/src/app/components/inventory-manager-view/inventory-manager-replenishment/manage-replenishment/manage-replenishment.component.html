@@ -57,8 +57,10 @@
 
 <!-- VIEW PURCHASE ORDER MODAL -->
 <div class="modal-overlay" *ngIf="purchaseOrder">
-  <app-view-purchase-order-details *ngIf="purchaseOrder" [purchaseOrder]="purchaseOrder"
-    (closeForm)="closeViewPurchaseOrderForm()"></app-view-purchase-order-details>
+  <app-view-purchase-order-details *ngIf="purchaseOrder" 
+  [purchaseOrder]="purchaseOrder"
+    (closeForm)="closeViewPurchaseOrderForm()"
+    ></app-view-purchase-order-details>
 </div>
 
 <!-- ARCHIVE CONFIRMATION MODAL -->

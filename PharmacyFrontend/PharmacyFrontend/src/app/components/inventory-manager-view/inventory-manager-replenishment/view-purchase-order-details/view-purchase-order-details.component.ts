@@ -41,6 +41,7 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
   markReceivedError: string = '';
   transactionReceived: boolean = false;
   viewPurchaseOrderItem ?: PurchaseOrderItem | null;
+  purchaseOrders: PurchaseOrder[] = [];
 
   // Pagination properties
   currentPage: number = 1;
@@ -63,6 +64,17 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       this.currentPage = 1;
       this.updatePagination();
     }
+  }
+
+  getAllPendingPurchaseOrders() {
+    this.getService.getAllPendingPurchaseOrdersAsync().subscribe({
+      next: res =>  {
+        this.purchaseOrders = res;
+      },
+      error: err => {
+        console.log(err.error);
+      }
+    });
   }
 
   updatePagination() {
@@ -253,14 +265,12 @@ export class ViewPurchaseOrderDetailsComponent implements OnInit, OnChanges {
       })),
     };
 
-    console.log(`${JSON.stringify(requestPayload)}`);
-
     this.updateService
       .markPurchaseOrderAsReceivedAsync(requestPayload)
       .subscribe({
         next: (res) => {
           this.transactionReceived = true;
-          console.log(`${JSON.stringify(requestPayload)}`);
+          this.getAllPendingPurchaseOrders();
         },
         error: (err) => {
           this.markReceivedError = err.error || 'An error occurred while processing the request';
