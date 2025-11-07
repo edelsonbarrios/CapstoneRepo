@@ -1085,42 +1085,44 @@ namespace PharmacyBackend.Service.GetService
           // Map nested Product -> ProductDto (safe null checks)
           Product = i.Product == null ? null : new ProductDto
           {
-          ProductID = i.Product.ProductID,
-          ProductName = i.Product.ProductName,
-          CategoryID = i.Product.CategoryID,
-          BrandID = i.Product.BrandID,
-          GenericID = i.Product.GenericID,
-          FormulationID = i.Product.FormulationID,
-          ClassificationID = i.Product.ClassificationID,
-          TypeID = i.Product.TypeID,
-          IsActive = i.Product.IsActive,
-          DateCreated = i.Product.DateCreated,
-          SheetsPerBox = i.Product.SheetsPerBox,
-          PiecesPerSheet = i.Product.PiecesPerSheet,
-          BoxPrice = i.Product.BoxPrice,
-          SheetPrice = i.Product.SheetPrice,
-          PiecePrice = i.Product.PiecePrice,
-          ReorderLevel = i.Product.ReorderLevel,
-          UnitMeasurement = i.Product.UnitMeasurement,
-          PiecePerBox = i.PiecePerBox,
+              ProductID = i.Product.ProductID,
+              ProductName = i.Product.ProductName,
+              CategoryID = i.Product.CategoryID,
+              BrandID = i.Product.BrandID,
+              GenericID = i.Product.GenericID,
+              FormulationID = i.Product.FormulationID,
+              ClassificationID = i.Product.ClassificationID,
+              TypeID = i.Product.TypeID,
+              IsActive = i.Product.IsActive,
+              DateCreated = i.Product.DateCreated,
+              SheetsPerBox = i.Product.SheetsPerBox,
+              PiecesPerSheet = i.Product.PiecesPerSheet,
+              BoxPrice = i.Product.BoxPrice,
+              SheetPrice = i.Product.SheetPrice,
+              PiecePrice = i.Product.PiecePrice,
+              ReorderLevel = i.Product.ReorderLevel,
+              UnitMeasurement = i.Product.UnitMeasurement,
+              PiecePerBox = i.PiecePerBox,
 
-          // Derived product properties (guarded against null Inventory collections)
-          ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
-          NearExpiryStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsNearExpiry && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
-          IsCriticalStock = (i.Product.Inventory?.Where(x => x.IsActive && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0) <= i.Product.ReorderLevel,
-          HasExpiredStock = i.Product.Inventory?.Any(x => x.IsActive && x.IsExpired) ?? false,
+              // Derived product properties (guarded against null Inventory collections)
+              ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+              NearExpiryStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsNearExpiry && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+              IsCriticalStock = (i.Product.Inventory?.Where(x => x.IsActive && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0) <= i.Product.ReorderLevel,
+              HasExpiredStock = i.Product.Inventory?.Any(x => x.IsActive && x.IsExpired) ?? false,
 
-          // Related names
-          CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
-          BrandName = i.Product.Brand?.BrandName ?? string.Empty,
-          GenericName = i.Product.Generic?.GenericName ?? string.Empty,
-          FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
-          ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
-          TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
+              // Related names
+              CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
+              BrandName = i.Product.Brand?.BrandName ?? string.Empty,
+              GenericName = i.Product.Generic?.GenericName ?? string.Empty,
+              FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
+              ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
+              TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
           },
 
           // Inventory-specific fields
           ProductName = i.Product?.ProductName ?? string.Empty,
+          CategoryName = i.Product?.Category?.CategoryName ?? string.Empty,  // ADD THIS LINE
+          BrandName = i.Product?.Brand?.BrandName ?? string.Empty,           // ADD THIS LINE
           BatchNumber = i.BatchNumber,
           ManufacturingDate = i.ManufacturingDate,
           ExpirationDate = i.ExpirationDate,
@@ -1146,10 +1148,10 @@ namespace PharmacyBackend.Service.GetService
           IsCriticalStock = i.IsCriticalStock,
           IsMultiUnit = i.IsMultiUnit,
           TotalPiecesAvailable = i.TotalPiecesAvailable
-          })
-      .ToList();
+      })
+    .ToList();
 
-      return result;
+            return result;
     }
     public async Task<List<InventoryDto>> GetAllAvailableInventoryAsync()
     {
@@ -1165,42 +1167,44 @@ namespace PharmacyBackend.Service.GetService
           // Map nested Product -> ProductDto (safe null checks)
           Product = i.Product == null ? null : new ProductDto
           {
-          ProductID = i.Product.ProductID,
-          ProductName = i.Product.ProductName,
-          CategoryID = i.Product.CategoryID,
-          BrandID = i.Product.BrandID,
-          GenericID = i.Product.GenericID,
-          FormulationID = i.Product.FormulationID,
-          ClassificationID = i.Product.ClassificationID,
-          TypeID = i.Product.TypeID,
-          IsActive = i.Product.IsActive,
-          DateCreated = i.Product.DateCreated,
-          SheetsPerBox = i.Product.SheetsPerBox,
-          PiecesPerSheet = i.Product.PiecesPerSheet,
-          BoxPrice = i.Product.BoxPrice,
-          SheetPrice = i.Product.SheetPrice,
-          PiecePrice = i.Product.PiecePrice,
-          ReorderLevel = i.Product.ReorderLevel,
-          UnitMeasurement = i.Product.UnitMeasurement,
-          PiecePerBox = i.Product.PiecePerBox,
+              ProductID = i.Product.ProductID,
+              ProductName = i.Product.ProductName,
+              CategoryID = i.Product.CategoryID,
+              BrandID = i.Product.BrandID,
+              GenericID = i.Product.GenericID,
+              FormulationID = i.Product.FormulationID,
+              ClassificationID = i.Product.ClassificationID,
+              TypeID = i.Product.TypeID,
+              IsActive = i.Product.IsActive,
+              DateCreated = i.Product.DateCreated,
+              SheetsPerBox = i.Product.SheetsPerBox,
+              PiecesPerSheet = i.Product.PiecesPerSheet,
+              BoxPrice = i.Product.BoxPrice,
+              SheetPrice = i.Product.SheetPrice,
+              PiecePrice = i.Product.PiecePrice,
+              ReorderLevel = i.Product.ReorderLevel,
+              UnitMeasurement = i.Product.UnitMeasurement,
+              PiecePerBox = i.PiecePerBox,
 
-          // Derived product properties (guarded against null Inventory collections)
-          ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
-          NearExpiryStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsNearExpiry && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
-          IsCriticalStock = (i.Product.Inventory?.Where(x => x.IsActive && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0) <= i.Product.ReorderLevel,
-          HasExpiredStock = i.Product.Inventory?.Any(x => x.IsActive && x.IsExpired) ?? false,
+              // Derived product properties (guarded against null Inventory collections)
+              ExpiredStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+              NearExpiryStock = i.Product.Inventory?.Where(x => x.IsActive && x.IsNearExpiry && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0,
+              IsCriticalStock = (i.Product.Inventory?.Where(x => x.IsActive && !x.IsExpired).Sum(x => x.BoxQuantity) ?? 0) <= i.Product.ReorderLevel,
+              HasExpiredStock = i.Product.Inventory?.Any(x => x.IsActive && x.IsExpired) ?? false,
 
-          // Related names
-          CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
-          BrandName = i.Product.Brand?.BrandName ?? string.Empty,
-          GenericName = i.Product.Generic?.GenericName ?? string.Empty,
-          FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
-          ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
-          TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
+              // Related names
+              CategoryName = i.Product.Category?.CategoryName ?? string.Empty,
+              BrandName = i.Product.Brand?.BrandName ?? string.Empty,
+              GenericName = i.Product.Generic?.GenericName ?? string.Empty,
+              FormulationName = i.Product.Formulation?.FormulationName ?? string.Empty,
+              ClassificationName = i.Product.Classification?.ClassificationName ?? string.Empty,
+              TypeName = i.Product.TypeModel?.TypeName ?? string.Empty
           },
 
           // Inventory-specific fields
           ProductName = i.Product?.ProductName ?? string.Empty,
+          CategoryName = i.Product?.Category?.CategoryName ?? string.Empty,  // ADD THIS LINE
+          BrandName = i.Product?.Brand?.BrandName ?? string.Empty,           // ADD THIS LINE
           BatchNumber = i.BatchNumber,
           ManufacturingDate = i.ManufacturingDate,
           ExpirationDate = i.ExpirationDate,
@@ -1226,8 +1230,9 @@ namespace PharmacyBackend.Service.GetService
           IsCriticalStock = i.IsCriticalStock,
           IsMultiUnit = i.IsMultiUnit,
           TotalPiecesAvailable = i.TotalPiecesAvailable
-          }).ToList();
-    }
+              })
+        .ToList();
+        }
 
     public async Task<InventoryDto?> GetInventoryByIdAsync(int id)
     {

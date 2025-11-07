@@ -3,7 +3,14 @@ import { Product } from "../product-models/product";
 export class Inventory {
     inventoryID: number = 0;
     productID: number = 0;
-    product: Product = new Product();
+    product?: {
+    categoryName?: string;
+    brandName?: string;
+    genericName?: string;
+    formulatioName?: string;
+    classification?: string;
+    type?: string;
+    };
     productName: string = '';
     batchNumber: string = '';
     manufacturingDate: Date = new Date();
