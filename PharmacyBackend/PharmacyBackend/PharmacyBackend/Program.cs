@@ -22,17 +22,14 @@ using PharmacyBackend.Service.DeleteService;
 using PharmacyBackend.Service.GetService;
 using PharmacyBackend.Service.PostService;
 using PharmacyBackend.Service.UpdateService;
-using PharmacyBackend.Service.BackgroundServices;
 using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -46,7 +43,7 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-          {
+        {
             new OpenApiSecurityScheme
             {
                 Reference = new OpenApiReference
@@ -109,17 +106,17 @@ builder.Services.AddScoped<AccountHelper>();
 builder.Services.AddHostedService<BackupBackgroundService>();
 #endregion
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger available at /swagger
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+// Serve Angular app
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseCors("RacquelPharmacy");
 
@@ -127,5 +124,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Fallback to Angular for all unmatched routes
+app.MapFallbackToFile("index.html");
 
 app.Run();
