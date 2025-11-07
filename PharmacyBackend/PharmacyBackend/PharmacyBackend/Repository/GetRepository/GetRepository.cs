@@ -611,6 +611,7 @@ namespace PharmacyBackend.Repository.GET
         public async Task<IEnumerable<Supplier>> GetAllSupplierAsync()
         {
           return await _context.Supplier
+            
             .Include(s => s.Products)
             .ThenInclude(p => p.Category)
             .Include(s => s.Products)
@@ -625,6 +626,7 @@ namespace PharmacyBackend.Repository.GET
             .ThenInclude(p => p.TypeModel)
             .Include(s => s.Products)
             .Where(s => s.IsActive == true)
+            .OrderByDescending(s => s.Id)
             .ToListAsync();
         }
 

@@ -22,7 +22,10 @@ export class ManageStockEntryComponent implements OnInit {
   paginatedInventories: Inventory[] = [];
   searchQuery: string = '';
   showDeleteConfirmation: boolean = false;
-  inventoryToDelete ?: Inventory | null;
+  inventoryToDelete?: Inventory | null;
+  
+  // New properties for filtering
+  selectedFilter: 'all' | 'expired' | 'nearExpiry' | 'healthy' = 'all';
 
   // Pagination properties
   currentPage: number = 1;
@@ -31,22 +34,126 @@ export class ManageStockEntryComponent implements OnInit {
 
   constructor(
     private getService: GetService,
-    private updateService : UpdateService
+    private updateService: UpdateService
   ) {}
 
   ngOnInit(): void {
     this.getAllInventories();
   }
 
-  get filteredInventories(): Inventory[] {
-    if (!this.searchQuery.trim()) {
-      return this.inventories;
+  // Calculate days until expiration
+  getDaysUntilExpiry(expirationDate: string | Date): number {
+    const expiry = new Date(expirationDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    expiry.setHours(0, 0, 0, 0);
+    const diffTime = expiry.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
+  // Get expiry status: 'critical' (red), 'warning' (yellow), 'healthy' (green)
+  getExpiryStatus(expirationDate: string | Date): 'critical' | 'warning' | 'healthy' {
+    const days = this.getDaysUntilExpiry(expirationDate);
+    if (days <= 180) return 'critical'; // 6 months or less
+    if (days <= 365) return 'warning';  // 7-12 months
+    return 'healthy'; // more than 1 year
+  }
+
+  // Get CSS class for expiry status
+  getExpiryClass(expirationDate: string | Date): string {
+    const days = this.getDaysUntilExpiry(expirationDate);
+
+    if (days < 0) return 'expired';          // red
+    if (days <= 365) return 'nearExpiry';    // yellow
+    return 'healthy';                        // green
+  }
+
+  // Get human-readable expiry label
+  getExpiryLabel(expirationDate: string | Date): string {
+    const days = this.getDaysUntilExpiry(expirationDate);
+    
+    if (days < 0) {
+      return `Expired ${Math.abs(days)} days ago`;
+    } else if (days === 0) {
+      return 'Expires today';
+    } else if (days === 1) {
+      return 'Expires tomorrow';
+    } else if (days <= 30) {
+      return `${days} days left`;
+    } else if (days <= 365) {
+      const months = Math.floor(days / 30);
+      return `${months} month${months > 1 ? 's' : ''} left`;
+    } else {
+      const years = Math.floor(days / 365);
+      const remainingMonths = Math.floor((days % 365) / 30);
+      if (remainingMonths === 0) {
+        return `${years} year${years > 1 ? 's' : ''} left`;
+      }
+      return `${years}y ${remainingMonths}m left`;
     }
-    const query = this.searchQuery.toLowerCase();
-    return this.inventories.filter(inv =>
-      inv.batchNumber.toLowerCase().includes(query) ||
-      inv.productName.toLowerCase().includes(query)
-    );
+  }
+
+  // Get count for each filter category
+  getFilterCount(filter: 'all' | 'expired' | 'nearExpiry' | 'healthy'): number {
+    const filtered = this.inventories.filter(inv => {
+      const days = this.getDaysUntilExpiry(inv.expirationDate);
+      
+      switch (filter) {
+        case 'all':
+          return true;
+        case 'expired':
+          return days < 0;
+        case 'nearExpiry':
+          return days >= 0 && days <= 365; // Within 1 year
+        case 'healthy':
+          return days > 365; // More than 1 year
+        default:
+          return true;
+      }
+    });
+    return filtered.length;
+  }
+
+  // Handle filter change
+  onFilterChange(filter: 'all' | 'expired' | 'nearExpiry' | 'healthy') {
+    this.selectedFilter = filter;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  // Updated filtered inventories to include expiry filter
+  get filteredInventories(): Inventory[] {
+    let filtered = this.inventories;
+
+    // Apply search filter
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(inv =>
+        inv.batchNumber.toLowerCase().includes(query) ||
+        inv.productName.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply expiry filter
+    filtered = filtered.filter(inv => {
+      const days = this.getDaysUntilExpiry(inv.expirationDate);
+      
+      switch (this.selectedFilter) {
+        case 'all':
+          return true;
+        case 'expired':
+          return days < 0;
+        case 'nearExpiry':
+          return days >= 0 && days <= 365;
+        case 'healthy':
+          return days > 365;
+        default:
+          return true;
+      }
+    });
+
+    return filtered;
   }
 
   onSearchChange() {
