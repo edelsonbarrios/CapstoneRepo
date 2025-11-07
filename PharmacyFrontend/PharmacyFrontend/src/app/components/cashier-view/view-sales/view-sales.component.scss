@@ -267,6 +267,14 @@
           color: #006dba;
           font-size: 1.3rem;
         }
+
+        &.vat-amount {
+          color: #ddaf2e;
+        }
+
+        &.discount-amount {
+          color: #ef4444;
+        }
       }
     }
   }

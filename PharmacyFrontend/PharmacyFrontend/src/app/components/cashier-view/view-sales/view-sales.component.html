@@ -82,6 +82,16 @@
       </div>
 
       <div class="final-info">
+        <label>VAT</label>
+        <p class="vat-amount">₱{{viewSales.vatAmount | number: '1.2-2'}}</p>
+      </div>
+
+      <div class="final-info">
+        <label>Discount</label>
+        <p class="discount-amount">-₱{{viewSales.discountAmount | number: '1.2-2'}}</p>
+      </div>
+
+      <div class="final-info">
         <label>Amount Paid</label>
         <p class="amount-paid">₱{{viewSales.amountPaid | number: '1.2-2'}}</p>
       </div>
