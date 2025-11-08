@@ -4,6 +4,9 @@ import { Product } from '../../../models/product-models/product';
 import { NgIf, DatePipe } from '@angular/common';
 import { ViewCashierProductsComponent } from '../view-cashier-products/view-cashier-products.component';
 import { LogInToken } from '../../shared/token';
+import { jwtDecode } from 'jwt-decode';
+import { GetService } from '../../../services/GetService/get.service';
+import { Employee } from '../../../models/employee-models/employee';
 
 @Component({
   selector: 'app-cashier-header',
@@ -16,14 +19,21 @@ export class CashierHeaderComponent implements OnInit, OnDestroy {
   viewCashierProduct?: Product | null;
   dateTime: Date = new Date();
   timer: any;
+  employee: Employee = new Employee();
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private getService: GetService
+  ) {}
 
   ngOnInit(): void {
     // Update date/time every second
     this.timer = setInterval(() => {
       this.dateTime = new Date();
     }, 1000);
+
+    // Load employee information
+    this.getLoggedInEmployee();
   }
 
   ngOnDestroy(): void {
@@ -45,5 +55,25 @@ export class CashierHeaderComponent implements OnInit, OnDestroy {
     localStorage.removeItem(LogInToken);
     this.router.navigate(['/log-in'], { replaceUrl: true });
     this.router.navigateByUrl('/log-in');
+  }
+
+  getLoggedInEmployee() {
+    const token = localStorage.getItem(LogInToken);
+    if (!token) {
+      console.log('Token does not exist.');
+      return;
+    }
+
+    const decodedToken: any = jwtDecode(token);
+    const employeeId = parseInt(decodedToken.EmployeeId);
+
+    this.getService.GetEmployeeById(employeeId).subscribe({
+      next: (employee) => {
+        this.employee = employee;
+      },
+      error: (err) => {
+        console.log(`Error: ${err.error}`);
+      },
+    });
   }
 }

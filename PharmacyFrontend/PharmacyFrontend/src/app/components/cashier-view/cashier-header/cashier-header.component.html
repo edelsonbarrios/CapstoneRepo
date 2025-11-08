@@ -1,5 +1,4 @@
 <div class="wrapper">
-
   <nav class="left-nav">
     <a routerLink="/cashier-main/cashier-dashboard">
       <span><i class="fa-solid fa-desktop"></i></span>
@@ -10,6 +9,12 @@
       Daily Sales
     </a>
   </nav>
+
+  <!-- Employee Information -->
+  <div class="employee-info">
+    <i class="fa-solid fa-user-circle"></i>
+    <span class="employee-name">{{ employee.fullName || (employee.firstName + ' ' + employee.lastName) }}</span>
+  </div>
 
   <!-- Date & Time Display -->
   <div class="datetime-display">

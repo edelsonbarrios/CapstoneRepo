@@ -20,55 +20,48 @@
         </select>
       </div>
 
-      <div class="table-wrapper">
-        <table class="product-table">
-          <thead>
-            <tr>
-              <th>Select</th>
-              <th>Batch Number</th>
-              <th>Product Details</th>
-              <th>Category</th>
-              <th>Brand</th>
-              <th>Type</th>
-              <th>Unit Type</th>
-              <th>Price</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let product of filteredProducts; let i = index">
-              <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="product.selected" />
-              </td>
-              <td>{{product.batchNumber}}</td>
-              <td class="product-details">
-                <div class="product-name">{{ product.productName }}</div>
-                <div class="product-formulation" *ngIf="product.product.formulationName">
-                  {{ product.product.formulationName }}
-                </div>
-              </td>
-              <td>{{ product.categoryName }}</td>
-              <td>{{ product.product.brandName }}</td>
-              <td>
-                <span *ngIf="product.product.typeName">{{ product.product.typeName }}</span>
-                <span *ngIf="!product.product.typeName" class="na-text">N/A</span>
-              </td>
-              <td>
-                <select [(ngModel)]="product.tempUnitType" class="unit-select">
-                  <option *ngFor="let unit of getAvailableUnitMeasurements(product)" [value]="unit">
-                    {{ unit }}
-                  </option>
-                </select>
-              </td>
-              <td class="price-cell">{{ getProductUnitPriceDisplay(product) | currency:'PHP':'symbol':'1.2-2' }}</td>
-              <td>
-                <button class="view-btn" (click)="openViewInventoryForm(product)">
-                  <i class="fa-solid fa-eye"></i> View
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="products-list">
+        <div class="product-item" *ngFor="let product of filteredProducts; let i = index">
+          <div class="item-left">
+            <input type="checkbox" [(ngModel)]="product.selected" />
+            <div class="product-info">
+              <div class="product-main">
+                <span class="product-name">{{ product.productName }}</span>
+                <span class="product-price">{{ getProductUnitPriceDisplay(product) | currency:'PHP':'symbol':'1.2-2' }}</span>
+              </div>
+              <div class="product-sub">
+                <span class="detail">{{ product.batchNumber }}</span>
+                <span class="divider">•</span>
+                <span class="detail">{{ product.categoryName }}</span>
+                <span class="divider">•</span>
+                <span class="detail">{{ product.product.brandName }}</span>
+                <span class="divider" *ngIf="product.product.formulationName">•</span>
+                <span class="detail" *ngIf="product.product.formulationName">{{ product.product.formulationName }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="stock-info">
+              <span class="stock-item" *ngIf="product.unitMeasurement === 'Multi-Level' || product.unitMeasurement === 'Dual-Level'">
+                Box: <strong>{{ product.boxQuantity }}</strong>
+              </span>
+              <span class="stock-item" *ngIf="product.unitMeasurement === 'Multi-Level'">
+                Sheet: <strong>{{ product.sheetQuantity }}</strong>
+              </span>
+              <span class="stock-item">
+                Piece: <strong>{{ product.pieceQuantity }}</strong>
+              </span>
+            </div>
+            <select [(ngModel)]="product.tempUnitType" class="unit-select">
+              <option *ngFor="let unit of getAvailableUnitMeasurements(product)" [value]="unit">
+                {{ unit }}
+              </option>
+            </select>
+            <button class="view-btn" (click)="openViewInventoryForm(product)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
       </div>
 
       <button class="btn-primary" (click)="addSelectedProducts()">
@@ -87,27 +80,39 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Batch Number</th>
-              <th>Product</th>
-              <th>Category</th>
-              <th>Brand</th>
-              <th>Formulation</th>
+              <th>Product Information</th>
               <th>Unit</th>
               <th>Qty</th>
               <th>Unit Price</th>
               <th>Subtotal</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of selectedProducts; let i = index">
               <td class="index-cell">{{ i + 1 }}</td>
-              <td>{{item.batchNumber}}</td>
-              <td class="product-name-cell">{{ item.productName }}</td>
-              <td>{{ item.categoryName }}</td>
-              <td>{{ item.brandName }}</td>
-              <td>
-                <span *ngIf="item.formulationName">{{ item.formulationName }}</span>
-                <span *ngIf="!item.formulationName" class="na-text">N/A</span>
+              <td class="cart-product-details">
+                <div class="cart-info-grid">
+                  <div class="cart-row primary">
+                    <span class="cart-product-name">{{ item.productName }}</span>
+                  </div>
+                  <div class="cart-row">
+                    <span class="cart-label">Batch:</span>
+                    <span class="cart-value">{{ item.batchNumber }}</span>
+                  </div>
+                  <div class="cart-row">
+                    <span class="cart-label">Category:</span>
+                    <span class="cart-value">{{ item.categoryName }}</span>
+                  </div>
+                  <div class="cart-row">
+                    <span class="cart-label">Brand:</span>
+                    <span class="cart-value">{{ item.brandName }}</span>
+                  </div>
+                  <div class="cart-row" *ngIf="item.formulationName">
+                    <span class="cart-label">Formula:</span>
+                    <span class="cart-value">{{ item.formulationName }}</span>
+                  </div>
+                </div>
               </td>
               <td>
                 <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemUnitTypeChange(item)"
@@ -118,18 +123,30 @@
                 </select>
               </td>
               <td>
-                <input type="number" min="1" [(ngModel)]="item.quantity" (ngModelChange)="onCartItemChange(item)"
-                  class="qty-input" />
+                <div class="qty-control">
+                  <button class="qty-btn" (click)="decrementQuantity(item)">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <input type="number" min="1" [(ngModel)]="item.quantity" (ngModelChange)="onCartItemChange(item)"
+                    class="qty-input" />
+                  <button class="qty-btn" (click)="incrementQuantity(item)">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
               </td>
-              <td>
-                <input type="number" min="0" step="0.01" [(ngModel)]="item.unitPrice"
-                  (ngModelChange)="onCartItemChange(item)" readonly class="price-input" />
+              <td class="price-cell">
+                {{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}
               </td>
               <td class="subtotal-cell">{{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}</td>
+              <td class="action-cell">
+                <button class="remove-btn" (click)="removeFromCart(i)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
             </tr>
 
             <tr *ngIf="selectedProducts.length === 0">
-              <td colspan="9" class="no-cart">
+              <td colspan="7" class="no-cart">
                 <i class="fa-solid fa-cart-arrow-down"></i>
                 <p>No items in cart</p>
               </td>
@@ -160,7 +177,6 @@
             <span class="label">Invoice Number:</span>
             <span class="value">{{newInvoice}}</span>
           </div>
-
         </div>
 
         <div class="bottom-btn">

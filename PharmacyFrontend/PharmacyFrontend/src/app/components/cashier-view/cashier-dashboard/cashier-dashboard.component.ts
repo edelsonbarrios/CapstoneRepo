@@ -63,7 +63,7 @@ export class CashierDashboardComponent implements OnInit {
     categoryName: string;
     brandName: string;
     formulationName: string;
-    batchNumber: string,
+    batchNumber: string;
     unitType: 'Box' | 'Sheet' | 'Piece';
     quantity: number;
     unitPrice: number;
@@ -134,7 +134,6 @@ export class CashierDashboardComponent implements OnInit {
       next: (res) => {
         this.products = res.map((p: any) => ({
           ...p,
-          // Ensure categoryName is properly extracted from response
           categoryName: p.categoryName || p.product?.categoryName || p.product?.category?.categoryName || '',
           tempUnitType: 'Piece',
           sheetPrice: p.sheetPrice,
@@ -149,12 +148,11 @@ export class CashierDashboardComponent implements OnInit {
           piecePerBox: p.piecePerBox,
           reorderLevel: p.reorderLevel,
         }));
-        
-        // Log to verify categoryName is populated
-        console.log('Products loaded:', this.products.map(p => ({ 
-          id: p.productID, 
-          name: p.productName, 
-          category: p.categoryName 
+
+        console.log('Products loaded:', this.products.map(p => ({
+          id: p.productID,
+          name: p.productName,
+          category: p.categoryName
         })));
       },
       error: (err) => console.error(err.error),
@@ -257,7 +255,6 @@ export class CashierDashboardComponent implements OnInit {
         // Add to existing quantity
         existing.quantity += qtyToAdd;
       } else {
-        // Properly access categoryName from product object
         this.selectedProducts.push({
           productID: p.productID,
           productName: p.productName,
@@ -278,9 +275,26 @@ export class CashierDashboardComponent implements OnInit {
       p.quantity = 0;
       p.tempUnitType = 'Piece';
     });
-    
-    // Log entire cart
+
     console.log('Cart contents:', this.selectedProducts);
+  }
+
+  incrementQuantity(item: any) {
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity >= max) {
+      this.errorMessage = `Maximum available quantity for ${item.unitType} is ${max}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 3000);
+      return;
+    }
+    item.quantity++;
+  }
+
+  decrementQuantity(item: any) {
+    if (item.quantity > 1) {
+      item.quantity--;
+    }
   }
 
   onCartItemChange(item: any) {
@@ -290,6 +304,16 @@ export class CashierDashboardComponent implements OnInit {
     const product = this.products.find((p) => p.productID === item.productID);
     if (product && (!item.unitPrice || item.unitPrice === 0)) {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
+    }
+
+    // Validate max quantity
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity > max) {
+      item.quantity = max;
+      this.errorMessage = `Maximum available quantity for ${item.unitType} is ${max}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 3000);
     }
   }
 
@@ -303,7 +327,15 @@ export class CashierDashboardComponent implements OnInit {
     const max = this.getMaxQuantity(item);
     if (max !== Infinity && item.quantity > max) {
       item.quantity = max;
+      this.errorMessage = `Maximum available quantity for ${item.unitType} is ${max}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 3000);
     }
+  }
+
+  removeFromCart(index: number) {
+    this.selectedProducts.splice(index, 1);
   }
 
   clearSelection() {
@@ -378,11 +410,9 @@ export class CashierDashboardComponent implements OnInit {
 
         let errorMsg = 'An unexpected error occurred';
 
-        // Try to extract error message from different possible locations
         if (err.error) {
           if (typeof err.error === 'string') {
             try {
-              // Sometimes the error is a JSON string
               const parsed = JSON.parse(err.error);
               errorMsg = parsed.Message || parsed.message || err.error;
             } catch {
@@ -422,7 +452,7 @@ export class CashierDashboardComponent implements OnInit {
   openViewInventoryForm(inv: any) {
     this.viewInventory = inv;
   }
-  
+
   closeViewInventoryForm() {
     this.viewInventory = null;
   }
