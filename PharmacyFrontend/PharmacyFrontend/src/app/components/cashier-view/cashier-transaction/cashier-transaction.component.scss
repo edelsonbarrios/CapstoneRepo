@@ -8,10 +8,9 @@
     padding: 1rem;
     gap: 1rem;
     height: 100%;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr;
     grid-template-areas:
       'total-sales total-transaction item-sold total-product'
-      'transactions transactions transactions transactions'
       'product product table-container table-container';
 
     .total-sales {
@@ -28,10 +27,6 @@
 
     .total-product {
       grid-area: total-product;
-    }
-
-    .transactions {
-      grid-area: transactions;
     }
 
     .product {
@@ -78,16 +73,17 @@
         }
       }
 
-      .mid-container {
+      .table-header {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
         flex-wrap: wrap;
+        gap: 1rem;
 
-        h2 {
-          font-weight: 700;
+        h1 {
           font-size: 1.1rem;
+          font-weight: 700;
           color: #1e293b;
           margin: 0;
           display: flex;
@@ -95,82 +91,51 @@
           gap: 0.5rem;
 
           &::before {
-            font-size: 1rem;
+            content: "";
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(135deg, #006dba, #0088dd);
+            border-radius: 2px;
           }
         }
 
-        p {
-          margin: 0;
-          color: #64748b;
-          font-weight: 600;
-        }
-
-        .tab-container {
-          background-color: white;
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
+        .filter-container {
           display: flex;
-          overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-          .text-item {
-            padding: 0.625rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #475569;
-            border: none;
-            outline: none;
-
-            &:first-child {
-              background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-              border-right: 1px solid #e2e8f0;
-              color: #006dba;
-            }
-          }
-
-          select,
-          input {
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s ease;
-
-            &:hover {
-              background: #f8fafc;
-            }
-
-            &:focus {
-              background: #f8fafc;
-              outline: 2px solid #006dba;
-              outline-offset: -2px;
-            }
-          }
-        }
-
-        .last-container {
-          background-color: white;
+          align-items: center;
+          gap: 0.5rem;
+          background: white;
           border: 1px solid #e2e8f0;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
           border-radius: 8px;
-          overflow: hidden;
+          padding: 0.5rem 1rem;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
-          .text-item {
-            padding: 0.625rem 1rem;
+          label {
             font-size: 0.875rem;
             font-weight: 600;
             color: #475569;
-            border: none;
-            outline: none;
+            margin: 0;
+          }
+
+          select {
+            padding: 0.4rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            background: #ffffff;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
+            outline: none;
 
             &:hover {
               background: #f8fafc;
+              border-color: #cbd5e1;
             }
 
             &:focus {
-              background: #f8fafc;
-              outline: 2px solid #006dba;
-              outline-offset: -2px;
+              border-color: #006dba;
+              box-shadow: 0 0 0 3px rgba(0, 109, 186, 0.1);
             }
           }
         }
@@ -397,7 +362,6 @@
     grid-template-areas:
       'total-sales total-transaction'
       'item-sold total-product'
-      'transactions transactions'
       'product product'
       'table-container table-container';
     grid-template-columns: 1fr 1fr;
@@ -411,7 +375,6 @@
       'total-transaction'
       'item-sold'
       'total-product'
-      'transactions'
       'product'
       'table-container';
     grid-template-columns: 1fr;

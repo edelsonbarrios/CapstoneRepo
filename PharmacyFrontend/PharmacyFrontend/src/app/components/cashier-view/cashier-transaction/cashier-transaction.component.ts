@@ -49,13 +49,13 @@ export class CashierTransactionComponent implements OnInit {
   // Pagination for products table
   paginatedProducts: any[] = [];
   currentProductPage: number = 1;
-  itemsPerProductPage: number = 5;
+  itemsPerProductPage: number = 7;
   totalProductPages: number = 0;
 
   // Pagination for sales table
   paginatedTransactions: SalesTransaction[] = [];
   currentSalesPage: number = 1;
-  itemsPerSalesPage: number = 5;
+  itemsPerSalesPage: number = 6;
   totalSalesPages: number = 0;
 
   constructor(

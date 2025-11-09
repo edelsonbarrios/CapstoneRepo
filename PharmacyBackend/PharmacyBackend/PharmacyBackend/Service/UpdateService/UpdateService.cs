@@ -899,20 +899,16 @@ namespace PharmacyBackend.Service.UpdateService
                         if(computedPieceQty <= 0) 
                           return new MarkAsReceivedResult {Success = false, ProductName = product.ProductName, 
                             Message = $"The total pieces of {product.ProductName} is less than 0"};
-                        int computedSheetQty = computedPieceQty /piecesPerSheet;
-
-                        int loosePieces = computedPieceQty % piecesPerSheet;
-
+                        int computedSheetQty = computedPieceQty / piecesPerSheet;
                         int totalBoxes = computedSheetQty / sheetsPerBox;
-                        int looseSheets = computedSheetQty % sheetsPerBox;
 
 
                         var newInventory = new Inventory
                         {
                             ProductID = item.ProductID,
                             BoxQuantity = totalBoxes,
-                            SheetQuantity = looseSheets,
-                            PieceQuantity = loosePieces,
+                            SheetQuantity = computedSheetQty,
+                            PieceQuantity = computedPieceQty,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,
@@ -933,7 +929,6 @@ namespace PharmacyBackend.Service.UpdateService
                     {
                         int computedPieceQty = (item.BoxQuantityReceived * product.PiecePerBox) - totalDeduction;
                         int totalBoxes = computedPieceQty / product.PiecePerBox;
-                        int loosePieces = computedPieceQty % product.PiecePerBox;
                         if(computedPieceQty <= 0)
                             return new MarkAsReceivedResult
                             {
@@ -947,7 +942,7 @@ namespace PharmacyBackend.Service.UpdateService
                             ProductID = item.ProductID,
                             BoxQuantity = totalBoxes,
                             SheetQuantity = 0,
-                            PieceQuantity = loosePieces,
+                            PieceQuantity = computedPieceQty,
                             BatchNumber = item.BatchNumber,
                             ManufacturingDate = item.ManufacturingDate,
                             ExpirationDate = item.ExpirationDate,
