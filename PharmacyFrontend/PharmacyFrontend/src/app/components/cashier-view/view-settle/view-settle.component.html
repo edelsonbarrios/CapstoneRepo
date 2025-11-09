@@ -65,7 +65,7 @@
           <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
             <option [ngValue]="null">None</option>
             <option *ngFor="let v of vats" [ngValue]="v">
-              {{ v.vatRate }}%
+              {{ v.vatName }}
             </option>
           </select>
         </div>
@@ -82,7 +82,7 @@
           <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">
             <option [ngValue]="null">None</option>
             <option *ngFor="let d of discounts" [ngValue]="d">
-              {{ d.discountRate }}%
+              {{ d.discountName }}
             </option>
           </select>
         </div>
