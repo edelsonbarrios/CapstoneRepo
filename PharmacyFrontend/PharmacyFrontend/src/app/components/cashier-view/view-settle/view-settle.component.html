@@ -142,7 +142,7 @@
       <div class="change-display" *ngIf="payment > 0">
         <span class="label">
           <i class="fas fa-exchange-alt"></i>
-          Change:
+          {{ change < 0 ? 'Balance:' : 'Change:' }}
         </span>
         <span class="value" [class.negative]="change < 0">
           {{ change | currency:'PHP':'symbol':'1.2-2' }}
