@@ -31,6 +31,8 @@ export class FastMovingProductsComponent implements OnInit {
   constructor(private getService: GetService) {}
   // Modal
   showExportModal: boolean = false;
+  showValidationModal: boolean = false;
+  validationMessage: string = '';
 
   ngOnInit(): void {
     
@@ -113,7 +115,24 @@ export class FastMovingProductsComponent implements OnInit {
   }
 
   showExportConfirmation(): void {
+        // Validate that both start and end dates are provided
+    if (!this.startDate || !this.endDate) {
+      this.validationMessage = 'Please select both Start Date and End Date before exporting.';
+      this.showValidationModal = true;
+      return;
+    }
+
+    // Validate that start date is not after end date
+    if (new Date(this.startDate) > new Date(this.endDate)) {
+      this.validationMessage = 'Start Date cannot be later than End Date.';
+      this.showValidationModal = true;
+      return;
+    }
     this.showExportModal = true;
+  }
+
+  closeValidationModal(): void {
+  this.showValidationModal = false;
   }
 
   confirmExport(): void {

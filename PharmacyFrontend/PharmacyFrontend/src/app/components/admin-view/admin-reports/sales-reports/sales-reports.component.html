@@ -46,7 +46,7 @@
       <div class="control">
         <label>Employee</label>
         <select [(ngModel)]="selectedEmployeeId" (change)="onFilterChange()">
-          <option [value]="null">All Employee</option>
+          <option [ngValue]="null">All Employee</option>
           <option *ngFor="let emp of cashiers" [ngValue]="emp.id">
             {{ emp.fullName }}
           </option>
@@ -111,6 +111,25 @@
     </div>
   </div>
 </main>
+
+<!-- Validation Modal -->
+<div class="modal-overlay" *ngIf="showValidationModal">
+  <div class="wrapper-modal validation-modal">
+    <div class="icon-wrapper">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
+    <h1>Validation Required</h1>
+    <p class="subtext">{{ validationMessage }}</p>
+
+    <div class="button-wrapper">
+      <button class="btn-ok" (click)="closeValidationModal()">OK</button>
+    </div>
+  </div>
+</div>
 
 <!-- Export Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showExportModal">

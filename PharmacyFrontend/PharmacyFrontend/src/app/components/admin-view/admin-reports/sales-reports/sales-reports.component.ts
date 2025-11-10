@@ -41,6 +41,8 @@ export class SalesReportsComponent implements OnInit {
 
   // Modal
   showExportModal: boolean = false;
+  showValidationModal: boolean = false;
+  validationMessage: string = '';
 
   constructor(private getService: GetService) {}
 
@@ -102,7 +104,24 @@ export class SalesReportsComponent implements OnInit {
   }
 
   showExportConfirmation(): void {
+    // Validate that both start and end dates are provided
+    if (!this.startDate || !this.endDate) {
+      this.validationMessage = 'Please select both Start Date and End Date before exporting.';
+      this.showValidationModal = true;
+      return;
+    }
+
+    // Validate that start date is not after end date
+    if (new Date(this.startDate) > new Date(this.endDate)) {
+      this.validationMessage = 'Start Date cannot be later than End Date.';
+      this.showValidationModal = true;
+      return;
+    }
     this.showExportModal = true;
+  }
+
+  closeValidationModal(): void {
+    this.showValidationModal = false;
   }
 
   confirmExport(): void {
@@ -118,7 +137,7 @@ export class SalesReportsComponent implements OnInit {
     if (this.exporting) return;
 
     this.exporting = true;
-
+    
     const start = this.startDate ? new Date(this.startDate) : undefined;
     const end = this.endDate ? new Date(this.endDate) : undefined;
     const empId = this.selectedEmployeeId || undefined;
@@ -131,7 +150,7 @@ export class SalesReportsComponent implements OnInit {
         const link = document.createElement('a');
         link.href = url;
         
-        // Generate filename
+        // Generate filename with properly formatted dates
         const fileName = `SalesReport_${this.startDate}_${this.endDate}.xlsx`;
         link.download = fileName;
         
@@ -155,8 +174,9 @@ export class SalesReportsComponent implements OnInit {
   resetFilterValues() {
     this.startDate = '';
     this.endDate = '';
-    this.selectedCashier = new Employee();
+    this.selectedEmployeeId = null;
     this.selectedPaymentMethod = '';
+    this.currentPage = 1;
     this.loadSalesReport();
   }
 

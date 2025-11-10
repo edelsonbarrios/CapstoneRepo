@@ -69,27 +69,72 @@
     <table class="inventory-table" *ngIf="!loading && inventoryReport">
       <thead>
         <tr>
-          <th>Product</th>
-          <th>Category</th>
-          <th>Batch</th>
-          <th>Box On Hand</th>
-          <th>Reorder Level</th>
           <th>Date Added</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Unit Type</th>
+          <th>Batch Number</th>
+          <th>Stock On Hand</th>
+          <th>Total Pieces</th>
+          <th>Reorder Level</th>
+          <th>Mfg Date</th>
+          <th>Expiry Date</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let inv of paginatedInventory">
-          <td>{{ inv.productName }}</td>
-          <td>{{ inv.product?.categoryName || 'N/A' }}</td>
+          <td>{{ inv.dateAdded | date:'MMM dd, yyyy' }}</td>
+          <td class="product-name">{{ inv.productName }}</td>
+          <td>{{ inv.product?.categoryName || inv.categoryName || 'N/A' }}</td>
+          <td>{{ inv.product?.brandName || inv.brandName || 'N/A' }}</td>
+          <td>
+            <span class="unit-type-badge" 
+                  [class.multi-level]="getUnitMeasurement(inv) === 'Multi-Level'"
+                  [class.dual-level]="getUnitMeasurement(inv) === 'Dual-Level'"
+                  [class.single-level]="getUnitMeasurement(inv) === 'Single-Level'">
+              {{ getUnitMeasurement(inv) }}
+            </span>
+          </td>
           <td>{{ inv.batchNumber }}</td>
-          <td>{{ inv.boxQuantity }}</td>
+          <td>
+            <div class="stock-display">
+              <!-- Multi-Level: Box → Sheet → Piece -->
+              <span *ngIf="getUnitMeasurement(inv) === 'Multi-Level'">
+                <strong>Box:</strong> {{inv.boxQuantity || 0}}<br>
+                <strong>Sheet:</strong> {{inv.sheetQuantity || 0}}<br>
+                <strong>Piece:</strong> {{inv.pieceQuantity || 0}}
+              </span>
+              
+              <!-- Dual-Level: Box → Piece -->
+              <span *ngIf="getUnitMeasurement(inv) === 'Dual-Level'">
+                <strong>Box:</strong> {{inv.boxQuantity || 0}}<br>
+                <strong>Piece:</strong> {{inv.pieceQuantity || 0}}
+              </span>
+              
+              <!-- Single-Level: Piece only -->
+              <span *ngIf="getUnitMeasurement(inv) === 'Single-Level'">
+                <strong>Pieces:</strong> {{inv.pieceQuantity || inv.totalPiecesAvailable || 0}}
+              </span>
+            </div>
+          </td>
+          <td class="total-pieces">{{ inv.totalPiecesAvailable | number }}</td>
           <td>{{ inv.reorderLevel }}</td>
-          <td>{{ inv.dateAdded | date:'dd-MM-yyyy' }}</td>
-          <td>{{ getInventoryStatus(inv) }}</td>
+          <td>{{ inv.manufacturingDate | date:'MMM dd, yyyy' }}</td>
+          <td>{{ inv.expirationDate | date:'MMM dd, yyyy' }}</td>
+          <td>
+            <span class="status-badge"
+                  [class.status-expired]="inv.isExpired"
+                  [class.status-near-expiry]="inv.isNearExpiry && !inv.isExpired"
+                  [class.status-critical]="inv.isCriticalStock && !inv.isExpired && !inv.isNearExpiry"
+                  [class.status-normal]="!inv.isExpired && !inv.isNearExpiry && !inv.isCriticalStock">
+              {{ getInventoryStatus(inv) }}
+            </span>
+          </td>
         </tr>
         <tr *ngIf="paginatedInventory.length === 0">
-          <td colspan="7" style="text-align: center;">No inventory items found</td>
+          <td colspan="12" style="text-align: center;">No inventory items found</td>
         </tr>
       </tbody>
     </table>
@@ -101,6 +146,25 @@
     </div>
   </div>
 </main>
+
+<!-- Validation Modal -->
+<div class="modal-overlay" *ngIf="showValidationModal">
+  <div class="wrapper-modal validation-modal">
+    <div class="icon-wrapper">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
+    <h1>Validation Required</h1>
+    <p class="subtext">{{ validationMessage }}</p>
+
+    <div class="button-wrapper">
+      <button class="btn-ok" (click)="closeValidationModal()">OK</button>
+    </div>
+  </div>
+</div>
 
 <!-- Export Confirmation Modal -->
 <div class="modal-overlay" *ngIf="showExportModal">
