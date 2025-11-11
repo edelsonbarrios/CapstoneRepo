@@ -269,7 +269,6 @@
   z-index: 999;
 }
 
-/* Confirmation Wrapper */
 .wrapper-modal {
   background: #ffffff;
   border-radius: 16px;
@@ -278,18 +277,35 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: fadeInScale 0.25s ease-in-out;
+
+  h1 {
+    font-size: 20px;
+    color: #222;
+    margin-bottom: 10px;
+  }
+
+  .subtext {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+  }
 }
 
-.wrapper-modal h1 {
-  font-size: 20px;
-  color: #222;
-  margin-bottom: 10px;
-}
+/* Validation Modal Specific Styles */
+.validation-modal {
+  .icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
 
-.wrapper-modal .subtext {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 25px;
+    svg {
+      animation: pulse 2s ease-in-out infinite;
+    }
+  }
+
+  h1 {
+    color: #f59e0b;
+  }
 }
 
 /* Buttons */
@@ -297,37 +313,64 @@
   display: flex;
   justify-content: center;
   gap: 15px;
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin: 0; // Reset margin from parent button styles
+  }
 }
 
-.button-wrapper button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
+.btn-ok {
+  background-color: #f59e0b;
+  color: white;
+
+  &:hover {
+    background-color: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .btn-confirm {
   background-color: #007bff;
   color: white;
-}
 
-.btn-confirm:hover {
-  background-color: #0066dd;
+  &:hover {
+    background-color: #0066dd;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .btn-cancel {
   background-color: #e0e0e0;
   color: #333;
+
+  &:hover {
+    background-color: #cfcfcf;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
-.btn-cancel:hover {
-  background-color: #cfcfcf;
-}
-
-/* Simple animation */
+/* Animations */
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -336,5 +379,16 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }

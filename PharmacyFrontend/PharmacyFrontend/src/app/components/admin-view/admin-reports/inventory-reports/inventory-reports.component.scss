@@ -166,27 +166,51 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 12px;
+    overflow-x: auto;
+    display: block;
+    
+    thead, tbody {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
 
     th,
     td {
       padding: 14px 12px;
       text-align: left;
       border-bottom: 1px solid #f1f5f9;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     th {
       font-weight: 600;
       color: #334155;
       background: #f8fafc;
-      font-size: 13px;
+      font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
     td {
       color: #475569;
       font-weight: 500;
+      
+      &.product-name {
+        font-weight: 600;
+        color: #1f4e78;
+      }
+      
+      &.total-pieces {
+        font-weight: 600;
+        color: #059669;
+      }
+      
+      &.total-value {
+        font-weight: 700;
+        color: #1f4e78;
+      }
     }
 
     tbody tr {
@@ -200,6 +224,82 @@
         border-bottom: none;
       }
     }
+  }
+
+  // Stock Display Styling
+  .stock-display {
+    text-align: left;
+    line-height: 1.8;
+    font-size: 12px;
+    
+    span {
+      display: block;
+      
+      strong {
+        color: #1f4e78;
+        font-weight: 600;
+        min-width: 50px;
+        display: inline-block;
+        font-size: 11px;
+      }
+    }
+  }
+
+  // Unit Type Badge
+  .unit-type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    
+    &.multi-level {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+    
+    &.dual-level {
+      background-color: #e0e7ff;
+      color: #4338ca;
+    }
+    
+    &.single-level {
+      background-color: #f3e8ff;
+      color: #6b21a8;
+    }
+  }
+
+  // Status Badge Styling
+  .status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .status-expired {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  .status-near-expiry {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-critical {
+    background-color: #fed7aa;
+    color: #9a3412;
+  }
+
+  .status-normal {
+    background-color: #d1fae5;
+    color: #065f46;
   }
 
   .pagination-controls {
@@ -219,6 +319,7 @@
       font-size: 13px;
       font-weight: 500;
       transition: all 0.2s ease;
+      margin: 0;
 
       &:hover:not(:disabled) {
         background-color: #3498ff;
@@ -263,7 +364,7 @@
   z-index: 999;
 }
 
-/* Confirmation Wrapper */
+/* Modal Wrapper */
 .wrapper-modal {
   background: #ffffff;
   border-radius: 16px;
@@ -272,18 +373,35 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: fadeInScale 0.25s ease-in-out;
+
+  h1 {
+    font-size: 20px;
+    color: #222;
+    margin-bottom: 10px;
+  }
+
+  .subtext {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+  }
 }
 
-.wrapper-modal h1 {
-  font-size: 20px;
-  color: #222;
-  margin-bottom: 10px;
-}
+/* Validation Modal Specific Styles */
+.validation-modal {
+  .icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
 
-.wrapper-modal .subtext {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 25px;
+    svg {
+      animation: pulse 2s ease-in-out infinite;
+    }
+  }
+
+  h1 {
+    color: #f59e0b;
+  }
 }
 
 /* Buttons */
@@ -291,45 +409,93 @@
   display: flex;
   justify-content: center;
   gap: 15px;
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin: 0;
+  }
 }
 
-.button-wrapper button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
+.btn-ok {
+  background-color: #f59e0b;
+  color: white;
+
+  &:hover {
+    background-color: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .btn-confirm {
   background-color: #007bff;
   color: white;
-}
 
-.btn-confirm:hover {
-  background-color: #0066dd;
+  &:hover {
+    background-color: #0066dd;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .btn-cancel {
   background-color: #e0e0e0;
   color: #333;
+
+  &:hover {
+    background-color: #cfcfcf;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
-.btn-cancel:hover {
-  background-color: #cfcfcf;
-}
-
-/* Simple animation */
+/* Animations */
 @keyframes fadeInScale {
   from {
     opacity: 0;
     transform: scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .wrapper .inventory-table {
+    font-size: 12px;
+    
+    th, td {
+      padding: 10px 8px;
+    }
   }
 }

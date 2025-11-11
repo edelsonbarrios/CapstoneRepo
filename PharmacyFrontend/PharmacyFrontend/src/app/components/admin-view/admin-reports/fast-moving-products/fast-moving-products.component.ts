@@ -25,15 +25,17 @@ export class FastMovingProductsComponent implements OnInit {
   // Pagination properties
   paginatedProducts: FastMovingProduct[] = [];
   currentPage: number = 1;
-  itemsPerPage: number = 4;
+  itemsPerPage: number = 10;
   totalPages: number = 0;
 
-  constructor(private getService: GetService) {}
   // Modal
   showExportModal: boolean = false;
+  showValidationModal: boolean = false;
+  validationMessage: string = '';
+
+  constructor(private getService: GetService) {}
 
   ngOnInit(): void {
-    
     this.getFastMovingReport();
   }
 
@@ -113,7 +115,24 @@ export class FastMovingProductsComponent implements OnInit {
   }
 
   showExportConfirmation(): void {
+    // Validate that both start and end dates are provided
+    if (!this.startDate || !this.endDate) {
+      this.validationMessage = 'Please select both Start Date and End Date before exporting.';
+      this.showValidationModal = true;
+      return;
+    }
+
+    // Validate that start date is not after end date
+    if (new Date(this.startDate) > new Date(this.endDate)) {
+      this.validationMessage = 'Start Date cannot be later than End Date.';
+      this.showValidationModal = true;
+      return;
+    }
     this.showExportModal = true;
+  }
+
+  closeValidationModal(): void {
+    this.showValidationModal = false;
   }
 
   confirmExport(): void {
@@ -162,5 +181,42 @@ export class FastMovingProductsComponent implements OnInit {
         this.exporting = false;
       }
     });
+  }
+
+  // Helper methods for styling
+  getStockClass(stock: number): string {
+    if (stock === 0) return 'out-of-stock';
+    if (stock < 10) return 'low-stock';
+    if (stock < 50) return 'moderate-stock';
+    return 'adequate-stock';
+  }
+
+  getStockStatusClass(status: string | undefined): string {
+    if (!status) return '';
+    switch (status.toLowerCase()) {
+      case 'out of stock':
+        return 'status-out';
+      case 'low stock':
+        return 'status-low';
+      case 'moderate':
+        return 'status-moderate';
+      case 'adequate':
+        return 'status-adequate';
+      default:
+        return '';
+    }
+  }
+
+  getTrendClass(trend: string): string {
+    switch (trend.toLowerCase()) {
+      case 'increasing':
+        return 'trend-increasing';
+      case 'stable':
+        return 'trend-stable';
+      case 'decreasing':
+        return 'trend-decreasing';
+      default:
+        return '';
+    }
   }
 }

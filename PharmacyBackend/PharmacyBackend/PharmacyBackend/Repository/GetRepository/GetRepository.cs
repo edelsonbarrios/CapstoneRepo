@@ -168,16 +168,24 @@ namespace PharmacyBackend.Repository.GET
                 endDate = DateTime.UtcNow.Date;
             }
 
-            // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Value.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Value.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
+            // Handle null dates first - default to today
+            if (!startDate.HasValue || !endDate.HasValue)
+            {
+                startDate = DateTime.UtcNow.Date;
+                endDate = DateTime.UtcNow.Date;
+            }
 
-            // Base query
+            // Convert Philippine Time to UTC
+            var phStartTime = startDate.Value.Date;
+            var phEndTime = endDate.Value.Date.AddDays(1).AddTicks(-1);
+
+            var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+            var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
+
             var query = _context.SalesTransaction
                 .Include(st => st.Items)
-                .Where(st => st.TransactionDate >= start && st.TransactionDate <= end);
+                .Where(st => st.TransactionDate >= utcStart && st.TransactionDate <= utcEnd);
 
-            // Apply filters
             if (employeeId.HasValue)
             {
                 query = query.Where(st => st.EmployeeID == employeeId.Value);
@@ -267,20 +275,21 @@ namespace PharmacyBackend.Repository.GET
             int? employeeId = null,
             string paymentMethod = null)
         {
-            // Ensure we're comparing dates only (ignore time)
-            var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // End of the day
+            // Convert Philippine Time to UTC
+            var phStartTime = startDate.Date;
+            var phEndTime = endDate.Date.AddDays(1).AddTicks(-1);
 
-            // Base query with includes
+            var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+            var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
+
             var query = _context.SalesTransaction
                 .Include(st => st.Items)
                     .ThenInclude(si => si.Product)
                 .Include(st => st.Employee)
                 .Include(st => st.Discount)
                 .Include(st => st.VAT)
-                .Where(st => st.TransactionDate >= start && st.TransactionDate <= end);
+                .Where(st => st.TransactionDate >= utcStart && st.TransactionDate <= utcEnd);
 
-            // Apply filters
             if (employeeId.HasValue)
             {
                 query = query.Where(st => st.EmployeeID == employeeId.Value);
@@ -291,7 +300,6 @@ namespace PharmacyBackend.Repository.GET
                 query = query.Where(st => st.PaymentMethod == paymentMethod);
             }
 
-            // Order by date descending (newest first)
             query = query.OrderByDescending(st => st.TransactionDate);
 
             return await query.ToListAsync();
@@ -892,32 +900,35 @@ namespace PharmacyBackend.Repository.GET
             .ThenInclude(si => si.Product)
             .AsQueryable();
 
-          // Apply date filter only if BOTH dates are provided
-          if(startDate.HasValue && !endDate.HasValue)
-          {
-            var startDateUtc = startDate.Value.Date;
-            query = query.Where(st => st.TransactionDate.Date >= startDateUtc);
-          }
+            // Apply date filter with Philippine Time (UTC+8) conversion
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var phStartTime = startDate.Value.Date;
+                var phEndTime = endDate.Value.Date.AddDays(1).AddTicks(-1);
 
-          if (startDate.HasValue && endDate.HasValue)
-          {
-            var startDateUtc = startDate.Value.Date;
-            var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
-            query = query.Where(st => st.TransactionDate >= startDateUtc && st.TransactionDate <= endDateUtc);
-          }
-          // If no dates provided, show ALL transactions (no date filter)
+                var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+                var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
 
-          if (employeeId.HasValue)
-          {
-            query = query.Where(st => st.EmployeeID == employeeId.Value);
-          }
+                query = query.Where(st => st.TransactionDate >= utcStart && st.TransactionDate <= utcEnd);
+            }
+            else if (startDate.HasValue && !endDate.HasValue)
+            {
+                var phStartTime = startDate.Value.Date;
+                var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+                query = query.Where(st => st.TransactionDate >= utcStart);
+            }
 
-          if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
-          {
-            query = query.Where(st => st.PaymentMethod.ToLower() == paymentMethod.ToLower());
-          }
+            if (employeeId.HasValue)
+            {
+                query = query.Where(st => st.EmployeeID == employeeId.Value);
+            }
 
-          return await query
+            if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
+            {
+                query = query.Where(st => st.PaymentMethod.ToLower() == paymentMethod.ToLower());
+            }
+
+            return await query
             .OrderByDescending(st => st.TransactionDate)
             .ToListAsync();
         }
@@ -944,29 +955,28 @@ namespace PharmacyBackend.Repository.GET
             .ThenInclude(p => p.TypeModel)
             .AsQueryable();
 
-          // Apply date filter only if dates are provided
+            // Apply date filter only if dates are provided
 
-          if(startDate.HasValue && !endDate.HasValue)
-          {
-            var startingDate = startDate.Value.Date;
-            query = query.Where(i => i.DateAdded >= startingDate);
-          }
+            // Apply date filter with Philippine Time conversion
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var phStartTime = startDate.Value.Date;
+                var phEndTime = endDate.Value.Date.AddDays(1).AddTicks(-1);
 
-          if(startDate.HasValue && !endDate.HasValue)
-          {
-            var startingDate = startDate.Value.Date;
-            query = query.Where(i => i.DateAdded.Date >= startingDate);
-          }
+                var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+                var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
 
-          if (startDate.HasValue && endDate.HasValue)
-          {
-            var startDateUtc = startDate.Value.Date;
-            var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
-            query = query.Where(i => i.DateAdded >= startDateUtc && i.DateAdded <= endDateUtc);
-          }
+                query = query.Where(i => i.DateAdded >= utcStart && i.DateAdded <= utcEnd);
+            }
+            else if (startDate.HasValue && !endDate.HasValue)
+            {
+                var phStartTime = startDate.Value.Date;
+                var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+                query = query.Where(i => i.DateAdded >= utcStart);
+            }
 
-          // Apply status filters
-          switch (filterType?.ToLower() ?? "all")
+            // Apply status filters
+            switch (filterType?.ToLower() ?? "all")
           {
             case "critical":
             case "critical stock":
@@ -1010,24 +1020,27 @@ namespace PharmacyBackend.Repository.GET
             .Include(si => si.SalesTransaction)
             .AsQueryable();
 
-          // Apply date filter only if dates are provided
+            // Apply date filter with Philippine Time conversion
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                var phStartTime = startDate.Value.Date;
+                var phEndTime = endDate.Value.Date.AddDays(1).AddTicks(-1);
 
-          if(startDate.HasValue && !endDate.HasValue)
-          {
-            var startingDate = startDate.Value.Date;
-            salesQuery = salesQuery.Where(si => si.SalesTransaction.TransactionDate.Date >= startingDate);
-          }
+                var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+                var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
 
-          if (startDate.HasValue && endDate.HasValue)
-          {
-            var startDateUtc = startDate.Value.Date;
-            var endDateUtc = endDate.Value.Date.AddDays(1).AddTicks(-1);
-            salesQuery = salesQuery.Where(si =>
-                si.SalesTransaction.TransactionDate >= startDateUtc &&
-                si.SalesTransaction.TransactionDate <= endDateUtc);
-          }
+                salesQuery = salesQuery.Where(si =>
+                    si.SalesTransaction.TransactionDate >= utcStart &&
+                    si.SalesTransaction.TransactionDate <= utcEnd);
+            }
+            else if (startDate.HasValue && !endDate.HasValue)
+            {
+                var phStartTime = startDate.Value.Date;
+                var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
+                salesQuery = salesQuery.Where(si => si.SalesTransaction.TransactionDate >= utcStart);
+            }
 
-          var salesData = await salesQuery
+            var salesData = await salesQuery
             .GroupBy(si => new
                 {
                 si.ProductId,

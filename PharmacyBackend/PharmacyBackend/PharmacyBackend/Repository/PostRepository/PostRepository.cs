@@ -106,7 +106,7 @@ namespace PharmacyBackend.Repository.POST
 
 
 
-        #region Sales
+    #region Sales
         // ========================================
         // SMART HIERARCHICAL INVENTORY SYSTEM
         // Automatically maintains synchronization by checking remainders
@@ -238,7 +238,7 @@ namespace PharmacyBackend.Repository.POST
 
         #endregion
 
-        #region Private Helper Methods - SMART CASCADING DEDUCTION
+    #region Private Helper Methods - SMART CASCADING DEDUCTION
 
         private async Task ProcessSalesItemAsync(SalesItem salesItem, string invoiceNumber, int employeeId)
         {
@@ -541,7 +541,7 @@ namespace PharmacyBackend.Repository.POST
 
         #endregion
 
-        #region Discount
+    #region Discount
         public async Task<bool> CreateDiscountAsync(Discount discount)
     {
       await _context.Discounts.AddAsync(discount);
