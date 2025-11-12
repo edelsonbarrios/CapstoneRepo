@@ -1003,6 +1003,10 @@ namespace PharmacyBackend.Service.GetService
           Email = s.Email,
           Address = s.Address,
           IsActive = s.IsActive,
+          Categories = s.Categories.Select(c => new CategoryDto {
+              CategoryID = c.CategoryID,
+              CategoryName = c.CategoryName,
+              }).ToList(),
           Products = s.Products.Select(p => new ProductDto
               {
               ProductID = p.ProductID,

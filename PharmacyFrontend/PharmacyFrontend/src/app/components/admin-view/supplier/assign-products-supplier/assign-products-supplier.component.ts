@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Supplier } from '../../../../models/supplier-models/supplier';
 import { AssignProductSupplierRequest } from '../../../../models/supplier-models/assign-product-supplier';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
+import { Category } from '../../../../models/category-models/category';
 
 @Component({
   selector: 'app-assign-products-supplier',
@@ -17,11 +18,13 @@ import { UpdateService } from '../../../../services/UpdateService/update.service
 export class AssignProductsSupplierComponent implements OnInit {
   @Input() supplier: Supplier = new Supplier();
   @Output() close = new EventEmitter<void>();
-  
+
   products: Product[] = [];
+  categories: Category[] = [];
   showSuccessAlert: boolean = false;
   searchQuery: string = '';
-  
+  selectedCategoryFilter: string = '';
+
   // Pagination
   paginatedProducts: Product[] = [];
   currentPage = 1;
@@ -35,20 +38,34 @@ export class AssignProductsSupplierComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProducts();
+    this.getAllCategories();
   }
 
-  // Filtered products based on search query
+  // Filtered products based on search query and category filter
   get filteredProducts(): Product[] {
-    if (!this.searchQuery.trim()) {
-      return this.products;
+    let filtered = this.products;
+
+    // Apply category filter
+    if (this.selectedCategoryFilter) {
+      const selectedCategoryName = this.selectedCategoryFilter;
+      filtered = filtered.filter(product =>
+        product.categoryName == selectedCategoryName
+      );
+      console.log(JSON.stringify(filtered));
     }
-    const query = this.searchQuery.toLowerCase();
-    return this.products.filter(product =>
-      product.productName.toLowerCase().includes(query) ||
-      product.categoryName?.toLowerCase().includes(query) ||
-      product.brandName?.toLowerCase().includes(query) ||
-      product.genericName?.toLowerCase().includes(query)
-    );
+
+    // Apply search query
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(product =>
+        product.productName.toLowerCase().includes(query) ||
+          product.categoryName?.toLowerCase().includes(query) ||
+          product.brandName?.toLowerCase().includes(query) ||
+          product.genericName?.toLowerCase().includes(query)
+      );
+    }
+
+    return filtered;
   }
 
   updatePagination() {
@@ -67,6 +84,11 @@ export class AssignProductsSupplierComponent implements OnInit {
   }
 
   onSearchChange() {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  onCategoryFilterChange() {
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -92,9 +114,21 @@ export class AssignProductsSupplierComponent implements OnInit {
       next: res => {
         this.products = res;
         this.updatePagination();
+        console.log(this.products);
       },
       error: err => {
         console.log(`${err.error}`);
+      }
+    });
+  }
+
+  getAllCategories() {
+    this.getService.getAllCategoriesAsync().subscribe({
+      next: res => {
+        this.categories = res;
+      },
+      error: err => {
+        console.error('Error loading categories:', err);
       }
     });
   }
@@ -103,7 +137,6 @@ export class AssignProductsSupplierComponent implements OnInit {
     if (!this.supplier || this.products.length == 0) return;
 
     const selectedProducts = this.products.filter(p => p.selected);
-
     if (selectedProducts.length === 0) {
       alert('Please select at least one product.');
       return;

@@ -31,13 +31,13 @@ export class CreateSupplierComponent {
   onContactNumberInput(event: any) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    
+
     // Remove any non-numeric characters
     const numericValue = value.replace(/\D/g, '');
-    
+
     // Update the model with numeric value only
     this.newSupplier.contactNumber = numericValue;
-    
+
     // Update the input display value
     input.value = numericValue;
   }
@@ -46,13 +46,13 @@ export class CreateSupplierComponent {
   onContactPersonNumberInput(event: any) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    
+
     // Remove any non-numeric characters
     const numericValue = value.replace(/\D/g, '');
-    
+
     // Update the model with numeric value only
     this.newSupplier.contactPersonNumber = numericValue;
-    
+
     // Update the input display value
     input.value = numericValue;
   }

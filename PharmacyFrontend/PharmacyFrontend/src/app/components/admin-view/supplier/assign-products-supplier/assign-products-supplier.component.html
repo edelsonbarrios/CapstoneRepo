@@ -3,9 +3,8 @@
     <h2>Select Products</h2>
     <span class="close" (click)="close.emit()">&times;</span>
   </div>
-
   <div class="modal-body">
-    <!-- Search Bar -->
+    <!-- Search and Filter Section -->
     <div class="search-section">
       <div class="search-box">
         <input
@@ -17,6 +16,21 @@
         />
         <span class="search-icon">🔍</span>
       </div>
+
+      <!-- Category Filter Dropdown -->
+      <div class="filter-box">
+        <select
+          class="category-filter"
+          [(ngModel)]="selectedCategoryFilter"
+          (change)="onCategoryFilterChange()"
+        >
+          <option value="">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category.categoryName">
+            {{ category.categoryName }}
+          </option>
+        </select>
+      </div>
+
       <div class="selection-info" *ngIf="selectedCount > 0">
         <span class="badge">{{ selectedCount }} selected</span>
       </div>
@@ -48,8 +62,8 @@
           <tr *ngIf="paginatedProducts.length === 0">
             <td colspan="9" class="empty-state">
               {{
-                searchQuery
-                  ? "No products found matching your search."
+                searchQuery || selectedCategoryFilter
+                  ? "No products found matching your filters."
                   : "No products available."
               }}
             </td>
@@ -80,9 +94,7 @@
       >
         ← Previous
       </button>
-
       <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-
       <button
         class="btn-page"
         [disabled]="currentPage === totalPages"

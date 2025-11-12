@@ -679,6 +679,13 @@ namespace PharmacyBackend.Service.PostService
     #region Supplier
     public async Task<bool> CreateSupplierAsync(CreateSupplierDto dto)
     {
+      var categories = new List<Category>();
+      foreach(var category in dto.CategoryNames) {
+        var cat = await _context.Category.FirstOrDefaultAsync(c => c.CategoryName.Equals(category));
+        if(category is null)
+          continue;
+        categories.Add(cat);
+      }
       var supplier = new Supplier
       {
         SupplierName = dto.SupplierName,
@@ -688,7 +695,8 @@ namespace PharmacyBackend.Service.PostService
         Email = dto.Email,
         Address = dto.Address,
         IsActive = true,
-        Products = new List<Product>()
+        Products = new List<Product>(),
+        Categories = categories,
       };
 
       var created = await _postRepo.CreateSupplierAsync(supplier);

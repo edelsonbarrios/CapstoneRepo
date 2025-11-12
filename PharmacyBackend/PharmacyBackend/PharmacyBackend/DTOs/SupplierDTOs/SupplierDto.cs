@@ -1,4 +1,5 @@
 ﻿using PharmacyBackend.DTOs.ProductDTOs;
+using PharmacyBackend.DTOs.CategoryDTOs;
 
 namespace PharmacyBackend.DTOs.SupplierDTOs
 {
@@ -13,5 +14,6 @@ namespace PharmacyBackend.DTOs.SupplierDTOs
         public string Address { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public List<ProductDto> Products { get; set; }
+        public List<CategoryDto> Categories {get; set;}
     }
 }

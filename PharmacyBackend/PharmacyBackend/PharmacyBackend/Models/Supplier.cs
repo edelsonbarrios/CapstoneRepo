@@ -14,6 +14,7 @@ namespace PharmacyBackend.Models
         public string Address { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
         public List<Product> Products { get; set; }
+        public List<Category> Categories { get; set;}
 
         // Navigation properties
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();

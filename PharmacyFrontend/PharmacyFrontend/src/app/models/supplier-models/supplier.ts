@@ -1,3 +1,4 @@
+import { Category } from "../category-models/category";
 import { Product } from "../product-models/product";
 
 export class Supplier {
@@ -10,4 +11,5 @@ export class Supplier {
   address : string = '';
   isActive : boolean = true;
   products : Product[] = [];
+  categories : Category[] = [];
 }
