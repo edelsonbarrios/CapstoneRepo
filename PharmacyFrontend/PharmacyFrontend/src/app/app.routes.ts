@@ -241,7 +241,132 @@ export const routes: Routes = [
         },
         canActivate: [authGuard],
         data: { roles: ['Administrator'] },
-      }
+      },
+      // INVENTORY ROUTES FOR ADMIN
+      {
+        path: 'admin-product-main',
+        loadComponent: () => {
+          return import(
+            './components/admin-view/admin-inventory/admin-products/admin-product-main/admin-product-main.component'
+          ).then((m) => m.AdminProductMainComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-products/admin-manage-product/admin-manage-product.component'
+              ).then((m) => m.ManageProductComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] },
+          },
+          {
+            path: 'admin-manage-products',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-products/admin-manage-product/admin-manage-product.component'
+              ).then((m) => m.ManageProductComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] },
+          },
+          {
+            path: 'admin-manage-category',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-products/admin-manage-category/admin-manage-category.component'
+              ).then((m) => m.ManageCategoryComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] },
+          },
+        ],
+      },
+      {
+        path: 'admin-inventory-module-main',
+        loadComponent: () => {
+          return import(
+            './components/admin-view/admin-inventory/admin-inventory-module/admin-inventory-module-main/admin-inventory-module-main.component'
+          ).then((m) => m.InventoryModuleMainComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-inventory-module/admin-manage-stock-entry/admin-manage-stock-entry.component'
+              ).then((m) => m.ManageStockEntryComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] },
+          },
+          {
+            path: 'admin-manage-stock-entry',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-inventory-module/admin-manage-stock-entry/admin-manage-stock-entry.component'
+              ).then((m) => m.ManageStockEntryComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] },
+          },
+          {
+            path: 'admin-manage-stock-adjustment',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-inventory-module/admin-manage-stock-adjustment/admin-manage-stock-adjustment.component'
+              ).then((m) => m.ManageStockAdjustmentComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] },
+          },
+          {
+            path: 'admin-manage-stock-History',
+            loadComponent: () => {
+              return import(
+                './components/admin-view/admin-inventory/admin-inventory-module/admin-stock-history/admin-stock-history.component'
+              ).then((m) => m.ManageStockHistoryComponent);
+            },
+            canActivate: [authGuard],
+            data: { roles: ['Administrator'] }
+          },
+        ],
+      },
+      {
+        path: 'admin-inventory-purchase-order',
+        loadComponent: () => {
+          return import(
+            './components/admin-view/admin-inventory/admin-purchase-order/admin-inventory-purchase-order/admin-inventory-purchase-order.component'
+          ).then((m) => m.InventoryPurchaseOrderComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+      },
+      {
+        path: 'admin-purchase-order-products',
+        loadComponent: () => {
+          return import(
+            './components/admin-view/admin-inventory/admin-purchase-order/admin-purchase-order-products/admin-purchase-order-products.component'
+          ).then((m) => m.PurchaseOrderProductsComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+      },
+      {
+        path: 'admin-manage-replenishment',
+        loadComponent: () => {
+          return import(
+            './components/admin-view/admin-inventory/admin-replenishment/admin-manage-replenishment/admin-manage-replenishment.component'
+          ).then((m) => m.ManageReplenishmentComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+      },
     ],
   },
   {

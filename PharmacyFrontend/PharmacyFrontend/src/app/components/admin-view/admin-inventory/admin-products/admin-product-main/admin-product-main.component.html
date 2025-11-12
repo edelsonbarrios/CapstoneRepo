@@ -1,0 +1,18 @@
+<main class="wrapper">
+  <div class="header">
+    <div class="nav-interact">
+      <a routerLink="/admin-main/admin-product-main/admin-manage-products" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-box"></i></span>
+        <span class="tab-label">Product</span>
+      </a>
+      <a routerLink="/admin-main/admin-product-main/admin-manage-category" routerLinkActive="active" class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-layer-group"></i></span>
+        <span class="tab-label">Category</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</main>

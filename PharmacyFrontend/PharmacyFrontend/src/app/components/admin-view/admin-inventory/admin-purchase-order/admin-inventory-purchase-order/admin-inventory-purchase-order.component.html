@@ -1,0 +1,185 @@
+<div class="wrapper">
+  <div class="purchase-order-form">
+    <h2>Create Purchase Order</h2>
+
+    <!-- Form Header Section -->
+    <div class="form-header">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="poNumber">Purchase Order Number</label>
+          <input
+            type="text"
+            id="poNumber"
+            placeholder="Enter PO Number"
+            [(ngModel)]="purchaseOrderNumber"
+            readonly
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="supplier">Supplier Name</label>
+          <select id="supplier" [(ngModel)]="selectedSupplier">
+            <option value="">-- Select Supplier --</option>
+            <option *ngFor="let s of suppliers" [ngValue]="s">
+              {{ s.supplierName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="notes">Notes</label>
+        <textarea
+          id="notes"
+          rows="2"
+          placeholder="Add notes (optional)"
+          [(ngModel)]="purchaseOrders.notes"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Items Section -->
+    <div class="items-section">
+      <div class="items-header">
+        <h3>Order Items</h3>
+        <div class="header-actions">
+          <div class="search-box">
+            <input
+              type="text"
+              placeholder="Search products..."
+              [(ngModel)]="searchQuery"
+              (input)="onSearchChange()"
+              class="search-input"
+            />
+            <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          </div>
+          <button class="add-item-btn" (click)="openProductsForm()">
+            + Add Item
+          </button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Unit Measurement</th>
+              <th>Unit Cost</th>
+              <th>Order Unit</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="paginatedItems.length === 0">
+              <td colspan="6" class="empty-state">
+                {{ searchQuery ? 'No products found matching your search.' : 'No items added yet. Click "Add Item" to start.' }}
+              </td>
+            </tr>
+            <tr *ngFor="let item of paginatedItems">
+              <td class="product-name">{{ item.productName }}</td>
+              <td>{{item.unitMeasurement}}</td>
+              <td>{{ getDisplayUnitPrice(item) | currency : "PHP" }}</td>
+              <td>{{item.poUnitType}}</td>
+              <td>
+                <input
+                  type="number"
+                  min="1"
+                  [(ngModel)]="item.quantityOrdered"
+                  (input)="recalculateQuantitiesAndTotals(item)"
+                  class="qty-input"
+                />
+              </td>
+              <td class="total-cost">
+                {{ item.totalCost | currency : "PHP" }}
+              </td>
+              <td>
+                <button class="remove-btn" (click)="removeItemPaginated(item)">
+                  ✕
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls">
+        <button
+          class="btn-page"
+          [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)"
+        >
+          ← Previous
+        </button>
+
+        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+
+        <button
+          class="btn-page"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(currentPage + 1)"
+        >
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <div class="total">
+        <strong>Total Amount:</strong>
+        <span class="total-amount">{{
+          purchaseOrders.totalAmount | currency : "PHP"
+        }}</span>
+      </div>
+      <div class="actions">
+        <button class="create-btn" (click)="createPurchaseOrder()">
+          Create Purchase Order
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" *ngIf="openProductForm">
+  <app-purchase-order-products
+    (close)="closeProductsForm()"
+    [supplierProudcts]="selectedSupplier.products"
+    (productsSelected)="onProductsSelected($event)"
+  ></app-purchase-order-products>
+</div>
+
+<div class="success-overlay" *ngIf="selectSupplier">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Please select a supplier first.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSelectSupplierForm()">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Alert Modal -->
+<div class="success-overlay" *ngIf="showSuccessAlert">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Purchase Order created successfully.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="error-overlay" *ngIf="addItem">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">Please add atleast one item.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeAddItemMessage()">OK</button>
+    </div>
+  </div>
+</div>

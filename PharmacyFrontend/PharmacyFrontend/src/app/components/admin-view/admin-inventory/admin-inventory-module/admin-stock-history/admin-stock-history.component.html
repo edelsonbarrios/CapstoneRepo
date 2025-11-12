@@ -1,0 +1,157 @@
+<main class="wrapper">
+  <div class="upper-container">
+    <div class="sub-container">
+      <div class="content">
+        <label>Total Records</label>
+        <p>{{ stockHistoryResponse.summary.totalTransactions }}</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Stock Entries</label>
+        <p>{{ stockHistoryResponse.summary.stockEntries }}</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Adjustment</label>
+        <p>{{ stockHistoryResponse.summary.adjustments }}</p>
+      </div>
+    </div>
+
+    <div class="sub-container">
+      <div class="content">
+        <label>Sales/Removals</label>
+        <p>{{ stockHistoryResponse.summary.salesRemovals }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="middle container">
+    <h2>Stock History</h2>
+
+    <div class="cntr-control">
+      <div class="control">
+        <label>Start Date</label>
+        <input type="date" [(ngModel)]="startDate" (change)="onFilterChange()" />
+      </div>
+
+      <div class="control">
+        <label>End Date</label>
+        <input type="date" [(ngModel)]="endDate" (change)="onFilterChange()" />
+      </div>
+
+      <div class="control">
+        <label>Record Type</label>
+        <select
+          id="transactionType"
+          [(ngModel)]="selectedTransactionType"
+          (change)="onFilterChange()"
+        >
+          <option value="">All Types</option>
+          <option *ngFor="let type of transactionTypes" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label>Search</label>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+          placeholder="Search..."
+        />
+      </div>
+    </div>
+    <button (click)="resetFilters()" class="btn-reset">Reset Filters</button>
+  </div>
+
+  <div class="lower container">
+    <h2>Stock History Record</h2>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <table class="inventory-table" *ngIf="!loading && stockHistoryResponse">
+      <thead>
+        <tr>
+          <th>Date & Time</th>
+          <th>Product</th>
+          <th>Batch</th>
+          <th>Type</th>
+          <th>Reference</th>
+          <th>Before</th>
+          <th>Changed</th>
+          <th>After</th>
+          <th>Performed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of paginatedTransactions">
+          <td>{{ transaction.movementDate | date : 'MM/dd/yyyy hh:mm a' }}</td>
+          <td>{{ transaction.productName }}</td>
+          <td>{{ transaction.batchNumber }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="getMovementTypeClass(transaction.movementType)"
+            >
+              {{ getMovementTypeDisplay(transaction.movementType) }}
+            </span>
+          </td>
+          <td>{{ transaction.referenceNumber || '-' }}</td>
+          <td>
+            <div class="quantity-display">
+              <span class="qty-label">Box:</span> {{ transaction.boxQuantityBefore || 0 }}<br>
+              <span class="qty-label">Sheet:</span> {{ transaction.sheetQuantityBefore || 0 }}<br>
+              <span class="qty-label">Pieces:</span> {{ transaction.pieceQuantityBefore || 0 }}
+            </div>
+          </td>
+          <td>
+            <div class="quantity-display">
+              <span class="qty-label">Box:</span> {{ formatChange(transaction.boxQuantityChanged) }}<br>
+              <span class="qty-label">Sheet:</span> {{ formatChange(transaction.sheetQuantityChanged) }}<br>
+              <span class="qty-label">Pieces:</span> {{ formatChange(transaction.pieceQuantityChanged) }}
+            </div>
+          </td>
+          <td>
+            <div class="quantity-display">
+              <span class="qty-label">Box:</span> {{ transaction.boxQuantityAfter || 0 }}<br>
+              <span class="qty-label">Sheet:</span> {{ transaction.sheetQuantityAfter || 0 }}<br>
+              <span class="qty-label">Pieces:</span> {{ transaction.pieceQuantityAfter || 0 }}
+            </div>
+          </td>
+          <td>{{ transaction.performedBy }}</td>
+        </tr>
+        <tr *ngIf="paginatedTransactions.length === 0">
+          <td colspan="9" style="text-align: center;">No transactions found</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div
+      class="pagination-controls"
+      *ngIf="stockHistoryResponse.transactions.length > 0"
+    >
+      <button
+        class="btn-page"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="btn-page"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</main>

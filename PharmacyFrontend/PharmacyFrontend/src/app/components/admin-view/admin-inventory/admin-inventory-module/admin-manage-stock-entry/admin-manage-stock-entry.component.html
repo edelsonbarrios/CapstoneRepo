@@ -1,0 +1,137 @@
+<div class="wrapper">
+  <div class="manage-stock-entry">
+
+    <!-- STOCK ENTRY CONTROLS/HEADER -->
+    <div class="entry-control">
+      <div class="search-wrapper">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <input type="text" name="searchbar" id="searchbar" class="searchbar"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          placeholder="Search by Batch No., Product Name...">
+      </div>
+      <button class="btn-entry" (click)="openCreateStockForm()">&#43; Stock Entry</button>
+    </div>
+
+    <!-- EXPIRY FILTER BUTTONS -->
+    <div class="filter-controls">
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'all'"
+        (click)="onFilterChange('all')">
+        <i class="fa-solid fa-list"></i>
+        All ({{getFilterCount('all')}})
+      </button>
+      <button 
+        class="filter-btn filter-expired" 
+        [class.active]="selectedFilter === 'expired'"
+        (click)="onFilterChange('expired')">
+        <i class="fa-solid fa-circle-xmark"></i>
+        Expired ({{getFilterCount('expired')}})
+      </button>
+      <button 
+        class="filter-btn filter-near-expiry" 
+        [class.active]="selectedFilter === 'nearExpiry'"
+        (click)="onFilterChange('nearExpiry')">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        Near Expiry ({{getFilterCount('nearExpiry')}})
+      </button>
+      <button 
+        class="filter-btn filter-healthy" 
+        [class.active]="selectedFilter === 'healthy'"
+        (click)="onFilterChange('healthy')">
+        <i class="fa-solid fa-circle-check"></i>
+        Healthy ({{getFilterCount('healthy')}})
+      </button>
+    </div>
+
+    <!-- STOCK ENTRY TABLE -->
+    <table class="entry-table">
+      <thead>
+        <tr>
+          <th>Batch No.</th>
+          <th>Category</th>
+          <th>Product Name</th>
+          <th>Brand</th>
+          <th>Box Qty</th>
+          <th>Sheet Qty</th>
+          <th>Piece Qty</th>
+          <th>ReOrder Level</th>
+          <th>Expiration<br><span style="font-size: 0.75rem; font-weight: normal; color: #94a3b8;">(DD/MM/YYYY)</span></th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="paginatedInventories.length === 0">
+          <td colspan="11" style="text-align: center; color: #94a3b8; padding: 2rem;">
+            No items found
+          </td>
+        </tr>
+        <tr *ngFor="let i of paginatedInventories" [class]="'row-' + getExpiryStatus(i.expirationDate)">
+          <td>{{i.batchNumber}}</td>
+          <td>{{i.product?.categoryName}}</td>
+          <td>{{i.productName}}</td>
+          <td>{{i.product?.brandName}}</td>
+          <td>{{i.boxQuantity}}</td>
+          <td>{{i.sheetQuantity}}</td>
+          <td>{{i.pieceQuantity}}</td>
+          <td>{{i.reorderLevel}}</td>
+          <td>
+            <span [class]="'expiry-date ' + getExpiryClass(i.expirationDate)">
+              {{i.expirationDate | date: 'dd-MM-yyyy'}}
+            </span>
+          </td>
+          <td>
+            <span [class]="'status-badge ' + getExpiryClass(i.expirationDate)">
+              {{getExpiryLabel(i.expirationDate)}}
+            </span>
+          </td>
+          <td>
+            <button class="btn-view" (click)="openViewEntryForm(i)">View Details</button>
+            <button class="btn-delete" (click)="openDeleteConfirmation(i)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- PAGINATION CONTROLS -->
+    <div class="pagination-controls" *ngIf="paginatedInventories.length > 0">
+      <button class="btn-page" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <span class="page-info">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="createStock">
+  <app-create-stock
+  *ngIf="createStock"
+  (closeForm)="closeCreateStockForm()"
+  ></app-create-stock>
+</div>
+
+<div class="modal-overlay" *ngIf="viewEntry">
+  <app-view-entry
+  *ngIf="viewEntry"
+  [viewEntry]="viewEntry"
+  (closeForm)="closeViewStockForm()"
+  ></app-view-entry>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteConfirmation">
+  <div class="delete-confirmation-modal">
+    <div class="delete-icon">⚠️</div>
+    <h3>Delete Stock Entry?</h3>
+    <p>Are you sure you want to delete this stock entry?</p>
+    <p class="delete-details">
+      <strong>Batch No:</strong> {{inventoryToDelete?.batchNumber}}<br>
+      <strong>Product:</strong> {{inventoryToDelete?.productName}}
+    </p>
+    <div class="delete-actions">
+      <button class="btn-cancel-delete" (click)="closeDeleteConfirmation()">Cancel</button>
+      <button class="btn-confirm-delete" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>

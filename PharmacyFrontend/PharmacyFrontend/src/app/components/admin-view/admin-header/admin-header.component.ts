@@ -4,16 +4,18 @@ import { LogInToken } from '../../shared/token';
 import { GetService } from '../../../services/GetService/get.service';
 import { jwtDecode } from 'jwt-decode';
 import { Employee } from '../../../models/employee-models/employee';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './admin-header.component.html',
   styleUrl: './admin-header.component.scss'
 })
 export class AdminHeaderComponent implements OnInit {
   employee: Employee = new Employee();
+  isInventoryDropdownOpen: boolean = false;
 
   constructor(
     private router: Router,
@@ -59,5 +61,16 @@ export class AdminHeaderComponent implements OnInit {
     }
     
     return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+  }
+
+  toggleInventoryDropdown() {
+    this.isInventoryDropdownOpen = !this.isInventoryDropdownOpen;
+  }
+
+  isInventoryRouteActive(): boolean {
+    return this.router.url.includes('/admin-main/admin-product-main') ||
+           this.router.url.includes('/admin-main/admin-inventory-module-main') ||
+           this.router.url.includes('/admin-main/admin-inventory-purchase-order') ||
+           this.router.url.includes('/admin-main/admin-manage-replenishment');
   }
 }
