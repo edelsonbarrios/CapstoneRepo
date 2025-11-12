@@ -35,6 +35,7 @@
       <span class="icon"><i class="fa-solid fa-truck-field"></i></span>
       <span class="label">Supplier</span>
     </a>
+
     <a routerLink="/admin-main/employee-accounts-main" routerLinkActive="active" class="nav-item">
       <span class="icon"><i class="fa-solid fa-users"></i></span>
       <span class="label">Employee Accounts</span>
@@ -43,6 +44,31 @@
       <span class="icon"><i class="fa-solid fa-gear"></i></span>
       <span class="label">Your Account</span>
     </a>
+
+    <!-- INVENTORY DROPDOWN -->
+    <div class="nav-item-dropdown" [class.active]="isInventoryRouteActive()">
+      <div class="nav-item" (click)="toggleInventoryDropdown()" [class.active]="isInventoryRouteActive()">
+        <span class="icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+        <span class="label">Inventory</span>
+        <span class="dropdown-arrow" [class.open]="isInventoryDropdownOpen">
+          <i class="fa-solid fa-chevron-down"></i>
+        </span>
+      </div>
+      <div class="dropdown-menu" [class.show]="isInventoryDropdownOpen">
+        <a routerLink="/admin-main/admin-product-main/admin-manage-products" routerLinkActive="active" class="dropdown-item">
+          <span class="label">Product Module</span>
+        </a>
+        <a routerLink="/admin-main/admin-inventory-module-main" routerLinkActive="active" class="dropdown-item">
+          <span class="label">Inventory Module</span>
+        </a>
+        <a routerLink="/admin-main/admin-inventory-purchase-order" routerLinkActive="active" class="dropdown-item">
+          <span class="label">Purchase Order Module</span>
+        </a>
+        <a routerLink="/admin-main/admin-manage-replenishment" routerLinkActive="active" class="dropdown-item">
+          <span class="label">Replenishment Module</span>
+        </a>
+      </div>
+    </div>
   </nav>
 
   <!-- BOTTOM NAVIGATION -->

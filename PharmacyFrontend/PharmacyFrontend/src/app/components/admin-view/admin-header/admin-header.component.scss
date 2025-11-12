@@ -6,22 +6,10 @@
   border-right: 1px solid #f1f5f9;
   height: 100vh;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.04);
-  position: sticky; // Changed from relative to sticky
-  top: 0; // Added: stick to top of viewport
-  left: 0; // Added: align to left
+  position: sticky;
+  top: 0;
+  left: 0;
   overflow: hidden;
-
-  // Subtle accent line
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%);
-    opacity: 0.6;
-  }
 
   // Subtle accent line
   &::before {
@@ -242,6 +230,100 @@
 
           i {
             color: #1d4ed8;
+          }
+        }
+      }
+    }
+
+    // Inventory Dropdown Styles
+    .nav-item-dropdown {
+      position: relative;
+
+      .nav-item {
+        
+
+        .dropdown-arrow {
+          font-size: 0.75rem;
+          transition: transform 0.3s ease;
+          position: relative;
+          z-index: 1;
+
+          &.open {
+            transform: rotate(180deg);
+          }
+
+          i {
+            color: #475569;
+          }
+        }
+
+        &:hover .dropdown-arrow i {
+          color: #356bff;
+        }
+
+        &.active .dropdown-arrow i {
+          color: #1d4ed8;
+        }
+      }
+
+      .dropdown-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        margin-left: 1rem;
+        border-left: 2px solid #e2e8f0;
+
+        &.show {
+          max-height: 300px;
+        }
+
+        .dropdown-item {
+          text-decoration: none;
+          color: #64748b;
+          font-size: 0.875rem;
+          font-weight: 500;
+          padding: 0.625rem 1rem;
+          padding-left: 1.5rem;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          position: relative;
+          margin: 0.25rem 0;
+
+          .label {
+            letter-spacing: 0.2px;
+          }
+
+          &:hover {
+            color: #2563eb;
+            background: #f8fafc;
+            transform: translateX(4px);
+          }
+
+          &.active {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            color: #1d4ed8;
+            font-weight: 600;
+          }
+        }
+      }
+
+      &.active {
+        .nav-item {
+          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          color: #1d4ed8;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+          border-left: 3px solid #3b82f6;
+
+          .icon {
+            transform: scale(1.1);
+
+            i {
+              color: #1d4ed8;
+            }
           }
         }
       }

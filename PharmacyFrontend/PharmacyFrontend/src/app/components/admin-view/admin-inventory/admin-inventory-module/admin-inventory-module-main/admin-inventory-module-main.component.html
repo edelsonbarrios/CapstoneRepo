@@ -1,0 +1,27 @@
+<main class="wrapper">
+  <div class="header">
+    <div class="nav-interact">
+      <a routerLink="/admin-main/admin-inventory-module-main/admin-manage-stock-entry" routerLinkActive="active"
+        class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-shop"></i></span>
+        <span class="tab-label">Stock Entry</span>
+      </a>
+
+      <a routerLink="/admin-main/admin-inventory-module-main/admin-manage-stock-adjustment" routerLinkActive="active"
+        class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-sliders"></i></span>
+        <span class="tab-label">Stock Adjustment</span>
+      </a>
+
+      <a routerLink="/admin-main/admin-inventory-module-main/admin-manage-stock-History" routerLinkActive="active"
+        class="nav-tab">
+        <span class="tab-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+        <span class="tab-label">Stock History</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</main>
