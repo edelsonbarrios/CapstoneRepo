@@ -1,4 +1,7 @@
 export class CreateDiscountRequest {
   discountName: string = '';
-  discountRate: number = 0;
+  discountType: string = '';
+  discountAmount : number = 0;
+  startDate ?: string = '';
+  endDate ?: string = ''
 }

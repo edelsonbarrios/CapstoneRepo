@@ -100,11 +100,50 @@ export class ViewSettleComponent implements OnInit {
     });
   }
 
-  calculateTotals() {
-    const vatAmount = this.subtotal * ((this.selectedVat?.vatRate || 0) / 100);
-    const discountAmount =
-      this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100);
+  /**
+   * Calculate discount amount based on discount type
+   */
+  calculateDiscountAmount(): number {
+    if (!this.selectedDiscount) return 0;
+
+    if (this.selectedDiscount.discountType === 'Percentage') {
+      // Percentage-based discount
+      return this.subtotal * ((this.selectedDiscount.discountAmount || 0) / 100);
+    } else if (this.selectedDiscount.discountType === 'Fixed') {
+      // Fixed amount discount
+      return this.selectedDiscount.discountAmount || 0;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Calculate VAT amount
+   */
+  calculateVatAmount(): number {
+    return this.subtotal * ((this.selectedVat?.vatRate || 0) / 100);
+  }
+
+  /**
+   * Calculate total amount (Subtotal + VAT - Discount)
+   */
+  calculateTotals(): number {
+    const vatAmount = this.calculateVatAmount();
+    const discountAmount = this.calculateDiscountAmount();
     return this.subtotal + vatAmount - discountAmount;
+  }
+
+  /**
+   * Format discount display text
+   */
+  getDiscountDisplayText(): string {
+    if (!this.selectedDiscount) return 'No Discount';
+
+    if (this.selectedDiscount.discountType === 'Percentage') {
+      return `${this.selectedDiscount.discountName} (${this.selectedDiscount.discountAmount}%)`;
+    } else {
+      return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount.toFixed(2)})`;
+    }
   }
 
   onPaymentChange() {
@@ -117,43 +156,56 @@ export class ViewSettleComponent implements OnInit {
   }
 
   confirmPayment() {
-    this.getService.referenceNumberValidationAsync(this.refNum).subscribe({
-      next: (res) => {
-        if (res.message === 'Reference number already used') {
-          this.refNumErrorMessage = res.message;
-          return;
-        }
+    // Validate reference number only for e-Payment
+    if (this.selectedPaymentMethod === 'e-Payment') {
+      if (!this.refNum || this.refNum.trim() === '') {
+        this.refNumErrorMessage = 'Reference number is required for e-Payment';
+        return;
+      }
 
-        const eventPayload = {
-          invoiceNumber: this.newInvoice,
-          paymentMethod: this.selectedPaymentMethod,
-          amountPaid: this.payment,
-          changeAmount: this.change,
-          discountAmount:
-            this.subtotal * ((this.selectedDiscount?.discountRate || 0) / 100),
-          vatAmount: this.subtotal * ((this.selectedVat?.vatRate || 0) / 100),
-          referenceNumber: this.refNum,
-          discountId: 1,
-          employeeID: this.loggedInEmployee.id,
-          vatId: this.selectedVat?.vatid,
-          items: this.cartItems.map((i) => ({
-            productId: i.productID,
-            quantity: i.quantity,
-            unitType: i.unitType,
-            unitPrice: i.unitPrice,
-            salesTransactionId: 0,
-            product: i.product,
-          })),
-          totalAmount: this.calculateTotals(),
-        };
+      this.getService.referenceNumberValidationAsync(this.refNum).subscribe({
+        next: (res) => {
+          if (res.message === 'Reference number already used') {
+            this.refNumErrorMessage = res.message;
+            return;
+          }
+          this.submitPayment();
+        },
+        error: (err) => {
+          this.refNumErrorMessage = err.error.message || 'Invalid reference number';
+          console.error('Error validating reference number:', err);
+        },
+      });
+    } else {
+      // For cash payment, submit directly
+      this.submitPayment();
+    }
+  }
 
-        this.paymentConfirmed.emit(eventPayload);
-      },
-      error: (err) => {
-        this.refNumErrorMessage = err.error.message;
-        console.error('Error validating reference number:', err);
-      },
-    });
+  private submitPayment() {
+    const eventPayload = {
+      invoiceNumber: this.newInvoice,
+      paymentMethod: this.selectedPaymentMethod,
+      amountPaid: this.payment,
+      changeAmount: this.change,
+      discountAmount: this.calculateDiscountAmount(),
+      vatAmount: this.calculateVatAmount(),
+      referenceNumber: this.selectedPaymentMethod === 'e-Payment' ? this.refNum : '',
+      discountId: this.selectedDiscount?.id || 0, // Fixed: was hardcoded to 1
+      employeeID: this.loggedInEmployee.id,
+      vatId: this.selectedVat?.vatid || null,
+      items: this.cartItems.map((i) => ({
+        productId: i.productID,
+        quantity: i.quantity,
+        unitType: i.unitType,
+        unitPrice: i.unitPrice,
+        salesTransactionId: 0,
+        product: i.product,
+      })),
+      totalAmount: this.calculateTotals(),
+    };
+
+    this.paymentConfirmed.emit(eventPayload);
   }
 
   getLoggedInUser() {

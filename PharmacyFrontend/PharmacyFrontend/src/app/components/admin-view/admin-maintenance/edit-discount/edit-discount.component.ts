@@ -31,12 +31,12 @@ export class EditDiscountComponent {
     }
 
     // Validate discount rate
-    if (this.editDiscount.discountRate === null || this.editDiscount.discountRate === undefined) {
+    if (this.editDiscount.discountAmount === null || this.editDiscount.discountAmount === undefined) {
       this.discountNameError = 'Discount rate is required';
       return;
     }
 
-    if (this.editDiscount.discountRate < 0 || this.editDiscount.discountRate > 100) {
+    if (this.editDiscount.discountAmount < 0 || this.editDiscount.discountAmount > 100) {
       this.discountNameError = 'Discount rate must be between 0 and 100';
       return;
     }

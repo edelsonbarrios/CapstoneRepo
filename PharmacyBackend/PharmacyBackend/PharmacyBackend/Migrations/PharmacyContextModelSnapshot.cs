@@ -235,14 +235,23 @@ namespace PharmacyBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DiscountAmount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("DiscountName")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("DiscountRate")
-                        .HasColumnType("numeric");
+                    b.Property<string>("DiscountType")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

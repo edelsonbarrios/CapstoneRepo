@@ -261,11 +261,14 @@ namespace PharmacyBackend.Service.PostService
       var validation = await _postRepo.ValidateDiscountNameAsync(dto.DiscountName);
       if (!validation)
         return false;
+
       var discount = new Discount
       {
         DiscountName = dto.DiscountName,
-        DiscountRate = dto.DiscountRate
-
+        DiscountType = dto.DiscountType,
+        DiscountAmount = dto.DiscountAmount,
+        StartDate = dto.StartDate,
+        EndDate = dto.EndDate
       };
 
       var result = await _postRepo.CreateDiscountAsync(discount);

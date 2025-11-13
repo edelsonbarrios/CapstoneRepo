@@ -70,24 +70,32 @@
           </select>
         </div>
         <span class="value">
-          {{ subtotal * ((selectedVat?.vatRate || 12) / 100) | currency:'PHP':'symbol':'1.2-2' }}
+          {{ calculateVatAmount() | currency:'PHP':'symbol':'1.2-2' }}
         </span>
       </div>
 
       <div class="summary-row">
         <span class="label">Discount:</span>
         <div class="input-group">
-          <span class="selected-value" *ngIf="selectedDiscount">{{selectedDiscount.discountName }}</span>
+          <span class="selected-value" *ngIf="selectedDiscount">
+            {{ getDiscountDisplayText() }}
+          </span>
           <span class="selected-value" *ngIf="!selectedDiscount">No Discount</span>
           <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">
             <option [ngValue]="null">None</option>
             <option *ngFor="let d of discounts" [ngValue]="d">
               {{ d.discountName }}
+              <ng-container *ngIf="d.discountType === 'Percentage'">
+                ({{ d.discountAmount }}%)
+              </ng-container>
+              <ng-container *ngIf="d.discountType === 'Fixed'">
+                (₱{{ d.discountAmount }})
+              </ng-container>
             </option>
           </select>
         </div>
         <span class="value discount-value">
-          - {{ subtotal * ((selectedDiscount?.discountRate || 0) / 100) | currency:'PHP':'symbol':'1.2-2' }}
+          - {{ calculateDiscountAmount() | currency:'PHP':'symbol':'1.2-2' }}
         </span>
       </div>
 
@@ -167,7 +175,7 @@
 <div class="error-overlay" *ngIf="refNumErrorMessage">
   <div class="error-alert">
     <div class="alert-icon">X</div>
-    <p class="alert-message">Reference number is already used..</p>
+    <p class="alert-message">{{ refNumErrorMessage }}</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeRefNumErrorMessage()">OK</button>
     </div>

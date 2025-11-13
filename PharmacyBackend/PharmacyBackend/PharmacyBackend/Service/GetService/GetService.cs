@@ -631,7 +631,10 @@ namespace PharmacyBackend.Service.GetService
           {
           Id = d.Id,
           DiscountName = d.DiscountName,
-          DiscountRate = d.DiscountRate,
+          DiscountType = d.DiscountType,
+          DiscountAmount = d.DiscountAmount,
+          StartDate = d.StartDate,
+          EndDate = d.EndDate,
           IsActive = d.IsActive
           });
     }
@@ -645,7 +648,10 @@ namespace PharmacyBackend.Service.GetService
       {
         Id = d.Id,
         DiscountName = d.DiscountName,
-        DiscountRate = d.DiscountRate,
+        DiscountType = d.DiscountType,
+        DiscountAmount = d.DiscountAmount,
+        StartDate = d.StartDate,
+        EndDate = d.EndDate,
         IsActive = d.IsActive
       };
     }

@@ -258,7 +258,10 @@ namespace PharmacyBackend.Service.UpdateService
             if (existing == null) return false;
 
             existing.DiscountName = dto.DiscountName;
-            existing.DiscountRate = dto.DiscountRate;
+            existing.DiscountType = dto.DiscountType;
+            existing.DiscountAmount = dto.DiscountAmount;
+            existing.StartDate = dto.StartDate;
+            existing.EndDate = dto.EndDate;
             existing.IsActive = dto.IsActive;
 
             await _updateRepo.UpdateDiscountAsync(existing);
