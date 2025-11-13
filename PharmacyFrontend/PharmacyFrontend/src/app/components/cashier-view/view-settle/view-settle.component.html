@@ -77,20 +77,11 @@
       <div class="summary-row">
         <span class="label">Discount:</span>
         <div class="input-group">
-          <span class="selected-value" *ngIf="selectedDiscount">
-            {{ getDiscountDisplayText() }}
-          </span>
           <span class="selected-value" *ngIf="!selectedDiscount">No Discount</span>
           <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">
             <option [ngValue]="null">None</option>
             <option *ngFor="let d of discounts" [ngValue]="d">
               {{ d.discountName }}
-              <ng-container *ngIf="d.discountType === 'Percentage'">
-                ({{ d.discountAmount }}%)
-              </ng-container>
-              <ng-container *ngIf="d.discountType === 'Fixed'">
-                (₱{{ d.discountAmount }})
-              </ng-container>
             </option>
           </select>
         </div>
