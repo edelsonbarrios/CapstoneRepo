@@ -75,7 +75,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       tooltip: {
         callbacks: {
           label: (context) => {
-            return `${context.dataset.label}: ₱${context.parsed.y.toLocaleString()}`;
+            return `${context.dataset.label}: ₱${context.parsed.y?.toLocaleString()}`;
           }
         }
       }
@@ -121,7 +121,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         callbacks: {
           label: (context) => {
             if (context.datasetIndex === 1) {
-              return `Revenue: ₱${context.parsed.y.toLocaleString()}`;
+              return `Revenue: ₱${context.parsed.y?.toLocaleString()}`;
             }
             return `Qty Sold: ${context.parsed.y}`;
           }
