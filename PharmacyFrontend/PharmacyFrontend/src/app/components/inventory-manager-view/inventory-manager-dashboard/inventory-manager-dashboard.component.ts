@@ -14,6 +14,7 @@ import { Inventory } from '../../../models/inventory-module-models/inventory';
 })
 export class InventoryManagerDashboardComponent implements OnInit{
   inventoryDashboard: InventoryDashboard = new InventoryDashboard();
+  outOfStockCount : number = 0;
 
   // Paginated arrays
   paginatedCriticalItems: Inventory[] = [];
@@ -41,6 +42,7 @@ export class InventoryManagerDashboardComponent implements OnInit{
 
   ngOnInit(): void {
     this.getInventoryDashboardValues();
+    this.getInventoryOutOfStock();
   }
 
   getInventoryDashboardValues() {
@@ -64,6 +66,17 @@ export class InventoryManagerDashboardComponent implements OnInit{
     const startIndex = (this.criticalCurrentPage - 1) * this.criticalItemsPerPage;
     const endIndex = startIndex + this.criticalItemsPerPage;
     this.paginatedCriticalItems = this.inventoryDashboard.criticalStockItems.slice(startIndex, endIndex);
+  }
+
+  getInventoryOutOfStock() {
+    this.getService.getInventoryOutOfStockCountAsync().subscribe({
+      next: res => {
+        this.outOfStockCount = res;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
   }
 
   goToCriticalPage(page: number) {

@@ -1169,7 +1169,7 @@ namespace PharmacyBackend.Repository.GET
         public async Task<int> GetInventoryOutOfStockCountAsync()
         {
           return await _context.Inventory
-            .Where(iv => iv.BoxQuantity == 0)
+            .Where(iv => iv.PieceQuantity == 0)
             .CountAsync();
         }
         public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()

@@ -19,10 +19,10 @@
     }
   }
 
-  // FIRST CONTAINER - STATS CARDS
+  // FIRST CONTAINER - ALL 6 STATS CARDS IN ONE ROW
   .first-container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 1rem;
 
     .stat-card {
@@ -224,7 +224,7 @@
 }
 
 // Responsive adjustments
-@media (max-width: 1400px) {
+@media (max-width: 1600px) {
   .wrapper {
     .first-container {
       grid-template-columns: repeat(3, 1fr);
