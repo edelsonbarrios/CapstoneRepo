@@ -78,6 +78,101 @@
       <a class="interact view-report" routerLink="/admin-main/admin-reports-main">See more &gt;</a>
     </div>
 
+    <!-- NEW: TABBED GRAPH SECTION -->
+    <div class="grid-items graph-section">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'sales'"
+          (click)="setActiveTab('sales')">
+          📈 Sales Trends
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'products'"
+          (click)="setActiveTab('products')">
+          📊 Top Products
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'inventory'"
+          (click)="setActiveTab('inventory')">
+          🎯 Inventory Overview
+        </button>
+      </div>
+
+      <!-- Graph Content -->
+      <div class="graph-content">
+        <!-- Sales Trends Tab -->
+        <div *ngIf="activeTab === 'sales'" class="tab-content">
+          <h3 class="graph-title">Sales & Cost Trends (Last 7 Days)</h3>
+          <div class="chart-container">
+            <canvas 
+              baseChart
+              [data]="salesLineChartData"
+              [options]="salesLineChartOptions"
+              [type]="salesLineChartType">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Top Products Tab -->
+        <div *ngIf="activeTab === 'products'" class="tab-content">
+          <h3 class="graph-title">Top 5 Selling Products (This Month)</h3>
+          <div class="chart-container">
+            <canvas 
+              baseChart
+              [data]="productsBarChartData"
+              [options]="productsBarChartOptions"
+              [type]="productsBarChartType">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Inventory Overview Tab -->
+        <div *ngIf="activeTab === 'inventory'" class="tab-content">
+          <h3 class="graph-title">Current Inventory Status Distribution</h3>
+          <div class="inventory-chart-wrapper">
+            <div class="chart-container-pie">
+              <canvas 
+                baseChart
+                [data]="inventoryPieChartData"
+                [options]="inventoryPieChartOptions"
+                [type]="inventoryPieChartType">
+              </canvas>
+            </div>
+            <div class="inventory-summary">
+              <div class="summary-item">
+                <div class="summary-indicator in-stock"></div>
+                <div>
+                  <div class="summary-value">{{245 - lowStockCount - outOfStockCount}}</div>
+                  <div class="summary-label">In Stock</div>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-indicator low-stock"></div>
+                <div>
+                  <div class="summary-value">{{lowStockCount}}</div>
+                  <div class="summary-label">Low Stock</div>
+                </div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-indicator out-stock"></div>
+                <div>
+                  <div class="summary-value">{{outOfStockCount}}</div>
+                  <div class="summary-label">Out of Stock</div>
+                </div>
+              </div>
+              <div class="total-products">
+                <div class="total-value">Total Products: {{245}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- EXPIRING SOON CONTAINER -->
     <div class="grid-items expiring-soon">
       <p class="title">Expiring Soon (Next 60 days)</p>

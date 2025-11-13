@@ -24,12 +24,13 @@
   .containers {
     display: grid;
     grid-template-columns: 1.7fr 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     gap: 1.5rem;
     height: 100%;
 
     grid-template-areas:
       "sales-report top-selling-meds"
+      "graph-section graph-section"
       "expiring-soon expiring-soon";
 
     .sales-report {
@@ -42,6 +43,10 @@
 
     .top-selling-meds {
       grid-area: top-selling-meds;
+    }
+
+    .graph-section {
+      grid-area: graph-section;
     }
 
     .expiring-soon {
@@ -189,7 +194,6 @@
             font-weight: 600;
             color: #3498ff;
             width: 100px;
-            
           }
 
           &:last-child {
@@ -301,6 +305,142 @@
   }
 }
 
+// NEW: Graph Section Styles
+.graph-section {
+  padding: 0 !important;
+  overflow: hidden;
+
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid #e2e8f0;
+
+    .tab-btn {
+      padding: 18px 30px;
+      border: none;
+      background-color: transparent;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      position: relative;
+
+      &:hover {
+        background-color: #f8fafc;
+        color: #3498ff;
+      }
+
+      &.active {
+        background-color: #3498ff;
+        color: white;
+        border-bottom-color: #3498ff;
+      }
+    }
+  }
+
+  .graph-content {
+    padding: 30px;
+  }
+
+  .tab-content {
+    animation: fadeIn 0.3s ease;
+  }
+
+  .graph-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1e293b;
+    letter-spacing: -0.3px;
+  }
+
+  .chart-container {
+    height: 400px;
+    position: relative;
+  }
+
+  .chart-container-pie {
+    height: 400px;
+    width: 50%;
+    position: relative;
+  }
+
+  .inventory-chart-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+
+  .inventory-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f8fafc;
+        transform: translateX(4px);
+      }
+    }
+
+    .summary-indicator {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+
+      &.in-stock {
+        background-color: #10b981;
+      }
+
+      &.low-stock {
+        background-color: #f59e0b;
+      }
+
+      &.out-stock {
+        background-color: #ef4444;
+      }
+    }
+
+    .summary-value {
+      font-weight: 700;
+      font-size: 24px;
+      color: #1e293b;
+      letter-spacing: -0.5px;
+    }
+
+    .summary-label {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .total-products {
+      margin-top: 10px;
+      padding: 15px;
+      background: linear-gradient(135deg, rgba(52, 152, 255, 0.08) 0%, rgba(52, 152, 255, 0.04) 100%);
+      border-radius: 8px;
+      border: 1px solid rgba(52, 152, 255, 0.2);
+
+      .total-value {
+        font-weight: 700;
+        font-size: 16px;
+        color: #1e293b;
+        text-align: center;
+      }
+    }
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -320,5 +460,42 @@
   to {
     opacity: 1;
     transform: translateX(0px);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .wrapper .containers {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "sales-report"
+      "top-selling-meds"
+      "graph-section"
+      "expiring-soon";
+  }
+
+  .graph-section {
+    .inventory-chart-wrapper {
+      flex-direction: column;
+      
+      .chart-container-pie {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 15px;
+  }
+
+  .graph-section .tabs {
+    flex-direction: column;
+
+    .tab-btn {
+      width: 100%;
+      text-align: left;
+    }
   }
 }
