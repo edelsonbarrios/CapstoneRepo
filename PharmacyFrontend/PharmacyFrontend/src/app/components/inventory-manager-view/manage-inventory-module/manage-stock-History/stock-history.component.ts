@@ -166,8 +166,24 @@ export class ManageStockHistoryComponent implements OnInit {
   }
 
   // Helper method for formatting +/- signs in Changed column
-  formatChange(value: number): string {
+  formatChange(value: number, movementType: string): string {
+
+    console.log(`${movementType}`);
+
     if (!value || value === 0) return '0';
+
+    if(movementType == 'Sale') {
+      return value > 0 ? `- ${value}` : `${value}`;
+    }else if(movementType == 'Stock In') {
+      return value > 0 ? `+ ${value}` : `${value}`;
+    }else if(movementType == 'Count Correction') {
+      return value > 0 ? `+ ${value}` : `- ${value}`;
+    }else if(movementType == 'Expired') {
+      return value > 0 ? `- ${value}` : `${value}`;
+    }else if(movementType == 'Damaged') {
+      return value > 0 ? `- ${value}` : `${value}`;
+    }
+
     return value > 0 ? `+${value}` : `${value}`;
   }
 
