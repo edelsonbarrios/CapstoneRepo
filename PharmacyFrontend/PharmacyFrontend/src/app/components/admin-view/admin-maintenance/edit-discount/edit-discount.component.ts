@@ -1,5 +1,5 @@
 // ==================== EDIT DISCOUNT COMPONENT ====================
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Discount } from '../../../../models/discount-models/discount';
 import { UpdateService } from '../../../../services/UpdateService/update.service';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
   templateUrl: './edit-discount.component.html',
   styleUrl: './edit-discount.component.scss'
 })
-export class EditDiscountComponent {
+export class EditDiscountComponent implements OnInit{
   @Input() editDiscount: Discount = new Discount();
   @Output() closeForm = new EventEmitter<void>();
 
@@ -21,8 +21,18 @@ export class EditDiscountComponent {
 
   constructor(private updateService: UpdateService) {}
 
+  ngOnInit(): void {
+    console.log(JSON.stringify(this.editDiscount));
+  }
+
   updateDiscount() {
     this.discountNameError = '';
+    if(this.editDiscount.startDate) {
+      this.editDiscount.startDate = new Date(this.editDiscount.startDate).toISOString();
+    }
+    if(this.editDiscount.endDate) {
+      this.editDiscount.endDate = new Date(this.editDiscount.endDate).toISOString();
+    }
 
     // Validate discount name
     if (!this.editDiscount.discountName || this.editDiscount.discountName.trim() === '') {
@@ -36,9 +46,18 @@ export class EditDiscountComponent {
       return;
     }
 
-    if (this.editDiscount.discountAmount < 0 || this.editDiscount.discountAmount > 100) {
-      this.discountNameError = 'Discount rate must be between 0 and 100';
-      return;
+    if(this.editDiscount.discountType == 'Percentage') {
+      if(this.editDiscount.discountAmount <= 0 || this.editDiscount.discountAmount >= 100) {
+        this.discountNameError = 'Discount Rate must only be between 0 to 100';
+        return;
+      }
+    }
+
+    if(this.editDiscount.discountType = 'Fixed') {
+      if(this.editDiscount.discountAmount < 0) {
+        this.discountNameError = 'Discount amount must be greater than or equal to 0';
+        return;
+      }
     }
 
     if (!this.editDiscount) return;
