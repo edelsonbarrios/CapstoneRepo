@@ -19,6 +19,7 @@ import { ViewSalesComponent } from '../view-sales/view-sales.component';
 import { SalesTransaction } from '../../../models/sales-transaction-models/sales-transaction';
 import { DailySalesSummary } from '../../../models/sales-transaction-models/daily-sales-summary';
 import { ProductSalesSummary } from '../../../models/sales-transaction-models/product-sales-summary';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-cashier-transaction',
@@ -42,6 +43,7 @@ export class CashierTransactionComponent implements OnInit {
   transactions: SalesTransaction[] = [];
   dailySalesSummary: DailySalesSummary = new DailySalesSummary();
   productSalesSummary: ProductSalesSummary[] = [];
+  enrichedProducts: any[] = [];
   startDate: string = '';
   endDate: string = '';
   selectedPaymentMethod: string = '';
@@ -57,6 +59,9 @@ export class CashierTransactionComponent implements OnInit {
   currentSalesPage: number = 1;
   itemsPerSalesPage: number = 6;
   totalSalesPages: number = 0;
+
+  // Breakdown modal
+  showBreakdownModal: boolean = false;
 
   constructor(
     private getService: GetService,
@@ -107,12 +112,28 @@ export class CashierTransactionComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.productSalesSummary = res;
+          console.log('Product Sales Summary received:', res);
+          // Backend now returns the breakdown directly, so just use it
+          this.enrichedProducts = res;
           this.updateProductPagination();
         },
         error: (err) => {
           console.log(`Product sales summary error: ${err.error}`);
         },
       });
+  }
+
+  getUnitTypeClass(unitMeasurement: string): string {
+    switch (unitMeasurement) {
+      case 'Multi-Level':
+        return 'unit-multi';
+      case 'Dual-Level':
+        return 'unit-dual';
+      case 'Single-Level':
+        return 'unit-single';
+      default:
+        return 'unit-default';
+    }
   }
 
   getDailySalesSummary() {
@@ -171,14 +192,14 @@ export class CashierTransactionComponent implements OnInit {
         let filtered = allTransactions;
 
         // Filter by date range
-      if (this.startDate && this.endDate) {
-        filtered = filtered.filter((transaction) => {
-          const transactionDateStr = new Date(transaction.transactionDate)
-            .toISOString()
-            .split('T')[0];
-          return transactionDateStr >= this.startDate && transactionDateStr <= this.endDate;
-        });
-      }
+        if (this.startDate && this.endDate) {
+          filtered = filtered.filter((transaction) => {
+            const transactionDateStr = new Date(transaction.transactionDate)
+              .toISOString()
+              .split('T')[0];
+            return transactionDateStr >= this.startDate && transactionDateStr <= this.endDate;
+          });
+        }
 
         // Filter by payment method
         if (
@@ -215,16 +236,19 @@ export class CashierTransactionComponent implements OnInit {
   }
 
   updateProductPagination() {
+    // Use enrichedProducts if available, otherwise fall back to productSalesSummary
+    const dataSource = this.enrichedProducts.length > 0 
+      ? this.enrichedProducts 
+      : this.productSalesSummary;
+      
     this.totalProductPages = Math.ceil(
-      this.productSalesSummary.length / this.itemsPerProductPage
+      dataSource.length / this.itemsPerProductPage
     );
     if (this.totalProductPages === 0) this.totalProductPages = 1;
+    
     const startIndex = (this.currentProductPage - 1) * this.itemsPerProductPage;
     const endIndex = startIndex + this.itemsPerProductPage;
-    this.paginatedProducts = this.productSalesSummary.slice(
-      startIndex,
-      endIndex
-    );
+    this.paginatedProducts = dataSource.slice(startIndex, endIndex);
   }
 
   goToProductPage(page: number) {
@@ -260,24 +284,47 @@ export class CashierTransactionComponent implements OnInit {
   }
 
   getLoggedInEmployee() {
-      const token = localStorage.getItem(LogInToken);
-      if (!token) {
+    const token = localStorage.getItem(LogInToken);
+    if (!token) {
       console.log(`Token does not exist.`);
       return;
-      }
-
-      const employee: any = jwtDecode(token);
-      const employeeId = parseInt(employee.EmployeeId);
-
-      this.getService.GetEmployeeById(employeeId).subscribe({
-        next: (employee) => {
-          this.loggedInEmployee = employee;
-          this.getAllSalesTransactions();
-        },
-        error: (err) => {
-          console.log(`${err.error}`);
-        },
-      });
     }
 
+    const employee: any = jwtDecode(token);
+    const employeeId = parseInt(employee.EmployeeId);
+
+    this.getService.GetEmployeeById(employeeId).subscribe({
+      next: (employee) => {
+        this.loggedInEmployee = employee;
+        this.getAllSalesTransactions();
+      },
+      error: (err) => {
+        console.log(`${err.error}`);
+      },
+    });
+  }
+
+  // Breakdown modal methods
+  showItemsSoldBreakdown(): void {
+    this.showBreakdownModal = true;
+  }
+
+  closeBreakdownModal(): void {
+    this.showBreakdownModal = false;
+  }
+
+  getTotalItemsSold(): number {
+    if (!this.enrichedProducts || this.enrichedProducts.length === 0) {
+      return 0;
+    }
+
+    return this.enrichedProducts.reduce((total, product) => {
+      const boxes = product.boxSold || 0;
+      const sheets = product.sheetSold || 0;
+      const pieces = product.pieceSold || 0;
+      
+      // Each unit (box, sheet, or piece) counts as 1 item
+      return total + boxes + sheets + pieces;
+    }, 0);
+  }
 }
