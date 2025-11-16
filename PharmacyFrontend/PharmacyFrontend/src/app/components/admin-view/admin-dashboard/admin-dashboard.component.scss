@@ -172,33 +172,47 @@
       .top-meds-table {
         width: 100%;
         border-collapse: collapse;
+        margin-bottom: 20px;
 
         th {
-          padding: 14px 12px;
+          padding: 16px 14px;
           text-align: left;
           font-weight: 600;
-          font-size: 14px;
-          border-bottom: 1px solid rgb(235, 235, 235);
+          font-size: 13px;
+          color: #475569;
+          background: #f8fafc;
+          border-bottom: 2px solid #e2e8f0;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
+        // Column widths for the 4-column layout
+        th:nth-child(1) { width: 30%; } // Product
+        th:nth-child(2) { width: 20%; } // Unit Type
+        th:nth-child(3) { width: 30%; } // Qty Sold
+        th:nth-child(4) { width: 20%; } // Available Stock
+
         td {
-          padding: 14px 12px;
+          padding: 16px 14px;
           text-align: left;
           color: #334155;
           font-weight: 500;
-          font-size: 14px;
+          font-size: 13px;
           border-bottom: 1px solid #f1f5f9;
           transition: background 0.15s ease;
+          vertical-align: top;
 
           &:first-child {
             font-weight: 600;
             color: #3498ff;
-            width: 100px;
+            font-size: 14px;
           }
 
           &:last-child {
             color: #64748b;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
           }
         }
 
@@ -305,7 +319,85 @@
   }
 }
 
-// NEW: Graph Section Styles
+// ✅ MINIMAL: Unit Type Badges
+// ✅ MINIMAL: Unit Type Badges
+.unit-badge {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  border: 1px solid;
+  display: inline-block;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &.multi-level {
+    background: #dbeafe;
+    color: #1e40af;
+    border-color: #93c5fd;
+  }
+
+  &.dual-level {
+    background: #fed7aa;
+    color: #c2410c;
+    border-color: #fdba74;
+  }
+
+  &.single-level {
+    background: #e9d5ff;
+    color: #7c3aed;
+    border-color: #c4b5fd;
+  }
+}
+
+// ✅ MINIMAL: Quantity Breakdown
+.qty-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .sold-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .sold-badge {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 3px 7px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid #86efac;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    line-height: 1.2;
+
+    &:hover {
+      background: #bbf7d0;
+    }
+  }
+
+  .total-qty {
+    font-size: 9px;
+    color: #64748b;
+    font-weight: 700;
+    margin-top: 2px;
+    padding: 2px 5px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    display: inline-block;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+}
+
+// Graph Section Styles
 .graph-section {
   padding: 0 !important;
   overflow: hidden;
@@ -496,6 +588,31 @@
     .tab-btn {
       width: 100%;
       text-align: left;
+    }
+  }
+
+  // Make table more mobile-friendly
+  .top-meds-table {
+    font-size: 12px;
+
+    th, td {
+      padding: 10px 8px;
+    }
+  }
+
+  .unit-badge {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  .sold-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .qty-breakdown {
+    .total-qty {
+      font-size: 10px;
     }
   }
 }

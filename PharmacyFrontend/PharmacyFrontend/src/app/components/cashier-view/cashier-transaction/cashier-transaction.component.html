@@ -18,8 +18,17 @@
 
     <div class="grid-items item-sold">
       <div class="upper-container">
-        <h2>ITEM SOLD</h2>
+        <div class="header-with-info">
+          <h2>ITEM SOLD</h2>
+          <button class="info-button" (click)="showItemsSoldBreakdown()" 
+                  title="Click to see detailed breakdown">
+            ℹ️
+          </button>
+        </div>
         <p>{{dailySalesSummary.totalItemsSold}}</p>
+        <div class="breakdown-hint">
+          <span class="hint-text">Click ℹ️ for breakdown</span>
+        </div>
       </div>
     </div>
 
@@ -32,22 +41,73 @@
 
     <!-- LOWER CONTAINER PRODUCT/TABLE CONTAINER-->
     <div class="grid-items product">
-      <h1>Products</h1>
+      <div class="product-header">
+        <h1>Products</h1>
+        <div class="info-badge">
+          <span class="info-icon" title="Shows complete units sold. Example: '1 Box, 4 Sheets, 4 Pcs' means 1 full box + 4 full sheets + 4 loose pieces">ℹ️</span>
+          <span class="info-text">Complete units sold</span>
+        </div>
+      </div>
 
       <table class="product-table">
         <thead>
           <tr>
             <th>Name</th>
+            <th>Unit Type</th>
             <th>Sold</th>
-            <th>Available</th>
             <th>Sales</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let p of paginatedProducts">
             <td>{{p.productName}}</td>
-            <td>{{p.quantitySold}}</td>
-            <td>{{p.availableStock}}</td>
+            <td>
+              <span class="unit-type-badge" [ngClass]="getUnitTypeClass(p.unitMeasurement)">
+                {{p.unitMeasurement || 'N/A'}}
+              </span>
+            </td>
+            <td>
+              <div class="sold-display">
+                <ng-container [ngSwitch]="p.unitMeasurement">
+                  <!-- Multi-Level: Show Box, Sheet, Piece -->
+                  <ng-container *ngSwitchCase="'Multi-Level'">
+                    <span class="sold-item" [title]="'Complete boxes sold'">
+                      <strong>Box:</strong> {{p.boxSold || 0}}
+                    </span>
+                    <span class="sold-item" [title]="'Complete sheets sold (not in boxes)'">
+                      <strong>Sheet:</strong> {{p.sheetSold || 0}}
+                    </span>
+                    <span class="sold-item" [title]="'Loose pieces sold (not in sheets)'">
+                      <strong>Pc:</strong> {{p.pieceSold || 0}}
+                    </span>
+                  </ng-container>
+
+                  <!-- Dual-Level: Show Box, Piece -->
+                  <ng-container *ngSwitchCase="'Dual-Level'">
+                    <span class="sold-item" [title]="'Complete boxes sold'">
+                      <strong>Box:</strong> {{p.boxSold || 0}}
+                    </span>
+                    <span class="sold-item" [title]="'Loose pieces sold (not in boxes)'">
+                      <strong>Pc:</strong> {{p.pieceSold || 0}}
+                    </span>
+                  </ng-container>
+
+                  <!-- Single-Level: Show Piece only -->
+                  <ng-container *ngSwitchCase="'Single-Level'">
+                    <span class="sold-item" [title]="'Total pieces sold'">
+                      <strong>Pieces:</strong> {{p.pieceSold || 0}}
+                    </span>
+                  </ng-container>
+
+                  <!-- Default: Show total pieces -->
+                  <ng-container *ngSwitchDefault>
+                    <span class="sold-item" [title]="'Total quantity sold'">
+                      <strong>Total:</strong> {{p.quantitySold || 0}}
+                    </span>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </td>
             <td>{{p.totalSales | currency: 'PHP'}}</td>
           </tr>
         </tbody>
@@ -119,10 +179,69 @@
   </div>
 </main>
 
+<!-- VIEW SALES MODAL -->
 <div class="modal-overlay" *ngIf="viewSales">
   <app-view-sales
     *ngIf="viewSales"
     [viewSales]="viewSales"
     (closeForm)="closeViewSalesForm()"
   ></app-view-sales>
+</div>
+
+<!-- BREAKDOWN MODAL -->
+<div class="modal-overlay" *ngIf="showBreakdownModal" (click)="closeBreakdownModal()">
+  <div class="breakdown-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📊 Items Sold Breakdown</h3>
+      <button class="close-btn" (click)="closeBreakdownModal()">✕</button>
+    </div>
+    
+    <div class="modal-content">
+      <div class="breakdown-explanation">
+        <p><strong>How "Items Sold" is calculated:</strong></p>
+        <p>Each box, sheet, or piece sold counts as 1 item.</p>
+      </div>
+
+      <div class="product-breakdown" *ngFor="let product of enrichedProducts">
+        <div class="product-name">
+          <strong>{{product.productName}}</strong>
+          <span class="unit-badge">{{product.unitMeasurement}}</span>
+        </div>
+        
+        <div class="calculation">
+          <ng-container *ngIf="product.unitMeasurement === 'Multi-Level'">
+            <span class="calc-item">{{product.boxSold || 0}} box(es)</span>
+            <span class="operator">+</span>
+            <span class="calc-item">{{product.sheetSold || 0}} sheet(s)</span>
+            <span class="operator">+</span>
+            <span class="calc-item">{{product.pieceSold || 0}} pc(s)</span>
+            <span class="operator">=</span>
+            <span class="calc-result">{{(product.boxSold || 0) + (product.sheetSold || 0) + (product.pieceSold || 0)}} items</span>
+          </ng-container>
+          
+          <ng-container *ngIf="product.unitMeasurement === 'Dual-Level'">
+            <span class="calc-item">{{product.boxSold || 0}} box(es)</span>
+            <span class="operator">+</span>
+            <span class="calc-item">{{product.pieceSold || 0}} pc(s)</span>
+            <span class="operator">=</span>
+            <span class="calc-result">{{(product.boxSold || 0) + (product.pieceSold || 0)}} items</span>
+          </ng-container>
+          
+          <ng-container *ngIf="product.unitMeasurement === 'Single-Level'">
+            <span class="calc-item">{{product.pieceSold || 0}} piece(s)</span>
+            <span class="operator">=</span>
+            <span class="calc-result">{{product.pieceSold || 0}} items</span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="total-section">
+        <div class="total-line"></div>
+        <div class="total-calculation">
+          <span class="total-label">TOTAL ITEMS SOLD:</span>
+          <span class="total-value">{{getTotalItemsSold()}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

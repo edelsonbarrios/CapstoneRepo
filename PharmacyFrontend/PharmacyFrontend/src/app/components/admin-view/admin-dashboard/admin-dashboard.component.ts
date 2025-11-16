@@ -8,6 +8,21 @@ import { GetService } from '../../../services/GetService/get.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
+// Extended interface for top selling medicines with unit breakdown
+interface TopSellingMedWithBreakdown extends ProductSalesSummary {
+  unitType: 'Multi-Level' | 'Dual-Level' | 'Single-Level';
+  quantitySoldBreakdown: {
+    box?: number;
+    sheet?: number;
+    piece: number;
+  };
+  totalQty: number;
+  boxSold?: number;
+  sheetSold?: number;
+  pieceSold?: number;
+  unitMeasurement?: string;
+}
+
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
@@ -20,8 +35,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   todaySalesAmount: number = 0;
   lowStockCount: number = 0;
   outOfStockCount: number = 0;
-  topSellingMedicines: ProductSalesSummary[] = [];
-  paginatedTopMeds: ProductSalesSummary[] = [];
+  topSellingMedicines: TopSellingMedWithBreakdown[] = [];
+  paginatedTopMeds: TopSellingMedWithBreakdown[] = [];
   dateToday: Date = new Date();
   timer: any;
   expiringProducts: Inventory[] = [];
@@ -159,7 +174,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.getOutOfStockCount();
     this.getNearExpiryInventory();
     this.getTopSellingProductsMonthly();
-    this.loadChartData(); // NEW: Load chart data
+    this.loadChartData();
 
     this.timer = setInterval(() => {
       this.dateToday = new Date();
@@ -172,8 +187,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
- //Generate array of last 7 days in MM/DD format
-
+  //Generate array of last 7 days in MM/DD format
   private getLast7Days(): string[] {
     const days: string[] = [];
     const today = new Date();
@@ -189,7 +203,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return days;
   }
 
-  // Updated loadChartData() method with proper typing:
   loadChartData(): void {
     // Load top products for bar chart (current month)
     this.getService.getTopSellingProductsMonthly().subscribe({
@@ -211,31 +224,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       next: (data: ProductSalesSummary[]) => {
         const last7Days = this.getLast7Days();
         
-        // Create a map of dates to sales amounts (aggregate by date)
         const salesByDate = new Map<string, number>();
-        
-        // Initialize all 7 days with 0
         last7Days.forEach((day: string) => salesByDate.set(day, 0));
         
-        // Aggregate sales data by date
         data.forEach((product: ProductSalesSummary) => {
-          // For now, we'll distribute the total sales across the period
-          // You might want to create a backend endpoint that returns daily sales
           const avgPerDay = product.totalSales / 7;
           last7Days.forEach((day: string) => {
             salesByDate.set(day, (salesByDate.get(day) || 0) + avgPerDay);
           });
         });
         
-        // Convert map to array
         const salesData = last7Days.map((day: string) => Math.round(salesByDate.get(day) || 0));
-        const costData = salesData.map((sale: number) => Math.round(sale * 0.6)); // Estimate cost as 60% of sales
+        const costData = salesData.map((sale: number) => Math.round(sale * 0.6));
         
         this.salesLineChartData.labels = last7Days;
         this.salesLineChartData.datasets[0].data = salesData;
         this.salesLineChartData.datasets[1].data = costData;
-        
-        console.log('Sales data loaded:', salesData); // Debug log
       },
       error: (err) => console.log('Error loading sales trend:', err)
     });
@@ -249,18 +253,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.lowStockCount,
       this.outOfStockCount
     ];
-    
-    console.log('Inventory data:', this.inventoryPieChartData.datasets[0].data); // Debug log
   }
 
-
-
-  // NEW: Tab switching
+  // Tab switching
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
 
-  // Existing methods...
   getTodaySalesAmount() {
     this.getService.getTodaySalesAmountAsync().subscribe({
       next: (res) => (this.todaySalesAmount = res),
@@ -272,7 +271,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.getService.getInventoryLowStockCountAsync().subscribe({
       next: (res) => {
         this.lowStockCount = res;
-        this.loadChartData(); // Update charts when data loads
+        this.loadChartData();
       },
       error: (err) => console.log(`${err.error}`),
     });
@@ -282,7 +281,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.getService.getInventoryOutOfStockCountAsync().subscribe({
       next: res => {
         this.outOfStockCount = res;
-        this.loadChartData(); // Update charts when data loads
+        this.loadChartData();
       },
       error: err => console.log(`${err.error}`)
     });
@@ -301,7 +300,29 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   getTopSellingProductsMonthly() {
     this.getService.getTopSellingProductsMonthly().subscribe({
       next: res => {
-        this.topSellingMedicines = res;
+        console.log('Backend response:', res); // Debug log
+        
+        // Map the backend response to include unit type and breakdown
+        this.topSellingMedicines = res.map(product => {
+          const mapped: TopSellingMedWithBreakdown = {
+            ...product,
+            unitType: (product.unitMeasurement || 'Single-Level') as 'Multi-Level' | 'Dual-Level' | 'Single-Level',
+            quantitySoldBreakdown: {
+              box: product.boxSold ?? undefined,
+              sheet: product.sheetSold ?? undefined,
+              piece: product.pieceSold ?? product.quantitySold ?? 0
+            },
+            totalQty: product.quantitySold || 0,
+            boxSold: product.boxSold,
+            sheetSold: product.sheetSold,
+            pieceSold: product.pieceSold,
+            unitMeasurement: product.unitMeasurement
+          };
+          
+          console.log('Mapped product:', mapped); // Debug log
+          return mapped;
+        });
+        
         this.updateTopMedsPagination();
       },
       error: err => console.log(`${err.error}`)

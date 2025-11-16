@@ -215,59 +215,176 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<ProductSalesSummaryDto>> GetProductSalesSummaryAsync(
-            DateTime startDate,
-            DateTime endDate)
+    DateTime startDate,
+    DateTime endDate)
         {
             // ✅ If no dates provided, default to current week (Monday → Sunday)
             if (startDate == default || endDate == default)
             {
                 var today = DateTime.UtcNow.Date;
-                int daysSinceMonday = ((int)today.DayOfWeek + 6) % 7; // Convert Sunday=0 → 6
-                startDate = today.AddDays(-daysSinceMonday); // Monday of current week
-                endDate = startDate.AddDays(6); // Sunday of current week
+                int daysSinceMonday = ((int)today.DayOfWeek + 6) % 7;
+                startDate = today.AddDays(-daysSinceMonday);
+                endDate = startDate.AddDays(6);
             }
 
-            // Ensure date comparisons ignore time
             var start = DateTime.SpecifyKind(startDate.Date, DateTimeKind.Utc);
-            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc); // end of day
+            var end = DateTime.SpecifyKind(endDate.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc);
 
-            // ✅ Fetch sales items within the range
-            var salesData = await _context.SalesItem
+            // ✅ Fetch ALL sales items (not just totals) to track unit types sold
+            var salesItems = await _context.SalesItem
                 .Include(si => si.SalesTransaction)
                 .Include(si => si.Product)
                     .ThenInclude(p => p.Inventory)
                 .Where(si => si.SalesTransaction.TransactionDate >= start
                           && si.SalesTransaction.TransactionDate <= end)
-                .GroupBy(si => new
-                {
-                    si.ProductId,
-                    si.Product.ProductName
-                })
-                .Select(g => new
-                {
-                    ProductId = g.Key.ProductId,
-                    ProductName = g.Key.ProductName,
-                    QuantitySold = g.Sum(si => si.Quantity),
-                    TotalSales = g.Sum(si => si.Subtotal),
-                    Product = g.FirstOrDefault().Product
-                })
                 .ToListAsync();
 
-            // ✅ Map to DTO
-            var result = salesData.Select(sd => new ProductSalesSummaryDto
+            // ✅ Group by product and calculate SMART ACCUMULATION
+            var groupedData = salesItems
+                .GroupBy(si => si.ProductId)
+                .Select(g => new
+                {
+                    ProductId = g.Key,
+                    Product = g.First().Product,
+                    SalesItems = g.ToList(), // Keep all individual sales
+                    TotalSales = g.Sum(si => si.Subtotal)
+                })
+                .ToList();
+
+            // ✅ Map to DTO with SMART CASCADING ACCUMULATION
+            var result = groupedData.Select(sd =>
             {
-                ProductId = sd.ProductId,
-                ProductName = sd.ProductName,
-                QuantitySold = sd.QuantitySold,
-                AvailableStock = sd.Product?.Inventory?
-                    .Where(i => i.IsActive && !i.IsExpired)
-                    .Sum(i => i.TotalPiecesAvailable) ?? 0,
-                TotalSales = sd.TotalSales
+                var dto = new ProductSalesSummaryDto
+                {
+                    ProductId = sd.ProductId,
+                    ProductName = sd.Product.ProductName,
+                    AvailableStock = sd.Product.Inventory?
+                        .Where(i => i.IsActive && !i.IsExpired)
+                        .Sum(i => i.TotalPiecesAvailable) ?? 0,
+                    TotalSales = sd.TotalSales,
+                    UnitMeasurement = sd.Product.UnitMeasurement
+                };
+
+                // 🔥 SMART CASCADING ACCUMULATION
+                // Track boxes, sheets, and pieces separately as they're sold
+                // Then recalculate to show complete units
+                var accumulation = CalculateSmartSalesAccumulation(
+                    sd.SalesItems,
+                    sd.Product.UnitMeasurement,
+                    sd.Product.SheetsPerBox,
+                    sd.Product.PiecesPerSheet,
+                    sd.Product.PiecePerBox
+                );
+
+                dto.QuantitySold = accumulation.TotalPieces;
+                dto.BoxSold = accumulation.Boxes;
+                dto.SheetSold = accumulation.Sheets;
+                dto.PieceSold = accumulation.Pieces;
+
+                return dto;
             }).ToList();
 
             return result;
         }
 
+        /// <summary>
+        /// SMART CASCADING ACCUMULATION for Sales
+        /// Shows complete units PLUS total pieces accumulated
+        /// 
+        /// Example: Biogesic (Multi-Level: 20 sheets/box, 10 pieces/sheet)
+        /// Sale 1: 11 pieces → 0 box, 1 sheet, 11 pieces total
+        /// Sale 2: 9 pieces → 0 box, 2 sheets, 20 pieces total (accumulated 11+9=20)
+        /// Sale 3: 190 pieces → 1 box, 0 sheets, 210 pieces total (accumulated 20+190=210)
+        /// Sale 4: 5 pieces → 1 box, 0 sheets, 215 pieces total (accumulated 210+5=215)
+        /// 
+        /// Display format: "1 box, 0 sheets, 215 pieces" where:
+        /// - Boxes/Sheets = Complete units formed
+        /// - Pieces = Total accumulated quantity sold
+        /// </summary>
+        private (int TotalPieces, int? Boxes, int? Sheets, int? Pieces) CalculateSmartSalesAccumulation(
+            List<SalesItem> salesItems,
+            string unitType,
+            int? sheetsPerBox,
+            int? piecesPerSheet,
+            int? piecePerBox)
+        {
+            // Step 1: Calculate TOTAL PIECES from all sales
+            // Each SalesItem.Quantity is already in pieces
+            int totalPieces = salesItems.Sum(item => item.Quantity);
+
+            // Step 2: Calculate complete units AND keep total pieces
+            int? boxes = null;
+            int? sheets = null;
+            int? pieces = totalPieces; // ALWAYS show total accumulated pieces
+
+            if (totalPieces == 0)
+            {
+                pieces = 0;
+                return (totalPieces, boxes, sheets, pieces);
+            }
+
+            switch (unitType)
+            {
+                case "Multi-Level":
+                    if (sheetsPerBox.HasValue && sheetsPerBox > 0 &&
+                        piecesPerSheet.HasValue && piecesPerSheet > 0)
+                    {
+                        var piecesPerBoxCalc = sheetsPerBox.Value * piecesPerSheet.Value;
+
+                        // Calculate complete boxes
+                        boxes = totalPieces / piecesPerBoxCalc;
+                        var remainingAfterBoxes = totalPieces % piecesPerBoxCalc;
+
+                        // Calculate complete sheets from remaining
+                        sheets = remainingAfterBoxes / piecesPerSheet.Value;
+
+                        // Keep total pieces accumulated (NOT the remainder)
+                        pieces = totalPieces;
+
+                        // Example with 215 pieces (20 sheets/box, 10 pieces/sheet = 200 pieces/box):
+                        // boxes = 215 / 200 = 1 box
+                        // remainingAfterBoxes = 215 % 200 = 15
+                        // sheets = 15 / 10 = 1 sheet  
+                        // pieces = 215 (total accumulated) ✅
+                        // Display: "1 box, 1 sheet, 215 pieces"
+                    }
+                    else
+                    {
+                        pieces = totalPieces;
+                    }
+                    break;
+
+                case "Dual-Level":
+                    if (piecePerBox.HasValue && piecePerBox > 0)
+                    {
+                        boxes = totalPieces / piecePerBox.Value;
+
+                        // Keep total pieces accumulated (NOT the remainder)
+                        pieces = totalPieces;
+
+                        // Example with 9 pieces (5 pieces/box):
+                        // boxes = 9 / 5 = 1 box
+                        // pieces = 9 (total accumulated) ✅
+                        // Display: "1 box, 9 pieces"
+                    }
+                    else
+                    {
+                        pieces = totalPieces;
+                    }
+                    break;
+
+                case "Single-Level":
+                    // Only pieces, no conversion needed
+                    pieces = totalPieces;
+                    break;
+
+                default:
+                    pieces = totalPieces;
+                    break;
+            }
+
+            return (totalPieces, boxes, sheets, pieces);
+        }
 
         public async Task<IEnumerable<SalesTransaction>> GetFilteredSalesTransactionsAsync(
             DateTime startDate,
@@ -1191,32 +1308,93 @@ namespace PharmacyBackend.Repository.GET
         }
         public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()
         {
-          var currentMonth = DateTime.Today.Month;
-          var topSellingProducts = await _context.SalesItem
-            .Include(si => si.SalesTransaction)
-            .Include(si => si.Product)
-            .ThenInclude(p => p.Inventory)
-            .Where(si => si.SalesTransaction.TransactionDate.Month == currentMonth)
-            .GroupBy(si => new {si.Product.ProductID, si.Product.ProductName})
-            .Select(g => new
+            var currentMonth = DateTime.Today.Month;
+            var currentYear = DateTime.Today.Year;
+
+            var topSellingProducts = await _context.SalesItem
+                .Include(si => si.SalesTransaction)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Inventory)
+                .Where(si => si.SalesTransaction.TransactionDate.Month == currentMonth
+                          && si.SalesTransaction.TransactionDate.Year == currentYear)
+                .GroupBy(si => new { si.Product.ProductID, si.Product.ProductName, si.Product.UnitMeasurement })
+                .Select(g => new
                 {
-                g.Key.ProductID,
-                g.Key.ProductName,
-                QuantitySold = g.Sum(si => si.Quantity),
-                TotalSales = g.Sum(si => si.Subtotal),
-                g.FirstOrDefault().Product
-                }).ToListAsync();
-          var result = topSellingProducts.Select(ts => new ProductSalesSummaryDto
-              {
-              ProductId = ts.ProductID,
-              ProductName = ts.ProductName,
-              QuantitySold = ts.QuantitySold,
-              AvailableStock = ts.Product.Inventory
-              .Where(i => i.IsActive && !i.IsExpired)
-              .Sum(i => i.TotalPiecesAvailable),
-              TotalSales = ts.TotalSales
-              }).ToList();
-          return result;
+                    g.Key.ProductID,
+                    g.Key.ProductName,
+                    g.Key.UnitMeasurement,
+                    QuantitySold = g.Sum(si => si.Quantity), // Total pieces sold
+                    TotalSales = g.Sum(si => si.Subtotal),
+                    Product = g.FirstOrDefault().Product
+                })
+                .OrderByDescending(x => x.QuantitySold)
+                .Take(10)
+                .ToListAsync();
+
+            var result = topSellingProducts.Select(ts =>
+            {
+                var dto = new ProductSalesSummaryDto
+                {
+                    ProductId = ts.ProductID,
+                    ProductName = ts.ProductName,
+                    QuantitySold = ts.QuantitySold,
+                    AvailableStock = ts.Product.Inventory
+                        .Where(i => i.IsActive && !i.IsExpired)
+                        .Sum(i => i.TotalPiecesAvailable),
+                    TotalSales = ts.TotalSales,
+                    UnitMeasurement = ts.UnitMeasurement ?? "Single-Level"
+                };
+
+                // Calculate breakdown based on unit measurement
+                CalculateSalesBreakdown(dto, ts.Product);
+
+                return dto;
+            }).ToList();
+
+            return result;
+        }
+
+        private void CalculateSalesBreakdown(ProductSalesSummaryDto dto, Product product)
+        {
+            int totalPieces = dto.QuantitySold;
+            switch (dto.UnitMeasurement)
+            {
+                case "Multi-Level":
+                    if (product.SheetsPerBox > 0 && product.PiecesPerSheet > 0)
+                    {
+                        int piecesPerBox = product.SheetsPerBox * product.PiecesPerSheet;
+                        dto.BoxSold = totalPieces / piecesPerBox;
+                        int remainder = totalPieces % piecesPerBox;
+                        dto.SheetSold = remainder / product.PiecesPerSheet;
+                        dto.PieceSold = totalPieces; // ✅ CHANGED: Show total accumulated pieces
+                    }
+                    else
+                    {
+                        dto.BoxSold = 0;
+                        dto.SheetSold = 0;
+                        dto.PieceSold = totalPieces;
+                    }
+                    break;
+                case "Dual-Level":
+                    if (product.PiecePerBox > 0)
+                    {
+                        dto.BoxSold = totalPieces / product.PiecePerBox;
+                        dto.PieceSold = totalPieces; // ✅ CHANGED: Show total accumulated pieces
+                        dto.SheetSold = null; // Not applicable for Dual-Level
+                    }
+                    else
+                    {
+                        dto.BoxSold = 0;
+                        dto.PieceSold = totalPieces;
+                    }
+                    break;
+                case "Single-Level":
+                default:
+                    dto.BoxSold = null; // Not applicable
+                    dto.SheetSold = null; // Not applicable
+                    dto.PieceSold = totalPieces;
+                    break;
+            }
         }
         #endregion
 

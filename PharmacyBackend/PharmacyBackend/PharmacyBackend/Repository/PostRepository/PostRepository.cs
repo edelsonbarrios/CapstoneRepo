@@ -238,8 +238,13 @@ namespace PharmacyBackend.Repository.POST
 
         #endregion
 
-    #region Private Helper Methods - SMART CASCADING DEDUCTION
-
+        #region Private Helper Methods - SMART CASCADING DEDUCTION
+        /// Example: Biogesic (Multi-Level: 20 sheets/box, 10 pieces/sheet)
+        /// Sale 1: 1 piece → Total: 0 box, 0 sheet, 1 piece
+        /// Sale 2: 9 pieces → Total: 0 box, 1 sheet, 0 pieces (10 pieces = 1 complete sheet)
+        /// Sale 3: 1 sheet → Total: 0 box, 2 sheets, 0 pieces
+        /// Sale 4: 18 sheets → Total: 1 box, 0 sheets, 0 pieces (20 sheets = 1 complete box)
+        /// Sale 5: 1 piece → Total: 1 box, 0 sheets, 1 piece
         private async Task ProcessSalesItemAsync(SalesItem salesItem, string invoiceNumber, int employeeId)
         {
             // Validation
@@ -278,6 +283,12 @@ namespace PharmacyBackend.Repository.POST
             // Validate the unit type is supported for this product
             ValidateUnitTypeForProduct(salesItem.UnitType, firstInventory);
 
+            // 🔥 FIX: Convert the quantity to TOTAL PIECES before any calculation
+            int quantityInPieces = ConvertToPieces(
+                salesItem.Quantity,
+                salesItem.UnitType,
+                firstInventory);
+
             // Check if enough stock is available across all inventories
             CheckStockAvailability(salesItem.UnitType, salesItem.Quantity, availableInventories);
 
@@ -287,26 +298,71 @@ namespace PharmacyBackend.Repository.POST
                 salesItem.UnitPrice = GetUnitPrice(salesItem.UnitType, firstInventory);
             }
 
-            // Calculate subtotal
+            // Calculate subtotal (using original quantity and unit price)
             salesItem.Subtotal = salesItem.Quantity * salesItem.UnitPrice;
 
+            // 🔥 IMPORTANT: Now update the Quantity to be in PIECES for database storage
+            // This ensures that when we sum quantities later, we're summing pieces
+            salesItem.Quantity = quantityInPieces;
+
             // Deduct from inventories using FIFO/FEFO with smart cascading
-            var remainingQuantity = salesItem.Quantity;
+            var remainingQuantity = quantityInPieces; // Use converted quantity for deduction
             foreach (var inventory in availableInventories)
             {
                 if (remainingQuantity <= 0) break;
 
-                var quantityToDeduct = GetAvailableQuantity(salesItem.UnitType, inventory);
+                // For deduction, we always work in the base unit (pieces)
+                var quantityToDeduct = GetAvailableQuantity("Piece", inventory);
                 var actualDeduction = Math.Min(remainingQuantity, quantityToDeduct);
 
                 await SmartCascadingDeductFromInventory(
                     inventory,
-                    salesItem.UnitType,
+                    "Piece", // Always deduct in pieces
                     actualDeduction,
                     invoiceNumber,
                     employeeId);
 
                 remainingQuantity -= actualDeduction;
+            }
+        }
+
+        /// <summary>
+        /// Convert quantity to total pieces based on unit type
+        /// </summary>
+        private int ConvertToPieces(int quantity, string unitType, Inventory inventory)
+        {
+            switch (unitType.ToLower())
+            {
+                case "box":
+                    // Multi-Level: Box → Sheets → Pieces
+                    if (inventory.SheetsPerBox.HasValue && inventory.PiecesPerSheet.HasValue)
+                    {
+                        return quantity * inventory.SheetsPerBox.Value * inventory.PiecesPerSheet.Value;
+                    }
+                    // Dual-Level: Box → Pieces
+                    else if (inventory.PiecePerBox.HasValue)
+                    {
+                        return quantity * inventory.PiecePerBox.Value;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Cannot convert box to pieces: missing conversion ratios");
+                    }
+
+                case "sheet":
+                    // Only for Multi-Level products
+                    if (inventory.PiecesPerSheet.HasValue)
+                    {
+                        return quantity * inventory.PiecesPerSheet.Value;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Cannot convert sheet to pieces: missing conversion ratio");
+                    }
+
+                case "piece":
+                default:
+                    return quantity; // Already in pieces
             }
         }
 
