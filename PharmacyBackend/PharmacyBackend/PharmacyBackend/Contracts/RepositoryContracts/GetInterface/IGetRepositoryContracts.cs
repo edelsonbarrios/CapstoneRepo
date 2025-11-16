@@ -91,6 +91,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #region Brand
         public Task<IEnumerable<Brand>> GetAllBrandAsync();
         public Task<Brand> GetBrandByIdAsync(int id);
+        public Task<List<Brand>> GetAllInactiveBrandsAsync();
         #endregion
 
         #region Generic
@@ -130,6 +131,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         public Task<IEnumerable<Inventory>> GetExpiredInventoryAsync();
         public Task<IEnumerable<Inventory>> GetNearExpiryInventoryAsync();
         public Task<IEnumerable<Inventory>> GetCriticalStockInventoryAsync();
+        public Task<List<Inventory>> GetInventoriesOutOfStockAsync();
         #endregion
 
         #region VAT

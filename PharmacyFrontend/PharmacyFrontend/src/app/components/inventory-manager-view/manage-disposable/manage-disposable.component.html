@@ -51,7 +51,8 @@
                 class="badge"
                 [ngClass]="{
                   'badge-product': item.entityType === 'product',
-                  'badge-category': item.entityType === 'category'
+                  'badge-category': item.entityType === 'category',
+                  'badge-inventory': item.entityType === 'inventory'
                 }">
                 <i [class]="item.entityType === 'product' ? 'fas fa-box' : 'fas fa-tag'"></i>
                 {{getItemType(item)}}

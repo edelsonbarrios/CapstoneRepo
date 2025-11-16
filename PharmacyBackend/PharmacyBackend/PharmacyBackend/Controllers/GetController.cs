@@ -17,6 +17,7 @@ using PharmacyBackend.Models;
 using System.Diagnostics.Contracts;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Service.GetService;
+using PharmacyBackend.DTOs.ItemDataControlDTOs;
 
 namespace PharmacyBackend.Controllers
 {
@@ -458,6 +459,14 @@ namespace PharmacyBackend.Controllers
 
             return Ok(brand);
         }
+        [HttpGet("InactiveBrands")]
+        public async Task<ActionResult<List<BrandDto>>> GetAllInactiveBrandsAsync() 
+        {
+          var inactiveBrands = await _getService.GetAllInactiveBrandsAsync();
+          if(!inactiveBrands.Any() || inactiveBrands.Count() == 0)
+            return NotFound(new List<BrandDto>());
+          return Ok(inactiveBrands);
+        }
         #endregion
 
         #region Generic
@@ -629,6 +638,15 @@ namespace PharmacyBackend.Controllers
             if (!inventories.Any())
                 return NotFound("No critical stock inventory found.");
             return Ok(inventories);
+        }
+        [HttpGet("InventoriesOutOfStock")]
+        public async Task<ActionResult<List<InventoryDto>>> GetInventoriesOutOfStockAsync() 
+        {
+          var inventories = await _getService.GetInventoriesOutOfStockAsync();
+          if(!inventories.Any() || inventories.Count() == 0)
+            return NotFound(new List<InventoryDto>());
+
+          return Ok(inventories);
         }
         #endregion
 

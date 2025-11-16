@@ -4,6 +4,8 @@ import { Product } from '../../../models/product-models/product';
 import { Category } from '../../../models/category-models/category';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Inventory } from '../../../models/inventory-module-models/inventory';
+import { Brand } from '../../../models/brand-models/brand';
 
 
 @Component({
@@ -22,6 +24,8 @@ export class ManageDisposableComponent implements OnInit {
   totalPages: number = 0;
   currentPage: number = 1;
   searchQuery: string = '';
+  inventories: Inventory[] = [];
+  brands: Brand[] = [];
 
   Math = Math;
 
@@ -53,8 +57,14 @@ export class ManageDisposableComponent implements OnInit {
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
+    this.getAllItems();
+  }
+
+  getAllItems() {
     this.getAllProducts();
     this.getAllCategories();
+    this.getInventoriesOutOfStock();
+    this.getAllInactiveBrands();
   }
 
   getAllProducts() {
@@ -85,6 +95,30 @@ export class ManageDisposableComponent implements OnInit {
         console.log(`${this.categories}`);
       }
     });
+  }
+
+  getInventoriesOutOfStock() {
+    this.getService.getInventoriesOutOfStockAsync().subscribe({
+      next: res => {
+        this.inventories = res;
+        const inventoriesWithType = res.map(iv => ({...iv, entityType: 'inventory'}));
+        this.all.push(...inventoriesWithType);
+        this.updatePaginatedItems();
+      }
+    })
+  }
+
+  getAllInactiveBrands() {
+    this.getService.getAllInactiveBrandsAsync().subscribe({
+      next: res => {
+        const brandsWithType = res.map(b => ({...b, entityType: 'brand'}));
+        this.all.push(...brandsWithType);
+        this.updatePaginatedItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
   }
 
   updatePaginatedItems() {
@@ -128,12 +162,20 @@ export class ManageDisposableComponent implements OnInit {
       return item.productName;
     } else if (item.entityType === 'category') {
       return item.categoryName;
+    }else if(item.entityType === 'inventory') {
+      return item.productName;
+    }else if(item.entityType === 'brand') {
+      return item.brandName;
     }
     return 'Unknown';
   }
 
   getItemType(item: any): string {
-    return item.entityType === 'product' ? 'Product' : 'Category';
+    if(item.entityType === 'product') return 'Product';
+    if(item.entityType === 'category') return 'Category';
+    if(item.entityType === 'inventory') return 'Inventory';
+    if(item.entityType === 'brand') return 'Brand';
+    return 'Unknown';
   }
 
   openAddModal() {

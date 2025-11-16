@@ -550,6 +550,12 @@ namespace PharmacyBackend.Repository.GET
         {
           return await _context.Brand.FindAsync(id);
         }
+        public async Task<List<Brand>> GetAllInactiveBrandsAsync() 
+        {
+          return await _context.Brand
+            .Where(b => b.IsActive == false)
+            .ToListAsync();
+        }
         #endregion
 
         #region Generic
@@ -766,7 +772,7 @@ namespace PharmacyBackend.Repository.GET
                     else // Single-Level (pieces only)
                     {
                         // Sum total pieces available
-                        totalStock = g.Sum(i => i.TotalPiecesAvailable);
+                        totalStock = g.Sum(i => i.PieceQuantity);
                     }
 
                     return totalStock <= reorderLevel;
@@ -776,6 +782,17 @@ namespace PharmacyBackend.Repository.GET
 
             return criticalProducts;
         }
+
+        public async Task<List<Inventory>> GetInventoriesOutOfStockAsync() 
+        {
+          var inventories = await _context.Inventory
+            .Include(iv => iv.Product)
+            .Where(iv => iv.PieceQuantity == 0)
+            .ToListAsync();
+
+          return inventories;
+        }
+
         #endregion
 
         #region VAT

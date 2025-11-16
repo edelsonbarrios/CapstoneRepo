@@ -108,6 +108,9 @@ export class GetService {
   getAllBrandsAsync(): Observable<Brand[]> {
     return this.httpClient.get<Brand[]>(`${this.apiUrl}/Get/BrandAll`);
   }
+  getAllInactiveBrandsAsync() : Observable<Brand[]> {
+    return this.httpClient.get<Brand[]>(`${this.apiUrl}/Get/InactiveBrands`);
+  }
   //Brand Service End
 
   //Generic Service
@@ -181,6 +184,10 @@ export class GetService {
   }
   getInventoryDashboardValues(): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/Get/InventoryDashboard`);
+  }
+
+  getInventoriesOutOfStockAsync() : Observable<Inventory[]> {
+    return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoriesOutOfStock`);
   }
   //Inventory Service End
 
