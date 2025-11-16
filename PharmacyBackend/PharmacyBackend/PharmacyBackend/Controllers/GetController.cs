@@ -549,6 +549,17 @@ namespace PharmacyBackend.Controllers
 
             return Ok(classification);
         }
+
+        [HttpGet("InactiveClassifications")]
+        public async Task<ActionResult<List<ClassificationDto>>> GetAllInactiveClassificationsAsync() 
+        {
+          var inactiveClassifications = await _getService.GetAllInactiveClassificationsAsync();
+          if(!inactiveClassifications.Any() || inactiveClassifications.Count() == 0)
+            return NotFound(new List<ClassificationDto>());
+
+          return Ok(inactiveClassifications);
+        }
+
         #endregion
 
         #region Type

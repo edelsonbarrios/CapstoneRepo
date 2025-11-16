@@ -109,6 +109,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #region Classification
         public Task<IEnumerable<Classification>> GetAllClassificationAsync();
         public Task<Classification> GetClassificationByIdAsync(int id);
+        public Task<List<Classification>> GetAllInactiveClassificationsAsync();
         #endregion
 
         #region Types

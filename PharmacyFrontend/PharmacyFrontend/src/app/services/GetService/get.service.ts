@@ -145,6 +145,11 @@ export class GetService {
       `${this.apiUrl}/Get/ClassificationAll`
     );
   }
+
+  getAllInActiveClassificationsAsync() : Observable<Classification[]> {
+    return this.httpClient.get<Classification[]>(`${this.apiUrl}/Get/InactiveClassifications`);
+  }
+
   //Classification Service End
 
   //Supplier Service

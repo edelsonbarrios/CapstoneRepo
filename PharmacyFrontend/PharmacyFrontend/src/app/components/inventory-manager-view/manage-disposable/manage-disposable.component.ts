@@ -70,6 +70,7 @@ export class ManageDisposableComponent implements OnInit {
     this.getAllInactiveGenerics();
     this.getAllInactiveFormulations();
     this.getAllInactiveFormulations();
+    this.getAllInactiveClassifications();
   }
 
   getAllProducts() {
@@ -146,6 +147,20 @@ export class ManageDisposableComponent implements OnInit {
     })
   }
 
+  getAllInactiveClassifications() {
+    this.getService.getAllInActiveClassificationsAsync().subscribe({
+      next: res => {
+        const classificationsWithType = res.map(c => ({...c, entityType: 'classification'}));
+        this.all.push(...classificationsWithType);
+        this.updatePaginatedItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
+  }
+
+
   updatePaginatedItems() {
     const items = this.filteredItems;
     this.totalPages = Math.ceil(items.length / this.itemsPerPage);
@@ -195,6 +210,8 @@ export class ManageDisposableComponent implements OnInit {
       return item.genericName;
     }else if(item.entityType === 'formulation') {
       return item.formulationName;
+    }else if(item.entityType === 'classification'){
+      return item.classificationName;
     }
     return 'Unknown';
   }
@@ -206,6 +223,7 @@ export class ManageDisposableComponent implements OnInit {
     if(item.entityType === 'brand') return 'Brand';
     if(item.entityType === 'generic') return 'Generic';
     if(item.entityType === 'formulation') return 'Formulation';
+    if(item.entityType === 'classification') return 'Classification';
     return 'Unknown';
   }
 

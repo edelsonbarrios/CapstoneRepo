@@ -727,6 +727,12 @@ namespace PharmacyBackend.Repository.GET
         {
           return await _context.Classification.FindAsync(id);
         }
+        public async Task<List<Classification>> GetAllInactiveClassificationsAsync() 
+        {
+          return await _context.Classification
+            .Where(c => c.IsActive == false)
+            .ToListAsync();
+        }
         #endregion
 
         #region Type

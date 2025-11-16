@@ -996,6 +996,17 @@ namespace PharmacyBackend.Service.GetService
         ClassificationName = c.ClassificationName
       };
     }
+
+    public async Task<List<ClassificationDto>> GetAllInactiveClassificationsAsync() 
+    {
+      var inactiveClassifications = await _getRepo.GetAllInactiveClassificationsAsync();
+
+      return inactiveClassifications.Select(c => new ClassificationDto {
+          ClassificationID = c.ClassificationID,
+          ClassificationName = c.ClassificationName,
+          }).ToList();
+    }
+
     #endregion
 
     #region Type
