@@ -376,7 +376,6 @@ export class CashierDashboardComponent implements OnInit {
   handlePayment(event: any) {
     const employeeId = event.employeeID;
     if (!employeeId || employeeId <= 0) {
-      console.error('No valid employeeID from payment event');
       alert('No logged-in employee found. Please login again.');
       return;
     }
