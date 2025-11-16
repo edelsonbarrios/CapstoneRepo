@@ -112,11 +112,13 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #region Generic
         public Task<IEnumerable<GenericDto>> GetAllGenericAsync();
         public Task<GenericDto> GetGenericByIdAsync(int id);
+        public Task<List<GenericDto>> GetAllInactiveGenericsAsync();
         #endregion
 
         #region Formulation
         public Task<IEnumerable<FormulationDto>> GetAllFormulationAsync();
         public Task<FormulationDto> GetFormulationByIdAsync(int id);
+        public Task<List<FormulationDto>> GetAllInactiveFormulationsAsync();
         #endregion
 
         #region Classification

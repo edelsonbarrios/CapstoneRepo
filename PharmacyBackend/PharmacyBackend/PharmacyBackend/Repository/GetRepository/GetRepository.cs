@@ -687,6 +687,12 @@ namespace PharmacyBackend.Repository.GET
         {
           return await _context.Generic.AsNoTracking().FirstOrDefaultAsync(g => g.GenericID == id);
         }
+        public async Task<List<Generic>> GetAllInactiveGenericsAsync() 
+        {
+          return await _context.Generic
+            .Where(g => g.IsActive == false)
+            .ToListAsync();
+        }
         #endregion
 
         #region Formulation
@@ -700,6 +706,12 @@ namespace PharmacyBackend.Repository.GET
         public async Task<Formulation> GetFormulationByIdAsync(int id)
         {
           return await _context.Formulation.FindAsync(id);
+        }
+        public async Task<List<Formulation>> GetAllInactiveFormulationsAsync() 
+        {
+          return await _context.Formulation
+            .Where(f => f.IsActive == false)
+            .ToListAsync();
         }
         #endregion
 

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Inventory } from '../../../models/inventory-module-models/inventory';
 import { Brand } from '../../../models/brand-models/brand';
+import { Generic } from '../../../models/generic-models/generic';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class ManageDisposableComponent implements OnInit {
   searchQuery: string = '';
   inventories: Inventory[] = [];
   brands: Brand[] = [];
+  generics: Generic[] = [];
 
   Math = Math;
 
@@ -65,6 +67,9 @@ export class ManageDisposableComponent implements OnInit {
     this.getAllCategories();
     this.getInventoriesOutOfStock();
     this.getAllInactiveBrands();
+    this.getAllInactiveGenerics();
+    this.getAllInactiveFormulations();
+    this.getAllInactiveFormulations();
   }
 
   getAllProducts() {
@@ -121,6 +126,26 @@ export class ManageDisposableComponent implements OnInit {
     })
   }
 
+  getAllInactiveGenerics() {
+    this.getService.getAllInactiveGenericsAsync().subscribe({
+      next: res => {
+        const genericsWithType = res.map(g => ({...g, entityType: 'generic'}));
+        this.all.push(...genericsWithType);
+        this.updatePaginatedItems();
+      }
+    })
+  }
+
+  getAllInactiveFormulations() {
+    this.getService.getAllInactiveFormulationsAsync().subscribe({
+      next: res => {
+        const formulationsWithType = res.map(f => ({...f, entityType: 'formulation'}));
+        this.all.push(...formulationsWithType);
+        this.updatePaginatedItems();
+      }
+    })
+  }
+
   updatePaginatedItems() {
     const items = this.filteredItems;
     this.totalPages = Math.ceil(items.length / this.itemsPerPage);
@@ -166,6 +191,10 @@ export class ManageDisposableComponent implements OnInit {
       return item.productName;
     }else if(item.entityType === 'brand') {
       return item.brandName;
+    }else if(item.entityType === 'generic') {
+      return item.genericName;
+    }else if(item.entityType === 'formulation') {
+      return item.formulationName;
     }
     return 'Unknown';
   }
@@ -175,6 +204,8 @@ export class ManageDisposableComponent implements OnInit {
     if(item.entityType === 'category') return 'Category';
     if(item.entityType === 'inventory') return 'Inventory';
     if(item.entityType === 'brand') return 'Brand';
+    if(item.entityType === 'generic') return 'Generic';
+    if(item.entityType === 'formulation') return 'Formulation';
     return 'Unknown';
   }
 

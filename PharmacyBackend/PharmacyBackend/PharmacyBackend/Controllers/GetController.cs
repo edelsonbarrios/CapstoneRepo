@@ -489,6 +489,14 @@ namespace PharmacyBackend.Controllers
 
             return Ok(generic);
         }
+        [HttpGet("InactiveGenerics")]
+        public async Task<ActionResult<List<GenericDto>>> GetAllInactiveGenericsAsync() 
+        {
+          var inactiveGenerics = await _getService.GetAllInactiveGenericsAsync();
+          if(!inactiveGenerics.Any() || inactiveGenerics.Count() == 0)
+            return NotFound(new List<GenericDto>());
+          return Ok(inactiveGenerics);
+        }
         #endregion
 
         #region Formulation
@@ -510,6 +518,14 @@ namespace PharmacyBackend.Controllers
                 return NotFound(new { Message = "Formulation not found." });
 
             return Ok(formulation);
+        }
+        [HttpGet("InactiveFormulations")]
+        public async Task<ActionResult<List<FormulationDto>>> GetAllInactiveFormulationsAsync() 
+        {
+          var inactiveFormulations = await _getService.GetAllInactiveFormulationsAsync();
+          if(!inactiveFormulations.Any() || inactiveFormulations.Count() == 0)
+            return NotFound(new List<FormulationDto>());
+          return Ok(inactiveFormulations);
         }
         #endregion
 

@@ -931,6 +931,14 @@ namespace PharmacyBackend.Service.GetService
         GenericName = g.GenericName
       };
     }
+    public async Task<List<GenericDto>> GetAllInactiveGenericsAsync() 
+    {
+      var inactiveGenerics = await _getRepo.GetAllInactiveGenericsAsync();
+      return inactiveGenerics.Select(g => new GenericDto {
+          GenericID = g.GenericID,
+          GenericName = g.GenericName,
+          }).ToList();
+    }
     #endregion
 
     #region Formulation
@@ -954,6 +962,15 @@ namespace PharmacyBackend.Service.GetService
         FormulationID = f.FormulationID,
         FormulationName = f.FormulationName
       };
+    }
+    public async Task<List<FormulationDto>> GetAllInactiveFormulationsAsync() 
+    {
+      var inactiveFormulations = await _getRepo.GetAllInactiveFormulationsAsync();
+
+      return inactiveFormulations.Select(f => new FormulationDto {
+          FormulationID = f.FormulationID,
+          FormulationName = f.FormulationName,
+          }).ToList();
     }
     #endregion
 

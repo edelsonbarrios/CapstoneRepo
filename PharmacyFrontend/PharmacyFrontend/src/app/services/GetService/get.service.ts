@@ -117,6 +117,9 @@ export class GetService {
   getAllGenericsAsync(): Observable<Generic[]> {
     return this.httpClient.get<Generic[]>(`${this.apiUrl}/Get/GenericAll`);
   }
+  getAllInactiveGenericsAsync() : Observable<Generic[]> {
+    return this.httpClient.get<Generic[]>(`${this.apiUrl}/Get/InactiveGenerics`);
+  }
   //Generic Service End
 
   //Type Service
@@ -130,6 +133,9 @@ export class GetService {
     return this.httpClient.get<Formulation[]>(
       `${this.apiUrl}/Get/FormulationAll`
     );
+  }
+  getAllInactiveFormulationsAsync() : Observable<Formulation[]> {
+    return this.httpClient.get<Formulation[]>(`${this.apiUrl}/Get/InactiveFormulations`);
   }
   //FormulationS Service End
 
