@@ -124,6 +124,7 @@ namespace PharmacyBackend.Repository.POST
                 if (salesTransaction.EmployeeID <= 0)
                     throw new ArgumentException("Valid Employee ID is required");
 
+
                 // Check duplicate invoice number
                 var existingTransaction = await _context.SalesTransaction
                     .FirstOrDefaultAsync(st => st.InvoiceNumber == salesTransaction.InvoiceNumber);

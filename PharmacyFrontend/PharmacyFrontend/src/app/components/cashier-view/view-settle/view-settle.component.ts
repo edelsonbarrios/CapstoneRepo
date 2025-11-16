@@ -205,6 +205,8 @@ export class ViewSettleComponent implements OnInit {
       totalAmount: this.calculateTotals(),
     };
 
+    console.log(JSON.stringify(eventPayload));
+
     this.paymentConfirmed.emit(eventPayload);
   }
 
