@@ -71,6 +71,7 @@ export class ManageDisposableComponent implements OnInit {
     this.getAllInactiveFormulations();
     this.getAllInactiveFormulations();
     this.getAllInactiveClassifications();
+    this.getAllInactiveTypes();
   }
 
   getAllProducts() {
@@ -160,6 +161,19 @@ export class ManageDisposableComponent implements OnInit {
     })
   }
 
+  getAllInactiveTypes() {
+    this.getService.getAllInactiveTypesAsync().subscribe({
+      next: res => {
+        const typesWithType = res.map(t => ({...t, entityType: 'type' }));
+        this.all.push(...typesWithType);
+        this.updatePaginatedItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
+  }
+
 
   updatePaginatedItems() {
     const items = this.filteredItems;
@@ -212,6 +226,8 @@ export class ManageDisposableComponent implements OnInit {
       return item.formulationName;
     }else if(item.entityType === 'classification'){
       return item.classificationName;
+    }else if(item.entityType === 'type') {
+      return item.typeName;
     }
     return 'Unknown';
   }
@@ -224,6 +240,7 @@ export class ManageDisposableComponent implements OnInit {
     if(item.entityType === 'generic') return 'Generic';
     if(item.entityType === 'formulation') return 'Formulation';
     if(item.entityType === 'classification') return 'Classification';
+    if(item.entityType === 'type') return 'Type';
     return 'Unknown';
   }
 

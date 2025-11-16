@@ -115,6 +115,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.GetInterface
         #region Types
         public Task<IEnumerable<TypeModel>> GetAllTypeModelAsync();
         public Task<TypeModel> GetTypeModelByIdAsync(int id);
+        public Task<List<TypeModel>> GetAllInactiveTypesAsync();
         #endregion
 
         #region Roles

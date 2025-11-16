@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PharmacyBackend.Contracts.RepositoryContracts.GetInterface;
 using PharmacyBackend.DataContext;
@@ -743,10 +742,19 @@ namespace PharmacyBackend.Repository.GET
             .Where(t => t.IsActive == true)
             .ToListAsync();
         }
+
         public async Task<TypeModel> GetTypeModelByIdAsync(int id)
         {
           return await _context.TypeModel.FindAsync(id);
         }
+
+        public async Task<List<TypeModel>> GetAllInactiveTypesAsync() 
+        {
+          return await _context.TypeModel
+            .Where(t => t.IsActive == false)
+            .ToListAsync();
+        }
+
         #endregion
 
         #region Role

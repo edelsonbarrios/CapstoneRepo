@@ -130,6 +130,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #region Type
         public Task<IEnumerable<TypeModelDto>> GetAllTypeModelAsync();
         public Task<TypeModelDto> GetTypeModelByIdAsync(int id);
+        public Task<List<TypeModelDto>> GetAllInactiveTypesAsync();
         #endregion
 
         #region Supplier

@@ -126,6 +126,11 @@ export class GetService {
   getAllTypesAsync(): Observable<TypeModel[]> {
     return this.httpClient.get<TypeModel[]>(`${this.apiUrl}/Get/TypeAll`);
   }
+
+  getAllInactiveTypesAsync() : Observable<TypeModel[]> {
+    return this.httpClient.get<TypeModel[]>(`${this.apiUrl}/Get/InactiveTypes`);
+  }
+
   //Type Service End
 
   //Formulation Service

@@ -582,6 +582,18 @@ namespace PharmacyBackend.Controllers
 
             return Ok(type);
         }
+
+        [HttpGet("InactiveTypes")]
+        public async Task<ActionResult<List<TypeModelDto>>> GetAllInactiveTypesAsync() 
+        {
+          var inactiveTypes = await _getService.GetAllInactiveTypesAsync();
+          
+          if(!inactiveTypes.Any() || inactiveTypes.Count() == 0)
+            return NotFound(new List<TypeModelDto>());
+
+          return Ok(inactiveTypes);
+        }
+
         #endregion
 
         #region Supplier

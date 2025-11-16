@@ -1031,6 +1031,17 @@ namespace PharmacyBackend.Service.GetService
         TypeName = t.TypeName
       };
     }
+
+    public async Task<List<TypeModelDto>> GetAllInactiveTypesAsync() 
+    {
+      var inactiveTypes = await _getRepo.GetAllInactiveTypesAsync();
+
+      return inactiveTypes.Select(t => new TypeModelDto {
+          TypeID = t.TypeID,
+          TypeName = t.TypeName,
+          }).ToList();
+    }
+
     #endregion
 
     #region Supplier
