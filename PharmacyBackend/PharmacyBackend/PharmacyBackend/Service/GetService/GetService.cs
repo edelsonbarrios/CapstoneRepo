@@ -70,9 +70,9 @@ namespace PharmacyBackend.Service.GetService
       dashboard.ExpiredStockCount = expiredStock.Count();
 
       // Populate detailed lists (limited to first 10 for performance)
-      dashboard.CriticalStockItems = criticalStock.Take(5).ToList();
-      dashboard.NearExpiryItems = nearExpiry.Take(5).ToList();
-      dashboard.ExpiredStockItems = expiredStock.Take(5).ToList();
+      dashboard.CriticalStockItems = criticalStock.ToList();
+      dashboard.NearExpiryItems = nearExpiry.ToList();
+      dashboard.ExpiredStockItems = expiredStock.ToList(); 
 
       return dashboard;
     }
