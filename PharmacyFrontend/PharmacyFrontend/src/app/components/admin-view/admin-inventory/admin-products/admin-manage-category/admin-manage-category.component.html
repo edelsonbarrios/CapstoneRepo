@@ -22,7 +22,6 @@
       <thead>
         <tr>
           <th>Category Name</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -33,10 +32,6 @@
         </tr>
         <tr *ngFor="let c of paginatedCategories">
           <td>{{ c.categoryName }}</td>
-          <td>
-            <button class="btn-update" (click)="openViewCategoryForm(c)">Update</button>
-            <button class="btn-archive" (click)="openArchiveForm(c.categoryID)">Delete</button>
-          </td>
         </tr>
       </tbody>
     </table>
