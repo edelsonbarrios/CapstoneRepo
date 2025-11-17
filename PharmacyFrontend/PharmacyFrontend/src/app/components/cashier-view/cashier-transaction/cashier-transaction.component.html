@@ -22,12 +22,12 @@
           <h2>ITEM SOLD</h2>
           <button class="info-button" (click)="showItemsSoldBreakdown()" 
                   title="Click to see detailed breakdown">
-            ℹ️
+            <span><i class="fa-solid fa-circle-info"></i></span>
           </button>
         </div>
         <p>{{dailySalesSummary.totalItemsSold}}</p>
         <div class="breakdown-hint">
-          <span class="hint-text">Click ℹ️ for breakdown</span>
+          <span class="hint-text">Click <span><i class="fa-solid fa-circle-info"></i></span> for breakdown</span>
         </div>
       </div>
     </div>
@@ -192,7 +192,7 @@
 <div class="modal-overlay" *ngIf="showBreakdownModal" (click)="closeBreakdownModal()">
   <div class="breakdown-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>📊 Items Sold Breakdown</h3>
+      <h3> <span><i class="fa-solid fa-chart-simple"></i></span> Items Sold Breakdown</h3>
       <button class="close-btn" (click)="closeBreakdownModal()">✕</button>
     </div>
     
