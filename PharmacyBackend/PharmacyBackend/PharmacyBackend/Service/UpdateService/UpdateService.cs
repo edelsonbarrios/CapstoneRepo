@@ -604,6 +604,22 @@ namespace PharmacyBackend.Service.UpdateService
           return true;
         }
 
+        public async Task<bool> RestoreBrandByIdAsync(int brandId) 
+        {
+          var brandToRestore = await _getRepo.GetBrandByIdAsync(brandId);
+          if(brandToRestore is null)
+            return false;
+
+          brandToRestore.IsActive = true;
+
+          var restoration = await _updateRepo.UpdateBrandAsync(brandToRestore);
+          if(!restoration)
+            return false;
+
+          return restoration;
+        }
+
+
         #endregion
 
         #region Generic
@@ -637,6 +653,21 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateGenericAsync(generic);
             return true;
         }
+
+        public async Task<bool> RestoreGenericByIdAsync(int genericId) 
+        {
+          var genericToRestore = await _getRepo.GetGenericByIdAsync(genericId);
+          if(genericToRestore is null)
+            return false;
+
+          genericToRestore.IsActive = true;
+          
+          var restoration = await _updateRepo.UpdateGenericAsync(genericToRestore);
+          if(!restoration)
+            return false;
+          return restoration;
+        }
+
         #endregion
 
         #region Formulation
@@ -670,6 +701,21 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateFormulationAsync(formulation);
             return true;
         }
+
+        public async Task<bool> RestoreFormulationByIdAsync(int formulationId) 
+        {
+          var formulationToRestore = await _getRepo.GetFormulationByIdAsync(formulationId);
+          if(formulationToRestore is null)
+            return false;
+
+          formulationToRestore.IsActive = true;
+
+          var restoration = await _updateRepo.UpdateFormulationAsync(formulationToRestore);
+          if(!restoration)
+            return false;
+          return restoration;
+        }
+
         #endregion
 
         #region Classification
@@ -703,6 +749,22 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateClassificationAsync(classification);
             return true;
         }
+
+        public async Task<bool> RestoreClassificationByIdAsync(int classificationId) 
+        {
+          var classificationToRestore = await _getRepo.GetClassificationByIdAsync(classificationId);
+          if(classificationToRestore is null)
+            return false;
+
+          classificationToRestore.IsActive = true;
+          
+          var restoration = await _updateRepo.UpdateClassificationAsync(classificationToRestore);
+          if(!restoration) 
+            return false;
+
+          return restoration;
+        }
+
         #endregion
 
         #region Type
@@ -736,6 +798,23 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateTypeModelAsync(type);
             return true;
         }
+
+        public async Task<bool> RestoreTypeModelByIdAsync(int typeId) 
+        {
+          var typeToRestore = await _getRepo.GetTypeModelByIdAsync(typeId);
+          if(typeToRestore is null)
+            return false;
+
+          typeToRestore.IsActive = true;
+
+          var restoration = await _updateRepo.UpdateTypeModelAsync(typeToRestore);
+
+          if(!restoration)
+            return false;
+
+          return restoration;
+        }
+
         #endregion
 
         #region Supplier
@@ -838,6 +917,20 @@ namespace PharmacyBackend.Service.UpdateService
            await _updateRepo.UpdateInventoryAsync(inventory);
            return true;
         }
+
+        public async Task<bool> DeleteInventoryByIdAsync(int inventoryId) 
+        {
+          var inventoryToDelete = await _getRepo.GetInventoryByIdAsync(inventoryId);
+          if(inventoryToDelete is null)
+            return false;
+
+          inventoryToDelete.IsDeleted = true;
+          var deletion = await _updateRepo.UpdateInventoryAsync(inventoryToDelete);
+          if(!deletion)
+            return false;
+          return deletion;
+        }
+
         #endregion
 
         #region VAT

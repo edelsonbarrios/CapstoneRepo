@@ -132,12 +132,18 @@ export class UpdateService {
   updateBrandAsync(id: number, brand: Brand): Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Brand?id=${id}`, brand);
   }
+
   archiveBrandByIdAsync(brandId: number): Observable<{ message: string }> {
     return this.httpClient.put<{ message: string }>(
       `${this.apiUrl}/Put/ArchiveBrand?brandId=${brandId}`,
       {}
     );
   }
+
+  restoreBrandByIdAsync(brandId: number) : Observable<{message : string}> {
+    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/RestoreBrand?brandId=${brandId}`, {});
+  }
+
   //Brand Service End
 
   //Generic Service
@@ -147,12 +153,18 @@ export class UpdateService {
       generic
     );
   }
+
   archiveGenericByIdAsync(genericId: number): Observable<{ message: string }> {
     return this.httpClient.put<{ message: string }>(
       `${this.apiUrl}/Put/ArchiveGeneric?genericId=${genericId}`,
       {}
     );
   }
+
+  restoreGenericByIdAsync(genericId : number) : Observable<{message : string}> {
+    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/RestoreGeneric?genericId=${genericId}`, {});
+  }
+
   //Generic Service End
 
   //Formulation Service
@@ -165,6 +177,7 @@ export class UpdateService {
       formulation
     );
   }
+
   archiveFormulationByIdAsync(
     formulationId: number
   ): Observable<{ message: string }> {
@@ -173,6 +186,11 @@ export class UpdateService {
       {}
     );
   }
+
+  restoreFormulationByIdAsync(formulationId : number) : Observable<{message : string}> {
+    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/RestoreFormulation?formulationId=${formulationId}`, {});
+  }
+
   //Formulation Service End
 
   //Classification Service
@@ -193,18 +211,29 @@ export class UpdateService {
       {}
     );
   }
+
+  restoreClassificationByIdAsync(classificationId: number) : Observable<{message : string}> {
+    return this.httpClient.put<{message : string}>(`${this.apiUrl}/Put/RestoreClassification?classificationId=${classificationId}`, {});
+  }
+
   //Classification Service End
 
   //Type Service
   updateTypeAsync(id: number, type: TypeModel): Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/Type?id=${id}`, type);
   }
+
   archiveTypeModelByIdAsync(typeId: number): Observable<{ message: string }> {
     return this.httpClient.put<{ message: string }>(
       `${this.apiUrl}/Put/ArchiveType?typeId=${typeId}`,
       {}
     );
   }
+
+  restoreTypeModelByIdAsync(typeId: number) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/RestoreType?typeId=${typeId}`, {});
+  }
+
   //Type Service End
 
   //Product Service
@@ -265,6 +294,10 @@ export class UpdateService {
   // update.service.ts
   updateBackupSettingsAsync(settings: any): Observable<any> {
     return this.httpClient.put<any>(`${this.apiUrl}/Put/backups/settings`, settings);
+  }
+
+  deleteInventoryByIdAsync(inventoryId : number) : Observable<{message : string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/DeleteInventory?inventoryId=${inventoryId}`, {});
   }
   //Databasebakup service end
 }

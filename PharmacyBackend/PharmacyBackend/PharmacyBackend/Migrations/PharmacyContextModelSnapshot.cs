@@ -453,6 +453,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("ManufacturingDate")
                         .HasColumnType("timestamp with time zone");
 

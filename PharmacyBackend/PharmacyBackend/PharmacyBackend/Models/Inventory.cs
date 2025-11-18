@@ -41,6 +41,7 @@ namespace PharmacyBackend.Models
         public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
         public int? PiecePerBox { get; set; }
+        public bool IsDeleted {get; set;} = false;
 
         public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
 

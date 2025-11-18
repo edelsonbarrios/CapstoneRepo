@@ -57,30 +57,35 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         public Task<bool> UpdateBrandAsync(int id, UpdateBrandDto dto);
         public Task<bool> ValidateBrandNameAsync(string name, int brandId);
         public Task<bool> ArchiveBrandByIdAsync(int brandId);
+        public Task<bool> RestoreBrandByIdAsync(int brandId);
         #endregion
 
         #region Generic
         public Task<bool> UpdateGenericAsync(int id, UpdateGenericDto dto);
         public Task<bool> ValidateGenericNameAsync(string name, int genericId);
         public Task<bool> ArchiveGenericByIdAsync(int genericId);
+        public Task<bool> RestoreGenericByIdAsync(int genericId);
         #endregion
 
         #region Formulation
         public Task<bool> UpdateFormulationAsync(int id, UpdateFormulationDto dto);
         public Task<bool> ValidateFormulationNameAsync(string name, int formulationId);
         public Task<bool> ArchiveFormulationByIdAsync(int formulationId);
+        public Task<bool> RestoreFormulationByIdAsync(int formulationId);
         #endregion
 
         #region Classification
         public Task<bool> UpdateClassificationAsync(int id, UpdateClassificationDto dto);
         public Task<bool> ValidateClassificationNameAsync(string name, int classificationId);
         public Task<bool> ArchiveClassificationByIdAsync(int classificationId);
+        public Task<bool> RestoreClassificationByIdAsync(int classificationId);
         #endregion
 
         #region Type
         public Task<bool> UpdateTypeModelAsync(int id, UpdateTypeModelDto dto);
         public Task<bool> ValidateTypeNameAsync(string name, int typeId);
         public Task<bool> ArchiveTypeModelByIdAsync(int typeId);
+        public Task<bool> RestoreTypeModelByIdAsync(int typeId);
         #endregion
 
         #region Supplier
@@ -92,6 +97,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         #region Inventory
         public Task<bool> UpdateInventoryAsync(int id, UpdateInventoryDto dto);
         public Task<bool> ArchiveInventoryByIdAsync(int inventoryId);
+        public Task<bool> DeleteInventoryByIdAsync(int inventoryId);
         #endregion
 
         #region VAT

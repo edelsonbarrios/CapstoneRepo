@@ -928,9 +928,10 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<List<Inventory>> GetInventoriesOutOfStockAsync() 
         {
+          var dateNow = DateTime.UtcNow.Date;
           var inventories = await _context.Inventory
             .Include(iv => iv.Product)
-            .Where(iv => iv.PieceQuantity == 0)
+            .Where(iv => iv.PieceQuantity == 0 && !iv.IsDeleted)
             .ToListAsync();
 
           return inventories;

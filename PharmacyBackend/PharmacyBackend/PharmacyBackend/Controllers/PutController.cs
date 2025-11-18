@@ -252,6 +252,21 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Brand cannot be deleted." });
             return Ok(new { Message = "Brand successfully deleted." });
         }
+
+        [HttpPut("RestoreBrand")]
+        public async Task<ActionResult<object>> RestoreBrandByIdAsync(int brandId) 
+        {
+          if(brandId == 0)
+            return NotFound(new {Message = "Brand does not exist."});
+
+          var restoration = await _updateService.RestoreBrandByIdAsync(brandId);
+
+          if(!restoration) 
+            return BadRequest(new { Message = "Brand cannot be restored."});
+
+          return Ok(new {Message = "Brand restored successfully."});
+        }
+
         #endregion
 
         #region Generic
@@ -277,6 +292,21 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Generic cannot be deleted." });
             return Ok(new { Message = "Generic successfully deleted." });
         }
+
+        [HttpPut("RestoreGeneric")]
+        public async Task<ActionResult<object>> RestoreGenericByIdAsync(int genericId) 
+        {
+          if(genericId == 0)
+            return NotFound(new {Message = "Generic does not exist."});
+
+          var restoration = await _updateService.RestoreGenericByIdAsync(genericId);
+
+          if(!restoration)
+            return BadRequest(new {Message = "Generic cannot be restored."});
+
+          return Ok(new {Message = "Generic successfully restored."});
+        }
+
         #endregion
 
         #region Formulation
@@ -302,6 +332,20 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Formulation cannot be deleted." });
             return Ok(new { Message = "Formulation successfully deleted." });
         }
+
+        [HttpPut("RestoreFormulation")]
+        public async Task<ActionResult<object>> RestoreFormulationByIdAsync(int formulationId)
+        {
+            if (formulationId == 0)
+                return NotFound(new { Message = "Formulation does not exist." });
+
+            var restoration = await _updateService.RestoreFormulationByIdAsync(formulationId);
+
+            if (!restoration)
+                return BadRequest(new { Message = "Formulation cannot be restored." });
+
+            return Ok(new { Message = "Formulation restored successfully" });
+        } 
         #endregion
 
         #region Classification
@@ -327,6 +371,21 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Classification cannot be deleted." });
             return Ok(new { Message = "Classification successfully deleted." });
         }
+
+        [HttpPut("RestoreClassification")]
+        public async Task<ActionResult<object>> RestoreClassificationByIdAsync(int classificationId) 
+        {
+          if(classificationId == 0)
+            return NotFound(new {Message = "Classification does not exist."});
+
+          var restoration = await _updateService.RestoreClassificationByIdAsync(classificationId);
+          
+          if(!restoration)
+            return BadRequest(new {Message = "Classification cannot be restored."});
+
+          return Ok(new {Message = "Classification restored successfully."});
+        }
+
         #endregion
 
         #region Type
@@ -352,6 +411,21 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Type cannot be deleted." });
             return Ok(new { Message = "Type successfully deleted." });
         }
+
+        [HttpPut("RestoreType")]
+        public async Task<ActionResult<object>> RestoreTypeModelByIdAsync(int typeId) 
+        {
+          if(typeId == 0)
+            return NotFound(new {Message = "Type does not exist."});
+
+          var restoration = await _updateService.RestoreTypeModelByIdAsync(typeId);
+
+          if(!restoration)
+            return BadRequest(new {Message = "Type cannot be restored."});
+
+          return Ok(new {Message = "Type restored sucessfully"});
+        }
+
         #endregion
 
         #region Supplier
@@ -403,6 +477,19 @@ namespace PharmacyBackend.Controllers
           if(!archiveInventory)
             return BadRequest(new {Message = "Inventory cannot be deleted."});
           return Ok(new { Message = "Inventory successfully deleted."});
+        }
+        [HttpPut("DeleteInventory")]
+        public async Task<ActionResult<object>> DeleteInventoryByIdAsync(int inventoryId) 
+        {
+          if(inventoryId == 0)
+            return NotFound(new {Message = "Inventory does not exist."});
+
+          var deletion = await _updateService.DeleteInventoryByIdAsync(inventoryId);
+          
+          if(!deletion)
+            return BadRequest(new {Message = "Inventory cannot be deleted."});
+
+          return Ok(new {Message = "Inventory successfully deleted."});
         }
         #endregion
 

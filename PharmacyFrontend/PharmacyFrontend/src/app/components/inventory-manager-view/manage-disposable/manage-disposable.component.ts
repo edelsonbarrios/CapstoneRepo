@@ -286,10 +286,86 @@ export class ManageDisposableComponent implements OnInit {
         this.restoreCategoryById(item.categoryID);
         break;
       case "product":
-        console.log(item);
         this.restoreProductById(item.productID);
         break;
+      case "brand":
+        this.restoreBrandById(item.brandID);
+        break;
+      case "generic":
+        this.restoreGenericById(item.genericID);
+        break;
+      case "formulation":
+        this.restoreFormulationById(item.formulationID);
+        break;
+      case "classification":
+        this.restoreClassificationById(item.classificationID);
+        console.log(JSON.stringify(item));
+        break;
+      case "type":
+        this.restoreTypeModelById(item.typeID);
+        break;
     }
+  }
+
+  restoreTypeModelById(id: number) {
+    this.updateService.restoreTypeModelByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  restoreClassificationById(id: number) {
+    debugger;
+    this.updateService.restoreClassificationByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  restoreFormulationById(id: number) {
+    this.updateService.restoreFormulationByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.erorr}`);
+      }
+    });
+  }
+
+  restoreGenericById(id :number) {
+    this.updateService.restoreGenericByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  restoreBrandById(id: number) {
+    this.updateService.restoreBrandByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 
   restoreProductById(id: number) {
@@ -317,13 +393,19 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   archiveItem(item: any) {
-    if (confirm(`Are you sure you want to archive ${this.getItemName(item)}?`)) {
-      console.log('Archive item:', item);
-      // Implement archive logic here
-      // After successful archive:
-      // this.all = this.all.filter(i => i !== item);
-      // this.updatePaginatedItems();
-    }
+    this.deleteInventory(item.inventoryID);
+  }
+
+  deleteInventory(id: number) {
+    this.updateService.deleteInventoryByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
   }
 
   closeModal() {
