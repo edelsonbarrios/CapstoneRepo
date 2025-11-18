@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GetService } from '../../../../../services/GetService/get.service';
@@ -76,7 +75,7 @@ export class ManageStockHistoryComponent implements OnInit {
   totalPages: number = 0;
   paginatedTransactions: StockHistoryTransaction[] = [];
 
-  constructor(private getService: GetService) { }
+  constructor(private getService: GetService) {}
 
   ngOnInit(): void {
     this.getStockHistory();
@@ -167,8 +166,24 @@ export class ManageStockHistoryComponent implements OnInit {
   }
 
   // Helper method for formatting +/- signs in Changed column
-  formatChange(value: number): string {
+  formatChange(value: number, movementType: string): string {
+
+    console.log(`${movementType}`);
+
     if (!value || value === 0) return '0';
+
+    if(movementType == 'Sale') {
+      return value > 0 ? `- ${value}` : `${value}`;
+    }else if(movementType == 'Stock In') {
+      return value > 0 ? `+ ${value}` : `${value}`;
+    }else if(movementType == 'Count Correction') {
+      return value > 0 ? `+ ${value}` : `- ${value}`;
+    }else if(movementType == 'Expired') {
+      return value > 0 ? `- ${value}` : `${value}`;
+    }else if(movementType == 'Damaged') {
+      return value > 0 ? `- ${value}` : `${value}`;
+    }
+
     return value > 0 ? `+${value}` : `${value}`;
   }
 
