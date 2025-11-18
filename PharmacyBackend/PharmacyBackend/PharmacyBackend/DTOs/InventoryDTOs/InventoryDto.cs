@@ -39,5 +39,6 @@ namespace PharmacyBackend.DTOs.InventoryDTOs
         public bool IsCriticalStock { get; set; }
         public bool IsMultiUnit { get; set; }
         public int TotalPiecesAvailable { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

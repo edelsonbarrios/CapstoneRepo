@@ -856,8 +856,7 @@ namespace PharmacyBackend.Repository.GET
 
           return await _context.Inventory
             .Include(i => i.Product)
-            .Where(i => i.ExpirationDate < DateTime.UtcNow)
-            .Take(4)
+            .Where(i => i.ExpirationDate < DateTime.UtcNow && i.IsDeleted == false)
             .ToListAsync();
         }
 
@@ -1127,13 +1126,13 @@ namespace PharmacyBackend.Repository.GET
                 var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
                 var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
 
-                query = query.Where(i => i.DateAdded >= utcStart && i.DateAdded <= utcEnd && i.IsDeleted == false);
+                query = query.Where(i => i.DateAdded >= utcStart && i.DateAdded <= utcEnd);
             }
             else if (startDate.HasValue && !endDate.HasValue)
             {
                 var phStartTime = startDate.Value.Date;
                 var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
-                query = query.Where(i => i.DateAdded >= utcStart && i.IsDeleted == false);
+                query = query.Where(i => i.DateAdded >= utcStart);
             }
 
             // Apply status filters
@@ -1141,25 +1140,25 @@ namespace PharmacyBackend.Repository.GET
           {
             case "critical":
             case "critical stock":
-                    query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel && i.IsDeleted == false);
+                    query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel);
               break;
 
             case "near expiry":
             case "nearexpiry":
               query = query.Where(i => i.IsActive &&
                   i.ExpirationDate > now &&
-                  i.ExpirationDate <= now.AddDays(90) && i.IsDeleted == false);
+                  i.ExpirationDate <= now.AddDays(90));
               break;
 
             case "expired":
               query = query.Where(i => i.IsActive &&
-                  i.ExpirationDate <= now && i.IsDeleted == false);
+                  i.ExpirationDate <= now);
               break;
 
             case "all":
             case "all inventory":
             default:
-              query = query.Where(i => i.IsActive && i.IsDeleted == false);
+              query = query.Where(i => i.IsActive);
               break;
           }
 

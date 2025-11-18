@@ -49,6 +49,8 @@ export class InventoryManagerDashboardComponent implements OnInit{
     this.getService.getInventoryDashboardValues().subscribe({
       next: res => {
         this.inventoryDashboard = res;
+        console.log(JSON.stringify(this.inventoryDashboard.expiredStockCount));
+        console.log(JSON.stringify(this.inventoryDashboard.expiredStockItems));
         this.updateCriticalPagination();
         this.updateNearExpiryPagination();
         this.updateExpiredPagination();

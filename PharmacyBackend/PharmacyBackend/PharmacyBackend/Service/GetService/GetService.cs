@@ -67,7 +67,7 @@ namespace PharmacyBackend.Service.GetService
       dashboard.TotalInventoryItems = allInventory.Count(i => i.IsActive);
       dashboard.CriticalStockCount = criticalStock.Count();
       dashboard.NearExpiryCount = nearExpiry.Count();
-      dashboard.ExpiredStockCount = expiredStock.Count();
+      dashboard.ExpiredStockCount = expiredStock.Count(i => i.IsDeleted == false);
 
       // Populate detailed lists (limited to first 10 for performance)
       dashboard.CriticalStockItems = criticalStock.ToList();
@@ -1380,9 +1380,9 @@ namespace PharmacyBackend.Service.GetService
           IsNearExpiry = i.IsNearExpiry,
           IsCriticalStock = i.IsCriticalStock,
           IsMultiUnit = i.IsMultiUnit,
-          TotalPiecesAvailable = i.TotalPiecesAvailable
+          TotalPiecesAvailable = i.TotalPiecesAvailable,
+          IsDeleted = i.IsDeleted,
           });
-
     }
 
     public async Task<IEnumerable<InventoryDto>> GetNearExpiryInventoryAsync()
