@@ -319,12 +319,9 @@ export class CashierTransactionComponent implements OnInit {
     }
 
     return this.enrichedProducts.reduce((total, product) => {
-      const boxes = product.boxSold || 0;
-      const sheets = product.sheetSold || 0;
-      const pieces = product.pieceSold || 0;
-      
-      // Each unit (box, sheet, or piece) counts as 1 item
-      return total + boxes + sheets + pieces;
+      // Simply return the total pieces sold (quantitySold)
+      // This should already be the complete piece count from backend
+      return total + (product.quantitySold || 0);
     }, 0);
   }
 }

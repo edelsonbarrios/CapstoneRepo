@@ -199,7 +199,7 @@
     <div class="modal-content">
       <div class="breakdown-explanation">
         <p><strong>How "Items Sold" is calculated:</strong></p>
-        <p>Each box, sheet, or piece sold counts as 1 item.</p>
+        <p>Shows the breakdown of how pieces are packaged. All units have already been converted to total pieces.</p>
       </div>
 
       <div class="product-breakdown" *ngFor="let product of enrichedProducts">
@@ -209,36 +209,51 @@
         </div>
         
         <div class="calculation">
+          <!-- Multi-Level: Box + Sheet + Piece -->
           <ng-container *ngIf="product.unitMeasurement === 'Multi-Level'">
-            <span class="calc-item">{{product.boxSold || 0}} box(es)</span>
-            <span class="operator">+</span>
-            <span class="calc-item">{{product.sheetSold || 0}} sheet(s)</span>
-            <span class="operator">+</span>
-            <span class="calc-item">{{product.pieceSold || 0}} pc(s)</span>
-            <span class="operator">=</span>
-            <span class="calc-result">{{(product.boxSold || 0) + (product.sheetSold || 0) + (product.pieceSold || 0)}} items</span>
+            <div class="breakdown-container">
+              <div class="breakdown-label">Breakdown of {{product.quantitySold || 0}} pieces:</div>
+              <div class="breakdown-items">
+                <span class="calc-item">{{product.boxSold || 0}} box</span>
+                <span class="calc-item">{{product.sheetSold || 0}} sheet</span>
+                <span class="calc-item">{{product.pieceSold || 0}} loose pc</span>
+              </div>
+            </div>
           </ng-container>
           
+          <!-- Dual-Level: Box + Piece -->
           <ng-container *ngIf="product.unitMeasurement === 'Dual-Level'">
-            <span class="calc-item">{{product.boxSold || 0}} box(es)</span>
-            <span class="operator">+</span>
-            <span class="calc-item">{{product.pieceSold || 0}} pc(s)</span>
-            <span class="operator">=</span>
-            <span class="calc-result">{{(product.boxSold || 0) + (product.pieceSold || 0)}} items</span>
+            <div class="breakdown-container">
+              <div class="breakdown-label">Breakdown of {{product.quantitySold || 0}} pieces:</div>
+              <div class="breakdown-items">
+                <span class="calc-item">{{product.boxSold || 0}} box</span>
+                <span class="calc-item">{{product.pieceSold || 0}} loose pc</span>
+              </div>
+            </div>
           </ng-container>
           
+          <!-- Single-Level: Piece only -->
           <ng-container *ngIf="product.unitMeasurement === 'Single-Level'">
-            <span class="calc-item">{{product.pieceSold || 0}} piece(s)</span>
-            <span class="operator">=</span>
-            <span class="calc-result">{{product.pieceSold || 0}} items</span>
+            <div class="breakdown-container">
+              <div class="breakdown-label">Total pieces sold:</div>
+              <div class="breakdown-items">
+                <span class="calc-result">{{product.pieceSold || 0}} pcs</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Default fallback -->
+          <ng-container *ngIf="!product.unitMeasurement || (product.unitMeasurement !== 'Multi-Level' && product.unitMeasurement !== 'Dual-Level' && product.unitMeasurement !== 'Single-Level')">
+            <div class="breakdown-items">
+              <span class="calc-result">{{product.quantitySold || 0}} pcs</span>
+            </div>
           </ng-container>
         </div>
       </div>
 
       <div class="total-section">
-        <div class="total-line"></div>
         <div class="total-calculation">
-          <span class="total-label">TOTAL ITEMS SOLD:</span>
+          <span class="total-label">TOTAL PIECES SOLD:</span>
           <span class="total-value">{{getTotalItemsSold()}}</span>
         </div>
       </div>
