@@ -1172,16 +1172,22 @@ namespace PharmacyBackend.Repository.GET
         }
 
         public async Task<IEnumerable<FastMovingProductDataDto>> GetFastMovingProductsDataAsync(
-            DateTime? startDate,
-            DateTime? endDate,
-            int topN)
+    DateTime? startDate,
+    DateTime? endDate,
+    int topN)
         {
-          // Step 1: Get sales data (with optional date filter)
-          var salesQuery = _context.SalesItem
-            .Include(si => si.Product)
-            .ThenInclude(p => p.Category)
-            .Include(si => si.SalesTransaction)
-            .AsQueryable();
+            // Step 1: Get sales data with ALL product details in a single query
+            var salesQuery = _context.SalesItem
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Category)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Brand)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Generic)
+                .Include(si => si.Product)
+                    .ThenInclude(p => p.Classification)
+                .Include(si => si.SalesTransaction)
+                .AsQueryable();
 
             // Apply date filter with Philippine Time conversion
             if (startDate.HasValue && endDate.HasValue)
@@ -1203,80 +1209,102 @@ namespace PharmacyBackend.Repository.GET
                 salesQuery = salesQuery.Where(si => si.SalesTransaction.TransactionDate >= utcStart);
             }
 
+            // Get sales data with ALL product details
             var salesData = await salesQuery
-            .GroupBy(si => new
+                .GroupBy(si => new
                 {
-                si.ProductId,
-                si.Product.ProductName,
-                CategoryName = si.Product.Category.CategoryName
+                    si.ProductId,
+                    si.Product.ProductName,
+                    CategoryName = si.Product.Category.CategoryName,
+                    BrandName = si.Product.Brand.BrandName,
+                    GenericName = si.Product.Generic.GenericName,
+                    ClassificationName = si.Product.Classification.ClassificationName,
+                    UnitMeasurement = si.Product.UnitMeasurement,
+                    SheetsPerBox = si.Product.SheetsPerBox,
+                    PiecesPerSheet = si.Product.PiecesPerSheet,
+                    PiecePerBox = si.Product.PiecePerBox
                 })
-          .Select(g => new
-              {
-              g.Key.ProductId,
-              g.Key.ProductName,
-              g.Key.CategoryName,
-              QuantitySold = g.Sum(si => si.Quantity),
-              TransactionCount = g.Select(si => si.SalesTransactionId).Distinct().Count(),
-              Revenue = g.Sum(si => si.Subtotal)
-              })
-          .OrderByDescending(p => p.QuantitySold)
-            .ThenByDescending(p => p.TransactionCount)
-            .Take(topN)
-            .ToListAsync(); // Materialize here to avoid complex translation
-
-          // Step 2: Get product IDs
-          var productIds = salesData.Select(s => s.ProductId).ToList();
-
-          // Step 3: Fetch inventory data using ONLY database columns
-          var now = DateTime.UtcNow;
-
-          var inventoryData = await _context.Inventory
-            .Where(i => productIds.Contains(i.ProductID)
-                && i.IsActive
-                && i.ExpirationDate >= now) // Using actual DB column
-            .Select(i => new
+                .Select(g => new
                 {
-                i.ProductID,
-                i.BoxQuantity,
-                i.SheetQuantity,
-                i.PieceQuantity,
-                i.SheetsPerBox,
-                i.PiecesPerSheet,
-                i.PiecePerBox
+                    g.Key.ProductId,
+                    g.Key.ProductName,
+                    g.Key.CategoryName,
+                    g.Key.BrandName,
+                    g.Key.GenericName,
+                    g.Key.ClassificationName,
+                    g.Key.UnitMeasurement,
+                    g.Key.SheetsPerBox,
+                    g.Key.PiecesPerSheet,
+                    g.Key.PiecePerBox,
+                    QuantitySold = g.Sum(si => si.Quantity),
+                    TransactionCount = g.Select(si => si.SalesTransactionId).Distinct().Count(),
+                    Revenue = g.Sum(si => si.Subtotal)
                 })
-          .ToListAsync(); // Materialize before calculating TotalPiecesAvailable
+                .OrderByDescending(p => p.QuantitySold)
+                .ThenByDescending(p => p.TransactionCount)
+                .Take(topN)
+                .ToListAsync();
 
-          // Step 4: Calculate total pieces in memory (client-side)
-          var stockByProduct = inventoryData
-            .GroupBy(i => i.ProductID)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Sum(i => CalculateTotalPieces(
+            // Step 2: Get product IDs for inventory lookup
+            var productIds = salesData.Select(s => s.ProductId).ToList();
+
+            // Step 3: Fetch inventory data
+            var now = DateTime.UtcNow;
+            var inventoryData = await _context.Inventory
+                .Where(i => productIds.Contains(i.ProductID)
+                    && i.IsActive
+                    && i.ExpirationDate >= now)
+                .Select(i => new
+                {
+                    i.ProductID,
                     i.BoxQuantity,
                     i.SheetQuantity,
                     i.PieceQuantity,
                     i.SheetsPerBox,
                     i.PiecesPerSheet,
                     i.PiecePerBox
+                })
+                .ToListAsync();
+
+            // Step 4: Calculate total pieces in memory
+            var stockByProduct = inventoryData
+                .GroupBy(i => i.ProductID)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Sum(i => CalculateTotalPieces(
+                        i.BoxQuantity,
+                        i.SheetQuantity,
+                        i.PieceQuantity,
+                        i.SheetsPerBox,
+                        i.PiecesPerSheet,
+                        i.PiecePerBox
                     ))
                 );
 
-          // Step 5: Combine results
-          var result = salesData.Select(s => new FastMovingProductDataDto
-              {
-              ProductId = s.ProductId,
-              ProductName = s.ProductName,
-              CategoryName = s.CategoryName,
-              QuantitySold = s.QuantitySold,
-              TransactionCount = s.TransactionCount,
-              Revenue = s.Revenue,
-              CurrentStock = stockByProduct.ContainsKey(s.ProductId)
-              ? stockByProduct[s.ProductId]
-              : 0
-              }).ToList();
+            // Step 5: Combine results with ALL product details
+            var result = salesData.Select(s => new FastMovingProductDataDto
+            {
+                ProductId = s.ProductId,
+                ProductName = s.ProductName,
+                CategoryName = s.CategoryName,
+                Brand = s.BrandName ?? "N/A",
+                Generic = s.GenericName ?? "N/A",
+                Classification = s.ClassificationName ?? "N/A",
+                UnitType = s.UnitMeasurement ?? "Single Level",
+                SheetsPerBox = s.SheetsPerBox,
+                PiecesPerSheet = s.PiecesPerSheet,
+                PiecePerBox = s.PiecePerBox,
+                QuantitySold = s.QuantitySold,
+                TransactionCount = s.TransactionCount,
+                Revenue = s.Revenue,
+                CurrentStock = stockByProduct.ContainsKey(s.ProductId)
+                    ? stockByProduct[s.ProductId]
+                    : 0
+            }).ToList();
 
-          return result;
+            return result;
         }
+
 
         // Helper method to calculate total pieces (same logic as your Inventory model)
         private int CalculateTotalPieces(

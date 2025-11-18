@@ -25,15 +25,14 @@ export class FastMovingProductsComponent implements OnInit {
   // Pagination properties
   paginatedProducts: FastMovingProduct[] = [];
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 4;
   totalPages: number = 0;
 
+  constructor(private getService: GetService) {}
   // Modal
   showExportModal: boolean = false;
   showValidationModal: boolean = false;
   validationMessage: string = '';
-
-  constructor(private getService: GetService) {}
 
   ngOnInit(): void {
     this.getFastMovingReport();
@@ -45,6 +44,22 @@ export class FastMovingProductsComponent implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  // Format unit type for display
+  formatUnitType(unitType: string): string {
+    if (!unitType) return 'Single Level';
+    
+    switch (unitType.toLowerCase()) {
+      case 'multi-level':
+        return 'Multi Level';
+      case 'dual-level':
+        return 'Dual Level';
+      case 'single-level':
+        return 'Single Level';
+      default:
+        return unitType;
+    }
   }
 
   getFastMovingReport() {
@@ -67,6 +82,7 @@ export class FastMovingProductsComponent implements OnInit {
         this.fastMovingReport = res;
         this.loading = false;
         this.setupPagination();
+        console.log('Received data:', res); // Debug log
       },
       error: (err) => {
         console.error('API Error:', err);
@@ -181,42 +197,5 @@ export class FastMovingProductsComponent implements OnInit {
         this.exporting = false;
       }
     });
-  }
-
-  // Helper methods for styling
-  getStockClass(stock: number): string {
-    if (stock === 0) return 'out-of-stock';
-    if (stock < 10) return 'low-stock';
-    if (stock < 50) return 'moderate-stock';
-    return 'adequate-stock';
-  }
-
-  getStockStatusClass(status: string | undefined): string {
-    if (!status) return '';
-    switch (status.toLowerCase()) {
-      case 'out of stock':
-        return 'status-out';
-      case 'low stock':
-        return 'status-low';
-      case 'moderate':
-        return 'status-moderate';
-      case 'adequate':
-        return 'status-adequate';
-      default:
-        return '';
-    }
-  }
-
-  getTrendClass(trend: string): string {
-    switch (trend.toLowerCase()) {
-      case 'increasing':
-        return 'trend-increasing';
-      case 'stable':
-        return 'trend-stable';
-      case 'decreasing':
-        return 'trend-decreasing';
-      default:
-        return '';
-    }
   }
 }

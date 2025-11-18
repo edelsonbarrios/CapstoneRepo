@@ -2037,57 +2037,125 @@ namespace PharmacyBackend.Service.GetService
       };
     }
 
-    //Fast-Moving Products
+        //Fast-Moving Products
 
-    public async Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
-        DateTime? startDate = null,
-        DateTime? endDate = null,
-        int topN = 20)
-    {
-      var productsData = await _getRepo.GetFastMovingProductsDataAsync(
-          startDate,
-          endDate,
-          topN);
+        public async Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
+    DateTime? startDate = null,
+    DateTime? endDate = null,
+    int topN = 20)
+        {
+            var productsData = await _getRepo.GetFastMovingProductsDataAsync(
+                startDate,
+                endDate,
+                topN);
 
-      var products = productsData.Select((p, index) => new FastMovingProductDto
-          {
-          Rank = index + 1,
-          ProductId = p.ProductId,
-          ProductName = p.ProductName,
-          CategoryName = p.CategoryName,
-          QuantitySold = p.QuantitySold,
-          TransactionCount = p.TransactionCount,
-          Revenue = p.Revenue,
-          CurrentStock = p.CurrentStock,
-          Trend = DetermineTrend(p.QuantitySold, p.CurrentStock)
-          }).ToList();
+            // Convert to list to avoid multiple enumeration
+            var productsDataList = productsData.ToList();
+            var products = new List<FastMovingProductDto>();
 
-      return new FastMovingProductReportDto
-      {
-        TotalProductsSold = products.Count,
-        TotalQuantitySold = products.Sum(p => p.QuantitySold),
-        TotalRevenue = products.Sum(p => p.Revenue),
-        Products = products
-      };
-    }
+            for (int i = 0; i < productsDataList.Count; i++)
+            {
+                var productData = productsDataList[i];
 
-    private string DetermineTrend(int quantitySold, int currentStock)
-    {
-      if (currentStock == 0) return "Decreasing";
+                var product = new FastMovingProductDto
+                {
+                    Rank = i + 1,
+                    ProductId = productData.ProductId,
+                    ProductName = productData.ProductName,
+                    Brand = productData.Brand,
+                    CategoryName = productData.CategoryName,
+                    Generic = productData.Generic,
+                    Classification = productData.Classification,
+                    UnitType = productData.UnitType,
+                    QuantitySold = productData.QuantitySold, // This is now available
+                    TransactionCount = productData.TransactionCount,
+                    Revenue = productData.Revenue,
+                    CurrentStock = productData.CurrentStock,
+                    StockStatus = DetermineStockStatus(productData.CurrentStock),
+                    Trend = DetermineTrend(productData.QuantitySold, productData.CurrentStock)
+                };
 
-      var ratio = (double)quantitySold / currentStock;
+                // Calculate Box, Sheet, Piece sold based on unit type
+                CalculateSoldQuantities(product, productData);
 
-      if (ratio > 2.0) return "Increasing";
-      if (ratio > 0.5) return "Stable";
-      return "Decreasing";
-    }
+                products.Add(product);
+            }
 
-    #endregion
+            return new FastMovingProductReportDto
+            {
+                TotalProductsSold = products.Count,
+                TotalQuantitySold = products.Sum(p => p.QuantitySold),
+                TotalRevenue = products.Sum(p => p.Revenue),
+                Products = products
+            };
+        }
 
-    #region Reports Exports In excell
+        private void CalculateSoldQuantities(FastMovingProductDto product, FastMovingProductDataDto productData)
+        {
+            int totalPiecesSold = productData.QuantitySold;
 
-    //SALES REPORTS
-    public async Task<byte[]> ExportSalesReportToExcelAsync(
+            switch (productData.UnitType?.ToLower())
+            {
+                case "multi-level":
+                    if (productData.SheetsPerBox.HasValue && productData.SheetsPerBox > 0 &&
+                        productData.PiecesPerSheet.HasValue && productData.PiecesPerSheet > 0)
+                    {
+                        int piecesPerBox = productData.SheetsPerBox.Value * productData.PiecesPerSheet.Value;
+                        product.BoxSold = totalPiecesSold / piecesPerBox;
+                        int remainder = totalPiecesSold % piecesPerBox;
+                        product.SheetSold = remainder / productData.PiecesPerSheet.Value;
+                        product.PieceSold = totalPiecesSold; // Total accumulated pieces
+                    }
+                    else
+                    {
+                        product.PieceSold = totalPiecesSold;
+                    }
+                    break;
+
+                case "dual-level":
+                    if (productData.PiecePerBox.HasValue && productData.PiecePerBox > 0)
+                    {
+                        product.BoxSold = totalPiecesSold / productData.PiecePerBox.Value;
+                        product.PieceSold = totalPiecesSold; // Total accumulated pieces
+                    }
+                    else
+                    {
+                        product.PieceSold = totalPiecesSold;
+                    }
+                    break;
+
+                case "single-level":
+                default:
+                    product.PieceSold = totalPiecesSold;
+                    break;
+            }
+        }
+
+        private string DetermineStockStatus(int currentStock)
+        {
+            if (currentStock == 0) return "Out of Stock";
+            if (currentStock < 10) return "Low Stock";
+            return "Adequate";
+        }
+
+        private string DetermineTrend(int quantitySold, int currentStock)
+        {
+            if (currentStock == 0) return "Decreasing";
+
+            var ratio = (double)quantitySold / currentStock;
+
+            if (ratio > 2.0) return "Increasing";
+            if (ratio > 0.5) return "Stable";
+            return "Decreasing";
+        }
+
+
+        #endregion
+
+        #region Reports Exports In excell
+
+        //SALES REPORTS
+        public async Task<byte[]> ExportSalesReportToExcelAsync(
         DateTime? startDate = null,
         DateTime? endDate = null,
         int? employeeId = null,
