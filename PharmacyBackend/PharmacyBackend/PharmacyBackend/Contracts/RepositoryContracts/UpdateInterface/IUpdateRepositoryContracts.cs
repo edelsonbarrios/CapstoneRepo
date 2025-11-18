@@ -33,6 +33,7 @@ namespace PharmacyBackend.Contracts.RepositoryContracts.UpdateInterface
         #region Category
         public Task<bool> UpdateCategoryAsync(Category category);
         public Task<bool> ValidateCategoryNameAsync(string name, int categoryId);
+        public Task<bool> CategoryRestorationValidationAsync(string categoryName);
         #endregion
 
         #region Brand

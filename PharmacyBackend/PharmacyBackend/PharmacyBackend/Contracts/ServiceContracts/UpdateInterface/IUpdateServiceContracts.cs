@@ -48,6 +48,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         public Task<bool> UpdateCategoryAsync(int id, UpdateCategoryDto dto);
         public Task<bool> ValidateCategoryNameAsync(string name, int categoryId);
         public Task<bool> ArchiveCategoryByIdAsync(int categoryId);
+        public Task<bool> RestoreCategoryByIdAsync(int categoryId);
+        public Task<bool> CategoryRestorationValidationAsync(int categoryId);
         #endregion
 
         #region Brand

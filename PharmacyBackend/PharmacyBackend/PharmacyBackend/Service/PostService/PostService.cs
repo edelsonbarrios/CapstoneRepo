@@ -525,9 +525,18 @@ namespace PharmacyBackend.Service.PostService
     #region Category
     public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto dto)
     {
-      var validation = await ValidateCategoryNameAsync(dto.CategoryName);
-      if (!validation)
-        return null;
+
+      var existingCategory = await _context.Category
+        .FirstOrDefaultAsync(c => c.CategoryName.ToLower().Equals(dto.CategoryName.ToLower()) && !c.IsActive);
+
+      if(existingCategory != null) {
+        existingCategory.IsActive = true;
+        await _updateRepo.UpdateCategoryAsync(existingCategory);
+        return new CategoryDto {
+          CategoryID = existingCategory.CategoryID,
+          CategoryName = existingCategory.CategoryName,
+        };
+      }
 
       var category = new Category
       {

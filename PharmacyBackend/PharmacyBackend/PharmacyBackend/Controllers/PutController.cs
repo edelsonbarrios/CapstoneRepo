@@ -197,6 +197,22 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Category cannot be updated." });
             return Ok(new { Message = "Category successsfully archived." });
         }
+
+        [HttpPut("RestoreCategory")]
+        public async Task<ActionResult<object>> RestoreCategoryByIdAsync(int categoryId) 
+        {
+          var restoreCategory = await _updateService.RestoreCategoryByIdAsync(categoryId);
+
+          if(restoreCategory)
+            return BadRequest(new {Message = "Category cannot be restored."});
+
+          var duplication = await _updateService.CategoryRestorationValidationAsync(categoryId);
+          if(!duplication)
+            return BadRequest(new {Message = "Category already exists in the Category module."});
+
+          return Ok(new {Message = "Category successfully restored."});
+        }
+
         #endregion
 
         #region Brand

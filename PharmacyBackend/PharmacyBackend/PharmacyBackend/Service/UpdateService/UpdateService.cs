@@ -529,6 +529,24 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateCategoryAsync(category);
             return true;
         }
+
+        public async Task<bool> RestoreCategoryByIdAsync(int categoryId) 
+        {
+          var category = await _getRepo.GetCategoryByIdAsync(categoryId);
+          
+          if(category is null)
+            return false;
+
+          category.IsActive = true;
+
+          var restoration = await _updateRepo.UpdateCategoryAsync(category);
+
+          if(!restoration)
+            return false;
+
+          return restoration;
+        }
+
         #endregion
 
         #region Brand
@@ -562,6 +580,19 @@ namespace PharmacyBackend.Service.UpdateService
             await _updateRepo.UpdateBrandAsync(brand);
             return true;
         }
+
+        public async Task<bool> CategoryRestorationValidationAsync(int categoryId) 
+        {
+          var category = await _getRepo.GetCategoryByIdAsync(categoryId);
+          if(category is null)
+            return false;
+          
+          var duplication = await _updateRepo.CategoryRestorationValidationAsync(category.CategoryName);
+          if(duplication)
+            return false;
+          return true;
+        }
+
         #endregion
 
         #region Generic

@@ -243,6 +243,11 @@ export class UpdateService {
       {}
     );
   }
+
+  restoreCategoryByIdAsync(categoryId: number) : Observable<{message : string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/RestoreCategory?categoryId=${categoryId}`, {});
+  }
+
   //Category Service End
   // Inventory Service
   archiveInventoryByIdAsync(inventoryId: number) : Observable<{message: string}> {

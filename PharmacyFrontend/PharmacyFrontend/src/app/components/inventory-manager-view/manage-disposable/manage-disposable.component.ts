@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Inventory } from '../../../models/inventory-module-models/inventory';
 import { Brand } from '../../../models/brand-models/brand';
 import { Generic } from '../../../models/generic-models/generic';
+import { UpdateService } from '../../../services/UpdateService/update.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class ManageDisposableComponent implements OnInit {
   generics: Generic[] = [];
 
   Math = Math;
+  restoreMessage: string = '';
 
   // Modal states
   showModal: boolean = false;
@@ -56,7 +58,11 @@ export class ManageDisposableComponent implements OnInit {
     });
   }
 
-  constructor(private getService: GetService) {}
+  constructor(
+    private getService: GetService,
+    private updateService: UpdateService,
+  )
+{}
 
   ngOnInit(): void {
     this.getAllItems();
@@ -174,7 +180,6 @@ export class ManageDisposableComponent implements OnInit {
     })
   }
 
-
   updatePaginatedItems() {
     const items = this.filteredItems;
     this.totalPages = Math.ceil(items.length / this.itemsPerPage);
@@ -264,11 +269,33 @@ export class ManageDisposableComponent implements OnInit {
     this.showModal = true;
   }
 
-  deleteItem(item: any) {
-    if (confirm(`Are you sure you want to delete ${this.getItemName(item)}?`)) {
-      console.log('Delete item:', item);
-      // Implement delete logic here
-      // After successful delete:
+  restoreItem(item: any) {
+    switch(item.entityType) {
+      case "category":
+        console.log('Category case matched, calling restoreCategoryById with ID:', item.categoryID);
+        this.restoreCategoryById(item.categoryID);
+        break;
+    }
+  }
+
+  restoreCategoryById(id: number) {
+    this.updateService.restoreCategoryByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        console.log('API Success:', res);
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
+  }
+
+  archiveItem(item: any) {
+    if (confirm(`Are you sure you want to archive ${this.getItemName(item)}?`)) {
+      console.log('Archive item:', item);
+      // Implement archive logic here
+      // After successful archive:
       // this.all = this.all.filter(i => i !== item);
       // this.updatePaginatedItems();
     }

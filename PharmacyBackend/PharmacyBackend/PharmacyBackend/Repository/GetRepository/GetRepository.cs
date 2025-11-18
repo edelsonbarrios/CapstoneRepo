@@ -603,7 +603,6 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<Product?> GetProductByIdAsync(int id)
         {
-          // ITO LANG YUNG PUTANGINANG KULANG OH
             return await _context.Product.FindAsync(id);
         }
 

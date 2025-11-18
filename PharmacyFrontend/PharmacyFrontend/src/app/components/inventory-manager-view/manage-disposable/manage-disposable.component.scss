@@ -315,6 +315,17 @@
       }
     }
 
+    &.btn-archive {
+      background: rgba(99, 102, 241, 0.1);
+      color: #4f46e5;
+
+      &:hover {
+        background: rgba(99, 102, 241, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+      }
+    }
+
     &:active {
       transform: translateY(0);
     }

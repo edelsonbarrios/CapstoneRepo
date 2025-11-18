@@ -117,6 +117,7 @@ namespace PharmacyBackend.Repository.UpdateRepository
             await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task<bool> ValidateCategoryNameAsync(string name, int categoryId)
         {
             var validation = await _context.Category
@@ -125,6 +126,14 @@ namespace PharmacyBackend.Repository.UpdateRepository
                 return false;
             return true;
         }
+
+        public async Task<bool> CategoryRestorationValidationAsync(string categoryName) 
+        {
+           return await _context.Category
+             .AsNoTracking()
+             .AnyAsync(c => c.CategoryName.Equals(categoryName) && c.IsActive == true);
+        }
+
         #endregion
 
         #region Brand
