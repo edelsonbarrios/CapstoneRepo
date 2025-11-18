@@ -1127,13 +1127,13 @@ namespace PharmacyBackend.Repository.GET
                 var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
                 var utcEnd = DateTime.SpecifyKind(phEndTime.AddHours(-8), DateTimeKind.Utc);
 
-                query = query.Where(i => i.DateAdded >= utcStart && i.DateAdded <= utcEnd);
+                query = query.Where(i => i.DateAdded >= utcStart && i.DateAdded <= utcEnd && i.IsDeleted == false);
             }
             else if (startDate.HasValue && !endDate.HasValue)
             {
                 var phStartTime = startDate.Value.Date;
                 var utcStart = DateTime.SpecifyKind(phStartTime.AddHours(-8), DateTimeKind.Utc);
-                query = query.Where(i => i.DateAdded >= utcStart);
+                query = query.Where(i => i.DateAdded >= utcStart && i.IsDeleted == false);
             }
 
             // Apply status filters
@@ -1141,25 +1141,25 @@ namespace PharmacyBackend.Repository.GET
           {
             case "critical":
             case "critical stock":
-              query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel);
+                    query = query.Where(i => i.IsActive && i.BoxQuantity <= i.ReorderLevel && i.IsDeleted == false);
               break;
 
             case "near expiry":
             case "nearexpiry":
               query = query.Where(i => i.IsActive &&
                   i.ExpirationDate > now &&
-                  i.ExpirationDate <= now.AddDays(90));
+                  i.ExpirationDate <= now.AddDays(90) && i.IsDeleted == false);
               break;
 
             case "expired":
               query = query.Where(i => i.IsActive &&
-                  i.ExpirationDate <= now);
+                  i.ExpirationDate <= now && i.IsDeleted == false);
               break;
 
             case "all":
             case "all inventory":
             default:
-              query = query.Where(i => i.IsActive);
+              query = query.Where(i => i.IsActive && i.IsDeleted == false);
               break;
           }
 
@@ -1328,7 +1328,7 @@ namespace PharmacyBackend.Repository.GET
         public async Task<int> GetInventoryOutOfStockCountAsync()
         {
           return await _context.Inventory
-            .Where(iv => iv.PieceQuantity == 0)
+            .Where(iv => iv.PieceQuantity == 0 && iv.IsDeleted == false)
             .CountAsync();
         }
         public async Task<List<ProductSalesSummaryDto>> GetTopSellingProductsMonthlyAsync()

@@ -221,7 +221,7 @@ namespace PharmacyBackend.Controllers
             return BadRequest(new {Message = "Category cannot be restored."});
 
           var duplication = await _updateService.CategoryRestorationValidationAsync(categoryId);
-          if(!duplication)
+          if(duplication)
             return BadRequest(new {Message = "Category already exists in the Category module."});
 
           return Ok(new {Message = "Category successfully restored."});
