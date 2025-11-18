@@ -69,6 +69,9 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   getAllItems() {
+
+    this.all = [];
+
     this.getAllProducts();
     this.getAllCategories();
     this.getInventoriesOutOfStock();
@@ -182,12 +185,20 @@ export class ManageDisposableComponent implements OnInit {
 
   updatePaginatedItems() {
     const items = this.filteredItems;
+
+    const sortedItems = items.sort((a, b) => {
+      const typeOrder = ['product', 'category', 'inventory', 'brand', 'generic', 'formulation', 'classification', 'type'];
+      const indexA = typeOrder.indexOf(a.entityType);
+      const indexB = typeOrder.indexOf(b.entityType);
+      return indexA - indexB;
+    });
+
     this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages == 0) this.totalPages = 1;
 
     const startingIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endingIndex = startingIndex + this.itemsPerPage;
-    this.paginatedItems = items.slice(startingIndex, endingIndex);
+    this.paginatedItems = sortedItems.slice(startingIndex, endingIndex);
   }
 
   onSearchChange() {
@@ -272,17 +283,31 @@ export class ManageDisposableComponent implements OnInit {
   restoreItem(item: any) {
     switch(item.entityType) {
       case "category":
-        console.log('Category case matched, calling restoreCategoryById with ID:', item.categoryID);
         this.restoreCategoryById(item.categoryID);
         break;
+      case "product":
+        console.log(item);
+        this.restoreProductById(item.productID);
+        break;
     }
+  }
+
+  restoreProductById(id: number) {
+    this.updateService.restoreProductAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 
   restoreCategoryById(id: number) {
     this.updateService.restoreCategoryByIdAsync(id).subscribe({
       next: res => {
         this.restoreMessage = res.message;
-        console.log('API Success:', res);
         this.getAllItems();
       },
       error: err => {

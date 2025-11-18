@@ -865,7 +865,7 @@ namespace PharmacyBackend.Repository.GET
 
         public async Task<IEnumerable<Inventory>> GetNearExpiryInventoryAsync()
         {
-          var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+          var now = DateTime.UtcNow.Date;
           var nearExpiryDate = DateTime.SpecifyKind(DateTime.Now.AddDays(90), DateTimeKind.Utc);
 
           return await _context.Inventory
@@ -878,7 +878,7 @@ namespace PharmacyBackend.Repository.GET
             .Include(i => i.Product.TypeModel)
             .OrderByDescending(i => i.DateAdded)
             .ThenByDescending(i => i.InventoryID)
-            .Where(i => i.ExpirationDate <= nearExpiryDate && i.ExpirationDate > now)
+            .Where(i => i.ExpirationDate <= nearExpiryDate && i.ExpirationDate >= now)
             .ToListAsync();
         }
 

@@ -495,6 +495,17 @@ namespace PharmacyBackend.Service.UpdateService
             return archiveProduct;
 
         }
+
+        public async Task<bool> RestoreProductByIdAsync(int id)  
+        {
+          var productToRestore = await _getRepo.GetProductByIdAsync(id);
+          if(productToRestore is null)
+            return false;
+          productToRestore.IsActive = true;
+          var restoration = await _updateRepo.UpdateProductAsync(productToRestore);
+          return restoration;
+        }
+
         #endregion
 
         #region Category

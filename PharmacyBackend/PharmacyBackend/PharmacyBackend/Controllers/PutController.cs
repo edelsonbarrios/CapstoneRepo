@@ -172,6 +172,20 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new ArchiveDiscountResponse { Message = "Product cannot be deleted." });
             return Ok(new ArchiveProductResponse { Message = "Product deleted successfully." });
         }
+
+        [HttpPut("RestoreProduct")]
+        public async Task<ActionResult<object>> RestoreProductByIdAsync(int productId) 
+        {
+          if(productId == 0)
+            return NotFound(new {Message = "Product does not exist."});
+
+          var restoration = await _updateService.RestoreProductByIdAsync(productId);
+          if(!restoration) 
+            return BadRequest(new {Message = "Product cannot be restored."});
+
+          return Ok(new {Message = "Product restored successfully."});
+        }
+
         #endregion
 
         #region Category

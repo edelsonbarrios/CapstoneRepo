@@ -214,6 +214,7 @@ export class UpdateService {
       {}
     );
   }
+
   updateProductAsync(
     productId: number,
     request: UpdateProductRequest
@@ -223,6 +224,11 @@ export class UpdateService {
       request
     );
   }
+
+  restoreProductAsync(productId: number) : Observable<{message : string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/RestoreProduct?productId=${productId}`, {});
+  }
+
   //Product Service End
 
   //Category Service
