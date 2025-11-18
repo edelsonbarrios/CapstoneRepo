@@ -21,22 +21,30 @@
         Product & Inventory Details
       </legend>
 
-      <div class="form-grid">
-        
-        <!-- Product Details Section -->
-        <div class="section-header">
-          <h3>Product Details</h3>
-        </div>
-        <div></div>
+      <!-- Product Details Grid -->
+      <div class="section-header">
+        <h3>Product Details</h3>
+      </div>
 
+      <div class="form-grid">
         <div class="form-group" *ngIf="viewInventory.product?.brandName">
           <label>Brand</label>
           <p>{{ viewInventory.product.brandName }}</p>
         </div>
 
+        <div class="form-group" *ngIf="viewInventory.product?.typeName">
+          <label>Type</label>
+          <p>{{ viewInventory.product.typeName }}</p>
+        </div>
+
         <div class="form-group" *ngIf="viewInventory.product?.genericName">
           <label>Generic Name</label>
           <p>{{ viewInventory.product.genericName }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <p>{{ viewInventory.product.categoryName }}</p>
         </div>
 
         <div class="form-group" *ngIf="viewInventory.product?.formulationName">
@@ -48,35 +56,26 @@
           <label>Classification</label>
           <p>{{ viewInventory.product.classificationName }}</p>
         </div>
+      </div>
 
-        <div class="form-group" *ngIf="viewInventory.product.typeName">
-          <label>Type</label>
-          <p>{{ viewInventory.product.typeName }}</p>
-        </div>
+      <!-- Inventory Details Grid -->
+      <div class="section-header">
+        <h3>Inventory Details</h3>
+      </div>
 
-        <div class="form-group">
-          <label>Category</label>
-          <p>{{ viewInventory.product.categoryName }}</p>
-        </div>
-
-        <!-- Inventory Details Section -->
-        <div class="section-header">
-          <h3>Inventory Details</h3>
-        </div>
-        <div></div>
-
-        <!-- Inventory Information - Left Column -->
+      <div class="form-grid">
+        <!-- Box Level (Always present) -->
         <div class="form-group">
           <label>Box Quantity</label>
           <p>{{ viewInventory.boxQuantity }}</p>
         </div>
 
-        <!-- Inventory Information - Right Column -->
         <div class="form-group">
           <label>Box Price</label>
           <p>{{ viewInventory.boxPrice }}</p>
         </div>
 
+        <!-- Sheet Level (Multi-level only) -->
         <div class="form-group" *ngIf="viewInventory.sheetQuantity">
           <label>Sheet Quantity</label>
           <p>{{ viewInventory.sheetQuantity }}</p>
@@ -87,6 +86,7 @@
           <p>{{ viewInventory.sheetPrice }}</p>
         </div>
 
+        <!-- Piece Level (Always present) -->
         <div class="form-group">
           <label>Piece Quantity</label>
           <p>{{ viewInventory.pieceQuantity }}</p>
@@ -97,14 +97,10 @@
           <p>{{ viewInventory.piecePrice }}</p>
         </div>
 
+        <!-- Additional Measurements -->
         <div class="form-group" *ngIf="viewInventory.sheetsPerBox">
           <label>Sheets Per Box</label>
           <p>{{ viewInventory.sheetsPerBox }}</p>
-        </div>
-
-        <div class="form-group">
-          <label>Reorder Level</label>
-          <p>{{ viewInventory.reorderLevel }}</p>
         </div>
 
         <div class="form-group" *ngIf="viewInventory.piecesPerSheet">
@@ -112,17 +108,22 @@
           <p>{{ viewInventory.piecesPerSheet }}</p>
         </div>
 
-        <div class="form-group">
-          <label>Unit Measurement</label>
-          <p>{{ viewInventory.unitMeasurement }}</p>
-        </div>
-
         <div class="form-group" *ngIf="viewInventory.piecePerBox">
           <label>Piece Per Box</label>
           <p>{{ viewInventory.piecePerBox }}</p>
         </div>
 
+        <div class="form-group">
+          <label>Reorder Level</label>
+          <p>{{ viewInventory.reorderLevel }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Unit Measurement</label>
+          <p>{{ viewInventory.unitMeasurement }}</p>
+        </div>
       </div>
+
     </fieldset>
   </div>
 
