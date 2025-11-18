@@ -35,6 +35,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   todaySalesAmount: number = 0;
   lowStockCount: number = 0;
   outOfStockCount: number = 0;
+  totalProductCount: number = 0;
   topSellingMedicines: TopSellingMedWithBreakdown[] = [];
   paginatedTopMeds: TopSellingMedWithBreakdown[] = [];
   dateToday: Date = new Date();
@@ -151,7 +152,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public inventoryPieChartData: ChartConfiguration<'pie'>['data'] = {
     labels: ['In Stock', 'Low Stock', 'Out of Stock'],
     datasets: [{
-      data: [245, 0, 0],
+      data: [0, 0, 0],
       backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
     }]
   };
@@ -168,13 +169,20 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   constructor(private getService: GetService) {}
 
+  // Add property for in-stock count
+  inStockCount: number = 0;
+
   ngOnInit(): void {
+    this.getTotalProductCount();
     this.getTodaySalesAmount();
     this.getLowStockCount();
     this.getOutOfStockCount();
+    this.getInStockCount(); // NEW: Get in-stock count directly
     this.getNearExpiryInventory();
     this.getTopSellingProductsMonthly();
+    this.loadSalesTrendFromTransactions();
     this.loadChartData();
+    
 
     this.timer = setInterval(() => {
       this.dateToday = new Date();
@@ -204,7 +212,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   loadChartData(): void {
-    // Load top products for bar chart (current month)
+    // Load top products for bar chart
     this.getService.getTopSellingProductsMonthly().subscribe({
       next: (data: ProductSalesSummary[]) => {
         const topProducts = data.slice(0, 5);
@@ -215,18 +223,37 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       error: (err) => console.log('Error loading top products:', err)
     });
 
-    // Load sales trend using existing getAllSalesTransactionsAsync
-    this.loadSalesTrendFromTransactions();
+    // Inventory chart is now updated by updateInventoryChart() method
+  }
 
-    // Update inventory pie chart with real data
-    const totalProducts = 245;
-    const inStock = totalProducts - this.lowStockCount - this.outOfStockCount;
-    
+  // Add a method to get total product count
+  getTotalProductCount(): void {
+    this.getService.getAllInventoriesAsync().subscribe({
+      next: (inventories: Inventory[]) => {
+        this.totalProductCount = inventories.length;
+        console.log('Total inventories loaded:', this.totalProductCount);
+        console.log('Inventories data:', inventories);
+        this.updateInventoryChart(); // Update chart when data changes
+      },
+      error: (err) => console.log('Error loading total products:', err)
+    });
+  }
+
+  // New method to update inventory pie chart
+  updateInventoryChart(): void {
+    // Use the in-stock count directly from backend instead of calculating
     this.inventoryPieChartData.datasets[0].data = [
-      inStock > 0 ? inStock : 0,
+      this.inStockCount,
       this.lowStockCount,
       this.outOfStockCount
     ];
+    
+    console.log('Inventory Chart Updated:', {
+      inStock: this.inStockCount,
+      lowStock: this.lowStockCount,
+      outOfStock: this.outOfStockCount,
+      total: this.totalProductCount
+    });
   }
 
   // Use existing getAllSalesTransactionsAsync to generate chart data
@@ -318,7 +345,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.getService.getInventoryLowStockCountAsync().subscribe({
       next: (res) => {
         this.lowStockCount = res;
-        this.loadChartData();
+        console.log('Low stock count:', this.lowStockCount);
+        this.updateInventoryChart(); // Update chart when data changes
       },
       error: (err) => console.log(`${err.error}`),
     });
@@ -328,9 +356,23 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.getService.getInventoryOutOfStockCountAsync().subscribe({
       next: res => {
         this.outOfStockCount = res;
-        this.loadChartData();
+        console.log('Out of stock count:', this.outOfStockCount);
+        this.updateInventoryChart(); // Update chart when data changes
       },
       error: err => console.log(`${err.error}`)
+    });
+  }
+
+  // NEW: Get in-stock count directly from backend
+  getInStockCount() {
+    // Calculate in stock based on available inventories
+    this.getService.getAllAvailableInventoriesAsync().subscribe({
+      next: (inventories: Inventory[]) => {
+        this.inStockCount = inventories.length;
+        console.log('In stock count:', this.inStockCount);
+        this.updateInventoryChart();
+      },
+      error: err => console.log('Error loading in stock count:', err)
     });
   }
 
