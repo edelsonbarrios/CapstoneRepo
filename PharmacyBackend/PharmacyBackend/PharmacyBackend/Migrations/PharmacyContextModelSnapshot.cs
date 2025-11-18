@@ -195,15 +195,10 @@ namespace PharmacyBackend.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("SupplierId")
-                        .HasColumnType("integer");
-
                     b.HasKey("CategoryID");
 
                     b.HasIndex("CategoryName")
                         .IsUnique();
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("Category");
                 });
@@ -969,13 +964,6 @@ namespace PharmacyBackend.Migrations
                     b.Navigation("VAT");
                 });
 
-            modelBuilder.Entity("PharmacyBackend.Models.Category", b =>
-                {
-                    b.HasOne("PharmacyBackend.Models.Supplier", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("SupplierId");
-                });
-
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>
                 {
                     b.HasOne("PharmacyBackend.Models.Role", "Role")
@@ -1207,8 +1195,6 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.Supplier", b =>
                 {
-                    b.Navigation("Categories");
-
                     b.Navigation("PurchaseOrders");
                 });
 
