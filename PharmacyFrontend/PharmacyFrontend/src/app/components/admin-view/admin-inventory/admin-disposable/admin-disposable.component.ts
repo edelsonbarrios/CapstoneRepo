@@ -37,7 +37,7 @@ export class ManageDisposableComponent implements OnInit {
   generics: Generic[] = [];
 
   Math = Math;
-  
+
   // Restore confirmation modal states
   showRestoreConfirmation: boolean = false;
   restoreMessage: string = '';
@@ -85,10 +85,12 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   getAllItems() {
+    this.paginatedItems = [];
     this.all = [];
     this.getAllProducts();
     this.getAllCategories();
     this.getInventoriesOutOfStock();
+    this.getExpiredInventories();
     this.getAllInactiveBrands();
     this.getAllInactiveGenerics();
     this.getAllInactiveFormulations();
@@ -133,6 +135,19 @@ export class ManageDisposableComponent implements OnInit {
         this.updatePaginatedItems();
       }
     })
+  }
+
+  getExpiredInventories() {
+    this.getService.getExpiredInventoriesAsync().subscribe({
+      next: res => {
+        const inventoriesWithType = res.map(i => ({...i, entityType : 'inventory'}));
+        this.all.push(...inventoriesWithType);
+        this.updatePaginatedItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
   }
 
   getAllInactiveBrands() {
@@ -332,7 +347,6 @@ export class ManageDisposableComponent implements OnInit {
     // Close the modal and reset
     this.showRestoreConfirmation = false;
     this.itemToRestore = null;
-    this.getAllItems();
   }
 
   onCancelRestore() {
