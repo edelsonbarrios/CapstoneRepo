@@ -172,6 +172,20 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new ArchiveDiscountResponse { Message = "Product cannot be deleted." });
             return Ok(new ArchiveProductResponse { Message = "Product deleted successfully." });
         }
+
+        [HttpPut("RestoreProduct")]
+        public async Task<ActionResult<object>> RestoreProductByIdAsync(int productId) 
+        {
+          if(productId == 0)
+            return NotFound(new {Message = "Product does not exist."});
+
+          var restoration = await _updateService.RestoreProductByIdAsync(productId);
+          if(!restoration) 
+            return BadRequest(new {Message = "Product cannot be restored."});
+
+          return Ok(new {Message = "Product restored successfully."});
+        }
+
         #endregion
 
         #region Category
@@ -197,6 +211,22 @@ namespace PharmacyBackend.Controllers
                 return BadRequest(new { Message = "Category cannot be updated." });
             return Ok(new { Message = "Category successsfully archived." });
         }
+
+        [HttpPut("RestoreCategory")]
+        public async Task<ActionResult<object>> RestoreCategoryByIdAsync(int categoryId) 
+        {
+          var restoreCategory = await _updateService.RestoreCategoryByIdAsync(categoryId);
+
+          if(restoreCategory)
+            return BadRequest(new {Message = "Category cannot be restored."});
+
+          var duplication = await _updateService.CategoryRestorationValidationAsync(categoryId);
+          if(!duplication)
+            return BadRequest(new {Message = "Category already exists in the Category module."});
+
+          return Ok(new {Message = "Category successfully restored."});
+        }
+
         #endregion
 
         #region Brand

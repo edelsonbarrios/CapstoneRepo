@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Inventory } from '../../../models/inventory-module-models/inventory';
 import { Brand } from '../../../models/brand-models/brand';
 import { Generic } from '../../../models/generic-models/generic';
+import { UpdateService } from '../../../services/UpdateService/update.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class ManageDisposableComponent implements OnInit {
   generics: Generic[] = [];
 
   Math = Math;
+  restoreMessage: string = '';
 
   // Modal states
   showModal: boolean = false;
@@ -56,13 +58,20 @@ export class ManageDisposableComponent implements OnInit {
     });
   }
 
-  constructor(private getService: GetService) {}
+  constructor(
+    private getService: GetService,
+    private updateService: UpdateService,
+  )
+{}
 
   ngOnInit(): void {
     this.getAllItems();
   }
 
   getAllItems() {
+
+    this.all = [];
+
     this.getAllProducts();
     this.getAllCategories();
     this.getInventoriesOutOfStock();
@@ -174,15 +183,22 @@ export class ManageDisposableComponent implements OnInit {
     })
   }
 
-
   updatePaginatedItems() {
     const items = this.filteredItems;
+
+    const sortedItems = items.sort((a, b) => {
+      const typeOrder = ['product', 'category', 'inventory', 'brand', 'generic', 'formulation', 'classification', 'type'];
+      const indexA = typeOrder.indexOf(a.entityType);
+      const indexB = typeOrder.indexOf(b.entityType);
+      return indexA - indexB;
+    });
+
     this.totalPages = Math.ceil(items.length / this.itemsPerPage);
     if (this.totalPages == 0) this.totalPages = 1;
 
     const startingIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endingIndex = startingIndex + this.itemsPerPage;
-    this.paginatedItems = items.slice(startingIndex, endingIndex);
+    this.paginatedItems = sortedItems.slice(startingIndex, endingIndex);
   }
 
   onSearchChange() {
@@ -264,11 +280,47 @@ export class ManageDisposableComponent implements OnInit {
     this.showModal = true;
   }
 
-  deleteItem(item: any) {
-    if (confirm(`Are you sure you want to delete ${this.getItemName(item)}?`)) {
-      console.log('Delete item:', item);
-      // Implement delete logic here
-      // After successful delete:
+  restoreItem(item: any) {
+    switch(item.entityType) {
+      case "category":
+        this.restoreCategoryById(item.categoryID);
+        break;
+      case "product":
+        console.log(item);
+        this.restoreProductById(item.productID);
+        break;
+    }
+  }
+
+  restoreProductById(id: number) {
+    this.updateService.restoreProductAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  restoreCategoryById(id: number) {
+    this.updateService.restoreCategoryByIdAsync(id).subscribe({
+      next: res => {
+        this.restoreMessage = res.message;
+        this.getAllItems();
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    })
+  }
+
+  archiveItem(item: any) {
+    if (confirm(`Are you sure you want to archive ${this.getItemName(item)}?`)) {
+      console.log('Archive item:', item);
+      // Implement archive logic here
+      // After successful archive:
       // this.all = this.all.filter(i => i !== item);
       // this.updatePaginatedItems();
     }

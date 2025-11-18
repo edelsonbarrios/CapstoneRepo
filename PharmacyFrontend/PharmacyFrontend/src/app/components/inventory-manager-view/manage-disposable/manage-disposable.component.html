@@ -66,9 +66,13 @@
             <td class="item-name">{{getItemName(item)}}</td>
             <td>
               <div class="action-buttons">
-                <button class="btn-action btn-restore" title="Restore">
+                <button class="btn-action btn-restore" title="Restore" *ngIf="item.entityType != 'inventory'" (click)="restoreItem(item)">
                   <i class="fas fa-undo"></i>
                   Restore
+                </button>
+                <button class="btn-action btn-archive" title="Archive" *ngIf="item.entityType === 'inventory'" (click)="archiveItem(item)">
+                  <i class="fas fa-archive"></i>
+                  Archive
                 </button>
               </div>
             </td>
