@@ -205,6 +205,10 @@ export class GetService {
   getInventoriesOutOfStockAsync() : Observable<Inventory[]> {
     return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoriesOutOfStock`);
   }
+
+  getExpiredInventoriesAsync() : Observable<Inventory[]> {
+    return this.httpClient.get<Inventory[]>(`${this.apiUrl}/Get/InventoryExpired`);
+  }
   //Inventory Service End
 
   //Stock Movement Service
