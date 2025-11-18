@@ -64,37 +64,80 @@
       {{error}}
     </div>
 
-    <table class="ranking-table" *ngIf="!loading && fastMovingReport">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Product</th>
-          <th>Category</th>
-          <th>Qty Sold</th>
-          <th>Revenue</th>
-          <th>Stock</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="paginatedProducts.length === 0">
-          <td colspan="6" style="text-align: center; color: #525252; padding: 1rem;">
-            No recent data
-          </td>
-        </tr>
-        <tr *ngFor="let p of paginatedProducts">
-          <td>{{p.rank}}</td>
-          <td>{{p.productName}}</td>
-          <td>{{p.categoryName}}</td>
-          <td>{{p.quantitySold}}</td>
-          <td>{{p.revenue | currency:'PHP':'symbol-narrow'}}</td>
-          <td>
-            <span [style.color]="p.currentStock < 10 ? '#dc2626' : '#10b981'">
-              {{p.currentStock}}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper" *ngIf="!loading && fastMovingReport">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Product Name</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Generic</th>
+            <th>Classification</th>
+            <th>Unit Type</th>
+            <th>Box Sold</th>
+            <th>Sheet Sold</th>
+            <th>Piece Sold</th>
+            <th>Transactions</th>
+            <th>Revenue</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="paginatedProducts.length === 0">
+            <td colspan="15" style="text-align: center; color: #525252; padding: 1rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let p of paginatedProducts">
+            <td>
+              <span class="rank-badge" 
+                    [class.rank-1]="p.rank === 1" 
+                    [class.rank-2]="p.rank === 2" 
+                    [class.rank-3]="p.rank === 3">
+                {{p.rank}}
+              </span>
+            </td>
+            <td class="product-name">{{p.productName}}</td>
+            <td>{{p.brand || 'N/A'}}</td>
+            <td>
+              <span class="category-badge">{{p.categoryName}}</span>
+            </td>
+            <td>{{p.generic || 'N/A'}}</td>
+            <td>{{p.classification || 'N/A'}}</td>
+            <td class="unit-type">{{formatUnitType(p.unitType)}}</td>
+            <td class="qty-cell">{{p.boxSold !== null && p.boxSold !== undefined ? p.boxSold : '-'}}</td>
+            <td class="qty-cell">{{p.sheetSold !== null && p.sheetSold !== undefined ? p.sheetSold : '-'}}</td>
+            <td class="qty-cell highlight">{{p.pieceSold}}</td>
+            <td class="transaction-count">{{p.transactionCount}}</td>
+            <td class="revenue">{{p.revenue | currency:'PHP':'symbol-narrow'}}</td>
+            <td>
+              <span [style.color]="p.currentStock < 10 ? '#dc2626' : '#10b981'">
+                {{p.currentStock | number}}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" 
+                    [class.status-low]="p.stockStatus === 'Low Stock'"
+                    [class.status-out]="p.stockStatus === 'Out of Stock'"
+                    [class.status-adequate]="p.stockStatus === 'Adequate'">
+                {{p.stockStatus}}
+              </span>
+            </td>
+            <td>
+              <span class="trend-badge"
+                    [class.trend-increasing]="p.trend === 'Increasing'"
+                    [class.trend-stable]="p.trend === 'Stable'"
+                    [class.trend-decreasing]="p.trend === 'Decreasing'">
+                {{p.trend}}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- PAGINATION CONTROLS -->
     <div class="pagination-controls" *ngIf="!loading && paginatedProducts.length > 0">
@@ -103,36 +146,36 @@
       <button class="btn-page" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
     </div>
   </div>
+
+  <!-- Validation Modal -->
+  <div class="modal-overlay" *ngIf="showValidationModal">
+    <div class="wrapper-modal validation-modal">
+      <div class="icon-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h1>Validation Required</h1>
+      <p class="subtext">{{ validationMessage }}</p>
+
+      <div class="button-wrapper">
+        <button class="btn-ok" (click)="closeValidationModal()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showExportModal">
+    <div class="wrapper-modal">
+      <h1>Do you want to Export this into Excel?</h1>
+      <p class="subtext">This will download the fast-moving products report as an Excel file.</p>
+
+      <div class="button-wrapper">
+        <button class="btn-confirm" (click)="confirmExport()">OK</button>
+        <button class="btn-cancel" (click)="cancelExport()">Cancel</button>
+      </div>
+    </div>
+  </div>
 </main>
-
-<!-- Validation Modal -->
-<div class="modal-overlay" *ngIf="showValidationModal">
-  <div class="wrapper-modal validation-modal">
-    <div class="icon-wrapper">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-      </svg>
-    </div>
-    <h1>Validation Required</h1>
-    <p class="subtext">{{ validationMessage }}</p>
-
-    <div class="button-wrapper">
-      <button class="btn-ok" (click)="closeValidationModal()">OK</button>
-    </div>
-  </div>
-</div>
-
-<!-- Export Confirmation Modal -->
-<div class="modal-overlay" *ngIf="showExportModal">
-  <div class="wrapper-modal">
-    <h1>Do you want to Export this into Excel?</h1>
-    <p class="subtext">This will download the fast-moving products report as an Excel file.</p>
-
-    <div class="button-wrapper">
-      <button class="btn-confirm" (click)="confirmExport()">OK</button>
-      <button class="btn-cancel" (click)="cancelExport()">Cancel</button>
-    </div>
-  </div>
-</div>
