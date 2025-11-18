@@ -367,6 +367,16 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: { roles: ['Administrator'] },
       },
+      {
+        path: 'admin-disposable',
+        loadComponent: () => {
+          return import (
+            './components/admin-view/admin-inventory/admin-disposable/admin-disposable.component'
+          ).then((m) => m.ManageDisposableComponent);
+        },
+        canActivate: [authGuard],
+        data: { roles: ['Administrator'] },
+      }
     ],
   },
   {

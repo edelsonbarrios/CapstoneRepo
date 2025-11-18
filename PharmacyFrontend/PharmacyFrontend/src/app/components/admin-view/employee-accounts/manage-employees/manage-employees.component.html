@@ -3,11 +3,10 @@
     <!-- Search & Add Employee -->
     <div class="table-header">
       <div class="search-wrapper">
-        <input type="text" placeholder="Search Last Name" class="search-box"
-         [(ngModel)]="this.searchQuery"
-         (input)="onSearchChange()"
-          />
-        <button class="btn search-btn" (click)="getEmployeesByLastName()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <input type="text" placeholder="Search Last Name" class="search-box" [(ngModel)]="this.searchQuery"
+          (input)="onSearchChange()" />
+        <button class="btn search-btn" (click)="getEmployeesByLastName()"><i
+            class="fa-solid fa-magnifying-glass"></i></button>
       </div>
       <button class="btn add" (click)="openCreateEmployeeForm()">+ Add Employee</button>
     </div>
@@ -37,8 +36,8 @@
           <td style="text-align: center;">
             <button class="btn details" (click)="openViewEmployeeForm(e)">See Details</button>
             <button class="btn details" id="red" (click)="openArchiveForm(e.id)" *ngIf="e.isSuperAdmin == false">
-              Delete
-              </button>
+              Archive
+            </button>
           </td>
         </tr>
       </tbody>
@@ -54,31 +53,19 @@
 </div>
 
 <div class="modal-overlay" *ngIf="viewEmployee">
-  <app-view-employee
-  *ngIf="viewEmployee"
-  [employee]="viewEmployee"
-  (closeForm)="closeViewEmployeeForm()"
-  ></app-view-employee>
+  <app-view-employee *ngIf="viewEmployee" [employee]="viewEmployee"
+    (closeForm)="closeViewEmployeeForm()"></app-view-employee>
 </div>
 
 <div class="modal-overlay" *ngIf="newEmployee">
-  <app-create-employee
-  *ngIf="newEmployee"
-  [newEmployee]="newEmployee"
-  (closeForm)="closeCreateEmployeeForm()"
-  ></app-create-employee>
+  <app-create-employee *ngIf="newEmployee" [newEmployee]="newEmployee"
+    (closeForm)="closeCreateEmployeeForm()"></app-create-employee>
 </div>
 
 <!-- Success Alert Modal -->
 
 <div class="modal-overlay" *ngIf="showArchiveForm">
-  <app-archive-confirmation
-  *ngIf="showArchiveForm"
-  [id]="showArchiveForm"
-  [message]="'Do you really want to delete this employee?'"
-  [alertMessage]="'Employee sucessfully deleted.'"
-
-  (onArchive)="archiveEmployee()"
-  (onCancel)="closeArchiveForm()"
-  ></app-archive-confirmation>
+  <app-archive-confirmation *ngIf="showArchiveForm" [id]="showArchiveForm"
+    [message]="'Do you really want to delete this employee?'" [alertMessage]="'Employee sucessfully deleted.'"
+    (onArchive)="archiveEmployee()" (onCancel)="closeArchiveForm()"></app-archive-confirmation>
 </div>

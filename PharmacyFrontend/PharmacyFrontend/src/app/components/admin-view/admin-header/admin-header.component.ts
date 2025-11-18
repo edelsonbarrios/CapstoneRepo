@@ -71,6 +71,7 @@ export class AdminHeaderComponent implements OnInit {
     return this.router.url.includes('/admin-main/admin-product-main') ||
            this.router.url.includes('/admin-main/admin-inventory-module-main') ||
            this.router.url.includes('/admin-main/admin-inventory-purchase-order') ||
-           this.router.url.includes('/admin-main/admin-manage-replenishment');
+           this.router.url.includes('/admin-main/admin-manage-replenishment') ||
+           this.router.url.includes('/admin-main/admin-disposable');
   }
 }
