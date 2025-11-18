@@ -113,9 +113,9 @@
           </td>
           <td>
             <div class="quantity-display">
-              <span class="qty-label">Box:</span> {{ formatChange(transaction.boxQuantityChanged) }}<br>
-              <span class="qty-label">Sheet:</span> {{ formatChange(transaction.sheetQuantityChanged) }}<br>
-              <span class="qty-label">Pieces:</span> {{ formatChange(transaction.pieceQuantityChanged) }}
+              <span class="qty-label">Box:</span> {{ formatChange(transaction.boxQuantityChanged, transaction.movementType) }}<br>
+              <span class="qty-label">Sheet:</span> {{ formatChange(transaction.sheetQuantityChanged, transaction.movementType) }}<br>
+              <span class="qty-label">Pieces:</span> {{ formatChange(transaction.pieceQuantityChanged, transaction.movementType) }}
             </div>
           </td>
           <td>
