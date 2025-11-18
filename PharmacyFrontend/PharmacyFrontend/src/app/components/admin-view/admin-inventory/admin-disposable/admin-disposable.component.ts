@@ -50,18 +50,6 @@ export class ManageDisposableComponent implements OnInit {
   deleteAlertMessage: string = '';
   itemToDelete: any = null;
 
-  // Modal states
-  showModal: boolean = false;
-  showSuccessAlert: boolean = false;
-  isEditMode: boolean = false;
-
-  // Form data
-  formData = {
-    id: null,
-    name: '',
-    entityType: 'product'
-  };
-
   get filteredItems(): any[] {
     if (this.searchQuery.trim() == '') {
       return this.all;
@@ -70,7 +58,12 @@ export class ManageDisposableComponent implements OnInit {
     return this.all.filter(item => {
       return (
         item.productName?.toLowerCase().includes(query) ||
-        item.categoryName?.toLowerCase().includes(query)
+        item.categoryName?.toLowerCase().includes(query) ||
+        item.brandName?.toLowerCase().includes(query) ||
+        item.genericName?.toLowerCase().includes(query) ||
+        item.formulationName?.toLowerCase().includes(query) ||
+        item.classificationName?.toLowerCase().includes(query) ||
+        item.typeName?.toLowerCase().includes(query)
       );
     });
   }
@@ -130,7 +123,7 @@ export class ManageDisposableComponent implements OnInit {
     this.getService.getInventoriesOutOfStockAsync().subscribe({
       next: res => {
         this.inventories = res;
-        const inventoriesWithType = res.map(iv => ({...iv, entityType: 'inventory'}));
+        const inventoriesWithType = res.map(iv => ({...iv, entityType: 'inventory', status: 'out-of-stock'}));
         this.all.push(...inventoriesWithType);
         this.updatePaginatedItems();
       }
@@ -140,7 +133,7 @@ export class ManageDisposableComponent implements OnInit {
   getExpiredInventories() {
     this.getService.getExpiredInventoriesAsync().subscribe({
       next: res => {
-        const inventoriesWithType = res.map(i => ({...i, entityType : 'inventory'}));
+        const inventoriesWithType = res.map(i => ({...i, entityType : 'inventory', status: 'expired'}));
         this.all.push(...inventoriesWithType);
         this.updatePaginatedItems();
       },
@@ -274,6 +267,15 @@ export class ManageDisposableComponent implements OnInit {
     return 'Unknown';
   }
 
+  getItemCode(item: any): string {
+    if (item.entityType === 'product' && item.productID) {
+      return `BTH-${String(item.productID).padStart(4, '0')}`;
+    } else if (item.entityType === 'inventory' && item.productID) {
+      return `BTH-${String(item.productID).padStart(4, '0')}`;
+    }
+    return '';
+  }
+
   getItemType(item: any): string {
     if (item.entityType === 'product') return 'Product';
     if (item.entityType === 'category') return 'Category';
@@ -286,28 +288,60 @@ export class ManageDisposableComponent implements OnInit {
     return 'Unknown';
   }
 
-  openAddModal() {
-    this.isEditMode = false;
-    this.formData = {
-      id: null,
-      name: '',
-      entityType: 'product'
-    };
-    this.showModal = true;
+  getIconClass(entityType: string): string {
+    switch(entityType) {
+      case 'product': return 'fas fa-box';
+      case 'category': return 'fas fa-tag';
+      case 'inventory': return 'fas fa-warehouse';
+      case 'brand': return 'fas fa-trademark';
+      case 'generic': return 'fas fa-pills';
+      case 'formulation': return 'fas fa-flask';
+      case 'classification': return 'fas fa-layer-group';
+      case 'type': return 'fas fa-shapes';
+      default: return 'fas fa-tag';
+    }
   }
 
-  editItem(item: any) {
-    this.isEditMode = true;
-    this.formData = {
-      id: item.id || item.productId || item.categoryId,
-      name: this.getItemName(item),
-      entityType: item.entityType
-    };
-    this.showModal = true;
+  getItemDetails(item: any): string[] {
+    const details: string[] = [];
+    
+    if (item.entityType === 'product') {
+      if (item.categoryName) details.push(item.categoryName);
+      if (item.brandName) details.push(item.brandName);
+      if (item.genericName) details.push(item.genericName);
+      if (item.formulationName) details.push(item.formulationName);
+    } else if (item.entityType === 'inventory') {
+      if (item.categoryName) details.push(item.categoryName);
+      if (item.brandName) details.push(item.brandName);
+      if (item.genericName) details.push(item.genericName);
+      if (item.expirationDate) {
+        const expDate = new Date(item.expirationDate);
+        details.push(`Exp: ${expDate.toLocaleDateString()}`);
+      }
+    }
+    
+    return details;
+  }
+
+  getInventoryStatus(item: any): string {
+    if (item.status === 'expired') return 'Expired';
+    if (item.status === 'out-of-stock') return 'Out of Stock';
+    return '';
+  }
+
+  getInventoryStatusClass(item: any): string {
+    if (item.status === 'expired') return 'status-expired';
+    if (item.status === 'out-of-stock') return 'status-out-of-stock';
+    return '';
+  }
+
+  getInventoryStatusIcon(item: any): string {
+    if (item.status === 'expired') return 'fas fa-exclamation-triangle';
+    if (item.status === 'out-of-stock') return 'fas fa-box-open';
+    return '';
   }
 
   restoreItem(item: any) {
-    // Store the item and show confirmation modal
     this.itemToRestore = item;
     this.restoreMessage = `Are you sure you want to restore this ${this.getItemType(item)}?`;
     this.restoreAlertMessage = `${this.getItemType(item)} has been restored successfully!`;
@@ -315,7 +349,6 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   onConfirmRestore() {
-    // This is called when user clicks "OK" on success alert
     if (!this.itemToRestore) return;
 
     const item = this.itemToRestore;
@@ -344,19 +377,16 @@ export class ManageDisposableComponent implements OnInit {
         break;
     }
 
-    // Close the modal and reset
     this.showRestoreConfirmation = false;
     this.itemToRestore = null;
   }
 
   onCancelRestore() {
-    // User clicked cancel
     this.showRestoreConfirmation = false;
     this.itemToRestore = null;
   }
 
   archiveItem(item: any) {
-    // Store the item and show delete confirmation modal
     this.itemToDelete = item;
     this.deleteMessage = `Are you sure you want to delete this ${this.getItemType(item)}?`;
     this.deleteAlertMessage = `${this.getItemType(item)} has been deleted successfully!`;
@@ -364,18 +394,15 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   onConfirmDelete() {
-    // This is called when user clicks "OK" on success alert
     if (!this.itemToDelete) return;
 
     this.deleteInventory(this.itemToDelete.inventoryID);
 
-    // Close the modal and reset
     this.showDeleteConfirmation = false;
     this.itemToDelete = null;
   }
 
   onCancelDelete() {
-    // User clicked cancel
     this.showDeleteConfirmation = false;
     this.itemToDelete = null;
   }
@@ -466,36 +493,6 @@ export class ManageDisposableComponent implements OnInit {
         console.log(`${err.error}`);
       }
     })
-  }
-
-  closeModal() {
-    this.showModal = false;
-    this.formData = {
-      id: null,
-      name: '',
-      entityType: 'product'
-    };
-  }
-
-  saveItem() {
-    if (!this.formData.name.trim()) {
-      return;
-    }
-
-    console.log('Save item:', this.formData);
-
-    // Implement save logic here
-    // After successful save:
-    this.showModal = false;
-    this.showSuccessAlert = true;
-
-    // Refresh data
-    // this.getAllProducts();
-    // this.getAllCategories();
-  }
-
-  closeSuccessAlert() {
-    this.showSuccessAlert = false;
   }
 
   get pageNumbers(): number[] {

@@ -1,0 +1,1 @@
+var e=class{id=0;employeeCode="";lastName="";firstName="";middleName="";age=0;birthDate=new Date;civilStatus="";gender="";email="";address="";phoneNumber="";rolePosition="";fullName="";createdBy=0;createdAt=new Date;isActive=!0;archivedBy=0;archivedAt=new Date;updatedBy=0;updatedAt=new Date;isSuperAdmin=!1};export{e as a};
