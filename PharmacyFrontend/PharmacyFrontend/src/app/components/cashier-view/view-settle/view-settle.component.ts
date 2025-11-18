@@ -106,15 +106,19 @@ export class ViewSettleComponent implements OnInit {
   calculateDiscountAmount(): number {
     if (!this.selectedDiscount) return 0;
 
+    const subtotalWithVat = this.subtotal + this.calculateVatAmount();
+    let discountAmount = 0;
+
     if (this.selectedDiscount.discountType === 'Percentage') {
       // Percentage-based discount
-      return this.subtotal * ((this.selectedDiscount.discountAmount || 0) / 100);
+      discountAmount = this.subtotal * ((this.selectedDiscount.discountAmount || 0) / 100);
     } else if (this.selectedDiscount.discountType === 'Fixed') {
       // Fixed amount discount
-      return this.selectedDiscount.discountAmount || 0;
+      discountAmount = this.selectedDiscount.discountAmount || 0;
     }
 
-    return 0;
+    // Ensure discount doesn't exceed subtotal + VAT
+    return Math.min(discountAmount, subtotalWithVat);
   }
 
   /**
@@ -126,11 +130,15 @@ export class ViewSettleComponent implements OnInit {
 
   /**
    * Calculate total amount (Subtotal + VAT - Discount)
+   * Ensures total is never negative
    */
   calculateTotals(): number {
     const vatAmount = this.calculateVatAmount();
     const discountAmount = this.calculateDiscountAmount();
-    return this.subtotal + vatAmount - discountAmount;
+    const total = this.subtotal + vatAmount - discountAmount;
+    
+    // Ensure total is never negative
+    return Math.max(total, 0);
   }
 
   /**
@@ -148,7 +156,14 @@ export class ViewSettleComponent implements OnInit {
 
   onPaymentChange() {
     const total = this.calculateTotals();
-    this.change = this.payment - total;
+    
+    // If total is 0 (discount exceeds total), set payment to 1 peso
+    if (total === 0) {
+      this.payment = 1;
+      this.change = 0;
+    } else {
+      this.change = this.payment - total;
+    }
   }
 
   closeRefNumErrorMessage() {
@@ -191,7 +206,7 @@ export class ViewSettleComponent implements OnInit {
       discountAmount: this.calculateDiscountAmount(),
       vatAmount: this.calculateVatAmount(),
       referenceNumber: this.selectedPaymentMethod === 'e-Payment' ? this.refNum : '',
-      discountId: this.selectedDiscount?.id || 0, // Fixed: was hardcoded to 1
+      discountId: this.selectedDiscount?.id || 0,
       employeeID: this.loggedInEmployee.id,
       vatId: this.selectedVat?.vatid || null,
       items: this.cartItems.map((i) => ({
