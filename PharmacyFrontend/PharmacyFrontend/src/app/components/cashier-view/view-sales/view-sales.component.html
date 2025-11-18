@@ -57,7 +57,7 @@
             <td>{{item.unitType}}</td>
             <td>{{getUnitQuantity(item)}}</td>
             <td>₱{{item.unitPrice | number: '1.2-2'}}</td>
-            <td>₱{{(item.quantity * item.unitPrice) | number: '1.2-2'}}</td>
+            <td>₱{{getDisplaySubtotal(item) | number: '1.2-2'}}</td>
           </tr>
         </tbody>
       </table>
