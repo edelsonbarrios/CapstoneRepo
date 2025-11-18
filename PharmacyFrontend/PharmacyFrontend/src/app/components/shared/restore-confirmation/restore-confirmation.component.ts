@@ -18,7 +18,6 @@ export class RestoreConfirmationComponent {
   showSuccessAlert: boolean = false;
 
   onCommit() {
-    // Show success alert first
     this.showSuccessAlert = true;
   }
 

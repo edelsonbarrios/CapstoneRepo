@@ -8,12 +8,18 @@ import { Inventory } from '../../../models/inventory-module-models/inventory';
 import { Brand } from '../../../models/brand-models/brand';
 import { Generic } from '../../../models/generic-models/generic';
 import { UpdateService } from '../../../services/UpdateService/update.service';
-
+import { RestoreConfirmationComponent } from '../../shared/restore-confirmation/restore-confirmation.component';
+import { DeleteConfirmationComponent } from '../../shared/delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'app-manage-disposable',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    RestoreConfirmationComponent,
+    DeleteConfirmationComponent
+  ],
   templateUrl: './manage-disposable.component.html',
   styleUrl: './manage-disposable.component.scss'
 })
@@ -31,7 +37,18 @@ export class ManageDisposableComponent implements OnInit {
   generics: Generic[] = [];
 
   Math = Math;
+  
+  // Restore confirmation modal states
+  showRestoreConfirmation: boolean = false;
   restoreMessage: string = '';
+  restoreAlertMessage: string = '';
+  itemToRestore: any = null;
+
+  // Delete confirmation modal states
+  showDeleteConfirmation: boolean = false;
+  deleteMessage: string = '';
+  deleteAlertMessage: string = '';
+  itemToDelete: any = null;
 
   // Modal states
   showModal: boolean = false;
@@ -61,23 +78,19 @@ export class ManageDisposableComponent implements OnInit {
   constructor(
     private getService: GetService,
     private updateService: UpdateService,
-  )
-{}
+  ) {}
 
   ngOnInit(): void {
     this.getAllItems();
   }
 
   getAllItems() {
-
     this.all = [];
-
     this.getAllProducts();
     this.getAllCategories();
     this.getInventoriesOutOfStock();
     this.getAllInactiveBrands();
     this.getAllInactiveGenerics();
-    this.getAllInactiveFormulations();
     this.getAllInactiveFormulations();
     this.getAllInactiveClassifications();
     this.getAllInactiveTypes();
@@ -93,7 +106,6 @@ export class ManageDisposableComponent implements OnInit {
       },
       error: err => {
         console.log(`${err.error}`);
-        console.log(`${this.products}`);
       }
     });
   }
@@ -108,7 +120,6 @@ export class ManageDisposableComponent implements OnInit {
       },
       error: err => {
         console.log(`${err.error}`);
-        console.log(`${this.categories}`);
       }
     });
   }
@@ -232,31 +243,31 @@ export class ManageDisposableComponent implements OnInit {
       return item.productName;
     } else if (item.entityType === 'category') {
       return item.categoryName;
-    }else if(item.entityType === 'inventory') {
+    } else if (item.entityType === 'inventory') {
       return item.productName;
-    }else if(item.entityType === 'brand') {
+    } else if (item.entityType === 'brand') {
       return item.brandName;
-    }else if(item.entityType === 'generic') {
+    } else if (item.entityType === 'generic') {
       return item.genericName;
-    }else if(item.entityType === 'formulation') {
+    } else if (item.entityType === 'formulation') {
       return item.formulationName;
-    }else if(item.entityType === 'classification'){
+    } else if (item.entityType === 'classification') {
       return item.classificationName;
-    }else if(item.entityType === 'type') {
+    } else if (item.entityType === 'type') {
       return item.typeName;
     }
     return 'Unknown';
   }
 
   getItemType(item: any): string {
-    if(item.entityType === 'product') return 'Product';
-    if(item.entityType === 'category') return 'Category';
-    if(item.entityType === 'inventory') return 'Inventory';
-    if(item.entityType === 'brand') return 'Brand';
-    if(item.entityType === 'generic') return 'Generic';
-    if(item.entityType === 'formulation') return 'Formulation';
-    if(item.entityType === 'classification') return 'Classification';
-    if(item.entityType === 'type') return 'Type';
+    if (item.entityType === 'product') return 'Product';
+    if (item.entityType === 'category') return 'Category';
+    if (item.entityType === 'inventory') return 'Inventory';
+    if (item.entityType === 'brand') return 'Brand';
+    if (item.entityType === 'generic') return 'Generic';
+    if (item.entityType === 'formulation') return 'Formulation';
+    if (item.entityType === 'classification') return 'Classification';
+    if (item.entityType === 'type') return 'Type';
     return 'Unknown';
   }
 
@@ -281,7 +292,20 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   restoreItem(item: any) {
-    switch(item.entityType) {
+    // Store the item and show confirmation modal
+    this.itemToRestore = item;
+    this.restoreMessage = `Are you sure you want to restore this ${this.getItemType(item)}?`;
+    this.restoreAlertMessage = `${this.getItemType(item)} has been restored successfully!`;
+    this.showRestoreConfirmation = true;
+  }
+
+  onConfirmRestore() {
+    // This is called when user clicks "OK" on success alert
+    if (!this.itemToRestore) return;
+
+    const item = this.itemToRestore;
+
+    switch (item.entityType) {
       case "category":
         this.restoreCategoryById(item.categoryID);
         break;
@@ -299,18 +323,52 @@ export class ManageDisposableComponent implements OnInit {
         break;
       case "classification":
         this.restoreClassificationById(item.classificationID);
-        console.log(JSON.stringify(item));
         break;
       case "type":
         this.restoreTypeModelById(item.typeID);
         break;
     }
+
+    // Close the modal and reset
+    this.showRestoreConfirmation = false;
+    this.itemToRestore = null;
+    this.getAllItems();
+  }
+
+  onCancelRestore() {
+    // User clicked cancel
+    this.showRestoreConfirmation = false;
+    this.itemToRestore = null;
+  }
+
+  archiveItem(item: any) {
+    // Store the item and show delete confirmation modal
+    this.itemToDelete = item;
+    this.deleteMessage = `Are you sure you want to delete this ${this.getItemType(item)}?`;
+    this.deleteAlertMessage = `${this.getItemType(item)} has been deleted successfully!`;
+    this.showDeleteConfirmation = true;
+  }
+
+  onConfirmDelete() {
+    // This is called when user clicks "OK" on success alert
+    if (!this.itemToDelete) return;
+
+    this.deleteInventory(this.itemToDelete.inventoryID);
+
+    // Close the modal and reset
+    this.showDeleteConfirmation = false;
+    this.itemToDelete = null;
+  }
+
+  onCancelDelete() {
+    // User clicked cancel
+    this.showDeleteConfirmation = false;
+    this.itemToDelete = null;
   }
 
   restoreTypeModelById(id: number) {
     this.updateService.restoreTypeModelByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
@@ -320,10 +378,8 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   restoreClassificationById(id: number) {
-    debugger;
     this.updateService.restoreClassificationByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
@@ -335,19 +391,17 @@ export class ManageDisposableComponent implements OnInit {
   restoreFormulationById(id: number) {
     this.updateService.restoreFormulationByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
-        console.log(`${err.erorr}`);
+        console.log(`${err.error}`);
       }
     });
   }
 
-  restoreGenericById(id :number) {
+  restoreGenericById(id: number) {
     this.updateService.restoreGenericByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
@@ -359,7 +413,6 @@ export class ManageDisposableComponent implements OnInit {
   restoreBrandById(id: number) {
     this.updateService.restoreBrandByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
@@ -371,7 +424,6 @@ export class ManageDisposableComponent implements OnInit {
   restoreProductById(id: number) {
     this.updateService.restoreProductAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
@@ -383,7 +435,6 @@ export class ManageDisposableComponent implements OnInit {
   restoreCategoryById(id: number) {
     this.updateService.restoreCategoryByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {
@@ -392,14 +443,9 @@ export class ManageDisposableComponent implements OnInit {
     })
   }
 
-  archiveItem(item: any) {
-    this.deleteInventory(item.inventoryID);
-  }
-
   deleteInventory(id: number) {
     this.updateService.deleteInventoryByIdAsync(id).subscribe({
       next: res => {
-        this.restoreMessage = res.message;
         this.getAllItems();
       },
       error: err => {

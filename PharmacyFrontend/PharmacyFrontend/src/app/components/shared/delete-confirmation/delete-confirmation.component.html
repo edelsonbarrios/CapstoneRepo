@@ -1,0 +1,44 @@
+<!-- Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showConfirmation" (click)="cancelDelete()">
+  <div class="confirmation-modal" (click)="$event.stopPropagation()">
+    <div class="modal-icon">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="32" fill="#ef4444" opacity="0.1"/>
+        <circle cx="32" cy="32" r="24" fill="#ef4444" opacity="0.2"/>
+        <path d="M32 20V34M32 42V44" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 class="modal-title">Confirm Deletion</h3>
+    <p class="modal-message">{{ message }}</p>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" (click)="cancelDelete()">
+        <i class="fas fa-times"></i>
+        Cancel
+      </button>
+      <button class="btn btn-delete" (click)="confirmDelete()">
+        <i class="fas fa-trash"></i>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Alert -->
+<div class="modal-overlay" *ngIf="showSuccessAlert" (click)="closeSuccessAlert()">
+  <div class="success-alert" (click)="$event.stopPropagation()">
+    <div class="alert-icon">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="40" fill="#10b981" opacity="0.1"/>
+        <circle cx="40" cy="40" r="32" fill="#10b981" opacity="0.2"/>
+        <path d="M25 40L35 50L55 30" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="alert-title">Success!</h3>
+    <p class="alert-message">{{ alertMessage }}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeSuccessAlert()">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
