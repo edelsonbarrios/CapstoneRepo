@@ -68,6 +68,7 @@ export class CashierDashboardComponent implements OnInit {
     quantity: number;
     unitPrice: number;
     unitMeasurement: string;
+    quantityError?: string;
   }[] = [];
 
   searchTerm: string = '';
@@ -246,13 +247,11 @@ export class CashierDashboardComponent implements OnInit {
       const price = this.resolveUnitPriceFromProduct(p, unitType);
       const qtyToAdd = p.quantity && p.quantity > 0 ? p.quantity : 1;
 
-      // Check if product with same ID and unit type already exists in cart
       const existing = this.selectedProducts.find(
         (sp) => sp.productID === p.productID && sp.unitType === unitType
       );
 
       if (existing) {
-        // Add to existing quantity
         existing.quantity += qtyToAdd;
       } else {
         this.selectedProducts.push({
@@ -270,7 +269,6 @@ export class CashierDashboardComponent implements OnInit {
         console.log(JSON.stringify(this.selectedProducts));
       }
 
-      // Reset product selection state
       p.selected = false;
       p.quantity = 0;
       p.tempUnitType = 'Piece';
@@ -298,6 +296,13 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   onCartItemChange(item: any) {
+    if (item.quantity && !Number.isInteger(Number(item.quantity))) {
+      item.quantityError = 'Whole number only';
+      return;
+    } else {
+      item.quantityError = '';
+    }
+
     if (!item.quantity || item.quantity < 1) item.quantity = 1;
     if (!item.unitPrice || item.unitPrice < 0) item.unitPrice = 0;
 
@@ -306,7 +311,6 @@ export class CashierDashboardComponent implements OnInit {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
     }
 
-    // Validate max quantity
     const max = this.getMaxQuantity(item);
     if (max !== Infinity && item.quantity > max) {
       item.quantity = max;

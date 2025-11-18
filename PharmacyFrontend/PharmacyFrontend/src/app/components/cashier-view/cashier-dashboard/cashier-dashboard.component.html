@@ -127,8 +127,14 @@
                   <button class="qty-btn" (click)="decrementQuantity(item)">
                     <i class="fa-solid fa-minus"></i>
                   </button>
-                  <input type="number" min="1" [(ngModel)]="item.quantity" (ngModelChange)="onCartItemChange(item)"
-                    class="qty-input" />
+                  <div class="qty-input-wrapper">
+                    <input type="number" min="1" [(ngModel)]="item.quantity" (ngModelChange)="onCartItemChange(item)"
+                      class="qty-input" [class.error]="item.quantityError" />
+                    <div class="qty-error" *ngIf="item.quantityError">
+                      <i class="fa-solid fa-circle-exclamation"></i>
+                      <span>{{ item.quantityError }}</span>
+                    </div>
+                  </div>
                   <button class="qty-btn" (click)="incrementQuantity(item)">
                     <i class="fa-solid fa-plus"></i>
                   </button>

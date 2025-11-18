@@ -118,7 +118,6 @@
         }
       }
 
-      // Simple Products List Layout
       .products-list {
         flex: 1;
         overflow-y: auto;
@@ -333,7 +332,7 @@
         border-collapse: separate;
         border-spacing: 0;
         font-size: 0.75rem;
-        table-layout: fixed; // This forces columns to respect width percentages
+        table-layout: fixed;
 
         &.compute-table {
           thead tr {
@@ -354,14 +353,13 @@
             border-bottom: 2px solid #e2e8f0;
             white-space: nowrap;
 
-            // FIXED: Better column width distribution - removed fixed widths
-            &:nth-child(1) { width: 3%; } // #
-            &:nth-child(2) { width: 35%; } // Product Info
-            &:nth-child(3) { width: 10%; } // Unit
-            &:nth-child(4) { width: 15%; } // Qty
-            &:nth-child(5) { width: 12%; } // Unit Price
-            &:nth-child(6) { width: 12%; } // Subtotal
-            &:nth-child(7) { width: 8%; } // Action
+            &:nth-child(1) { width: 3%; }
+            &:nth-child(2) { width: 35%; }
+            &:nth-child(3) { width: 10%; }
+            &:nth-child(4) { width: 15%; }
+            &:nth-child(5) { width: 12%; }
+            &:nth-child(6) { width: 12%; }
+            &:nth-child(7) { width: 8%; }
           }
 
           tbody tr {
@@ -383,7 +381,7 @@
             font-weight: 500;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: middle;
-            overflow: hidden; // ADDED
+            overflow: hidden;
 
             &.index-cell {
               text-align: center;
@@ -394,8 +392,8 @@
 
             &.cart-product-details {
               overflow: hidden;
-              max-width: none; // Let percentage width handle this
-              padding-right: 1rem; // Add spacing
+              max-width: none;
+              padding-right: 1rem;
             }
 
             &.price-cell {
@@ -442,7 +440,7 @@
           select.unit-select {
             border: 1px solid #e2e8f0;
             border-radius: 6px;
-            padding: 0.375rem 0.5rem; // INCREASED
+            padding: 0.375rem 0.5rem;
             font-size: 0.6875rem;
             font-weight: 600;
             color: #475569;
@@ -451,7 +449,7 @@
             transition: all 0.2s ease;
             cursor: pointer;
             width: 100%;
-            min-width: 80px; // ADDED
+            min-width: 80px;
 
             &:focus {
               border-color: #006dba;
@@ -467,9 +465,16 @@
 
           .qty-control {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.25rem;
             justify-content: center;
+
+            .qty-input-wrapper {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              position: relative;
+            }
 
             .qty-btn {
               padding: 0.25rem 0.375rem;
@@ -486,6 +491,7 @@
               width: 24px;
               height: 24px;
               flex-shrink: 0;
+              margin-top: 0;
 
               i {
                 font-size: 0.5625rem;
@@ -527,6 +533,45 @@
                 background: #ffffff;
                 box-shadow: 0 0 0 2px rgba(0, 109, 186, 0.1);
               }
+
+              &.error {
+                border-color: #dc2626;
+                background: #fef2f2;
+
+                &:focus {
+                  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+                }
+              }
+            }
+
+            .qty-error {
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+              margin-top: 0.25rem;
+              padding: 0.25rem 0.375rem;
+              background: #fef2f2;
+              border: 1px solid #fecaca;
+              border-radius: 4px;
+              font-size: 0.5625rem;
+              color: #dc2626;
+              white-space: nowrap;
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              z-index: 10;
+              box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+
+              i {
+                font-size: 0.5625rem;
+                flex-shrink: 0;
+              }
+
+              span {
+                font-weight: 600;
+                line-height: 1;
+              }
             }
           }
 
@@ -563,24 +608,23 @@
         }
       }
 
-      // Cart Information Grid
       .cart-info-grid {
         display: flex;
         flex-direction: column;
         gap: 0.1875rem;
-        max-width: 100%; // ADDED
+        max-width: 100%;
 
         .cart-row {
           display: flex;
           align-items: baseline;
-          gap: 0.375rem; // INCREASED
+          gap: 0.375rem;
           line-height: 1.2;
 
           &.primary {
-            margin-bottom: 0.25rem; // INCREASED
+            margin-bottom: 0.25rem;
 
             .cart-product-name {
-              font-size: 0.75rem; // INCREASED
+              font-size: 0.75rem;
               font-weight: 700;
               color: #1e293b;
               overflow: hidden;
@@ -595,7 +639,7 @@
             color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.02em;
-            min-width: 45px; // INCREASED
+            min-width: 45px;
             flex-shrink: 0;
           }
 
@@ -606,7 +650,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            flex: 1; // ADDED
+            flex: 1;
           }
         }
       }
@@ -928,7 +972,6 @@
   }
 }
 
-// Responsive design
 @media (max-width: 1400px) {
   .wrapper.modern .containers {
     grid-template-columns: 1fr;
