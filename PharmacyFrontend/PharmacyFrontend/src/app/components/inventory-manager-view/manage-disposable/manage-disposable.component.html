@@ -37,6 +37,8 @@
           <tr>
             <th>Type</th>
             <th>Name</th>
+            <th>Details</th>
+            <th>Stock Info</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -55,11 +57,48 @@
                   'badge-classification': item.entityType === 'classification',
                   'badge-type': item.entityType === 'type'
                 }">
-                <i [class]="item.entityType === 'product' ? 'fas fa-box' : 'fas fa-tag'"></i>
+                <i [class]="getIconClass(item.entityType)"></i>
                 {{getItemType(item)}}
               </span>
             </td>
-            <td class="item-name">{{getItemName(item)}}</td>
+            <td>
+              <div class="item-info">
+                <span class="item-name">{{getItemName(item)}}</span>
+                <span class="item-code" *ngIf="getItemCode(item)">{{getItemCode(item)}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="details-cell">
+                <span class="detail-item" *ngFor="let detail of getItemDetails(item)">
+                  {{detail}}
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="stock-info">
+                <!-- For Inventory Items -->
+                <ng-container *ngIf="item.entityType === 'inventory'">
+                  <span class="inventory-status" [ngClass]="getInventoryStatusClass(item)">
+                    <i [class]="getInventoryStatusIcon(item)"></i>
+                    {{getInventoryStatus(item)}}
+                  </span>
+                  <span class="stock-item" *ngIf="item.boxQuantity !== undefined">
+                    <strong>Box:</strong> {{item.boxQuantity}}
+                  </span>
+                  <span class="stock-item" *ngIf="item.sheetQuantity !== undefined">
+                    <strong>Sheet:</strong> {{item.sheetQuantity}}
+                  </span>
+                  <span class="stock-item" *ngIf="item.pieceQuantity !== undefined">
+                    <strong>Piece:</strong> {{item.pieceQuantity}}
+                  </span>
+                </ng-container>
+
+                <!-- For all other entity types -->
+                <ng-container *ngIf="item.entityType !== 'inventory'">
+                  <span class="no-stock">—</span>
+                </ng-container>
+              </div>
+            </td>
             <td>
               <div class="action-buttons">
                 <button class="btn-action btn-restore" title="Restore" *ngIf="item.entityType != 'inventory'" (click)="restoreItem(item)">
@@ -74,7 +113,7 @@
             </td>
           </tr>
           <tr *ngIf="paginatedItems.length === 0" class="no-data-row">
-            <td colspan="3">
+            <td colspan="5">
               <div class="no-data">
                 <i class="fas fa-inbox"></i>
                 <p>No items found</p>
@@ -113,98 +152,6 @@
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <div class="icon-title">
-        <div class="icon-wrapper">
-          <i [class]="isEditMode ? 'fas fa-edit' : 'fas fa-plus'"></i>
-        </div>
-        <div class="title">
-          <h2>{{isEditMode ? 'Edit Item' : 'Add New Item'}}</h2>
-          <p>{{isEditMode ? 'Update item details' : 'Create a new disposable item'}}</p>
-        </div>
-      </div>
-      <button class="btn-close" (click)="closeModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="modal-body">
-      <fieldset>
-        <legend>
-          <i class="fas fa-info-circle"></i>
-          Item Details
-        </legend>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>
-              Type
-              <span class="required">*</span>
-            </label>
-            <select [(ngModel)]="formData.entityType" class="form-select">
-              <option value="product">Product</option>
-              <option value="category">Category</option>
-            </select>
-          </div>
-          <div class="form-group" [class.error]="!formData.name.trim() && formData.name !== ''">
-            <label>
-              Name
-              <span class="required">*</span>
-            </label>
-            <input
-              type="text"
-              [(ngModel)]="formData.name"
-              placeholder="Enter item name"
-              class="form-input">
-            <span class="error-message" *ngIf="!formData.name.trim() && formData.name !== ''">
-              <i class="fas fa-exclamation-circle"></i>
-              Name is required
-            </span>
-          </div>
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-cancel" (click)="closeModal()">
-        <i class="fas fa-times"></i>
-        Cancel
-      </button>
-      <button
-        class="btn btn-save"
-        (click)="saveItem()"
-        [disabled]="!formData.name.trim()">
-        <i class="fas fa-check"></i>
-        {{isEditMode ? 'Update' : 'Save'}}
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Success Alert -->
-<div class="modal-overlay" *ngIf="showSuccessAlert" (click)="closeSuccessAlert()">
-  <div class="success-alert" (click)="$event.stopPropagation()">
-    <div class="alert-icon">
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-        <circle cx="40" cy="40" r="40" fill="#10b981" opacity="0.1"/>
-        <circle cx="40" cy="40" r="32" fill="#10b981" opacity="0.2"/>
-        <path d="M25 40L35 50L55 30" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <h3 class="alert-title">Success!</h3>
-    <p class="alert-message">
-      Item has been {{isEditMode ? 'updated' : 'created'}} successfully.
-    </p>
-    <div class="alert-footer">
-      <button class="ok-btn" (click)="closeSuccessAlert()">
-        OK
-      </button>
     </div>
   </div>
 </div>
