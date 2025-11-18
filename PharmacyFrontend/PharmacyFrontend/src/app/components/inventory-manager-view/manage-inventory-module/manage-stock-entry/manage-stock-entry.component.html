@@ -10,34 +10,33 @@
           (input)="onSearchChange()"
           placeholder="Search by Batch No., Product Name...">
       </div>
-      <button class="btn-entry" (click)="openCreateStockForm()">&#43; Stock Entry</button>
     </div>
 
     <!-- EXPIRY FILTER BUTTONS -->
     <div class="filter-controls">
-      <button 
-        class="filter-btn" 
+      <button
+        class="filter-btn"
         [class.active]="selectedFilter === 'all'"
         (click)="onFilterChange('all')">
         <i class="fa-solid fa-list"></i>
         All ({{getFilterCount('all')}})
       </button>
-      <button 
-        class="filter-btn filter-expired" 
+      <button
+        class="filter-btn filter-expired"
         [class.active]="selectedFilter === 'expired'"
         (click)="onFilterChange('expired')">
         <i class="fa-solid fa-circle-xmark"></i>
         Expired ({{getFilterCount('expired')}})
       </button>
-      <button 
-        class="filter-btn filter-near-expiry" 
+      <button
+        class="filter-btn filter-near-expiry"
         [class.active]="selectedFilter === 'nearExpiry'"
         (click)="onFilterChange('nearExpiry')">
         <i class="fa-solid fa-triangle-exclamation"></i>
         Near Expiry ({{getFilterCount('nearExpiry')}})
       </button>
-      <button 
-        class="filter-btn filter-healthy" 
+      <button
+        class="filter-btn filter-healthy"
         [class.active]="selectedFilter === 'healthy'"
         (click)="onFilterChange('healthy')">
         <i class="fa-solid fa-circle-check"></i>
