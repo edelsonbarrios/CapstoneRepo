@@ -782,7 +782,6 @@ namespace PharmacyBackend.Repository.GET
             .Include(s => s.Products)
             .ThenInclude(p => p.TypeModel)
             .Include(s => s.Products)
-            .Include(s => s.Categories)
             .Where(s => s.IsActive == true)
             .OrderByDescending(s => s.Id)
             .ToListAsync();
@@ -792,7 +791,6 @@ namespace PharmacyBackend.Repository.GET
         {
           return await _context.Supplier
             .Include(s => s.Products)
-            .Include(s => s.Categories)
             .FirstOrDefaultAsync(s => s.Id == id);
         }
         #endregion

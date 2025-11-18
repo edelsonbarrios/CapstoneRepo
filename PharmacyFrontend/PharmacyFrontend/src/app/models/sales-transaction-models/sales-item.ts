@@ -3,7 +3,7 @@ export class SalesItem {
   salesTransactionId: number = 0;
   productId: number = 0;
   productName: string = '';
-  unitType: number = 0;
+  unitType: string = '';
   quantity: number = 0;
   unitPrice: number = 0;
   subTotal: number = 0;
