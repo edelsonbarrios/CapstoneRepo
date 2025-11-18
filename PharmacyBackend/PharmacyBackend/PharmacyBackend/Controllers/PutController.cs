@@ -217,7 +217,7 @@ namespace PharmacyBackend.Controllers
         {
           var restoreCategory = await _updateService.RestoreCategoryByIdAsync(categoryId);
 
-          if(restoreCategory)
+          if(!restoreCategory)
             return BadRequest(new {Message = "Category cannot be restored."});
 
           var duplication = await _updateService.CategoryRestorationValidationAsync(categoryId);

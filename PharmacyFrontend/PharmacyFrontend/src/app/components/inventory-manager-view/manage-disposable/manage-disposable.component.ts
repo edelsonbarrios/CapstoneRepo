@@ -85,6 +85,7 @@ export class ManageDisposableComponent implements OnInit {
   }
 
   getAllItems() {
+    this.paginatedItems = [];
     this.all = [];
     this.getAllProducts();
     this.getAllCategories();
@@ -322,31 +323,24 @@ export class ManageDisposableComponent implements OnInit {
     switch (item.entityType) {
       case "category":
         this.restoreCategoryById(item.categoryID);
-        this.getAllItems();
         break;
       case "product":
         this.restoreProductById(item.productID);
-        this.getAllItems();
         break;
       case "brand":
         this.restoreBrandById(item.brandID);
-        this.getAllItems();
         break;
       case "generic":
         this.restoreGenericById(item.genericID);
-        this.getAllItems();
         break;
       case "formulation":
         this.restoreFormulationById(item.formulationID);
-        this.getAllItems();
         break;
       case "classification":
         this.restoreClassificationById(item.classificationID);
-        this.getAllItems();
         break;
       case "type":
         this.restoreTypeModelById(item.typeID);
-        this.getAllItems();
         break;
     }
 
