@@ -1349,7 +1349,10 @@ namespace PharmacyBackend.Repository.GET
         public async Task<int> GetInventoryLowStockCountAsync()
         {
           return await _context.Inventory
-            .Where(iv => iv.BoxQuantity <= iv.ReorderLevel)
+            .Include(iv => iv.Product)
+            .Where(iv => iv.Product.UnitMeasurement.Equals("Multi-Level") || iv.Product.UnitMeasurement.Equals("Dual-Level")
+            ? iv.BoxQuantity <= iv.ReorderLevel : iv.PieceQuantity <= iv.ReorderLevel 
+            && iv.IsActive && !iv.IsDeleted)
             .CountAsync();
         }
         public async Task<int> GetInventoryOutOfStockCountAsync()

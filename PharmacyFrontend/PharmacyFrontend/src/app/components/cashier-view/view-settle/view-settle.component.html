@@ -61,9 +61,7 @@
         <span class="label">VAT:</span>
         <div class="input-group">
           <span class="selected-value" *ngIf="selectedVat">{{selectedVat.vatName }}</span>
-          <span class="selected-value" *ngIf="!selectedVat">No VAT</span>
           <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
-            <option [ngValue]="null">None</option>
             <option *ngFor="let v of vats" [ngValue]="v">
               {{ v.vatName }}
             </option>
