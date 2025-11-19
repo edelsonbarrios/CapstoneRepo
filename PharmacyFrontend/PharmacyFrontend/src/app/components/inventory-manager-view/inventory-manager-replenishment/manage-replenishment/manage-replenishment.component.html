@@ -65,7 +65,7 @@
 
 <!-- ARCHIVE CONFIRMATION MODAL -->
 <div class="modal-overlay" *ngIf="showArchiveForm">
-  <app-archive-confirmation *ngIf="showArchiveForm" [alertMessage]="'Purchase Order successfully deleted.'"
-    [id]="showArchiveForm" [message]="'Are you sure you want to delete this Purchase Order?'"
+  <app-archive-confirmation *ngIf="showArchiveForm" [alertMessage]="'Purchase Order successfully archived.'"
+    [id]="showArchiveForm" [message]="'Are you sure you want to archive this Purchase Order?'"
     (onArchive)="archivePurchaseOrder()" (onCancel)="closeArchivePurchaseOrderForm()"></app-archive-confirmation>
 </div>

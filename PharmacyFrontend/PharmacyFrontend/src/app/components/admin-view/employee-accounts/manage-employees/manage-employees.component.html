@@ -66,6 +66,6 @@
 
 <div class="modal-overlay" *ngIf="showArchiveForm">
   <app-archive-confirmation *ngIf="showArchiveForm" [id]="showArchiveForm"
-    [message]="'Do you really want to delete this employee?'" [alertMessage]="'Employee sucessfully deleted.'"
+    [message]="'Do you really want to archive this employee?'" [alertMessage]="'Employee sucessfully archived.'"
     (onArchive)="archiveEmployee()" (onCancel)="closeArchiveForm()"></app-archive-confirmation>
 </div>

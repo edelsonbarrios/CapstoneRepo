@@ -122,15 +122,15 @@
 <div class="modal-overlay" *ngIf="showDeleteConfirmation">
   <div class="delete-confirmation-modal">
     <div class="delete-icon">⚠️</div>
-    <h3>Delete Stock Entry?</h3>
-    <p>Are you sure you want to delete this stock entry?</p>
+    <h3>Archive Stock Entry?</h3>
+    <p>Are you sure you want to archive this stock entry?</p>
     <p class="delete-details">
       <strong>Batch No:</strong> {{inventoryToDelete?.batchNumber}}<br>
       <strong>Product:</strong> {{inventoryToDelete?.productName}}
     </p>
     <div class="delete-actions">
       <button class="btn-cancel-delete" (click)="closeDeleteConfirmation()">Cancel</button>
-      <button class="btn-confirm-delete" (click)="confirmDelete()">Delete</button>
+      <button class="btn-confirm-delete" (click)="confirmDelete()">Archive</button>
     </div>
   </div>
 </div>

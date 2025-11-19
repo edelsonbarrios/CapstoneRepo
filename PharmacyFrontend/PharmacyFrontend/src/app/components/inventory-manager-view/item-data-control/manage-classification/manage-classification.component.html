@@ -65,8 +65,8 @@
   <app-archive-confirmation
   *ngIf="showArchiveForm"
   [id]="showArchiveForm"
-  [alertMessage]="'Classification successfully deleted.'"
-  [message]="'Do you really want to delete this classification?'"
+  [alertMessage]="'Classification successfully archived.'"
+  [message]="'Do you really want to archive this classification?'"
 
   (onArchive)="archiveClassification()"
   (onCancel)="closeArchiveConfirmationForm()"

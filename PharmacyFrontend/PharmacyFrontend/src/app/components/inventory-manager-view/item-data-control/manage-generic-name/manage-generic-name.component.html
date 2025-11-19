@@ -65,8 +65,8 @@
   <app-archive-confirmation
   *ngIf="showArchiveForm"
   [id]="showArchiveForm"
-  [alertMessage]="'Generic successfully deleted.'"
-  [message]="'Do you really want to delete this generic?'"
+  [alertMessage]="'Generic successfully archived.'"
+  [message]="'Do you really want to archive this generic?'"
   
   (onArchive)="archiveGeneric()"
   (onCancel)="closeArchiveConfirmationForm()"

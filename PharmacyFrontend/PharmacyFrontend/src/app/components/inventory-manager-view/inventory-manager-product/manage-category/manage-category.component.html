@@ -84,8 +84,8 @@
   <app-archive-confirmation
     *ngIf="showArchiveForm"
     [id]="showArchiveForm"
-    [alertMessage]="'Category successfully deleted.'"
-    [message]="'Do you really want to delete this category?'"
+    [alertMessage]="'Category successfully archived.'"
+    [message]="'Do you really want to archive this category?'"
     (onArchive)="archiveCategory()"
     (onCancel)="closeArchiveForm()"
   ></app-archive-confirmation>

@@ -55,6 +55,6 @@
 
 <div class="modal-overlay" *ngIf="showArchiveForm">
   <app-archive-confirmation *ngIf="showArchiveForm" [id]="showArchiveForm"
-    [alertMessage]="'Formulation sucessfully deleted.'" [message]="'Do you really want to delete this formulation?'"
+    [alertMessage]="'Formulation sucessfully archived.'" [message]="'Do you really want to archive this formulation?'"
     (onArchive)="archiveFormulation()" (onCancel)="closeArchiveForm()"></app-archive-confirmation>
 </div>

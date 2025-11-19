@@ -145,8 +145,8 @@
   <app-archive-confirmation
     *ngIf="showArchiveForm"
     [id]="showArchiveForm"
-    [alertMessage]="'Discount successfully deleted.'"
-    [message]="'Do you really want to delete this discount?'"
+    [alertMessage]="'Discount successfully archived.'"
+    [message]="'Do you really want to archive this discount?'"
     (onArchive)="archiveDiscount()"
     (onCancel)="closeArchiveForm()">
   </app-archive-confirmation>

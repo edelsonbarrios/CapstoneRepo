@@ -92,8 +92,8 @@
   <app-archive-confirmation
     *ngIf="showArchiveForm"
     [id]="showArchiveForm"
-    [alertMessage]="'Supplier successfully deleted.'"
-    [message]="'Do you really want to delete this supplier?'"
+    [alertMessage]="'Supplier successfully archived.'"
+    [message]="'Do you really want to archive this supplier?'"
     (onArchive)="archiveSupplier()"
     (onCancel)="closeArchiveForm()"
   ></app-archive-confirmation>
