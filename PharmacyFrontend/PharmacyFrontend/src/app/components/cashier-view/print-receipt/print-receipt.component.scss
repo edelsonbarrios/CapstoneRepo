@@ -13,11 +13,11 @@
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   padding: 1rem 0.7rem;
-  width: 220px; /* ✅ Adjusted for 58mm receipt */
+  width: 220px;
   font-family: "Courier New", monospace;
   color: #000;
   position: relative;
-  font-size: 0.7rem; /* ✅ Compact readable text */
+  font-size: 0.7rem;
 
   &::before,
   &::after {
@@ -99,9 +99,9 @@
   .receipt-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* ✅ Force equal width per column */
+    table-layout: fixed;
     margin: 0.5rem 0;
-    font-size: 0.62rem; /* ✅ Slightly smaller to fit */
+    font-size: 0.62rem;
 
     th,
     td {
@@ -122,17 +122,15 @@
 
     td:last-child,
     th:last-child {
-      text-align: right; /* ✅ Align totals */
+      text-align: right;
     }
 
-    /* ✅ Narrower column widths for small paper */
-    th:nth-child(1), td:nth-child(1) { width: 38%; } /* Product */
-    th:nth-child(2), td:nth-child(2) { width: 15%; } /* Quantity */
-    th:nth-child(3), td:nth-child(3) { width: 15%; } /* Type */
-    th:nth-child(4), td:nth-child(4) { width: 15%; } /* Price */
-    th:nth-child(5), td:nth-child(5) { width: 17%; } /* Total */
+    th:nth-child(1), td:nth-child(1) { width: 38%; }
+    th:nth-child(2), td:nth-child(2) { width: 15%; }
+    th:nth-child(3), td:nth-child(3) { width: 15%; }
+    th:nth-child(4), td:nth-child(4) { width: 15%; }
+    th:nth-child(5), td:nth-child(5) { width: 17%; }
   }
-
 
   .pagination-controls {
     display: flex;
@@ -225,26 +223,45 @@
       letter-spacing: 1px;
     }
 
-    button {
+    .footer-buttons {
+      display: flex;
+      gap: 0.5rem;
       margin-top: 0.7rem;
-      padding: 0.5rem;
-      background-color: #000;
-      color: #ffffff;
-      border: none;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-transform: uppercase;
-      width: 100%;
 
-      &:hover {
-        background-color: #333;
-        transform: translateY(-2px);
+      button {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+
+        &:active {
+          transform: translateY(0);
+        }
       }
 
-      &:active {
-        transform: translateY(0);
+      .cancel-btn {
+        background-color: #dc2626;
+        color: #ffffff;
+
+        &:hover {
+          background-color: #b91c1c;
+          transform: translateY(-2px);
+        }
+      }
+
+      .finish-btn {
+        background-color: #000;
+        color: #ffffff;
+
+        &:hover {
+          background-color: #333;
+          transform: translateY(-2px);
+        }
       }
     }
   }
@@ -279,7 +296,7 @@
     }
   }
 
-  .receipt-footer button {
+  .receipt-footer .footer-buttons {
     display: none !important;
   }
 }

@@ -696,6 +696,14 @@ export const routes: Routes = [
         },
         canActivate: [authGuard],
         data: { roles: ['Cashier'] },
+      },
+      {
+        path: 'cashier-info',
+        loadComponent: () => {
+          return import (
+            './components/cashier-view/cashier-info/cashier-info.component'
+          ).then((m) => m.CashierInfoComponent);
+        }
       }
     ],
   },

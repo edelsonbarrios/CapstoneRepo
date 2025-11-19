@@ -53,7 +53,10 @@
     <div class="receipt-footer">
       <p>Thank you for shopping with Racquel Pharmacy!</p>
       <p>Please come again</p>
-      <button (click)="finishedTransac = true">Finish</button>
+      <div class="footer-buttons">
+        <button class="cancel-btn" (click)="close()">Cancel</button>
+        <button class="finish-btn" (click)="finishedTransac = true">Finish</button>
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,52 @@
+.wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+  height: 100%;
+  padding: 1rem;
+  gap: 10px;
+
+  h2 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #284368;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+
+  .upper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+
+    .total-sales,
+    .total-products,
+    .active-promos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+  }
+
+  .mid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .lower {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .grid-items {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    padding: 1.5rem;
+  }
+}
