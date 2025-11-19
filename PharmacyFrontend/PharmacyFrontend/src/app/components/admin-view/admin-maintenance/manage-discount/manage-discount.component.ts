@@ -1,6 +1,3 @@
-// ===================================
-// manage-discount.component.ts
-// ===================================
 import { Component, OnInit } from '@angular/core';
 import { GetService } from '../../../../services/GetService/get.service';
 import { PostService } from '../../../../services/PostService/post.service';
