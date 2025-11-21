@@ -22,6 +22,65 @@
   <div class="mid container">
     <div class="grid-items top-selling">
       <h2>Top Selling Product</h2>
+      
+      <!-- TSM TABLE-->
+      <table class="top-meds-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Unit Type</th>
+            <th>Qty Sold</th>
+            <th>Available Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="topSellingMedicines.length === 0">
+            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 2rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let med of paginatedTopMeds">
+            <td>{{med.productName}}</td>
+            <td>
+              <span class="unit-badge" [ngClass]="{
+                'multi-level': med.unitType === 'Multi-Level',
+                'dual-level': med.unitType === 'Dual-Level',
+                'single-level': med.unitType === 'Single-Level'
+              }">
+                {{med.unitType}}
+              </span>
+            </td>
+            <td>
+              <div class="qty-breakdown">
+                <!-- Multi-Level -->
+                <div *ngIf="med.unitType === 'Multi-Level'" class="sold-items">
+                  <span class="sold-badge">Box: {{med.quantitySoldBreakdown.box}}</span>
+                  <span class="sold-badge">Sheet: {{med.quantitySoldBreakdown.sheet}}</span>
+                  <span class="sold-badge">Pc: {{med.quantitySoldBreakdown.piece}}</span>
+                </div>
+                <!-- Dual-Level -->
+                <div *ngIf="med.unitType === 'Dual-Level'" class="sold-items">
+                  <span class="sold-badge">Box: {{med.quantitySoldBreakdown.box}}</span>
+                  <span class="sold-badge">Pc: {{med.quantitySoldBreakdown.piece}}</span>
+                </div>
+                <!-- Single-Level -->
+                <div *ngIf="med.unitType === 'Single-Level'" class="sold-items">
+                  <span class="sold-badge">Pieces: {{med.quantitySoldBreakdown.piece}}</span>
+                </div>
+                <div class="total-qty">Total: {{med.totalQty}}</div>
+              </div>
+            </td>
+            <td>{{med.availableStock}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- PAGINATION CONTROLS FOR TOP MEDS -->
+      <div class="pagination-controls" *ngIf="topSellingMedicines.length > 0">
+        <button class="btn-page" [disabled]="topMedsCurrentPage === 1" (click)="goToTopMedsPage(topMedsCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{topMedsCurrentPage}} of {{topMedsTotalPages}}</span>
+        <button class="btn-page" [disabled]="topMedsCurrentPage === topMedsTotalPages" (click)="goToTopMedsPage(topMedsCurrentPage + 1)">Next</button>
+      </div>
     </div>
 
     <div class="grid-items act-pro">
