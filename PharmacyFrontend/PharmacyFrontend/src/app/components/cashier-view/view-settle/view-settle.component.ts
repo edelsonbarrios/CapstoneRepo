@@ -144,15 +144,19 @@ export class ViewSettleComponent implements OnInit {
   /**
    * Format discount display text
    */
+
   getDiscountDisplayText(): string {
     if (!this.selectedDiscount) return 'No Discount';
 
     if (this.selectedDiscount.discountType === 'Percentage') {
       return `${this.selectedDiscount.discountName} (${this.selectedDiscount.discountAmount}%)`;
-    } else {
-      return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount.toFixed(2)})`;
+    } else if (this.selectedDiscount.discountType === 'Fixed') {
+      return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount?.toFixed(2) || '0.00'})`;
     }
+    
+    return this.selectedDiscount.discountName;
   }
+
 
   onPaymentChange() {
     const total = this.calculateTotals();
@@ -242,6 +246,7 @@ export class ViewSettleComponent implements OnInit {
   }
 
   closeModal() {
+    // Don't emit modalClosed - just close the modal without clearing cart
     this.modalClosed.emit();
   }
 }

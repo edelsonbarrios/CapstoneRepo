@@ -60,12 +60,14 @@
       <div class="summary-row">
         <span class="label">VAT:</span>
         <div class="input-group">
-          <span class="selected-value" *ngIf="selectedVat">{{selectedVat.vatName }}</span>
+          <span class="selected-value" *ngIf="selectedVat">
+            {{ selectedVat.vatName }} ({{ selectedVat.vatRate }}%)
+          </span>
           <span class="selected-value" *ngIf="!selectedVat">No VAT</span>
           <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
             <option [ngValue]="null">None</option>
             <option *ngFor="let v of vats" [ngValue]="v">
-              {{ v.vatName }}
+              {{ v.vatName }} ({{ v.vatRate }}%)
             </option>
           </select>
         </div>
@@ -74,10 +76,17 @@
         </span>
       </div>
 
+      
       <div class="summary-row">
         <span class="label">Discount:</span>
         <div class="input-group">
           <span class="selected-value" *ngIf="!selectedDiscount">No Discount</span>
+          <span class="selected-value" *ngIf="selectedDiscount">
+            {{ getDiscountDisplayText() }}
+            <span class="discount-type-badge" [class.percentage]="selectedDiscount?.discountType === 'Percentage'" [class.fixed]="selectedDiscount?.discountType === 'Fixed'">
+              {{ selectedDiscount?.discountType === 'Percentage' ? 'Percentage' : 'FIXED' }}
+            </span>
+          </span>
           <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">
             <option [ngValue]="null">None</option>
             <option *ngFor="let d of discounts" [ngValue]="d">
