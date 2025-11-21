@@ -345,6 +345,14 @@ namespace PharmacyBackend.DataContext
                     RolePosition = "Cashier"
                 }
                 );
+            modelBuilder.Entity<VAT>().HasData(
+                new VAT
+                {
+                    VATID = 1,
+                    VATName = "Standard",
+                    VATRate = 12
+                }
+                );
         }
     }
 }

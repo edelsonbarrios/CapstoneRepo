@@ -5,15 +5,14 @@
     <!-- VAT INPUT CONTROLS -->
     <div class="product-control">
       <div class="input-wrapper">
-        <input type="text" id="vat-name" name="vat-name" class="input-field" placeholder="VAT Name" 
+        <input type="text" id="vat-name" name="vat-name" class="input-field" placeholder="VAT Name"
           [(ngModel)]="createdVat.vatName"
           [class.error]="vatError">
-        <input type="number" id="rate" name="rate" class="input-field" placeholder="Rate (%)" 
+        <input type="number" id="rate" name="rate" class="input-field" placeholder="Rate (%)"
           [(ngModel)]="createdVat.vatRate"
           min="0"
           [class.error]="vatError">
       </div>
-      <button class="btn-product" (click)="createNewVat()">Save VAT</button>
     </div>
     <p class="error-message" *ngIf="vatError">{{ vatError }}</p>
 
@@ -39,7 +38,6 @@
           <td>{{v.dateCreated | date: 'dd-MM-yyyy'}}</td>
           <td>
             <button class="btn-view" (click)="openEditVatForm(v)">Edit</button>
-            <button class="btn-archive" (click)="openArchiveForm(v.vatid)">Archive</button>
           </td>
         </tr>
       </tbody>
@@ -55,7 +53,7 @@
 </div>
 
 <div class="modal-overlay" *ngIf="editVat">
-  <app-edit-vat 
+  <app-edit-vat
   *ngIf="editVat"
   [editVat]="editVat"
   (closeForm)="closeEditVatForm()"

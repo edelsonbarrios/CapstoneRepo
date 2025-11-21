@@ -45,8 +45,8 @@ export class ViewSettleComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLoggedInUser();
+    this.getAllVAT(); // Load VAT first to set default
     this.getAllDiscounts();
-    this.getAllVAT();
     this.updatePagination();
   }
 
@@ -91,11 +91,27 @@ export class ViewSettleComponent implements OnInit {
     this.getService.getAllVatAsync().subscribe({
       next: (res) => {
         this.vats = res;
-        const defaultVat = res.find((v) => v.vatName == 'Standard');
-        this.selectedVat = defaultVat || null;
+        
+        // Set Standard VAT as default
+        const defaultVat = res.find((v) => v.vatName === 'Standard');
+        
+        if (defaultVat) {
+          this.selectedVat = defaultVat;
+        } else if (res.length > 0) {
+          // Fallback: use first VAT if 'Standard' not found
+          this.selectedVat = res[0];
+          console.warn('Standard VAT not found, using first available VAT');
+        } else {
+          this.selectedVat = null;
+          console.warn('No VAT options available');
+        }
+        
+        // Calculate initial totals with default VAT
+        this.onPaymentChange();
       },
       error: (err) => {
         console.log(`${err.error}`);
+        this.selectedVat = null;
       },
     });
   }
