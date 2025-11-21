@@ -2150,1297 +2150,1587 @@ namespace PharmacyBackend.Service.GetService
 
         #region Reports Exports In excell
 
-        //SALES REPORTS
+        //SALES REPORTs
+
         public async Task<byte[]> ExportSalesReportToExcelAsync(
-        DateTime? startDate = null,
-        DateTime? endDate = null,
-        int? employeeId = null,
-        string paymentMethod = null)
-    {
-      var report = await GetSalesReportAsync(startDate, endDate, employeeId, paymentMethod);
-
-      ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-      using (var package = new ExcelPackage())
-      {
-        // Single Sheet with Summary at Top
-        var worksheet = package.Workbook.Worksheets.Add("Sales Report");
-
-        // ===== HEADER SECTION =====
-        worksheet.Cells["A1"].Value = "SALES REPORT";
-        worksheet.Cells["A1:J1"].Merge = true;
-        worksheet.Cells["A1:J1"].Style.Font.Bold = true;
-        worksheet.Cells["A1:J1"].Style.Font.Size = 20;
-        worksheet.Cells["A1:J1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells["A1:J1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells["A1:J1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells["A1:J1"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
-        worksheet.Cells["A1:J1"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Row(1).Height = 35;
-
-        // Period Information
-        int currentRow = 3;
-        worksheet.Cells[$"A{currentRow}"].Value = "Period:";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Cells[$"B{currentRow}"].Value = startDate.HasValue && endDate.HasValue
-          ? $"{startDate:MMM dd, yyyy} to {endDate:MMM dd, yyyy}"
-          : "All Time";
-        worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-
-        // Employee Filter (if applicable)
-        if (employeeId.HasValue)
+    DateTime? startDate = null,
+    DateTime? endDate = null,
+    int? employeeId = null,
+    string paymentMethod = null,
+    int? currentLoggedInUserId = null)
         {
-          currentRow++;
-          var employee = await GetEmployeeByIdAsync(employeeId.Value);
-          worksheet.Cells[$"A{currentRow}"].Value = "Employee:";
-          worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-          worksheet.Cells[$"B{currentRow}"].Value = employee?.FullName ?? "N/A";
-          worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-          worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-        }
+            var report = await GetSalesReportAsync(startDate, endDate, employeeId, paymentMethod);
 
-        // Payment Method Filter (if applicable)
-        if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
-        {
-          currentRow++;
-          worksheet.Cells[$"A{currentRow}"].Value = "Payment Method:";
-          worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-          worksheet.Cells[$"B{currentRow}"].Value = paymentMethod;
-          worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-          worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-        }
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-        // ===== SUMMARY SECTION =====
-        currentRow += 2;
-        int summaryStartRow = currentRow;
-
-        // Summary Headers with styling - Extended to column J to match table width
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Row(currentRow).Height = 25;
-
-        // Merge cells for each summary metric to make them wider
-        worksheet.Cells[$"A{currentRow}:B{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = "Total Transactions";
-
-        worksheet.Cells[$"C{currentRow}:E{currentRow}"].Merge = true;
-        worksheet.Cells[$"C{currentRow}"].Value = "Net Revenue";
-
-        worksheet.Cells[$"F{currentRow}:H{currentRow}"].Merge = true;
-        worksheet.Cells[$"F{currentRow}"].Value = "Total Items Sold";
-
-        worksheet.Cells[$"I{currentRow}:J{currentRow}"].Merge = true;
-        worksheet.Cells[$"I{currentRow}"].Value = "Average Transaction";
-
-        currentRow++;
-
-        // Summary Values
-        worksheet.Cells[$"A{currentRow}:B{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = report.Summary.TotalTransactions;
-        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Row(currentRow).Height = 30;
-
-        worksheet.Cells[$"C{currentRow}:E{currentRow}"].Merge = true;
-        worksheet.Cells[$"C{currentRow}"].Value = report.Summary.NetRevenue;
-        worksheet.Cells[$"C{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-        worksheet.Cells[$"C{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"C{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"C{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"C{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"C{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
-        worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-        worksheet.Cells[$"F{currentRow}:H{currentRow}"].Merge = true;
-        worksheet.Cells[$"F{currentRow}"].Value = report.Summary.TotalItemsSold;
-        worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"F{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"F{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"F{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-        worksheet.Cells[$"I{currentRow}:J{currentRow}"].Merge = true;
-        worksheet.Cells[$"I{currentRow}"].Value = report.Summary.AverageTransaction;
-        worksheet.Cells[$"I{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-        worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"I{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"I{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"I{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-        // Add border to summary section - Extended to column J
-        using (var range = worksheet.Cells[summaryStartRow, 1, currentRow, 10])
-        {
-          range.Style.Border.Top.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Left.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Right.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-        }
-
-        // ===== TRANSACTIONS SECTION =====
-        currentRow += 3;
-        int transactionsStartRow = currentRow;
-
-        // Section Title
-        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = "TRANSACTION DETAILS";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
-        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Row(currentRow).Height = 25;
-
-        currentRow++;
-
-        // Transaction Headers
-        worksheet.Cells[$"A{currentRow}"].Value = "Invoice #";
-        worksheet.Cells[$"B{currentRow}"].Value = "Date & Time";
-        worksheet.Cells[$"C{currentRow}"].Value = "Product Name";
-        worksheet.Cells[$"D{currentRow}"].Value = "Unit Type";
-        worksheet.Cells[$"E{currentRow}"].Value = "Quantity";
-        worksheet.Cells[$"F{currentRow}"].Value = "Unit Price";
-        worksheet.Cells[$"G{currentRow}"].Value = "Subtotal";
-        worksheet.Cells[$"H{currentRow}"].Value = "Discount";
-        worksheet.Cells[$"I{currentRow}"].Value = "VAT";
-        worksheet.Cells[$"J{currentRow}"].Value = "Net Amount";
-
-        // Style transaction headers
-        using (var range = worksheet.Cells[$"A{currentRow}:J{currentRow}"])
-        {
-          range.Style.Font.Bold = true;
-          range.Style.Font.Size = 11;
-          range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-          range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
-          range.Style.Font.Color.SetColor(Color.White);
-          range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-          range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-        }
-        worksheet.Row(currentRow).Height = 22;
-
-        currentRow++;
-
-        // Transaction Data with Items
-        int rowCounter = 0;
-        foreach (var transaction in report.Transactions)
-        {
-          int transactionStartRow = currentRow;
-          bool isFirstItem = true;
-          bool isEvenRow = rowCounter % 2 == 0;
-
-          // If transaction has items, show them
-          if (transaction.Items != null && transaction.Items.Any())
-          {
-            foreach (var item in transaction.Items)
+            using (var package = new ExcelPackage())
             {
-              // Alternating row colors
-              Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
+                var worksheet = package.Workbook.Worksheets.Add("Sales Report");
 
-              // Invoice Number (only on first item)
-              if (isFirstItem)
-              {
-                worksheet.Cells[$"A{currentRow}"].Value = transaction.InvoiceNumber;
+                // Get the current logged-in user's name
+                string adminName = "Administrator";
+                if (currentLoggedInUserId.HasValue && currentLoggedInUserId.Value > 0)
+                {
+                    var currentUser = await GetEmployeeByIdAsync(currentLoggedInUserId.Value);
+                    adminName = currentUser?.FullName ?? "Administrator";
+                }
+
+                string pharmacyAddress = "Racquel Pharmacy";
+                string printDate = DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt");
+
+                // ===== HEADER SECTION =====
+                int currentRow = 1;
+                int headerStartRow = currentRow;
+
+                // SALES REPORT - Title (Centered)
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "SALES REPORT";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 20;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 35;
+
+                currentRow++;
+
+                // Pharmacy Name - Centered
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Racquel Pharmacy";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 25;
+
+                currentRow++;
+
+                // Pharmacy Address - Centered
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Q3H+HGC, Makabud, Novaliches, Caloocan, Metro Manila";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Empty row for spacing with background
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 5;
+
+                currentRow++;
+
+                // Period - Centered
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Period: " + (startDate.HasValue && endDate.HasValue
+                  ? $"{startDate:MMM dd, yyyy} to {endDate:MMM dd, yyyy}"
+                  : "All Time");
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Printed By - Centered
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Printed By: " + adminName;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Print Date - Centered
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Print Date: " + printDate;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                // Employee Filter (if applicable)
+                if (employeeId.HasValue)
+                {
+                    currentRow++;
+                    var employee = await GetEmployeeByIdAsync(employeeId.Value);
+                    worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                    worksheet.Cells[$"A{currentRow}"].Value = "Cashier: " + (employee?.FullName ?? "N/A");
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+                    worksheet.Row(currentRow).Height = 20;
+                }
+
+                // Payment Method Filter (if applicable)
+                if (!string.IsNullOrEmpty(paymentMethod) && paymentMethod.ToLower() != "all methods")
+                {
+                    currentRow++;
+                    worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                    worksheet.Cells[$"A{currentRow}"].Value = "Payment Method: " + paymentMethod;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+                    worksheet.Row(currentRow).Height = 20;
+                }
+
+                // Add border around entire header section
+                using (var range = worksheet.Cells[headerStartRow, 1, currentRow, 10])
+                {
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+
+                currentRow += 2;
+
+                // ===== SUMMARY SECTION =====
+                int summaryStartRow = currentRow;
+
+                // Summary Headers with styling - Extended to column J to match table width
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Row(currentRow).Height = 25;
+
+                // Merge cells for each summary metric to make them wider
+                worksheet.Cells[$"A{currentRow}:B{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Total Transactions";
+
+                worksheet.Cells[$"C{currentRow}:E{currentRow}"].Merge = true;
+                worksheet.Cells[$"C{currentRow}"].Value = "Net Revenue";
+
+                worksheet.Cells[$"F{currentRow}:H{currentRow}"].Merge = true;
+                worksheet.Cells[$"F{currentRow}"].Value = "Total Items Sold";
+
+                worksheet.Cells[$"I{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"I{currentRow}"].Value = "Average Transaction";
+
+                currentRow++;
+
+                // Summary Values
+                worksheet.Cells[$"A{currentRow}:B{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = report.Summary.TotalTransactions;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 16;
                 worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
                 worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-              }
+                worksheet.Row(currentRow).Height = 30;
 
-              // Date & Time (only on first item)
-              if (isFirstItem)
-              {
-                worksheet.Cells[$"B{currentRow}"].Value = transaction.TransactionDate;
-                worksheet.Cells[$"B{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy hh:mm AM/PM";
-                worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-              }
+                worksheet.Cells[$"C{currentRow}:E{currentRow}"].Merge = true;
+                worksheet.Cells[$"C{currentRow}"].Value = report.Summary.NetRevenue;
+                worksheet.Cells[$"C{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                worksheet.Cells[$"C{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"C{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"C{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"C{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"C{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
+                worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
 
-              // Item Details with row color
-              worksheet.Cells[$"C{currentRow}"].Value = item.ProductName;
-              worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-              worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+                worksheet.Cells[$"F{currentRow}:H{currentRow}"].Merge = true;
+                worksheet.Cells[$"F{currentRow}"].Value = report.Summary.TotalItemsSold;
+                worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"F{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"F{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"F{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
 
-              worksheet.Cells[$"D{currentRow}"].Value = item.UnitType;
-              worksheet.Cells[$"D{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-              worksheet.Cells[$"D{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-              worksheet.Cells[$"D{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-              worksheet.Cells[$"E{currentRow}"].Value = item.Quantity;
-              worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-              worksheet.Cells[$"E{currentRow}"].Style.Font.Bold = true;
-              worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-              worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-              worksheet.Cells[$"F{currentRow}"].Value = item.UnitPrice;
-              worksheet.Cells[$"F{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-              worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-              worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-              worksheet.Cells[$"G{currentRow}"].Value = item.Subtotal;
-              worksheet.Cells[$"G{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-              worksheet.Cells[$"G{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-              worksheet.Cells[$"G{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-              // Discount (only on first item)
-              if (isFirstItem)
-              {
-                string discountText = "";
-                if (!string.IsNullOrEmpty(transaction.DiscountName) && transaction.DiscountAmount > 0)
-                {
-                  discountText = $"{transaction.DiscountName}\n₱{transaction.DiscountAmount:N2}";
-                }
-                else if (transaction.DiscountAmount > 0)
-                {
-                  discountText = $"₱{transaction.DiscountAmount:N2}";
-                }
-                else
-                {
-                  discountText = "None";
-                }
-
-                worksheet.Cells[$"H{currentRow}"].Value = discountText;
-                worksheet.Cells[$"H{currentRow}"].Style.WrapText = true;
-                worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
-
-                if (transaction.DiscountAmount > 0)
-                {
-                  worksheet.Cells[$"H{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 80, 77));
-                }
-              }
-
-              // VAT (only on first item)
-              if (isFirstItem)
-              {
-                string vatText = "";
-                if (transaction.VATRate.HasValue && transaction.VATAmount > 0)
-                {
-                  vatText = $"{transaction.VATRate:N2}%\n₱{transaction.VATAmount:N2}";
-                }
-                else if (transaction.VATAmount > 0)
-                {
-                  vatText = $"₱{transaction.VATAmount:N2}";
-                }
-                else
-                {
-                  vatText = "None";
-                }
-
-                worksheet.Cells[$"I{currentRow}"].Value = vatText;
-                worksheet.Cells[$"I{currentRow}"].Style.WrapText = true;
+                worksheet.Cells[$"I{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"I{currentRow}"].Value = report.Summary.AverageTransaction;
+                worksheet.Cells[$"I{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
                 worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"I{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"I{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"I{currentRow}"].Style.Font.Bold = true;
                 worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-              }
 
-              // Net Amount (only on first item, merged vertically if multiple items)
-              if (isFirstItem)
-              {
-                worksheet.Cells[$"J{currentRow}"].Value = transaction.NetAmount;
-                worksheet.Cells[$"J{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-                worksheet.Cells[$"J{currentRow}"].Style.Font.Bold = true;
-                worksheet.Cells[$"J{currentRow}"].Style.Font.Size = 12;
-                worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-                worksheet.Cells[$"J{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
-              }
-
-              // Add borders to each cell
-              worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-              worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-              worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-              worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-              currentRow++;
-              isFirstItem = false;
-            }
-
-            // Merge cells for invoice and date if multiple items
-            if (transaction.Items.Count > 1)
-            {
-              worksheet.Cells[$"A{transactionStartRow}:A{currentRow - 1}"].Merge = true;
-              worksheet.Cells[$"A{transactionStartRow}:A{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-
-              worksheet.Cells[$"B{transactionStartRow}:B{currentRow - 1}"].Merge = true;
-              worksheet.Cells[$"B{transactionStartRow}:B{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-
-              worksheet.Cells[$"H{transactionStartRow}:H{currentRow - 1}"].Merge = true;
-              worksheet.Cells[$"H{transactionStartRow}:H{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-
-              worksheet.Cells[$"I{transactionStartRow}:I{currentRow - 1}"].Merge = true;
-              worksheet.Cells[$"I{transactionStartRow}:I{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-
-              worksheet.Cells[$"J{transactionStartRow}:J{currentRow - 1}"].Merge = true;
-              worksheet.Cells[$"J{transactionStartRow}:J{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            }
-          }
-          else
-          {
-            // Transaction with no items (fallback)
-            Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
-
-            worksheet.Cells[$"A{currentRow}"].Value = transaction.InvoiceNumber;
-            worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-            worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-            worksheet.Cells[$"B{currentRow}"].Value = transaction.TransactionDate;
-            worksheet.Cells[$"B{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy hh:mm AM/PM";
-            worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-            worksheet.Cells[$"C{currentRow}:G{currentRow}"].Merge = true;
-            worksheet.Cells[$"C{currentRow}"].Value = "No items recorded";
-            worksheet.Cells[$"C{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            worksheet.Cells[$"C{currentRow}"].Style.Font.Italic = true;
-            worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-            // Discount
-            string discountText = "";
-            if (!string.IsNullOrEmpty(transaction.DiscountName) && transaction.DiscountAmount > 0)
-            {
-              discountText = $"{transaction.DiscountName}\n₱{transaction.DiscountAmount:N2}";
-            }
-            else if (transaction.DiscountAmount > 0)
-            {
-              discountText = $"₱{transaction.DiscountAmount:N2}";
-            }
-            else
-            {
-              discountText = "None";
-            }
-
-            worksheet.Cells[$"H{currentRow}"].Value = discountText;
-            worksheet.Cells[$"H{currentRow}"].Style.WrapText = true;
-            worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
-
-            if (transaction.DiscountAmount > 0)
-            {
-              worksheet.Cells[$"H{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 80, 77));
-            }
-
-            // VAT
-            string vatText = "";
-            if (transaction.VATRate.HasValue && transaction.VATAmount > 0)
-            {
-              vatText = $"{transaction.VATRate:N2}%\n₱{transaction.VATAmount:N2}";
-            }
-            else if (transaction.VATAmount > 0)
-            {
-              vatText = $"₱{transaction.VATAmount:N2}";
-            }
-            else
-            {
-              vatText = "None";
-            }
-
-            worksheet.Cells[$"I{currentRow}"].Value = vatText;
-            worksheet.Cells[$"I{currentRow}"].Style.WrapText = true;
-            worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-            worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-            worksheet.Cells[$"J{currentRow}"].Value = transaction.NetAmount;
-            worksheet.Cells[$"J{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-            worksheet.Cells[$"J{currentRow}"].Style.Font.Bold = true;
-            worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-            // Add borders
-            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-            currentRow++;
-          }
-
-          rowCounter++;
-        }
-
-        // Add border around entire transaction section
-        if (currentRow > transactionsStartRow + 2)
-        {
-          using (var range = worksheet.Cells[transactionsStartRow, 1, currentRow - 1, 10])
-          {
-            range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-          }
-        }
-
-        // Auto-fit columns
-        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-
-        // Set minimum column widths
-        worksheet.Column(1).Width = 15; // Invoice
-        worksheet.Column(2).Width = 20; // Date
-        worksheet.Column(3).Width = 30; // Product Name
-        worksheet.Column(4).Width = 12; // Unit Type
-        worksheet.Column(5).Width = 10; // Quantity
-        worksheet.Column(6).Width = 13; // Unit Price
-        worksheet.Column(7).Width = 13; // Subtotal
-        worksheet.Column(8).Width = 18; // Discount
-        worksheet.Column(9).Width = 15; // VAT
-        worksheet.Column(10).Width = 16; // Net Amount
-
-        return package.GetAsByteArray();
-      }
-    }
-
-    //INVENTORY REPORTS
-    public async Task<byte[]> ExportInventoryReportToExcelAsync(
-        DateTime? startDate = null,
-        DateTime? endDate = null,
-        string filterType = "all")
-    {
-      var report = await GetInventoryReportAsync(startDate, endDate, filterType);
-
-      ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-      using (var package = new ExcelPackage())
-      {
-        // Single Sheet
-        var worksheet = package.Workbook.Worksheets.Add("Inventory Report");
-
-        // ===== HEADER SECTION =====
-        worksheet.Cells["A1"].Value = "INVENTORY REPORT";
-        worksheet.Cells["A1:O1"].Merge = true;
-        worksheet.Cells["A1:O1"].Style.Font.Bold = true;
-        worksheet.Cells["A1:O1"].Style.Font.Size = 20;
-        worksheet.Cells["A1:O1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells["A1:O1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells["A1:O1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells["A1:O1"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
-        worksheet.Cells["A1:O1"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Row(1).Height = 35;
-
-        // ===== METADATA SECTION =====
-        int currentRow = 3;
-
-        // Period Information
-        worksheet.Cells[$"A{currentRow}"].Value = "Period:";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Cells[$"B{currentRow}"].Value = startDate.HasValue && endDate.HasValue
-          ? $"{startDate:MMM dd, yyyy} to {endDate:MMM dd, yyyy}"
-          : "All Time";
-        worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-
-        currentRow++;
-
-        // Filter Type
-        worksheet.Cells[$"A{currentRow}"].Value = "Filter Type:";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-        string filterDisplayName = filterType?.ToLower() switch
-        {
-          "critical" or "critical stock" => "Critical Stock",
-          "near expiry" or "nearexpiry" => "Near Expiry",
-          "expired" => "Expired",
-          "all" or "all inventory" => "All Inventory",
-          _ => filterType ?? "All Inventory"
-        };
-
-        worksheet.Cells[$"B{currentRow}"].Value = filterDisplayName;
-        worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-
-        // ===== SUMMARY SECTION =====
-        currentRow += 2;
-        int summaryStartRow = currentRow;
-
-        // Summary Headers - Extended to column O to match table width
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Row(currentRow).Height = 25;
-
-        // Merge cells for each summary metric
-        worksheet.Cells[$"A{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = "Total Products";
-
-        worksheet.Cells[$"E{currentRow}:H{currentRow}"].Merge = true;
-        worksheet.Cells[$"E{currentRow}"].Value = "Total Value";
-
-        worksheet.Cells[$"I{currentRow}:L{currentRow}"].Merge = true;
-        worksheet.Cells[$"I{currentRow}"].Value = "Critical Stock Count";
-
-        worksheet.Cells[$"M{currentRow}:O{currentRow}"].Merge = true;
-        worksheet.Cells[$"M{currentRow}"].Value = "Near Expiry Count";
-
-        currentRow++;
-
-        // Summary Values
-        worksheet.Cells[$"A{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = report.Summary.TotalProducts;
-        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Row(currentRow).Height = 30;
-
-        worksheet.Cells[$"E{currentRow}:H{currentRow}"].Merge = true;
-        worksheet.Cells[$"E{currentRow}"].Value = report.Summary.TotalValue;
-        worksheet.Cells[$"E{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-        worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"E{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"E{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"E{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"E{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
-        worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-        worksheet.Cells[$"I{currentRow}:L{currentRow}"].Merge = true;
-        worksheet.Cells[$"I{currentRow}"].Value = report.Summary.CriticalStockCount;
-        worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"I{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"I{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"I{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
-        if (report.Summary.CriticalStockCount > 0)
-        {
-          worksheet.Cells[$"I{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 80, 77));
-        }
-
-        worksheet.Cells[$"M{currentRow}:O{currentRow}"].Merge = true;
-        worksheet.Cells[$"M{currentRow}"].Value = report.Summary.NearExpiryCount;
-        worksheet.Cells[$"M{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"M{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"M{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"M{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"M{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"M{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-        // Add border to summary section
-        using (var range = worksheet.Cells[summaryStartRow, 1, currentRow, 15])
-        {
-          range.Style.Border.Top.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Left.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Right.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-        }
-
-        // ===== INVENTORY DETAILS SECTION =====
-        currentRow += 3;
-        int detailsStartRow = currentRow;
-
-        // Section Title
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = "INVENTORY DETAILS";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
-        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Row(currentRow).Height = 25;
-
-        currentRow++;
-
-        // Detail Headers
-        worksheet.Cells[$"A{currentRow}"].Value = "Product Name";
-        worksheet.Cells[$"B{currentRow}"].Value = "Category";
-        worksheet.Cells[$"C{currentRow}"].Value = "Brand";
-        worksheet.Cells[$"D{currentRow}"].Value = "Unit Type";
-        worksheet.Cells[$"E{currentRow}"].Value = "Batch Number";
-        worksheet.Cells[$"F{currentRow}"].Value = "Box Qty";
-        worksheet.Cells[$"G{currentRow}"].Value = "Sheet Qty";
-        worksheet.Cells[$"H{currentRow}"].Value = "Piece Qty";
-        worksheet.Cells[$"I{currentRow}"].Value = "Total Pieces";
-        worksheet.Cells[$"J{currentRow}"].Value = "Reorder Level";
-        worksheet.Cells[$"K{currentRow}"].Value = "Unit Price";
-        worksheet.Cells[$"L{currentRow}"].Value = "Total Value";
-        worksheet.Cells[$"M{currentRow}"].Value = "Mfg Date";
-        worksheet.Cells[$"N{currentRow}"].Value = "Expiry Date";
-        worksheet.Cells[$"O{currentRow}"].Value = "Status";
-
-        // Style detail headers
-        using (var range = worksheet.Cells[$"A{currentRow}:O{currentRow}"])
-        {
-          range.Style.Font.Bold = true;
-          range.Style.Font.Size = 11;
-          range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-          range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
-          range.Style.Font.Color.SetColor(Color.White);
-          range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-          range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-        }
-        worksheet.Row(currentRow).Height = 22;
-
-        currentRow++;
-
-        // Detail Data with alternating row colors
-        int rowCounter = 0;
-        foreach (var inventory in report.InventoryItems)
-        {
-          bool isEvenRow = rowCounter % 2 == 0;
-          Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
-
-          // Product Name
-          worksheet.Cells[$"A{currentRow}"].Value = inventory.ProductName;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Category
-          worksheet.Cells[$"B{currentRow}"].Value = inventory.Product?.CategoryName ?? "N/A";
-          worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Brand
-          worksheet.Cells[$"C{currentRow}"].Value = inventory.Product?.BrandName ?? "N/A";
-          worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Unit Type (Unit Measurement) - Display proper values
-          string unitType = "N/A";
-          if (inventory.Product?.UnitMeasurement != null)
-          {
-            unitType = inventory.Product.UnitMeasurement;
-          }
-          // If Product is null but we can infer from quantities
-          else if (inventory.SheetsPerBox.HasValue && inventory.SheetsPerBox > 0 &&
-              inventory.PiecesPerSheet.HasValue && inventory.PiecesPerSheet > 0)
-          {
-            unitType = "Multi-Level";
-          }
-          else if (inventory.PiecePerBox.HasValue && inventory.PiecePerBox > 0 &&
-              (!inventory.PiecesPerSheet.HasValue || inventory.PiecesPerSheet == 0))
-          {
-            unitType = "Dual-Level";
-          }
-          else if ((!inventory.SheetsPerBox.HasValue || inventory.SheetsPerBox == 0) &&
-              (!inventory.PiecePerBox.HasValue || inventory.PiecePerBox == 0))
-          {
-            unitType = "Single-Level";
-          }
-
-          worksheet.Cells[$"D{currentRow}"].Value = unitType;
-          worksheet.Cells[$"D{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"D{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"D{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"D{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-          // Batch Number
-          worksheet.Cells[$"E{currentRow}"].Value = inventory.BatchNumber;
-          worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Box Quantity
-          worksheet.Cells[$"F{currentRow}"].Value = inventory.BoxQuantity;
-          worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Sheet Quantity
-          worksheet.Cells[$"G{currentRow}"].Value = inventory.SheetQuantity;
-          worksheet.Cells[$"G{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"G{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"G{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Piece Quantity
-          worksheet.Cells[$"H{currentRow}"].Value = inventory.PieceQuantity;
-          worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Total Pieces Available
-          worksheet.Cells[$"I{currentRow}"].Value = inventory.TotalPiecesAvailable;
-          worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"I{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-          // Reorder Level
-          worksheet.Cells[$"J{currentRow}"].Value = inventory.ReorderLevel;
-          worksheet.Cells[$"J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Unit Price (Price per piece)
-          worksheet.Cells[$"K{currentRow}"].Value = inventory.PiecePrice;
-          worksheet.Cells[$"K{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-          worksheet.Cells[$"K{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-          worksheet.Cells[$"K{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"K{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Total Value (Total Pieces * Price per piece)
-          decimal totalValue = inventory.TotalPiecesAvailable * inventory.PiecePrice;
-          worksheet.Cells[$"L{currentRow}"].Value = totalValue;
-          worksheet.Cells[$"L{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-          worksheet.Cells[$"L{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-          worksheet.Cells[$"L{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"L{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"L{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-          // Manufacturing Date
-          worksheet.Cells[$"M{currentRow}"].Value = inventory.ManufacturingDate;
-          worksheet.Cells[$"M{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy";
-          worksheet.Cells[$"M{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"M{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"M{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Expiration Date
-          worksheet.Cells[$"N{currentRow}"].Value = inventory.ExpirationDate;
-          worksheet.Cells[$"N{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy";
-          worksheet.Cells[$"N{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"N{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"N{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // Status with color coding
-          string status = "Active";
-          Color statusColor = rowColor;
-          Color statusFontColor = Color.Black;
-
-          if (inventory.IsExpired)
-          {
-            status = "Expired";
-            statusColor = Color.FromArgb(255, 199, 206);
-            statusFontColor = Color.FromArgb(156, 0, 6);
-          }
-          else if (inventory.IsNearExpiry)
-          {
-            status = "Near Expiry";
-            statusColor = Color.FromArgb(255, 235, 156);
-            statusFontColor = Color.FromArgb(156, 101, 0);
-          }
-          else if (inventory.IsCriticalStock)
-          {
-            status = "Critical Stock";
-            statusColor = Color.FromArgb(255, 242, 204);
-            statusFontColor = Color.FromArgb(192, 80, 77);
-          }
-
-          worksheet.Cells[$"O{currentRow}"].Value = status;
-          worksheet.Cells[$"O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"O{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"O{currentRow}"].Style.Fill.BackgroundColor.SetColor(statusColor);
-          worksheet.Cells[$"O{currentRow}"].Style.Font.Color.SetColor(statusFontColor);
-
-          // Add borders to each cell
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-          currentRow++;
-          rowCounter++;
-        }
-
-        // Add border around entire details section
-        if (currentRow > detailsStartRow + 2)
-        {
-          using (var range = worksheet.Cells[detailsStartRow, 1, currentRow - 1, 15])
-          {
-            range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-          }
-        }
-
-        // Auto-fit columns
-        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-
-        // Set minimum column widths
-        worksheet.Column(1).Width = 30; // Product Name
-        worksheet.Column(2).Width = 15; // Category
-        worksheet.Column(3).Width = 15; // Brand
-        worksheet.Column(4).Width = 14; // Unit Type
-        worksheet.Column(5).Width = 18; // Batch Number
-        worksheet.Column(6).Width = 10; // Box Qty
-        worksheet.Column(7).Width = 10; // Sheet Qty
-        worksheet.Column(8).Width = 10; // Piece Qty
-        worksheet.Column(9).Width = 12; // Total Pieces
-        worksheet.Column(10).Width = 13; // Reorder Level
-        worksheet.Column(11).Width = 13; // Unit Price
-        worksheet.Column(12).Width = 15; // Total Value
-        worksheet.Column(13).Width = 15; // Mfg Date
-        worksheet.Column(14).Width = 15; // Expiry Date
-        worksheet.Column(15).Width = 16; // Status
-
-        return package.GetAsByteArray();
-      }
-    }
-
-    public async Task<byte[]> ExportFastMovingProductsToExcelAsync(
-        DateTime? startDate = null,
-        DateTime? endDate = null,
-        int topN = 20)
-    {
-      var report = await GetFastMovingProductsReportAsync(startDate, endDate, topN);
-
-      ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-      using (var package = new ExcelPackage())
-      {
-        var worksheet = package.Workbook.Worksheets.Add("Fast-Moving Products");
-
-        // ===== HEADER SECTION =====
-        worksheet.Cells["A1"].Value = "FAST-MOVING PRODUCTS REPORT";
-        worksheet.Cells["A1:O1"].Merge = true;
-        worksheet.Cells["A1:O1"].Style.Font.Bold = true;
-        worksheet.Cells["A1:O1"].Style.Font.Size = 20;
-        worksheet.Cells["A1:O1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells["A1:O1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells["A1:O1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells["A1:O1"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
-        worksheet.Cells["A1:O1"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Row(1).Height = 35;
-
-        // ===== METADATA SECTION =====
-        int currentRow = 3;
-
-        worksheet.Cells[$"A{currentRow}"].Value = "Period:";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Cells[$"B{currentRow}"].Value = startDate.HasValue && endDate.HasValue
-          ? $"{startDate:MMM dd, yyyy} to {endDate:MMM dd, yyyy}"
-          : "All Time";
-        worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-
-        currentRow++;
-
-        worksheet.Cells[$"A{currentRow}"].Value = "Top Products:";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 11;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Cells[$"B{currentRow}"].Value = $"Top {topN}";
-        worksheet.Cells[$"B{currentRow}:D{currentRow}"].Merge = true;
-        worksheet.Cells[$"B{currentRow}"].Style.Font.Size = 11;
-
-        // ===== SUMMARY SECTION =====
-        currentRow += 2;
-        int summaryStartRow = currentRow;
-
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Row(currentRow).Height = 25;
-
-        worksheet.Cells[$"A{currentRow}:E{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = "Total Products Sold";
-
-        worksheet.Cells[$"F{currentRow}:J{currentRow}"].Merge = true;
-        worksheet.Cells[$"F{currentRow}"].Value = "Total Quantity Sold";
-
-        worksheet.Cells[$"K{currentRow}:O{currentRow}"].Merge = true;
-        worksheet.Cells[$"K{currentRow}"].Value = "Total Revenue";
-
-        currentRow++;
-
-        worksheet.Cells[$"A{currentRow}:E{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = report.TotalProductsSold;
-        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-        worksheet.Row(currentRow).Height = 30;
-
-        worksheet.Cells[$"F{currentRow}:J{currentRow}"].Merge = true;
-        worksheet.Cells[$"F{currentRow}"].Value = report.TotalQuantitySold;
-        worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"F{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"F{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"F{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-        worksheet.Cells[$"K{currentRow}:O{currentRow}"].Merge = true;
-        worksheet.Cells[$"K{currentRow}"].Value = report.TotalRevenue;
-        worksheet.Cells[$"K{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-        worksheet.Cells[$"K{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"K{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-        worksheet.Cells[$"K{currentRow}"].Style.Font.Size = 16;
-        worksheet.Cells[$"K{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"K{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
-        worksheet.Cells[$"K{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"K{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-        using (var range = worksheet.Cells[summaryStartRow, 1, currentRow, 15])
-        {
-          range.Style.Border.Top.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Left.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Right.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
-          range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-        }
-
-        // ===== PRODUCT RANKINGS SECTION =====
-        currentRow += 3;
-        int detailsStartRow = currentRow;
-
-        worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
-        worksheet.Cells[$"A{currentRow}"].Value = "PRODUCT RANKINGS";
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
-        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
-        worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
-        worksheet.Row(currentRow).Height = 25;
-
-        currentRow++;
-
-        // Headers - 15 columns total (A to O)
-        worksheet.Cells[$"A{currentRow}"].Value = "Rank";
-        worksheet.Cells[$"B{currentRow}"].Value = "Product Name";
-        worksheet.Cells[$"C{currentRow}"].Value = "Brand";
-        worksheet.Cells[$"D{currentRow}"].Value = "Category";
-        worksheet.Cells[$"E{currentRow}"].Value = "Generic";
-        worksheet.Cells[$"F{currentRow}"].Value = "Classification";
-        worksheet.Cells[$"G{currentRow}"].Value = "Unit Type";
-        worksheet.Cells[$"H{currentRow}"].Value = "Box Sold";
-        worksheet.Cells[$"I{currentRow}"].Value = "Sheet Sold";
-        worksheet.Cells[$"J{currentRow}"].Value = "Piece Sold";
-        worksheet.Cells[$"K{currentRow}"].Value = "Transaction Count";
-        worksheet.Cells[$"L{currentRow}"].Value = "Revenue";
-        worksheet.Cells[$"M{currentRow}"].Value = "Current Stock";
-        worksheet.Cells[$"N{currentRow}"].Value = "Stock Status";
-        worksheet.Cells[$"O{currentRow}"].Value = "Trend";
-
-        using (var range = worksheet.Cells[$"A{currentRow}:O{currentRow}"])
-        {
-          range.Style.Font.Bold = true;
-          range.Style.Font.Size = 11;
-          range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-          range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
-          range.Style.Font.Color.SetColor(Color.White);
-          range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-          range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-        }
-        worksheet.Row(currentRow).Height = 22;
-
-        currentRow++;
-
-        // Get product details for unit types and quantities
-        var productIds = report.Products.Select(p => p.ProductId).ToList();
-        var products = await _getRepo.GetAllProductAsync();
-        var productDict = products.Where(p => productIds.Contains(p.ProductID))
-          .ToDictionary(p => p.ProductID);
-
-        int rowCounter = 0;
-        foreach (var product in report.Products)
-        {
-          bool isEvenRow = rowCounter % 2 == 0;
-          Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
-
-          // Get product details
-          var productDetails = productDict.ContainsKey(product.ProductId)
-            ? productDict[product.ProductId]
-            : null;
-
-          // COLUMN A: Rank
-          worksheet.Cells[$"A{currentRow}"].Value = product.Rank;
-          worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 12;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-          if (product.Rank == 1)
-            worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(255, 215, 0));
-          else if (product.Rank == 2)
-            worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 192, 192));
-          else if (product.Rank == 3)
-            worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(205, 127, 50));
-
-          // COLUMN B: Product Name (with Formulation and Type)
-          string productNameText = product.ProductName;
-          if (productDetails != null)
-          {
-            var nameParts = new List<string> { productDetails.ProductName };
-
-            // Add Formulation if available (e.g., "500mg")
-            if (productDetails.Formulation != null && !string.IsNullOrEmpty(productDetails.Formulation.FormulationName))
-              nameParts.Add(productDetails.Formulation.FormulationName);
-
-            // Add Type if available (e.g., "Tablet")
-            if (productDetails.TypeModel != null && !string.IsNullOrEmpty(productDetails.TypeModel.TypeName))
-              nameParts.Add(productDetails.TypeModel.TypeName);
-
-            productNameText = string.Join(" ", nameParts);
-          }
-
-          worksheet.Cells[$"B{currentRow}"].Value = productNameText;
-          worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-          worksheet.Cells[$"B{currentRow}"].Style.Font.Bold = true;
-
-          // COLUMN C: Brand
-          string brandName = productDetails?.Brand?.BrandName ?? "N/A";
-          worksheet.Cells[$"C{currentRow}"].Value = brandName;
-          worksheet.Cells[$"C{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-          // COLUMN D: Category
-          string categoryName = productDetails?.Category?.CategoryName ?? "N/A";
-          worksheet.Cells[$"D{currentRow}"].Value = categoryName;
-          worksheet.Cells[$"D{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"D{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"D{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-          // COLUMN E: Generic
-          string genericName = productDetails?.Generic?.GenericName ?? "N/A";
-          worksheet.Cells[$"E{currentRow}"].Value = genericName;
-          worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // COLUMN F: Classification
-          string classificationName = productDetails?.Classification?.ClassificationName ?? "N/A";
-          worksheet.Cells[$"F{currentRow}"].Value = classificationName;
-          worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // COLUMN G: Unit Type
-          string unitType = productDetails?.UnitMeasurement ?? "N/A";
-          worksheet.Cells[$"G{currentRow}"].Value = unitType;
-          worksheet.Cells[$"G{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"G{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"G{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"G{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
-
-          // Calculate Box, Sheet, Piece quantities based on unit type
-          int boxSold = 0, sheetSold = 0, pieceSold = 0;
-
-          if (productDetails != null)
-          {
-            int totalPieces = product.QuantitySold;
-
-            if (unitType == "Multi-Level")
-            {
-              // Box → Sheet → Piece
-              int sheetsPerBox = productDetails.SheetsPerBox;
-              int piecesPerSheet = productDetails.PiecesPerSheet;
-              int piecesPerBox = sheetsPerBox * piecesPerSheet;
-
-              if (piecesPerBox > 0)
-              {
-                boxSold = totalPieces / piecesPerBox;
-                int remainder = totalPieces % piecesPerBox;
-
-                if (piecesPerSheet > 0)
+                // Add border to summary section - Extended to column J
+                using (var range = worksheet.Cells[summaryStartRow, 1, currentRow, 10])
                 {
-                  sheetSold = remainder / piecesPerSheet;
-                  pieceSold = remainder % piecesPerSheet;
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
                 }
-              }
+
+                // ===== TRANSACTIONS SECTION =====
+                currentRow += 3;
+                int transactionsStartRow = currentRow;
+
+                // Section Title
+                worksheet.Cells[$"A{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "TRANSACTION DETAILS";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 25;
+
+                currentRow++;
+
+                // Transaction Headers
+                worksheet.Cells[$"A{currentRow}"].Value = "Invoice #";
+                worksheet.Cells[$"B{currentRow}"].Value = "Date & Time";
+                worksheet.Cells[$"C{currentRow}"].Value = "Product Name";
+                worksheet.Cells[$"D{currentRow}"].Value = "Unit Type";
+                worksheet.Cells[$"E{currentRow}"].Value = "Quantity";
+                worksheet.Cells[$"F{currentRow}"].Value = "Unit Price";
+                worksheet.Cells[$"G{currentRow}"].Value = "Subtotal";
+                worksheet.Cells[$"H{currentRow}"].Value = "Discount";
+                worksheet.Cells[$"I{currentRow}"].Value = "VAT";
+                worksheet.Cells[$"J{currentRow}"].Value = "Net Amount";
+
+                // Style transaction headers
+                using (var range = worksheet.Cells[$"A{currentRow}:J{currentRow}"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Font.Size = 11;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
+                    range.Style.Font.Color.SetColor(Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+                worksheet.Row(currentRow).Height = 22;
+
+                currentRow++;
+
+                // Transaction Data with Items
+                int rowCounter = 0;
+                foreach (var transaction in report.Transactions)
+                {
+                    int transactionStartRow = currentRow;
+                    bool isFirstItem = true;
+                    bool isEvenRow = rowCounter % 2 == 0;
+
+                    // If transaction has items, show them
+                    if (transaction.Items != null && transaction.Items.Any())
+                    {
+                        foreach (var item in transaction.Items)
+                        {
+                            // Alternating row colors
+                            Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
+
+                            // Invoice Number (only on first item)
+                            if (isFirstItem)
+                            {
+                                worksheet.Cells[$"A{currentRow}"].Value = transaction.InvoiceNumber;
+                                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                            }
+
+                            // Date & Time (only on first item)
+                            if (isFirstItem)
+                            {
+                                worksheet.Cells[$"B{currentRow}"].Value = transaction.TransactionDate;
+                                worksheet.Cells[$"B{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy hh:mm AM/PM";
+                                worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+                                worksheet.Cells[$"B{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                worksheet.Cells[$"B{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                            }
+
+                            // Item Details with row color
+                            worksheet.Cells[$"C{currentRow}"].Value = item.ProductName;
+                            worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                            worksheet.Cells[$"D{currentRow}"].Value = item.UnitType;
+                            worksheet.Cells[$"D{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            worksheet.Cells[$"D{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[$"D{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                            worksheet.Cells[$"E{currentRow}"].Value = item.Quantity;
+                            worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            worksheet.Cells[$"E{currentRow}"].Style.Font.Bold = true;
+                            worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                            worksheet.Cells[$"F{currentRow}"].Value = item.UnitPrice;
+                            worksheet.Cells[$"F{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                            worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                            worksheet.Cells[$"G{currentRow}"].Value = item.Subtotal;
+                            worksheet.Cells[$"G{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                            worksheet.Cells[$"G{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                            worksheet.Cells[$"G{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            worksheet.Cells[$"G{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                            // Discount (only on first item)
+                            if (isFirstItem)
+                            {
+                                // Get the discount details
+                                var discount = await GetDiscountByIdAsync(transaction.DiscountId);
+
+                                // Format discount display with name and percentage/amount
+                                string discountText = "";
+                                if (!string.IsNullOrEmpty(transaction.DiscountName) && transaction.DiscountAmount > 0)
+                                {
+                                    if (discount != null && discount.DiscountType?.ToLower() == "percentage")
+                                    {
+                                        // For percentage discounts, show the discount amount and percentage
+                                        discountText = $"{transaction.DiscountName} ({discount.DiscountAmount:N2}%)\n₱{transaction.DiscountAmount:N2}";
+                                    }
+                                    else
+                                    {
+                                        // For fixed discounts, just show name and amount
+                                        discountText = $"{transaction.DiscountName}\n₱{transaction.DiscountAmount:N2}";
+                                    }
+                                }
+                                else if (transaction.DiscountAmount > 0)
+                                {
+                                    discountText = $"₱{transaction.DiscountAmount:N2}";
+                                }
+                                else
+                                {
+                                    discountText = "None";
+                                }
+
+                                worksheet.Cells[$"H{currentRow}"].Value = discountText;
+                                worksheet.Cells[$"H{currentRow}"].Style.WrapText = true;
+                                worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                worksheet.Cells[$"H{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                                worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+
+                                if (transaction.DiscountAmount > 0)
+                                {
+                                    worksheet.Cells[$"H{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 80, 77));
+                                }
+                            }
+
+                            // VAT (only on first item)
+                            if (isFirstItem)
+                            {
+                                string vatText = "";
+                                if (transaction.VATRate.HasValue && transaction.VATAmount > 0)
+                                {
+                                    vatText = $"{transaction.VATRate:N2}%\n₱{transaction.VATAmount:N2}";
+                                }
+                                else if (transaction.VATAmount > 0)
+                                {
+                                    vatText = $"₱{transaction.VATAmount:N2}";
+                                }
+                                else
+                                {
+                                    vatText = "None";
+                                }
+
+                                worksheet.Cells[$"I{currentRow}"].Value = vatText;
+                                worksheet.Cells[$"I{currentRow}"].Style.WrapText = true;
+                                worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                worksheet.Cells[$"I{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                                worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                            }
+
+                            // Net Amount (only on first item, merged vertically if multiple items)
+                            if (isFirstItem)
+                            {
+                                worksheet.Cells[$"J{currentRow}"].Value = transaction.NetAmount;
+                                worksheet.Cells[$"J{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                                worksheet.Cells[$"J{currentRow}"].Style.Font.Bold = true;
+                                worksheet.Cells[$"J{currentRow}"].Style.Font.Size = 12;
+                                worksheet.Cells[$"J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                                worksheet.Cells[$"J{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                                worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+                                worksheet.Cells[$"J{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
+                            }
+
+                            // Add borders to each cell
+                            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                            currentRow++;
+                            isFirstItem = false;
+                        }
+
+                        // Merge cells for invoice and date if multiple items
+                        if (transaction.Items.Count > 1)
+                        {
+                            worksheet.Cells[$"A{transactionStartRow}:A{currentRow - 1}"].Merge = true;
+                            worksheet.Cells[$"A{transactionStartRow}:A{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                            worksheet.Cells[$"B{transactionStartRow}:B{currentRow - 1}"].Merge = true;
+                            worksheet.Cells[$"B{transactionStartRow}:B{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                            worksheet.Cells[$"H{transactionStartRow}:H{currentRow - 1}"].Merge = true;
+                            worksheet.Cells[$"H{transactionStartRow}:H{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                            worksheet.Cells[$"I{transactionStartRow}:I{currentRow - 1}"].Merge = true;
+                            worksheet.Cells[$"I{transactionStartRow}:I{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                            worksheet.Cells[$"J{transactionStartRow}:J{currentRow - 1}"].Merge = true;
+                            worksheet.Cells[$"J{transactionStartRow}:J{currentRow - 1}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        }
+                    }
+                    else
+                    {
+                        // Transaction with no items (fallback)
+                        Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
+
+                        worksheet.Cells[$"A{currentRow}"].Value = transaction.InvoiceNumber;
+                        worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                        worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                        worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                        worksheet.Cells[$"B{currentRow}"].Value = transaction.TransactionDate;
+                        worksheet.Cells[$"B{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy hh:mm AM/PM";
+                        worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+                        worksheet.Cells[$"B{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[$"B{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                        worksheet.Cells[$"C{currentRow}:G{currentRow}"].Merge = true;
+                        worksheet.Cells[$"C{currentRow}"].Value = "No items recorded";
+                        worksheet.Cells[$"C{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[$"C{currentRow}"].Style.Font.Italic = true;
+                        worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                        // Discount
+                        var discount = await GetDiscountByIdAsync(transaction.DiscountId);
+                        string discountText = "";
+                        if (!string.IsNullOrEmpty(transaction.DiscountName) && transaction.DiscountAmount > 0)
+                        {
+                            if (discount != null && discount.DiscountType?.ToLower() == "percentage")
+                            {
+                                discountText = $"{transaction.DiscountName} ({discount.DiscountAmount:N2}%)\n₱{transaction.DiscountAmount:N2}";
+                            }
+                            else
+                            {
+                                discountText = $"{transaction.DiscountName}\n₱{transaction.DiscountAmount:N2}";
+                            }
+                        }
+                        else if (transaction.DiscountAmount > 0)
+                        {
+                            discountText = $"₱{transaction.DiscountAmount:N2}";
+                        }
+                        else
+                        {
+                            discountText = "None";
+                        }
+
+                        worksheet.Cells[$"H{currentRow}"].Value = discountText;
+                        worksheet.Cells[$"H{currentRow}"].Style.WrapText = true;
+                        worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[$"H{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+
+                        if (transaction.DiscountAmount > 0)
+                        {
+                            worksheet.Cells[$"H{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 80, 77));
+                        }
+
+                        // VAT
+                        string vatText = "";
+                        if (transaction.VATRate.HasValue && transaction.VATAmount > 0)
+                        {
+                            vatText = $"{transaction.VATRate:N2}%\n₱{transaction.VATAmount:N2}";
+                        }
+                        else if (transaction.VATAmount > 0)
+                        {
+                            vatText = $"₱{transaction.VATAmount:N2}";
+                        }
+                        else
+                        {
+                            vatText = "None";
+                        }
+
+                        worksheet.Cells[$"I{currentRow}"].Value = vatText;
+                        worksheet.Cells[$"I{currentRow}"].Style.WrapText = true;
+                        worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[$"I{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                        worksheet.Cells[$"J{currentRow}"].Value = transaction.NetAmount;
+                        worksheet.Cells[$"J{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                        worksheet.Cells[$"J{currentRow}"].Style.Font.Bold = true;
+                        worksheet.Cells[$"J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                        worksheet.Cells[$"J{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+                        worksheet.Cells[$"J{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
+
+                        // Add borders
+                        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        worksheet.Cells[$"A{currentRow}:J{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        currentRow++;
+                    }
+
+                    rowCounter++;
+                }
+
+                // Add border around entire transaction section
+                if (currentRow > transactionsStartRow + 2)
+                {
+                    using (var range = worksheet.Cells[transactionsStartRow, 1, currentRow - 1, 10])
+                    {
+                        range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                    }
+                }
+
+                // Auto-fit columns
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Set minimum column widths
+                worksheet.Column(1).Width = 15; // Invoice
+                worksheet.Column(2).Width = 20; // Date
+                worksheet.Column(3).Width = 30; // Product Name
+                worksheet.Column(4).Width = 12; // Unit Type
+                worksheet.Column(5).Width = 10; // Quantity
+                worksheet.Column(6).Width = 13; // Unit Price
+                worksheet.Column(7).Width = 13; // Subtotal
+                worksheet.Column(8).Width = 18; // Discount
+                worksheet.Column(9).Width = 15; // VAT
+                worksheet.Column(10).Width = 16; // Net Amount
+
+                return package.GetAsByteArray();
             }
-            else if (unitType == "Dual-Level")
-            {
-              // Box → Piece
-              int piecesPerBox = productDetails.PiecePerBox;
-
-              if (piecesPerBox > 0)
-              {
-                boxSold = totalPieces / piecesPerBox;
-                pieceSold = totalPieces % piecesPerBox;
-              }
-            }
-            else // Single-Level
-            {
-              pieceSold = totalPieces;
-            }
-          }
-
-          // COLUMN H: Box Sold
-          worksheet.Cells[$"H{currentRow}"].Value = boxSold > 0 ? boxSold.ToString() : "-";
-          worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // COLUMN I: Sheet Sold
-          worksheet.Cells[$"I{currentRow}"].Value = sheetSold > 0 ? sheetSold.ToString() : "-";
-          worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // COLUMN J: Piece Sold
-          worksheet.Cells[$"J{currentRow}"].Value = pieceSold;
-          worksheet.Cells[$"J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"J{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-
-          // COLUMN K: Transaction Count
-          worksheet.Cells[$"K{currentRow}"].Value = product.TransactionCount;
-          worksheet.Cells[$"K{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"K{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"K{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // COLUMN L: Revenue
-          worksheet.Cells[$"L{currentRow}"].Value = product.Revenue;
-          worksheet.Cells[$"L{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
-          worksheet.Cells[$"L{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-          worksheet.Cells[$"L{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"L{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"L{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
-          worksheet.Cells[$"L{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
-
-          // COLUMN M: Current Stock
-          worksheet.Cells[$"M{currentRow}"].Value = product.CurrentStock;
-          worksheet.Cells[$"M{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"M{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"M{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"M{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
-
-          // COLUMN N: Stock Status
-          string stockStatus = "Adequate";
-          Color stockColor = Color.FromArgb(226, 239, 218);
-          Color stockFontColor = Color.FromArgb(0, 112, 60);
-
-          if (product.CurrentStock == 0)
-          {
-            stockStatus = "Out of Stock";
-            stockColor = Color.FromArgb(255, 199, 206);
-            stockFontColor = Color.FromArgb(156, 0, 6);
-          }
-          else if (product.CurrentStock < 10)
-          {
-            stockStatus = "Low Stock";
-            stockColor = Color.FromArgb(255, 242, 204);
-            stockFontColor = Color.FromArgb(192, 80, 77);
-          }
-          else if (product.CurrentStock < 50)
-          {
-            stockStatus = "Moderate";
-            stockColor = Color.FromArgb(255, 235, 156);
-            stockFontColor = Color.FromArgb(156, 101, 0);
-          }
-
-          worksheet.Cells[$"N{currentRow}"].Value = stockStatus;
-          worksheet.Cells[$"N{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"N{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"N{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"N{currentRow}"].Style.Fill.BackgroundColor.SetColor(stockColor);
-          worksheet.Cells[$"N{currentRow}"].Style.Font.Color.SetColor(stockFontColor);
-
-          // COLUMN O: Trend
-          Color trendColor = rowColor;
-          Color trendFontColor = Color.Black;
-
-          switch (product.Trend.ToLower())
-          {
-            case "increasing":
-              trendColor = Color.FromArgb(226, 239, 218);
-              trendFontColor = Color.FromArgb(0, 112, 60);
-              break;
-            case "stable":
-              trendColor = Color.FromArgb(217, 225, 242);
-              trendFontColor = Color.FromArgb(31, 78, 120);
-              break;
-            case "decreasing":
-              trendColor = Color.FromArgb(255, 199, 206);
-              trendFontColor = Color.FromArgb(156, 0, 6);
-              break;
-          }
-
-          worksheet.Cells[$"O{currentRow}"].Value = product.Trend;
-          worksheet.Cells[$"O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-          worksheet.Cells[$"O{currentRow}"].Style.Font.Bold = true;
-          worksheet.Cells[$"O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-          worksheet.Cells[$"O{currentRow}"].Style.Fill.BackgroundColor.SetColor(trendColor);
-          worksheet.Cells[$"O{currentRow}"].Style.Font.Color.SetColor(trendFontColor);
-
-          // Add borders
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-          worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-
-          worksheet.Row(currentRow).Height = 25;
-
-          currentRow++;
-          rowCounter++;
         }
 
-        if (currentRow > detailsStartRow + 2)
+        //INVENTORY REPORTS
+        public async Task<byte[]> ExportInventoryReportToExcelAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            string filterType = "all",
+            int? currentLoggedInUserId = null)
         {
-          using (var range = worksheet.Cells[detailsStartRow, 1, currentRow - 1, 15])
-          {
-            range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
-          }
+            var report = await GetInventoryReportAsync(startDate, endDate, filterType);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Inventory Report");
+
+                // Get the current logged-in user's name
+                string adminName = "Administrator";
+                if (currentLoggedInUserId.HasValue && currentLoggedInUserId.Value > 0)
+                {
+                    var currentUser = await GetEmployeeByIdAsync(currentLoggedInUserId.Value);
+                    adminName = currentUser?.FullName ?? "Administrator";
+                }
+
+                string printDate = DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt");
+
+                // ===== HEADER SECTION =====
+                int currentRow = 1;
+                int headerStartRow = currentRow;
+
+                // INVENTORY REPORT - Title (Centered)
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "INVENTORY REPORT";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 20;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 35;
+
+                currentRow++;
+
+                // Pharmacy Name - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Racquel Pharmacy";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 25;
+
+                currentRow++;
+
+                // Pharmacy Address - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Q3H+HGC, Makabud, Novaliches, Caloocan, Metro Manila";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Empty row for spacing with background
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 5;
+
+                currentRow++;
+
+                // Period - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Period: " + (startDate.HasValue && endDate.HasValue
+                    ? $"{startDate:MMM dd, yyyy} to {endDate:MMM dd, yyyy}"
+                    : "All Time");
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Printed By - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Printed By: " + adminName;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Print Date - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Print Date: " + printDate;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                // Filter Type (if applicable)
+                string filterDisplayName = filterType?.ToLower() switch
+                {
+                    "critical" or "critical stock" => "Critical Stock",
+                    "near expiry" or "nearexpiry" => "Near Expiry",
+                    "expired" => "Expired",
+                    "all" or "all inventory" => "All Inventory",
+                    _ => filterType ?? "All Inventory"
+                };
+
+                if (!string.IsNullOrEmpty(filterType) && filterType.ToLower() != "all" && filterType.ToLower() != "all inventory")
+                {
+                    currentRow++;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                    worksheet.Cells[$"A{currentRow}"].Value = "Filter Type: " + filterDisplayName;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+                    worksheet.Row(currentRow).Height = 20;
+                }
+
+                // Add border around entire header section
+                using (var range = worksheet.Cells[headerStartRow, 1, currentRow, 15])
+                {
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+
+                currentRow += 2;
+
+                // ===== SUMMARY SECTION =====
+                int summaryStartRow = currentRow;
+
+                // Summary Headers with styling
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Row(currentRow).Height = 25;
+
+                // Merge cells for each summary metric
+                worksheet.Cells[$"A{currentRow}:D{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Total Products";
+
+                worksheet.Cells[$"E{currentRow}:H{currentRow}"].Merge = true;
+                worksheet.Cells[$"E{currentRow}"].Value = "Total Value";
+
+                worksheet.Cells[$"I{currentRow}:L{currentRow}"].Merge = true;
+                worksheet.Cells[$"I{currentRow}"].Value = "Critical Stock Count";
+
+                worksheet.Cells[$"M{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"M{currentRow}"].Value = "Near Expiry Count";
+
+                currentRow++;
+
+                // Summary Values
+                worksheet.Cells[$"A{currentRow}:D{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = report.Summary.TotalProducts;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 30;
+
+                worksheet.Cells[$"E{currentRow}:H{currentRow}"].Merge = true;
+                worksheet.Cells[$"E{currentRow}"].Value = report.Summary.TotalValue;
+                worksheet.Cells[$"E{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"E{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"E{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"E{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"E{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
+                worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+
+                worksheet.Cells[$"I{currentRow}:L{currentRow}"].Merge = true;
+                worksheet.Cells[$"I{currentRow}"].Value = report.Summary.CriticalStockCount;
+                worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"I{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"I{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"I{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+                if (report.Summary.CriticalStockCount > 0)
+                {
+                    worksheet.Cells[$"I{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 80, 77));
+                }
+
+                worksheet.Cells[$"M{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"M{currentRow}"].Value = report.Summary.NearExpiryCount;
+                worksheet.Cells[$"M{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"M{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"M{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"M{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"M{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"M{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                // Add border to summary section
+                using (var range = worksheet.Cells[summaryStartRow, 1, currentRow, 15])
+                {
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+
+                // ===== INVENTORY DETAILS SECTION =====
+                currentRow += 3;
+                int detailsStartRow = currentRow;
+
+                // Section Title
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "INVENTORY DETAILS";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 25;
+
+                currentRow++;
+
+                // Detail Headers
+                worksheet.Cells[$"A{currentRow}"].Value = "Product Name";
+                worksheet.Cells[$"B{currentRow}"].Value = "Category";
+                worksheet.Cells[$"C{currentRow}"].Value = "Brand";
+                worksheet.Cells[$"D{currentRow}"].Value = "Unit Type";
+                worksheet.Cells[$"E{currentRow}"].Value = "Batch Number";
+                worksheet.Cells[$"F{currentRow}"].Value = "Box Qty";
+                worksheet.Cells[$"G{currentRow}"].Value = "Sheet Qty";
+                worksheet.Cells[$"H{currentRow}"].Value = "Piece Qty";
+                worksheet.Cells[$"I{currentRow}"].Value = "Total Pieces";
+                worksheet.Cells[$"J{currentRow}"].Value = "Reorder Level";
+                worksheet.Cells[$"K{currentRow}"].Value = "Unit Price";
+                worksheet.Cells[$"L{currentRow}"].Value = "Total Value";
+                worksheet.Cells[$"M{currentRow}"].Value = "Mfg Date";
+                worksheet.Cells[$"N{currentRow}"].Value = "Expiry Date";
+                worksheet.Cells[$"O{currentRow}"].Value = "Status";
+
+                // Style detail headers
+                using (var range = worksheet.Cells[$"A{currentRow}:O{currentRow}"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Font.Size = 11;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
+                    range.Style.Font.Color.SetColor(Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+                worksheet.Row(currentRow).Height = 22;
+
+                currentRow++;
+
+                // Detail Data with alternating row colors
+                int rowCounter = 0;
+                foreach (var inventory in report.InventoryItems)
+                {
+                    bool isEvenRow = rowCounter % 2 == 0;
+                    Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
+
+                    // Product Name
+                    worksheet.Cells[$"A{currentRow}"].Value = inventory.ProductName;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Category
+                    worksheet.Cells[$"B{currentRow}"].Value = inventory.Product?.CategoryName ?? "N/A";
+                    worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Brand
+                    worksheet.Cells[$"C{currentRow}"].Value = inventory.Product?.BrandName ?? "N/A";
+                    worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Unit Type
+                    string unitType = "N/A";
+                    if (inventory.Product?.UnitMeasurement != null)
+                    {
+                        unitType = inventory.Product.UnitMeasurement;
+                    }
+                    else if (inventory.SheetsPerBox.HasValue && inventory.SheetsPerBox > 0 &&
+                        inventory.PiecesPerSheet.HasValue && inventory.PiecesPerSheet > 0)
+                    {
+                        unitType = "Multi-Level";
+                    }
+                    else if (inventory.PiecePerBox.HasValue && inventory.PiecePerBox > 0 &&
+                        (!inventory.PiecesPerSheet.HasValue || inventory.PiecesPerSheet == 0))
+                    {
+                        unitType = "Dual-Level";
+                    }
+                    else if ((!inventory.SheetsPerBox.HasValue || inventory.SheetsPerBox == 0) &&
+                        (!inventory.PiecePerBox.HasValue || inventory.PiecePerBox == 0))
+                    {
+                        unitType = "Single-Level";
+                    }
+
+                    worksheet.Cells[$"D{currentRow}"].Value = unitType;
+                    worksheet.Cells[$"D{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"D{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"D{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"D{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                    // Batch Number
+                    worksheet.Cells[$"E{currentRow}"].Value = inventory.BatchNumber;
+                    worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Box Quantity
+                    worksheet.Cells[$"F{currentRow}"].Value = inventory.BoxQuantity;
+                    worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Sheet Quantity
+                    worksheet.Cells[$"G{currentRow}"].Value = inventory.SheetQuantity;
+                    worksheet.Cells[$"G{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"G{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"G{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Piece Quantity
+                    worksheet.Cells[$"H{currentRow}"].Value = inventory.PieceQuantity;
+                    worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Total Pieces Available
+                    worksheet.Cells[$"I{currentRow}"].Value = inventory.TotalPiecesAvailable;
+                    worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"I{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+
+                    // Reorder Level
+                    worksheet.Cells[$"J{currentRow}"].Value = inventory.ReorderLevel;
+                    worksheet.Cells[$"J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Unit Price
+                    worksheet.Cells[$"K{currentRow}"].Value = inventory.PiecePrice;
+                    worksheet.Cells[$"K{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                    worksheet.Cells[$"K{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    worksheet.Cells[$"K{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"K{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Total Value
+                    decimal totalValue = inventory.TotalPiecesAvailable * inventory.PiecePrice;
+                    worksheet.Cells[$"L{currentRow}"].Value = totalValue;
+                    worksheet.Cells[$"L{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                    worksheet.Cells[$"L{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    worksheet.Cells[$"L{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"L{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"L{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+
+                    // Manufacturing Date
+                    worksheet.Cells[$"M{currentRow}"].Value = inventory.ManufacturingDate;
+                    worksheet.Cells[$"M{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy";
+                    worksheet.Cells[$"M{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"M{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"M{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Expiration Date
+                    worksheet.Cells[$"N{currentRow}"].Value = inventory.ExpirationDate;
+                    worksheet.Cells[$"N{currentRow}"].Style.Numberformat.Format = "mmm dd, yyyy";
+                    worksheet.Cells[$"N{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"N{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"N{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // Status
+                    string status = "Active";
+                    Color statusColor = rowColor;
+                    Color statusFontColor = Color.Black;
+
+                    if (inventory.IsExpired)
+                    {
+                        status = "Expired";
+                        statusColor = Color.FromArgb(255, 199, 206);
+                        statusFontColor = Color.FromArgb(156, 0, 6);
+                    }
+                    else if (inventory.IsNearExpiry)
+                    {
+                        status = "Near Expiry";
+                        statusColor = Color.FromArgb(255, 235, 156);
+                        statusFontColor = Color.FromArgb(156, 101, 0);
+                    }
+                    else if (inventory.IsCriticalStock)
+                    {
+                        status = "Critical Stock";
+                        statusColor = Color.FromArgb(255, 242, 204);
+                        statusFontColor = Color.FromArgb(192, 80, 77);
+                    }
+
+                    worksheet.Cells[$"O{currentRow}"].Value = status;
+                    worksheet.Cells[$"O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"O{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"O{currentRow}"].Style.Fill.BackgroundColor.SetColor(statusColor);
+                    worksheet.Cells[$"O{currentRow}"].Style.Font.Color.SetColor(statusFontColor);
+
+                    // Add borders
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                    currentRow++;
+                    rowCounter++;
+                }
+
+                // Add border around entire details section
+                if (currentRow > detailsStartRow + 2)
+                {
+                    using (var range = worksheet.Cells[detailsStartRow, 1, currentRow - 1, 15])
+                    {
+                        range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                    }
+                }
+
+                // Auto-fit columns
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Set minimum column widths
+                worksheet.Column(1).Width = 30;  // Product Name
+                worksheet.Column(2).Width = 15;  // Category
+                worksheet.Column(3).Width = 15;  // Brand
+                worksheet.Column(4).Width = 14;  // Unit Type
+                worksheet.Column(5).Width = 18;  // Batch Number
+                worksheet.Column(6).Width = 10;  // Box Qty
+                worksheet.Column(7).Width = 10;  // Sheet Qty
+                worksheet.Column(8).Width = 10;  // Piece Qty
+                worksheet.Column(9).Width = 12;  // Total Pieces
+                worksheet.Column(10).Width = 13; // Reorder Level
+                worksheet.Column(11).Width = 13; // Unit Price
+                worksheet.Column(12).Width = 15; // Total Value
+                worksheet.Column(13).Width = 15; // Mfg Date
+                worksheet.Column(14).Width = 15; // Expiry Date
+                worksheet.Column(15).Width = 16; // Status
+
+                return package.GetAsByteArray();
+            }
         }
 
-        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
-        // Set column widths for 15 columns (A to O)
-        worksheet.Column(1).Width = 8;   // A - Rank
-        worksheet.Column(2).Width = 30;  // B - Product Name
-        worksheet.Column(3).Width = 15;  // C - Brand
-        worksheet.Column(4).Width = 15;  // D - Category
-        worksheet.Column(5).Width = 18;  // E - Generic
-        worksheet.Column(6).Width = 18;  // F - Classification
-        worksheet.Column(7).Width = 14;  // G - Unit Type
-        worksheet.Column(8).Width = 12;  // H - Box Sold
-        worksheet.Column(9).Width = 12;  // I - Sheet Sold
-        worksheet.Column(10).Width = 12; // J - Piece Sold
-        worksheet.Column(11).Width = 16; // K - Transaction Count
-        worksheet.Column(12).Width = 15; // L - Revenue
-        worksheet.Column(13).Width = 14; // M - Current Stock
-        worksheet.Column(14).Width = 14; // N - Stock Status
-        worksheet.Column(15).Width = 14; // O - Trend
+        // FAST-MOVING PRODUCTS REPORT - COMPLETE EXPORT METHOD
+        public async Task<byte[]> ExportFastMovingProductsToExcelAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            int topN = 20,
+            int? currentLoggedInUserId = null)
+        {
+            var report = await GetFastMovingProductsReportAsync(startDate, endDate, topN);
 
-        return package.GetAsByteArray();
-      }
-    }
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Fast-Moving Products");
+
+                // Get the current logged-in user's name
+                string adminName = "Administrator";
+                if (currentLoggedInUserId.HasValue && currentLoggedInUserId.Value > 0)
+                {
+                    var currentUser = await GetEmployeeByIdAsync(currentLoggedInUserId.Value);
+                    adminName = currentUser?.FullName ?? "Administrator";
+                }
+
+                string printDate = DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt");
+
+                // ===== HEADER SECTION =====
+                int currentRow = 1;
+                int headerStartRow = currentRow;
+
+                // FAST-MOVING PRODUCTS REPORT - Title (Centered)
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "FAST-MOVING PRODUCTS REPORT";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 20;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 35;
+
+                currentRow++;
+
+                // Pharmacy Name - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Racquel Pharmacy";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 25;
+
+                currentRow++;
+
+                // Pharmacy Address - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Q3H+HGC, Makabud, Novaliches, Caloocan, Metro Manila";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Empty row for spacing with background
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 5;
+
+                currentRow++;
+
+                // Period - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Period: " + (startDate.HasValue && endDate.HasValue
+                    ? $"{startDate:MMM dd, yyyy} to {endDate:MMM dd, yyyy}"
+                    : "All Time");
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Printed By - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Printed By: " + adminName;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Print Date - Centered
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Print Date: " + printDate;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(242, 242, 242));
+                worksheet.Row(currentRow).Height = 20;
+
+                currentRow++;
+
+                // Top Products Filter
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Top Products: Top " + topN;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 10;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(255, 242, 204));
+                worksheet.Row(currentRow).Height = 20;
+
+                // Add border around entire header section
+                using (var range = worksheet.Cells[headerStartRow, 1, currentRow, 15])
+                {
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+
+                currentRow += 2;
+
+                // ===== SUMMARY SECTION =====
+                int summaryStartRow = currentRow;
+
+                // Summary Headers with styling
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Row(currentRow).Height = 25;
+
+                // Merge cells for each summary metric
+                worksheet.Cells[$"A{currentRow}:E{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "Total Products Sold";
+
+                worksheet.Cells[$"F{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"F{currentRow}"].Value = "Total Quantity Sold";
+
+                worksheet.Cells[$"K{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"K{currentRow}"].Value = "Total Revenue";
+
+                currentRow++;
+
+                // Summary Values
+                worksheet.Cells[$"A{currentRow}:E{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = report.TotalProductsSold;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+                worksheet.Row(currentRow).Height = 30;
+
+                worksheet.Cells[$"F{currentRow}:J{currentRow}"].Merge = true;
+                worksheet.Cells[$"F{currentRow}"].Value = report.TotalQuantitySold;
+                worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"F{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"F{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"F{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                worksheet.Cells[$"K{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"K{currentRow}"].Value = report.TotalRevenue;
+                worksheet.Cells[$"K{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                worksheet.Cells[$"K{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"K{currentRow}"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[$"K{currentRow}"].Style.Font.Size = 16;
+                worksheet.Cells[$"K{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"K{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
+                worksheet.Cells[$"K{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"K{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+
+                // Add border to summary section
+                using (var range = worksheet.Cells[summaryStartRow, 1, currentRow, 15])
+                {
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Medium;
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+
+                // ===== PRODUCT RANKINGS SECTION =====
+                currentRow += 3;
+                int detailsStartRow = currentRow;
+
+                // Section Title
+                worksheet.Cells[$"A{currentRow}:O{currentRow}"].Merge = true;
+                worksheet.Cells[$"A{currentRow}"].Value = "PRODUCT RANKINGS";
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 14;
+                worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(31, 78, 120));
+                worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.White);
+                worksheet.Row(currentRow).Height = 25;
+
+                currentRow++;
+
+                // Headers - 15 columns total (A to O)
+                worksheet.Cells[$"A{currentRow}"].Value = "Rank";
+                worksheet.Cells[$"B{currentRow}"].Value = "Product Name";
+                worksheet.Cells[$"C{currentRow}"].Value = "Brand";
+                worksheet.Cells[$"D{currentRow}"].Value = "Category";
+                worksheet.Cells[$"E{currentRow}"].Value = "Generic";
+                worksheet.Cells[$"F{currentRow}"].Value = "Classification";
+                worksheet.Cells[$"G{currentRow}"].Value = "Unit Type";
+                worksheet.Cells[$"H{currentRow}"].Value = "Box Sold";
+                worksheet.Cells[$"I{currentRow}"].Value = "Sheet Sold";
+                worksheet.Cells[$"J{currentRow}"].Value = "Piece Sold";
+                worksheet.Cells[$"K{currentRow}"].Value = "Transaction Count";
+                worksheet.Cells[$"L{currentRow}"].Value = "Revenue";
+                worksheet.Cells[$"M{currentRow}"].Value = "Current Stock";
+                worksheet.Cells[$"N{currentRow}"].Value = "Stock Status";
+                worksheet.Cells[$"O{currentRow}"].Value = "Trend";
+
+                using (var range = worksheet.Cells[$"A{currentRow}:O{currentRow}"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Font.Size = 11;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(68, 114, 196));
+                    range.Style.Font.Color.SetColor(Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                }
+                worksheet.Row(currentRow).Height = 22;
+
+                currentRow++;
+
+                // Get product details for unit types and quantities
+                var productIds = report.Products.Select(p => p.ProductId).ToList();
+                var products = await _getRepo.GetAllProductAsync();
+                var productDict = products.Where(p => productIds.Contains(p.ProductID))
+                    .ToDictionary(p => p.ProductID);
+
+                int rowCounter = 0;
+                foreach (var product in report.Products)
+                {
+                    bool isEvenRow = rowCounter % 2 == 0;
+                    Color rowColor = isEvenRow ? Color.White : Color.FromArgb(242, 242, 242);
+
+                    // Get product details
+                    var productDetails = productDict.ContainsKey(product.ProductId)
+                        ? productDict[product.ProductId]
+                        : null;
+
+                    // COLUMN A: Rank
+                    worksheet.Cells[$"A{currentRow}"].Value = product.Rank;
+                    worksheet.Cells[$"A{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"A{currentRow}"].Style.Font.Size = 12;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"A{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                    if (product.Rank == 1)
+                        worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(255, 215, 0)); // Gold
+                    else if (product.Rank == 2)
+                        worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(192, 192, 192)); // Silver
+                    else if (product.Rank == 3)
+                        worksheet.Cells[$"A{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(205, 127, 50)); // Bronze
+
+                    // COLUMN B: Product Name (with Formulation and Type)
+                    string productNameText = product.ProductName;
+                    if (productDetails != null)
+                    {
+                        var nameParts = new List<string> { productDetails.ProductName };
+
+                        if (productDetails.Formulation != null && !string.IsNullOrEmpty(productDetails.Formulation.FormulationName))
+                            nameParts.Add(productDetails.Formulation.FormulationName);
+
+                        if (productDetails.TypeModel != null && !string.IsNullOrEmpty(productDetails.TypeModel.TypeName))
+                            nameParts.Add(productDetails.TypeModel.TypeName);
+
+                        productNameText = string.Join(" ", nameParts);
+                    }
+
+                    worksheet.Cells[$"B{currentRow}"].Value = productNameText;
+                    worksheet.Cells[$"B{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"B{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+                    worksheet.Cells[$"B{currentRow}"].Style.Font.Bold = true;
+
+                    // COLUMN C: Brand
+                    string brandName = productDetails?.Brand?.BrandName ?? "N/A";
+                    worksheet.Cells[$"C{currentRow}"].Value = brandName;
+                    worksheet.Cells[$"C{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"C{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"C{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                    // COLUMN D: Category
+                    string categoryName = productDetails?.Category?.CategoryName ?? "N/A";
+                    worksheet.Cells[$"D{currentRow}"].Value = categoryName;
+                    worksheet.Cells[$"D{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"D{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"D{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                    // COLUMN E: Generic
+                    string genericName = productDetails?.Generic?.GenericName ?? "N/A";
+                    worksheet.Cells[$"E{currentRow}"].Value = genericName;
+                    worksheet.Cells[$"E{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"E{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"E{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // COLUMN F: Classification
+                    string classificationName = productDetails?.Classification?.ClassificationName ?? "N/A";
+                    worksheet.Cells[$"F{currentRow}"].Value = classificationName;
+                    worksheet.Cells[$"F{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"F{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"F{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // COLUMN G: Unit Type
+                    string unitType = productDetails?.UnitMeasurement ?? "N/A";
+                    worksheet.Cells[$"G{currentRow}"].Value = unitType;
+                    worksheet.Cells[$"G{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"G{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"G{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"G{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(217, 225, 242));
+
+                    // Calculate Box, Sheet, Piece quantities based on unit type
+                    int boxSold = 0, sheetSold = 0, pieceSold = 0;
+
+                    if (productDetails != null)
+                    {
+                        int totalPieces = product.QuantitySold;
+
+                        if (unitType == "Multi-Level")
+                        {
+                            int sheetsPerBox = productDetails.SheetsPerBox;
+                            int piecesPerSheet = productDetails.PiecesPerSheet;
+                            int piecesPerBox = sheetsPerBox * piecesPerSheet;
+
+                            if (piecesPerBox > 0)
+                            {
+                                boxSold = totalPieces / piecesPerBox;
+                                int remainder = totalPieces % piecesPerBox;
+
+                                if (piecesPerSheet > 0)
+                                {
+                                    sheetSold = remainder / piecesPerSheet;
+                                    pieceSold = remainder % piecesPerSheet;
+                                }
+                            }
+                        }
+                        else if (unitType == "Dual-Level")
+                        {
+                            int piecesPerBox = productDetails.PiecePerBox;
+
+                            if (piecesPerBox > 0)
+                            {
+                                boxSold = totalPieces / piecesPerBox;
+                                pieceSold = totalPieces % piecesPerBox;
+                            }
+                        }
+                        else
+                        {
+                            pieceSold = totalPieces;
+                        }
+                    }
+
+                    // COLUMN H: Box Sold
+                    worksheet.Cells[$"H{currentRow}"].Value = boxSold > 0 ? boxSold.ToString() : "-";
+                    worksheet.Cells[$"H{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"H{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"H{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // COLUMN I: Sheet Sold
+                    worksheet.Cells[$"I{currentRow}"].Value = sheetSold > 0 ? sheetSold.ToString() : "-";
+                    worksheet.Cells[$"I{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"I{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"I{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // COLUMN J: Piece Sold
+                    worksheet.Cells[$"J{currentRow}"].Value = pieceSold;
+                    worksheet.Cells[$"J{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"J{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"J{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"J{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+
+                    // COLUMN K: Transaction Count
+                    worksheet.Cells[$"K{currentRow}"].Value = product.TransactionCount;
+                    worksheet.Cells[$"K{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"K{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"K{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // COLUMN L: Revenue
+                    worksheet.Cells[$"L{currentRow}"].Value = product.Revenue;
+                    worksheet.Cells[$"L{currentRow}"].Style.Numberformat.Format = "₱#,##0.00";
+                    worksheet.Cells[$"L{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    worksheet.Cells[$"L{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"L{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"L{currentRow}"].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(226, 239, 218));
+                    worksheet.Cells[$"L{currentRow}"].Style.Font.Color.SetColor(Color.FromArgb(0, 112, 60));
+
+                    // COLUMN M: Current Stock
+                    worksheet.Cells[$"M{currentRow}"].Value = product.CurrentStock;
+                    worksheet.Cells[$"M{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"M{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"M{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"M{currentRow}"].Style.Fill.BackgroundColor.SetColor(rowColor);
+
+                    // COLUMN N: Stock Status
+                    string stockStatus = "Adequate";
+                    Color stockColor = Color.FromArgb(226, 239, 218);
+                    Color stockFontColor = Color.FromArgb(0, 112, 60);
+
+                    if (product.CurrentStock == 0)
+                    {
+                        stockStatus = "Out of Stock";
+                        stockColor = Color.FromArgb(255, 199, 206);
+                        stockFontColor = Color.FromArgb(156, 0, 6);
+                    }
+                    else if (product.CurrentStock < 10)
+                    {
+                        stockStatus = "Low Stock";
+                        stockColor = Color.FromArgb(255, 242, 204);
+                        stockFontColor = Color.FromArgb(192, 80, 77);
+                    }
+                    else if (product.CurrentStock < 50)
+                    {
+                        stockStatus = "Moderate";
+                        stockColor = Color.FromArgb(255, 235, 156);
+                        stockFontColor = Color.FromArgb(156, 101, 0);
+                    }
+
+                    worksheet.Cells[$"N{currentRow}"].Value = stockStatus;
+                    worksheet.Cells[$"N{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"N{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"N{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"N{currentRow}"].Style.Fill.BackgroundColor.SetColor(stockColor);
+                    worksheet.Cells[$"N{currentRow}"].Style.Font.Color.SetColor(stockFontColor);
+
+                    // COLUMN O: Trend
+                    Color trendColor = rowColor;
+                    Color trendFontColor = Color.Black;
+
+                    switch (product.Trend.ToLower())
+                    {
+                        case "increasing":
+                            trendColor = Color.FromArgb(226, 239, 218);
+                            trendFontColor = Color.FromArgb(0, 112, 60);
+                            break;
+                        case "stable":
+                            trendColor = Color.FromArgb(217, 225, 242);
+                            trendFontColor = Color.FromArgb(31, 78, 120);
+                            break;
+                        case "decreasing":
+                            trendColor = Color.FromArgb(255, 199, 206);
+                            trendFontColor = Color.FromArgb(156, 0, 6);
+                            break;
+                    }
+
+                    worksheet.Cells[$"O{currentRow}"].Value = product.Trend;
+                    worksheet.Cells[$"O{currentRow}"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[$"O{currentRow}"].Style.Font.Bold = true;
+                    worksheet.Cells[$"O{currentRow}"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[$"O{currentRow}"].Style.Fill.BackgroundColor.SetColor(trendColor);
+                    worksheet.Cells[$"O{currentRow}"].Style.Font.Color.SetColor(trendFontColor);
+
+                    // Add borders
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[$"A{currentRow}:O{currentRow}"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                    worksheet.Row(currentRow).Height = 25;
+
+                    currentRow++;
+                    rowCounter++;
+                }
+
+                // Add border around entire details section
+                if (currentRow > detailsStartRow + 2)
+                {
+                    using (var range = worksheet.Cells[detailsStartRow, 1, currentRow - 1, 15])
+                    {
+                        range.Style.Border.BorderAround(ExcelBorderStyle.Medium, Color.FromArgb(31, 78, 120));
+                    }
+                }
+
+                // Auto-fit columns
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Set column widths
+                worksheet.Column(1).Width = 8;   // Rank
+                worksheet.Column(2).Width = 30;  // Product Name
+                worksheet.Column(3).Width = 15;  // Brand
+                worksheet.Column(4).Width = 15;  // Category
+                worksheet.Column(5).Width = 18;  // Generic
+                worksheet.Column(6).Width = 18;  // Classification
+                worksheet.Column(7).Width = 14;  // Unit Type
+                worksheet.Column(8).Width = 12;  // Box Sold
+                worksheet.Column(9).Width = 12;  // Sheet Sold
+                worksheet.Column(10).Width = 12; // Piece Sold
+                worksheet.Column(11).Width = 16; // Transaction Count
+                worksheet.Column(12).Width = 15; // Revenue
+                worksheet.Column(13).Width = 14; // Current Stock
+                worksheet.Column(14).Width = 14; // Stock Status
+                worksheet.Column(15).Width = 14; // Trend
+
+                return package.GetAsByteArray();
+            }
+        }
 
 
-    #endregion
+        #endregion
 
-    #region AdminDashboard
-    public async Task<decimal> GetTodaySalesAmountAsync()
+        #region AdminDashboard
+        public async Task<decimal> GetTodaySalesAmountAsync()
     {
       var todaySales = await _getRepo.GetTodaySalesAmountAsync();
       if (todaySales <= 0)

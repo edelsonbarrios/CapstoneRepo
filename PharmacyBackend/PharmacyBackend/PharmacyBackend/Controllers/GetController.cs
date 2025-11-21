@@ -827,7 +827,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error generating sales report: {ex.Message}" });
             }
         }
-        
+
         [HttpGet("reports/sales/export")]
         public async Task<IActionResult> ExportSalesReport(
             [FromQuery] DateTime? startDate = null,
@@ -837,19 +837,29 @@ namespace PharmacyBackend.Controllers
         {
             try
             {
+                // Get the current logged-in user's ID from claims
+                var userIdClaim = User.FindFirst("EmployeeId") ?? User.FindFirst("userId") ?? User.FindFirst("sub");
+                int currentLoggedInUserId = 0;
+
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    currentLoggedInUserId = userId;
+                }
+
                 // Convert to UTC only if dates are provided
-                DateTime? startDateUtc = startDate.HasValue 
-                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
                     : null;
-                DateTime? endDateUtc = endDate.HasValue 
-                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
                     : null;
 
                 var excelData = await _getService.ExportSalesReportToExcelAsync(
                     startDateUtc,
                     endDateUtc,
                     employeeId,
-                    paymentMethod);
+                    paymentMethod,
+                    currentLoggedInUserId > 0 ? currentLoggedInUserId : null);
 
                 var fileName = startDate.HasValue && endDate.HasValue
                     ? $"SalesReport_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}.xlsx"
@@ -864,7 +874,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting sales report: {ex.Message}" });
             }
         }
-        
+
 
         //Inventory - Reports
 
@@ -897,7 +907,7 @@ namespace PharmacyBackend.Controllers
             }
         }
 
-        
+
         [HttpGet("reports/inventory/export")]
         public async Task<IActionResult> ExportInventoryReport(
             [FromQuery] DateTime? startDate = null,
@@ -906,18 +916,29 @@ namespace PharmacyBackend.Controllers
         {
             try
             {
+                // Get the current logged-in user's ID from claims
+                var userIdClaim = User.FindFirst("EmployeeId") ?? User.FindFirst("userId") ?? User.FindFirst("sub");
+                int currentLoggedInUserId = 0;
+
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    currentLoggedInUserId = userId;
+                }
+
                 // Convert to UTC only if dates are provided
-                DateTime? startDateUtc = startDate.HasValue 
-                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
+                DateTime? startDateUtc = startDate.HasValue
+                    ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc)
                     : null;
-                DateTime? endDateUtc = endDate.HasValue 
-                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc) 
+                DateTime? endDateUtc = endDate.HasValue
+                    ? DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc)
                     : null;
 
+                // FIXED: Parameters are now in correct order matching the service method
                 var excelData = await _getService.ExportInventoryReportToExcelAsync(
-                    startDateUtc,
-                    endDateUtc,
-                    filterType);
+                    startDateUtc,           // DateTime? startDate
+                    endDateUtc,             // DateTime? endDate
+                    filterType,             // string filterType
+                    currentLoggedInUserId > 0 ? currentLoggedInUserId : null); // int? currentLoggedInUserId
 
                 var fileName = startDate.HasValue && endDate.HasValue
                     ? $"InventoryReport_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}_{filterType}.xlsx"
@@ -932,7 +953,7 @@ namespace PharmacyBackend.Controllers
                 return StatusCode(500, new { message = $"Error exporting inventory report: {ex.Message}" });
             }
         }
-        
+
 
         //Fast-Moving Products
 
@@ -974,6 +995,14 @@ namespace PharmacyBackend.Controllers
         {
             try
             {
+                var userIdClaim = User.FindFirst("EmployeeId") ?? User.FindFirst("userId") ?? User.FindFirst("sub");
+                int currentLoggedInUserId = 0;
+
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    currentLoggedInUserId = userId;
+                }
+
                 // Convert to UTC only if dates are provided
                 DateTime? startDateUtc = startDate.HasValue 
                     ? DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc) 
@@ -985,7 +1014,8 @@ namespace PharmacyBackend.Controllers
                 var excelData = await _getService.ExportFastMovingProductsToExcelAsync(
                     startDateUtc,
                     endDateUtc,
-                    topN);
+                    topN,
+                    currentLoggedInUserId > 0 ? currentLoggedInUserId : null);
 
                 var fileName = startDate.HasValue && endDate.HasValue
                     ? $"FastMovingProducts_{startDate.Value:yyyyMMdd}_{endDate.Value:yyyyMMdd}_Top{topN}.xlsx"

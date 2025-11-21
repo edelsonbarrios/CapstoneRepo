@@ -181,7 +181,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
             DateTime? startDate = null,
             DateTime? endDate = null,
             int? employeeId = null,
-            string paymentMethod = null);
+            string paymentMethod = null,
+            int? currentLoggedInUserId = null);
 
         // Inventory Reports
         Task<InventoryReportDto> GetInventoryReportAsync(
@@ -192,7 +193,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         Task<byte[]> ExportInventoryReportToExcelAsync(
             DateTime? startDate =null,
             DateTime? endDate = null,
-            string filterType = "all");
+            string filterType = "all",
+            int? currentLoggedInUserId = null);
 
         // Fast-Moving Products
         Task<FastMovingProductReportDto> GetFastMovingProductsReportAsync(
@@ -203,7 +205,8 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         Task<byte[]> ExportFastMovingProductsToExcelAsync(
             DateTime? startDate = null,
             DateTime? endDate = null,
-            int topN = 20);
+            int topN = 20,
+            int? currentLoggedInUserId = null);
         #endregion
 
         #region AdminDashboard
