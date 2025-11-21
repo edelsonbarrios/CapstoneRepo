@@ -100,22 +100,24 @@
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin: 0.5rem 0;
-    font-size: 0.62rem;
 
     th,
     td {
-      padding: 0.25rem 0.15rem;
+      padding: 0.2rem;
       word-wrap: break-word;
       overflow-wrap: break-word;
       border-bottom: 1px dotted #ccc;
+    }
+
+    td {
+      font-size: 0.5rem;
     }
 
     th {
       background: #000;
       color: #fff;
       font-weight: 700;
-      font-size: 0.6rem;
+      font-size: 0.5rem;
       text-transform: uppercase;
       text-align: left;
     }
@@ -125,11 +127,11 @@
       text-align: right;
     }
 
-    th:nth-child(1), td:nth-child(1) { width: 38%; }
+    th:nth-child(1), td:nth-child(1) { width: 20%; }
     th:nth-child(2), td:nth-child(2) { width: 15%; }
     th:nth-child(3), td:nth-child(3) { width: 15%; }
     th:nth-child(4), td:nth-child(4) { width: 15%; }
-    th:nth-child(5), td:nth-child(5) { width: 17%; }
+    th:nth-child(5), td:nth-child(5) { width: 20%; }
   }
 
   .pagination-controls {
