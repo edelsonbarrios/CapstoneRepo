@@ -83,8 +83,8 @@
           <span class="selected-value" *ngIf="!selectedDiscount">No Discount</span>
           <span class="selected-value" *ngIf="selectedDiscount">
             {{ getDiscountDisplayText() }}
-            <span class="discount-type-badge" [class.percentage]="selectedDiscount?.discountType === 'Percentage'" [class.fixed]="selectedDiscount?.discountType === 'Fixed'">
-              {{ selectedDiscount?.discountType === 'Percentage' ? 'Percentage' : 'FIXED' }}
+            <span class="discount-type-badge" [class.percentage]="selectedDiscount.discountType === 'Percentage'" [class.fixed]="selectedDiscount.discountType === 'Fixed'">
+              {{ selectedDiscount.discountType === 'Percentage' ? 'Percentage' : 'FIXED' }}
             </span>
           </span>
           <select id="discount" [(ngModel)]="selectedDiscount" (ngModelChange)="onPaymentChange()">

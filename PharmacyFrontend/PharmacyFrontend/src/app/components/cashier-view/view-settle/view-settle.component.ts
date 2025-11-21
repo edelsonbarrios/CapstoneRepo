@@ -246,7 +246,6 @@ export class ViewSettleComponent implements OnInit {
   }
 
   closeModal() {
-    // Don't emit modalClosed - just close the modal without clearing cart
     this.modalClosed.emit();
   }
 }
