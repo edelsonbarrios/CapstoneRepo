@@ -1,3 +1,4 @@
+import { Discount } from "../discount-models/discount";
 import { Product } from "../product-models/product";
 
 export interface CartItem {
@@ -11,4 +12,8 @@ export interface CartItem {
   categoryName: string;
   brandName: string;
   formulationName: string;
+  quantityError?: string;
+
+  selectedDiscount?: Discount | null;
+  itemDiscountAmount: number;
 }

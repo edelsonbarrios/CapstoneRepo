@@ -6,5 +6,7 @@ export class SalesItem {
   unitType: string = '';
   quantity: number = 0;
   unitPrice: number = 0;
+  discountId : number | null = null;
+  discountAmount: number = 0;
   subTotal: number = 0;
 }

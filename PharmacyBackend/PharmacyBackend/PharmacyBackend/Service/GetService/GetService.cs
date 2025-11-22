@@ -655,6 +655,25 @@ namespace PharmacyBackend.Service.GetService
         IsActive = d.IsActive
       };
     }
+
+    public async Task<List<DiscountDto>> GetAllAvailableDiscountsAsync() 
+    {
+      var discounts = await _getRepo.GetAllAvailableDiscountsAsync();
+      
+      if(!discounts.Any() || discounts.Count() == 0)
+        return new List<DiscountDto>();
+
+      return discounts.Select(d => new DiscountDto {
+          Id = d.Id,
+          DiscountName = d.DiscountName,
+          DiscountType = d.DiscountType,
+          DiscountAmount = d.DiscountAmount,
+          StartDate = d.StartDate,
+          EndDate = d.EndDate,
+          IsActive = d.IsActive,
+          }).ToList();
+    }
+
     #endregion region
 
     #region Products

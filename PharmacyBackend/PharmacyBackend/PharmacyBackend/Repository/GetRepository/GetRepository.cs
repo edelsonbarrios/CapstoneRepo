@@ -583,6 +583,18 @@ namespace PharmacyBackend.Repository.GET
                 .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.Id == id && d.IsActive == true);
         }
+
+        public async Task<List<Discount>> GetAllAvailableDiscountsAsync() 
+        {
+
+          var now = DateTime.UtcNow.Date.AddHours(8);
+
+          return await _context.Discounts
+            .Where(d => d.IsActive &&
+                (d.StartDate == null || d.StartDate <= now) &&
+                (d.EndDate == null || d.EndDate >= now))
+            .ToListAsync();
+        }
         #endregion
 
         #region Product

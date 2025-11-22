@@ -88,6 +88,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.GetInterface
         #region Discount
         public Task<IEnumerable<DiscountDto>> GetAllDiscountAsync();
         public Task<DiscountDto> GetDiscountByIdAsync(int id);
+        public Task<List<DiscountDto>> GetAllAvailableDiscountsAsync();
         #endregion
 
         #region Product
