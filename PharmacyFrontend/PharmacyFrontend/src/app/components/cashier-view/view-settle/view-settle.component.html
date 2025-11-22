@@ -25,6 +25,7 @@
           <th>Category</th>
           <th>Brand</th>
           <th>Formulation</th>
+          <th>Unit</th>
           <th>Qty</th>
           <th>Price</th>
           <th>Subtotal</th>
@@ -37,7 +38,42 @@
           <td>{{ item.categoryName }}</td>
           <td>{{ item.brandName }}</td>
           <td>{{ item.formulationName }}</td>
-          <td>{{ item.quantity }}</td>
+          
+          <!-- EDITABLE UNIT TYPE -->
+          <td>
+            <select [(ngModel)]="item.unitType" 
+                    (ngModelChange)="onCartItemUnitTypeChange(item)"
+                    class="unit-select">
+              <option *ngFor="let unit of getAvailableUnitMeasurements(item)" [value]="unit">
+                {{ unit }}
+              </option>
+            </select>
+          </td>
+          
+          <!-- EDITABLE QUANTITY -->
+          <td>
+            <div class="qty-control">
+              <button class="qty-btn" (click)="decrementQuantity(item)">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <div class="qty-input-wrapper">
+                <input type="number" 
+                       min="1" 
+                       [(ngModel)]="item.quantity" 
+                       (ngModelChange)="onCartItemChange(item)"
+                       class="qty-input" 
+                       [class.error]="item.quantityError" />
+                <div class="qty-error" *ngIf="item.quantityError">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <span>{{ item.quantityError }}</span>
+                </div>
+              </div>
+              <button class="qty-btn" (click)="incrementQuantity(item)">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </td>
+          
           <td>{{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}</td>
           <td>{{ item.quantity * (item.unitPrice || 0) | currency:'PHP':'symbol':'1.2-2' }}</td>
         </tr>
@@ -172,12 +208,23 @@
   </div>
 </div>
 
+<!-- ERROR OVERLAYS -->
 <div class="error-overlay" *ngIf="refNumErrorMessage">
   <div class="error-alert">
     <div class="alert-icon">X</div>
     <p class="alert-message">{{ refNumErrorMessage }}</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeRefNumErrorMessage()">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="error-overlay" *ngIf="errorMessage">
+  <div class="error-alert">
+    <div class="alert-icon">X</div>
+    <p class="alert-message">{{ errorMessage }}</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeErrorMessage()">OK</button>
     </div>
   </div>
 </div>

@@ -199,9 +199,15 @@
 </main>
 
 <div class="modal-overlay" *ngIf="viewSettle">
-  <app-view-settle *ngIf="viewSettle" [cartItems]="selectedProducts" [newInvoice]="newInvoice"
-    [subtotal]="getTotalPrice()" (paymentConfirmed)="handlePayment($event)"
-    (modalClosed)="closeViewSettle()"></app-view-settle>
+  <app-view-settle 
+    *ngIf="viewSettle" 
+    [cartItems]="selectedProducts" 
+    [newInvoice]="newInvoice"
+    [subtotal]="getTotalPrice()" 
+    [products]="products"
+    (paymentConfirmed)="handlePayment($event)"
+    (modalClosed)="closeViewSettle()">
+  </app-view-settle>
 </div>
 
 <div class="modal-overlay" *ngIf="receipt">
