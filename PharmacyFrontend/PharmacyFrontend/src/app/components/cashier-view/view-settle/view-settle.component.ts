@@ -21,6 +21,8 @@ export class ViewSettleComponent implements OnInit {
   @Input() cartItems: CartItem[] = [];
   @Input() subtotal: number = 0;
   @Input() newInvoice: string = '';
+  @Input() products: any[] = []; // Add this to receive products from parent
+  
   vats: VAT[] = [];
   discounts: Discount[] = [];
   loggedInEmployee: Employee = new Employee();
@@ -28,12 +30,13 @@ export class ViewSettleComponent implements OnInit {
   selectedDiscount: Discount | null = null;
   currentPage: number = 1;
   totalPages: number = 0;
-  itemsPerPage: number = 2;
+  itemsPerPage: number = 5;
   paginateItems: CartItem[] = [];
   paymentMethods: string[] = ['Cash', 'e-Payment'];
   selectedPaymentMethod: string = 'Cash';
   refNum: string = '';
   refNumErrorMessage: string = '';
+  errorMessage: string = '';
 
   @Output() paymentConfirmed = new EventEmitter<any>();
   @Output() modalClosed = new EventEmitter<void>();
@@ -100,9 +103,140 @@ export class ViewSettleComponent implements OnInit {
     });
   }
 
-  /**
-   * Calculate discount amount based on discount type
-   */
+  // NEW: Get available unit measurements for a product
+  getAvailableUnitMeasurements(item: any): string[] {
+    if (!item) return [];
+    const unitMeasurement = item.unitMeasurement || item.product?.unitMeasurement;
+    
+    if (unitMeasurement === 'Multi-Level') {
+      return ['Piece', 'Sheet', 'Box'];
+    } else if (unitMeasurement === 'Dual-Level') {
+      return ['Piece', 'Box'];
+    } else {
+      return ['Piece'];
+    }
+  }
+
+  // NEW: Get max quantity for validation
+  getMaxQuantity(item: any): number {
+    const product = this.products.find((p: any) => p.productID === item.productID);
+    if (!product) return Infinity;
+
+    switch (item.unitType) {
+      case 'Box':
+        return product.boxQuantity || 0;
+      case 'Sheet':
+        return product.sheetQuantity || 0;
+      case 'Piece':
+        return product.pieceQuantity || 0;
+      default:
+        return Infinity;
+    }
+  }
+
+  // NEW: Resolve unit price from product
+  resolveUnitPriceFromProduct(product: any, unit: 'Box' | 'Sheet' | 'Piece'): number {
+    const boxPrice = product.boxPrice ?? 0;
+    const sheetPrice =
+      product.sheetPrice ??
+      (product.sheetsPerBox ? boxPrice / product.sheetsPerBox : undefined);
+    const piecePrice =
+      product.piecePrice ??
+      (product.piecesPerSheet
+        ? (sheetPrice ?? boxPrice / (product.sheetsPerBox ?? 1)) / product.piecesPerSheet
+        : undefined);
+
+    switch (unit) {
+      case 'Box':
+        return boxPrice;
+      case 'Sheet':
+        return sheetPrice ?? boxPrice;
+      case 'Piece':
+        return piecePrice ?? sheetPrice ?? boxPrice;
+      default:
+        return boxPrice;
+    }
+  }
+
+  // NEW: Handle unit type change
+  onCartItemUnitTypeChange(item: any) {
+    const product = this.products.find((p: any) => p.productID === item.productID);
+    if (!product) return;
+
+    const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
+    item.unitPrice = resolved;
+
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity > max) {
+      item.quantity = max;
+      this.errorMessage = `Maximum available quantity for ${item.unitType} is ${max}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 3000);
+    }
+
+    // Recalculate subtotal
+    this.recalculateSubtotal();
+    this.onPaymentChange();
+  }
+
+  // NEW: Handle quantity change
+  onCartItemChange(item: any) {
+    if (item.quantity && !Number.isInteger(Number(item.quantity))) {
+      item.quantityError = 'Whole number only';
+      return;
+    } else {
+      item.quantityError = '';
+    }
+
+    if (!item.quantity || item.quantity < 1) item.quantity = 1;
+
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity > max) {
+      item.quantity = max;
+      this.errorMessage = `Maximum available quantity for ${item.unitType} is ${max}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 3000);
+    }
+
+    // Recalculate subtotal
+    this.recalculateSubtotal();
+    this.onPaymentChange();
+  }
+
+  // NEW: Increment quantity
+  incrementQuantity(item: any) {
+    const max = this.getMaxQuantity(item);
+    if (max !== Infinity && item.quantity >= max) {
+      this.errorMessage = `Maximum available quantity for ${item.unitType} is ${max}`;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 3000);
+      return;
+    }
+    item.quantity++;
+    this.recalculateSubtotal();
+    this.onPaymentChange();
+  }
+
+  // NEW: Decrement quantity
+  decrementQuantity(item: any) {
+    if (item.quantity > 1) {
+      item.quantity--;
+      this.recalculateSubtotal();
+      this.onPaymentChange();
+    }
+  }
+
+  // NEW: Recalculate subtotal when items change
+  recalculateSubtotal() {
+    this.subtotal = this.cartItems.reduce(
+      (acc, item) => acc + item.unitPrice * (item.quantity || 0),
+      0
+    );
+  }
+
   calculateDiscountAmount(): number {
     if (!this.selectedDiscount) return 0;
 
@@ -110,54 +244,41 @@ export class ViewSettleComponent implements OnInit {
     let discountAmount = 0;
 
     if (this.selectedDiscount.discountType === 'Percentage') {
-      // Percentage-based discount
       discountAmount = this.subtotal * ((this.selectedDiscount.discountAmount || 0) / 100);
     } else if (this.selectedDiscount.discountType === 'Fixed') {
-      // Fixed amount discount
       discountAmount = this.selectedDiscount.discountAmount || 0;
     }
 
-    // Ensure discount doesn't exceed subtotal + VAT
     return Math.min(discountAmount, subtotalWithVat);
   }
 
-  /**
-   * Calculate VAT amount
-   */
   calculateVatAmount(): number {
     return this.subtotal * ((this.selectedVat?.vatRate || 0) / 100);
   }
 
-  /**
-   * Calculate total amount (Subtotal + VAT - Discount)
-   * Ensures total is never negative
-   */
   calculateTotals(): number {
     const vatAmount = this.calculateVatAmount();
     const discountAmount = this.calculateDiscountAmount();
     const total = this.subtotal + vatAmount - discountAmount;
     
-    // Ensure total is never negative
     return Math.max(total, 0);
   }
 
-  /**
-   * Format discount display text
-   */
   getDiscountDisplayText(): string {
     if (!this.selectedDiscount) return 'No Discount';
 
     if (this.selectedDiscount.discountType === 'Percentage') {
       return `${this.selectedDiscount.discountName} (${this.selectedDiscount.discountAmount}%)`;
-    } else {
-      return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount.toFixed(2)})`;
+    } else if (this.selectedDiscount.discountType === 'Fixed') {
+      return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount?.toFixed(2) || '0.00'})`;
     }
+    
+    return this.selectedDiscount.discountName;
   }
 
   onPaymentChange() {
     const total = this.calculateTotals();
     
-    // If total is 0 (discount exceeds total), set payment to 1 peso
     if (total === 0) {
       this.payment = 1;
       this.change = 0;
@@ -170,8 +291,11 @@ export class ViewSettleComponent implements OnInit {
     this.refNumErrorMessage = '';
   }
 
+  closeErrorMessage() {
+    this.errorMessage = '';
+  }
+
   confirmPayment() {
-    // Validate reference number only for e-Payment
     if (this.selectedPaymentMethod === 'e-Payment') {
       if (!this.refNum || this.refNum.trim() === '') {
         this.refNumErrorMessage = 'Reference number is required for e-Payment';
@@ -192,7 +316,6 @@ export class ViewSettleComponent implements OnInit {
         },
       });
     } else {
-      // For cash payment, submit directly
       this.submitPayment();
     }
   }

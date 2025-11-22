@@ -405,6 +405,9 @@ export class CashierDashboardComponent implements OnInit {
         console.log(JSON.stringify(event));
         this.getAllProducts();
         this.generateNewInvoiceNumber();
+        this.clearSelection(); // Clear cart only after successful payment
+        this.closeViewSettle();
+        this.finishedTransac = true;
       },
       error: (err) => {
         console.error('Full error object:', err);
@@ -433,19 +436,21 @@ export class CashierDashboardComponent implements OnInit {
         this.errorMessage = errorMsg;
       },
     });
-
-    this.clearSelection();
-    this.closeViewSettle();
   }
 
   openViewSettleForm() {
+  // Validate that cart is not empty
+  if (this.selectedProducts.length === 0) {
+    this.errorMessage = 'Cannot proceed to settlement. Please add items to cart first.';
+    return;
+  }
     this.viewSettle = new Product();
   }
 
   closeViewSettle() {
     this.viewSettle = null;
     this.getAllProducts();
-    this.clearSelection();
+    // Don't clear cart here - only clear after successful payment in handlePayment()
   }
 
   openPrintReceiptForm() {
