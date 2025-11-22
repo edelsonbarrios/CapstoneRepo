@@ -439,6 +439,11 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   openViewSettleForm() {
+  // Validate that cart is not empty
+  if (this.selectedProducts.length === 0) {
+    this.errorMessage = 'Cannot proceed to settlement. Please add items to cart first.';
+    return;
+  }
     this.viewSettle = new Product();
   }
 
