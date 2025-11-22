@@ -1,3 +1,4 @@
+// cashier-dashboard.component.scss
 .wrapper.modern {
   height: 100%;
   padding: 1rem;
@@ -354,12 +355,13 @@
             white-space: nowrap;
 
             &:nth-child(1) { width: 3%; }
-            &:nth-child(2) { width: 35%; }
-            &:nth-child(3) { width: 10%; }
-            &:nth-child(4) { width: 15%; }
-            &:nth-child(5) { width: 12%; }
-            &:nth-child(6) { width: 12%; }
-            &:nth-child(7) { width: 8%; }
+            &:nth-child(2) { width: 28%; }
+            &:nth-child(3) { width: 9%; }
+            &:nth-child(4) { width: 14%; }
+            &:nth-child(5) { width: 11%; }
+            &:nth-child(6) { width: 16%; } // Discount column
+            &:nth-child(7) { width: 12%; }
+            &:nth-child(8) { width: 7%; }
           }
 
           tbody tr {
@@ -404,12 +406,98 @@
               text-align: center;
             }
 
+            // NEW: Discount Cell Styles
+            &.discount-cell {
+              min-width: 150px;
+              padding: 8px;
+
+              .discount-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                align-items: stretch;
+              }
+
+              .discount-select {
+                padding: 5px 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 11px;
+                background-color: white;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                width: 100%;
+
+                &:hover {
+                  border-color: #4CAF50;
+                }
+
+                &:focus {
+                  outline: none;
+                  border-color: #4CAF50;
+                  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+                }
+
+                option {
+                  padding: 6px;
+                }
+              }
+
+              .discount-amount {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 3px 7px;
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+                border-radius: 4px;
+                color: white;
+                font-size: 10px;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+
+                i {
+                  font-size: 9px;
+                  opacity: 0.9;
+                }
+
+                .discount-value {
+                  flex: 1;
+                  text-align: center;
+                  letter-spacing: 0.3px;
+                }
+              }
+            }
+
             &.subtotal-cell {
               font-weight: 700;
               color: #006dba;
               font-size: 0.75rem;
               white-space: nowrap;
               text-align: center;
+
+              .subtotal-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+                align-items: flex-end;
+
+                .original-price {
+                  font-size: 10px;
+                  color: #999;
+                  text-decoration: line-through;
+                }
+
+                .final-price {
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: #333;
+
+                  &.discounted {
+                    color: #4CAF50;
+                    font-weight: 700;
+                  }
+                }
+              }
             }
 
             &.action-cell {
@@ -792,6 +880,18 @@
   }
 }
 
+// Animation for discount badge
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -981,6 +1081,20 @@
       max-height: 50vh;
     }
   }
+
+  .discount-cell {
+    min-width: 130px;
+
+    .discount-select {
+      font-size: 10px;
+      padding: 4px 6px;
+    }
+
+    .discount-amount {
+      font-size: 9px;
+      padding: 2px 5px;
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -1065,6 +1179,20 @@
           }
         }
       }
+    }
+  }
+
+  .discount-cell {
+    min-width: 120px;
+
+    .discount-select {
+      font-size: 9px;
+      padding: 3px 5px;
+    }
+
+    .discount-amount {
+      font-size: 8px;
+      padding: 2px 4px;
     }
   }
 }

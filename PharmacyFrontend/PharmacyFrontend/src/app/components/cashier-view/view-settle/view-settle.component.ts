@@ -22,7 +22,7 @@ export class ViewSettleComponent implements OnInit {
   @Input() subtotal: number = 0;
   @Input() newInvoice: string = '';
   @Input() products: any[] = []; // Add this to receive products from parent
-  
+
   vats: VAT[] = [];
   discounts: Discount[] = [];
   loggedInEmployee: Employee = new Employee();
@@ -107,7 +107,7 @@ export class ViewSettleComponent implements OnInit {
   getAvailableUnitMeasurements(item: any): string[] {
     if (!item) return [];
     const unitMeasurement = item.unitMeasurement || item.product?.unitMeasurement;
-    
+
     if (unitMeasurement === 'Multi-Level') {
       return ['Piece', 'Sheet', 'Box'];
     } else if (unitMeasurement === 'Dual-Level') {
@@ -260,7 +260,7 @@ export class ViewSettleComponent implements OnInit {
     const vatAmount = this.calculateVatAmount();
     const discountAmount = this.calculateDiscountAmount();
     const total = this.subtotal + vatAmount - discountAmount;
-    
+
     return Math.max(total, 0);
   }
 
@@ -272,13 +272,13 @@ export class ViewSettleComponent implements OnInit {
     } else if (this.selectedDiscount.discountType === 'Fixed') {
       return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount?.toFixed(2) || '0.00'})`;
     }
-    
+
     return this.selectedDiscount.discountName;
   }
 
   onPaymentChange() {
     const total = this.calculateTotals();
-    
+
     if (total === 0) {
       this.payment = 1;
       this.change = 0;

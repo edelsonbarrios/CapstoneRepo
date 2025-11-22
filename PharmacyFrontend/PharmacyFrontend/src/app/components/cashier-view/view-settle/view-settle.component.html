@@ -38,10 +38,10 @@
           <td>{{ item.categoryName }}</td>
           <td>{{ item.brandName }}</td>
           <td>{{ item.formulationName }}</td>
-          
+
           <!-- EDITABLE UNIT TYPE -->
           <td>
-            <select [(ngModel)]="item.unitType" 
+            <select [(ngModel)]="item.unitType"
                     (ngModelChange)="onCartItemUnitTypeChange(item)"
                     class="unit-select">
               <option *ngFor="let unit of getAvailableUnitMeasurements(item)" [value]="unit">
@@ -49,7 +49,7 @@
               </option>
             </select>
           </td>
-          
+
           <!-- EDITABLE QUANTITY -->
           <td>
             <div class="qty-control">
@@ -57,11 +57,11 @@
                 <i class="fa-solid fa-minus"></i>
               </button>
               <div class="qty-input-wrapper">
-                <input type="number" 
-                       min="1" 
-                       [(ngModel)]="item.quantity" 
+                <input type="number"
+                       min="1"
+                       [(ngModel)]="item.quantity"
                        (ngModelChange)="onCartItemChange(item)"
-                       class="qty-input" 
+                       class="qty-input"
                        [class.error]="item.quantityError" />
                 <div class="qty-error" *ngIf="item.quantityError">
                   <i class="fa-solid fa-circle-exclamation"></i>
@@ -73,7 +73,7 @@
               </button>
             </div>
           </td>
-          
+
           <td>{{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}</td>
           <td>{{ item.quantity * (item.unitPrice || 0) | currency:'PHP':'symbol':'1.2-2' }}</td>
         </tr>
@@ -112,7 +112,7 @@
         </span>
       </div>
 
-      
+
       <div class="summary-row">
         <span class="label">Discount:</span>
         <div class="input-group">

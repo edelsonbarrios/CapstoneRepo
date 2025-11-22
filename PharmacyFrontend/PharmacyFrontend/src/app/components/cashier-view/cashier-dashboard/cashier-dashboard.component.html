@@ -1,3 +1,4 @@
+<!-- cashier-dashboard.component.html -->
 <main class="wrapper modern">
   <div class="containers">
     <!-- LEFT: Product Display -->
@@ -84,6 +85,7 @@
               <th>Unit</th>
               <th>Qty</th>
               <th>Unit Price</th>
+              <th>Discount</th>
               <th>Subtotal</th>
               <th>Action</th>
             </tr>
@@ -143,7 +145,41 @@
               <td class="price-cell">
                 {{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}
               </td>
-              <td class="subtotal-cell">{{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}</td>
+
+              <!-- NEW: DISCOUNT COLUMN -->
+              <td class="discount-cell">
+                <div class="discount-wrapper">
+                  <select [(ngModel)]="item.selectedDiscount"
+                          (ngModelChange)="onItemDiscountChange(item)"
+                          class="discount-select">
+                    <option [ngValue]="null">No Discount</option>
+                    <option *ngFor="let discount of discounts" [ngValue]="discount">
+                      {{ discount.discountName }}
+                      <ng-container *ngIf="discount.discountType === 'Percentage'">
+                        ({{ discount.discountAmount }}%)
+                      </ng-container>
+                      <ng-container *ngIf="discount.discountType === 'Fixed'">
+                        (₱{{ discount.discountAmount | number:'1.2-2' }})
+                      </ng-container>
+                    </option>
+                  </select>
+                  <div class="discount-amount" *ngIf="item.itemDiscountAmount > 0">
+                    <i class="fa-solid fa-tag"></i>
+                    <span class="discount-value">-{{ item.itemDiscountAmount | currency:'PHP':'symbol':'1.2-2' }}</span>
+                  </div>
+                </div>
+              </td>
+
+              <td class="subtotal-cell">
+                <div class="subtotal-wrapper">
+                  <span class="original-price" *ngIf="item.itemDiscountAmount > 0">
+                    {{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}
+                  </span>
+                  <span class="final-price" [class.discounted]="item.itemDiscountAmount > 0">
+                    {{ ((item.quantity * item.unitPrice) - (item.itemDiscountAmount || 0)) | currency:'PHP':'symbol':'1.2-2' }}
+                  </span>
+                </div>
+              </td>
               <td class="action-cell">
                 <button class="remove-btn" (click)="removeFromCart(i)">
                   <i class="fa-solid fa-trash"></i>
@@ -152,7 +188,7 @@
             </tr>
 
             <tr *ngIf="selectedProducts.length === 0">
-              <td colspan="7" class="no-cart">
+              <td colspan="8" class="no-cart">
                 <i class="fa-solid fa-cart-arrow-down"></i>
                 <p>No items in cart</p>
               </td>
@@ -199,12 +235,13 @@
 </main>
 
 <div class="modal-overlay" *ngIf="viewSettle">
-  <app-view-settle 
-    *ngIf="viewSettle" 
-    [cartItems]="selectedProducts" 
+  <app-view-settle
+    *ngIf="viewSettle"
+    [cartItems]="selectedProducts"
     [newInvoice]="newInvoice"
-    [subtotal]="getTotalPrice()" 
+    [subtotal]="getTotalPrice()"
     [products]="products"
+    [discounts]="discounts"
     (paymentConfirmed)="handlePayment($event)"
     (modalClosed)="closeViewSettle()">
   </app-view-settle>

@@ -1,3 +1,4 @@
+// cashier-dashboard.component.ts
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Product } from '../../../models/product-models/product';
 import { Employee } from '../../../models/employee-models/employee';
 import { Category } from '../../../models/category-models/category';
+import { Discount } from '../../../models/discount-models/discount';
 import { LogInToken } from '../../shared/token';
 import { GetService } from '../../../services/GetService/get.service';
 import { PostService } from '../../../services/PostService/post.service';
@@ -39,6 +41,9 @@ export class CashierDashboardComponent implements OnInit {
   timer: any;
   errorMessage: string = '';
 
+  // NEW: Add discounts array
+  discounts: Discount[] = [];
+
   products: (Product & {
     selected?: boolean;
     quantity?: number;
@@ -69,6 +74,9 @@ export class CashierDashboardComponent implements OnInit {
     unitPrice: number;
     unitMeasurement: string;
     quantityError?: string;
+    selectedDiscount?: Discount | null;
+    itemDiscountAmount: number;
+    product?: any;
   }[] = [];
 
   searchTerm: string = '';
@@ -84,11 +92,22 @@ export class CashierDashboardComponent implements OnInit {
     this.getLoggedInUser();
     this.getAllProducts();
     this.getAllCategories();
+    this.getAllDiscounts();
     this.generateNewInvoiceNumber();
 
     this.timer = setInterval(() => {
       this.timeNow = new Date();
     }, 1000);
+  }
+
+  // NEW: Load all discounts
+  getAllDiscounts() {
+    this.getService.getAllDiscountAsync().subscribe({
+      next: (res) => {
+        this.discounts = res;
+      },
+      error: (err) => console.error('Error loading discounts:', err),
+    });
   }
 
   resetComponent(): void {
@@ -149,12 +168,6 @@ export class CashierDashboardComponent implements OnInit {
           piecePerBox: p.piecePerBox,
           reorderLevel: p.reorderLevel,
         }));
-
-        console.log('Products loaded:', this.products.map(p => ({
-          id: p.productID,
-          name: p.productName,
-          category: p.categoryName
-        })));
       },
       error: (err) => console.error(err.error),
     });
@@ -265,16 +278,37 @@ export class CashierDashboardComponent implements OnInit {
           unitPrice: price,
           unitMeasurement: p.unitMeasurement,
           batchNumber: p.batchNumber || '',
+          selectedDiscount: null,
+          itemDiscountAmount: 0,
+          product: p.product,
+          quantityError: undefined,
         });
-        console.log(JSON.stringify(this.selectedProducts));
       }
 
       p.selected = false;
       p.quantity = 0;
       p.tempUnitType = 'Piece';
     });
+  }
 
-    console.log('Cart contents:', this.selectedProducts);
+  // NEW: Calculate item discount amount
+  calculateItemDiscountAmount(item: any): number {
+    if (!item.selectedDiscount) return 0;
+
+    const itemSubtotal = item.quantity * item.unitPrice;
+
+    if (item.selectedDiscount.discountType === 'Percentage') {
+      return itemSubtotal * (item.selectedDiscount.discountAmount / 100);
+    } else if (item.selectedDiscount.discountType === 'Fixed') {
+      return Math.min(item.selectedDiscount.discountAmount, itemSubtotal);
+    }
+
+    return 0;
+  }
+
+  // NEW: Handle item discount change
+  onItemDiscountChange(item: any) {
+    item.itemDiscountAmount = this.calculateItemDiscountAmount(item);
   }
 
   incrementQuantity(item: any) {
@@ -287,11 +321,13 @@ export class CashierDashboardComponent implements OnInit {
       return;
     }
     item.quantity++;
+    this.onItemDiscountChange(item);
   }
 
   decrementQuantity(item: any) {
     if (item.quantity > 1) {
       item.quantity--;
+      this.onItemDiscountChange(item);
     }
   }
 
@@ -319,6 +355,8 @@ export class CashierDashboardComponent implements OnInit {
         this.errorMessage = '';
       }, 3000);
     }
+
+    this.onItemDiscountChange(item);
   }
 
   onCartItemUnitTypeChange(item: any) {
@@ -336,6 +374,8 @@ export class CashierDashboardComponent implements OnInit {
         this.errorMessage = '';
       }, 3000);
     }
+
+    this.onItemDiscountChange(item);
   }
 
   removeFromCart(index: number) {
@@ -350,11 +390,13 @@ export class CashierDashboardComponent implements OnInit {
     return this.selectedProducts.reduce((acc, p) => acc + (p.quantity || 0), 0);
   }
 
+  // UPDATED: Subtract item discounts from total
   getTotalPrice(): number {
-    return this.selectedProducts.reduce(
-      (acc, p) => acc + p.unitPrice * (p.quantity || 0),
-      0
-    );
+    return this.selectedProducts.reduce((acc, p) => {
+      const itemSubtotal = p.unitPrice * (p.quantity || 0);
+      const itemDiscount = p.itemDiscountAmount || 0;
+      return acc + (itemSubtotal - itemDiscount);
+    }, 0);
   }
 
   getGrossPrice(): number {
@@ -384,35 +426,17 @@ export class CashierDashboardComponent implements OnInit {
       return;
     }
 
-    const invoiceNumber = this.newInvoice;
-
-    const items = this.selectedProducts.map((sp) => ({
-      ProductId: sp.productID,
-      UnitType: sp.unitType,
-      Quantity: sp.quantity,
-      UnitPrice: sp.unitPrice,
-      Subtotal: +(sp.quantity * sp.unitPrice),
-    }));
-
-    const totalAmount = items.reduce((acc, it) => acc + it.Subtotal, 0);
-    const discountAmount = event?.discountAmount ?? 0;
-    const vatAmount = event?.vatAmount ?? 0;
-
     this.postService.createSalesTransactionAsync(event).subscribe({
       next: () => {
         this.receipt = event;
-        console.log('This is my receipt data:', this.receipt);
-        console.log(JSON.stringify(event));
         this.getAllProducts();
         this.generateNewInvoiceNumber();
-        this.clearSelection(); // Clear cart only after successful payment
+        this.clearSelection();
         this.closeViewSettle();
         this.finishedTransac = true;
       },
       error: (err) => {
         console.error('Full error object:', err);
-        console.error('Error status:', err.status);
-        console.error('Error error:', err.error);
 
         let errorMsg = 'An unexpected error occurred';
 
@@ -439,18 +463,16 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   openViewSettleForm() {
-  // Validate that cart is not empty
-  if (this.selectedProducts.length === 0) {
-    this.errorMessage = 'Cannot proceed to settlement. Please add items to cart first.';
-    return;
-  }
+    if (this.selectedProducts.length === 0) {
+      this.errorMessage = 'Cannot proceed to settlement. Please add items to cart first.';
+      return;
+    }
     this.viewSettle = new Product();
   }
 
   closeViewSettle() {
     this.viewSettle = null;
     this.getAllProducts();
-    // Don't clear cart here - only clear after successful payment in handlePayment()
   }
 
   openPrintReceiptForm() {
