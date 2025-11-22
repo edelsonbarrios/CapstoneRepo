@@ -9,12 +9,16 @@
   <ItemGroup>
     <Compile Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
     <Compile Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <Compile Remove="wwwroot\**" />
     <Content Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
     <Content Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
     <EmbeddedResource Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="DTOs\ReportsDTOs\FastMovingProductDTOs\**" />
     <None Remove="DTOs\ReportsDTOs\InventoryReportsDTOs\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,7 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
     <Folder Include="Repository\" />
   </ItemGroup>
 

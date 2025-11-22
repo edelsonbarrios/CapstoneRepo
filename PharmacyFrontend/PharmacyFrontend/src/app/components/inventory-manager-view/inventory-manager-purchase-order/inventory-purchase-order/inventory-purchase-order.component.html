@@ -1,185 +1,186 @@
-<div class="wrapper">
-  <div class="purchase-order-form">
-    <h2>Create Purchase Order</h2>
-
-    <!-- Form Header Section -->
-    <div class="form-header">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="poNumber">Purchase Order Number</label>
-          <input
-            type="text"
-            id="poNumber"
-            placeholder="Enter PO Number"
-            [(ngModel)]="purchaseOrderNumber"
-            readonly
-          />
+<div class="main-container">
+  <!-- Inventory Alerts -->
+  <div *ngIf="showInventoryAlerts && (inventoriesOutOfStock.length > 0 || inventoriesExpired.length > 0)" class="alerts-section">
+    <div class="alerts-header">
+      <h3><i class="fa-solid fa-triangle-exclamation"></i> Inventory Alerts</h3>
+      <button (click)="dismissInventoryAlerts()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="alerts-grid">
+      <div *ngIf="inventoriesOutOfStock.length > 0" class="alert-box red">
+        <div class="alert-header">
+          <i class="fa-solid fa-box-open"></i>
+          <div>
+            <h4>Out of Stock</h4>
+            <p>{{ inventoriesOutOfStock.length }} item(s)</p>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label for="supplier">Supplier Name</label>
-          <select id="supplier" [(ngModel)]="selectedSupplier">
-            <option value="">-- Select Supplier --</option>
-            <option *ngFor="let s of suppliers" [ngValue]="s">
-              {{ s.supplierName }}
-            </option>
-          </select>
+        <div class="alert-items">
+          <div *ngFor="let item of inventoriesOutOfStock.slice(0, 5)" class="alert-item">
+            <span>{{ item.productName }}</span>
+            <span class="badge red">Critical</span>
+          </div>
         </div>
       </div>
+      <div *ngIf="inventoriesExpired.length > 0" class="alert-box yellow">
+        <div class="alert-header">
+          <i class="fa-solid fa-clock"></i>
+          <div>
+            <h4>Expired Items</h4>
+            <p>{{ inventoriesExpired.length }} item(s)</p>
+          </div>
+        </div>
+        <div class="alert-items">
+          <div *ngFor="let item of inventoriesExpired.slice(0, 5)" class="alert-item">
+            <span>{{ item.productName }}</span>
+            <span class="badge yellow">Expired</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <div class="form-group full-width">
-        <label for="notes">Notes</label>
-        <textarea
-          id="notes"
-          rows="2"
-          placeholder="Add notes (optional)"
-          [(ngModel)]="purchaseOrders.notes"
-        ></textarea>
+  <!-- Main Form -->
+  <div class="form-container">
+    <!-- Header -->
+    <div class="form-header">
+      <h2><i class="fa-solid fa-file-invoice"></i> Create Purchase Order</h2>
+      <div class="po-badge">
+        <span>PO#</span>
+        <strong>{{ purchaseOrderNumber }}</strong>
       </div>
     </div>
 
-    <!-- Items Section -->
-    <div class="items-section">
+    <!-- Supplier & Notes -->
+    <div class="form-fields">
+      <div class="field">
+        <label><i class="fa-solid fa-truck"></i> Supplier Name</label>
+        <select [(ngModel)]="selectedSupplier">
+          <option [ngValue]="null">-- Select Supplier --</option>
+          <option *ngFor="let s of suppliers" [ngValue]="s">{{ s.supplierName }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label><i class="fa-solid fa-note-sticky"></i> Notes</label>
+        <textarea [(ngModel)]="notes" placeholder="Add notes (optional)" rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="items-container">
       <div class="items-header">
-        <h3>Order Items</h3>
-        <div class="header-actions">
-          <div class="search-box">
-            <input
-              type="text"
-              placeholder="Search products..."
-              [(ngModel)]="searchQuery"
-              (input)="onSearchChange()"
-              class="search-input"
-            />
-            <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          </div>
-          <button class="add-item-btn" (click)="openProductsForm()">
-            + Add Item
+        <h3><i class="fa-solid fa-list"></i> Order Items ({{ orderItems.length }})</h3>
+        <div class="actions">
+          <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()">
+          <button class="btn-add" (click)="openProductsForm()">
+            <i class="fa-solid fa-plus"></i> Add Item
           </button>
         </div>
       </div>
 
-      <div class="table-container">
-        <table class="items-table">
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Unit Measurement</th>
-              <th>Unit Cost</th>
-              <th>Order Unit</th>
-              <th>Quantity</th>
-              <th>Total</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="paginatedItems.length === 0">
-              <td colspan="6" class="empty-state">
-                {{ searchQuery ? 'No products found matching your search.' : 'No items added yet. Click "Add Item" to start.' }}
-              </td>
-            </tr>
-            <tr *ngFor="let item of paginatedItems">
-              <td class="product-name">{{ item.productName }}</td>
-              <td>{{item.unitMeasurement}}</td>
-              <td>{{ getDisplayUnitPrice(item) | currency : "PHP" }}</td>
-              <td>{{item.poUnitType}}</td>
-              <td>
-                <input
-                  type="number"
-                  min="1"
-                  [(ngModel)]="item.quantityOrdered"
-                  (input)="recalculateQuantitiesAndTotals(item)"
-                  class="qty-input"
-                />
-              </td>
-              <td class="total-cost">
-                {{ item.totalCost | currency : "PHP" }}
-              </td>
-              <td>
-                <button class="remove-btn" (click)="removeItemPaginated(item)">
-                  ✕
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- PRODUCTS LIST - SIMPLE DIV STRUCTURE -->
+      <div class="products-container">
+        <!-- Empty State -->
+        <div *ngIf="displayItems.length === 0" class="empty">
+          <i class="fa-solid fa-inbox"></i>
+          <p *ngIf="!searchQuery">No items added yet</p>
+          <p *ngIf="searchQuery">No products found</p>
+        </div>
+
+        <!-- Product Items - SIMPLE STRUCTURE -->
+        <div *ngFor="let item of displayItems; let idx = index" class="product-item">
+          <div class="product-row">
+            <div class="product-info">
+              <i class="fa-solid fa-box"></i>
+              <div>
+                <strong>{{ item.productName }}</strong>
+                <small>{{ item.unitMeasurement }}</small>
+              </div>
+            </div>
+            <button class="btn-remove" (click)="removeItem(item)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+          <div class="product-details">
+            <div class="detail">
+              <span>Unit Cost</span>
+              <strong>{{ getUnitPrice(item) | currency : "PHP" }}</strong>
+            </div>
+            <div class="detail">
+              <span>Order Unit</span>
+              <strong class="badge-blue">{{ item.poUnitType }}</strong>
+            </div>
+            <div class="detail">
+              <span>Quantity</span>
+              <input type="number" min="1" [(ngModel)]="item.quantityOrdered" (ngModelChange)="onQuantityChange(item)">
+            </div>
+            <div class="detail">
+              <span>Total</span>
+              <strong class="price">{{ item.totalCost | currency : "PHP" }}</strong>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Pagination Controls -->
-      <div class="pagination-controls">
-        <button
-          class="btn-page"
-          [disabled]="currentPage === 1"
-          (click)="goToPage(currentPage - 1)"
-        >
-          ← Previous
+      <!-- Pagination -->
+      <div *ngIf="orderItems.length > 0" class="pagination">
+        <button [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          <i class="fa-solid fa-chevron-left"></i> Previous
         </button>
-
-        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-
-        <button
-          class="btn-page"
-          [disabled]="currentPage === totalPages"
-          (click)="goToPage(currentPage + 1)"
-        >
-          Next →
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          Next <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
     </div>
 
-    <!-- Footer Section -->
-    <div class="footer">
+    <!-- Footer -->
+    <div class="form-footer">
       <div class="total">
-        <strong>Total Amount:</strong>
-        <span class="total-amount">{{
-          purchaseOrders.totalAmount | currency : "PHP"
-        }}</span>
+        <span>Total Amount:</span>
+        <strong>{{ totalAmount | currency : "PHP" }}</strong>
       </div>
-      <div class="actions">
-        <button class="create-btn" (click)="createPurchaseOrder()">
-          Create Purchase Order
-        </button>
-      </div>
+      <button class="btn-create" (click)="createPurchaseOrder()">
+        <i class="fa-solid fa-check"></i> Create Purchase Order
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Product Modal -->
-<div class="modal-overlay" *ngIf="openProductForm">
+<!-- Modals -->
+<div *ngIf="openProductForm" class="modal">
   <app-purchase-order-products
     (close)="closeProductsForm()"
-    [supplierProudcts]="selectedSupplier.products"
+    [supplierProudcts]="selectedSupplier?.products || []"
     (productsSelected)="onProductsSelected($event)"
   ></app-purchase-order-products>
 </div>
 
-<div class="success-overlay" *ngIf="selectSupplier">
-  <div class="success-alert">
-    <div class="alert-icon">✓</div>
-    <p class="alert-message">Please select a supplier first.</p>
-    <div class="alert-footer">
-      <button class="ok-btn" (click)="closeSelectSupplierForm()">OK</button>
+<div *ngIf="selectSupplier" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon warning">
+      <i class="fa-solid fa-exclamation"></i>
     </div>
+    <p>Please select a supplier first.</p>
+    <button (click)="closeSelectSupplierForm()">OK</button>
   </div>
 </div>
 
-<!-- Success Alert Modal -->
-<div class="success-overlay" *ngIf="showSuccessAlert">
-  <div class="success-alert">
-    <div class="alert-icon">✓</div>
-    <p class="alert-message">Purchase Order created successfully.</p>
-    <div class="alert-footer">
-      <button class="ok-btn" (click)="closeSuccessAlert()">OK</button>
+<div *ngIf="showSuccessAlert" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon success">
+      <i class="fa-solid fa-check"></i>
     </div>
+    <p>Purchase Order created successfully.</p>
+    <button (click)="closeSuccessAlert()">OK</button>
   </div>
 </div>
 
-<div class="error-overlay" *ngIf="addItem">
-  <div class="error-alert">
-    <div class="alert-icon">X</div>
-    <p class="alert-message">Please add atleast one item.</p>
-    <div class="alert-footer">
-      <button class="ok-btn" (click)="closeAddItemMessage()">OK</button>
+<div *ngIf="addItem" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon error">
+      <i class="fa-solid fa-xmark"></i>
     </div>
+    <p>Please add at least one item.</p>
+    <button (click)="closeAddItemMessage()">OK</button>
   </div>
 </div>

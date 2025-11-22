@@ -59,7 +59,7 @@ export class PurchaseOrderProductsComponent implements OnInit {
   }
 
   getUnitPrice(prod: Product) : number{
-    return prod.poUnitType == 'Box' ? prod.costBoxPrice : prod.costPiecePrice;
+    return prod.poUnitType == 'Box' ? prod.boxPrice : prod.piecePrice;
   }
 
   updatePagination() {

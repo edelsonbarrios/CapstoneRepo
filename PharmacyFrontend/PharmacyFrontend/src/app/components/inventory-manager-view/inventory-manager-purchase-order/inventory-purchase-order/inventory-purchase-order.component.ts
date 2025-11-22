@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PurchaseOrder } from '../../../../models/purchase-order-models/purchase-order';
@@ -13,38 +13,48 @@ import { CreatePurchaseOrder } from '../../../../models/purchase-order-models/cr
 import { Employee } from '../../../../models/employee-models/employee';
 import { LogInToken } from '../../../shared/token';
 import { jwtDecode } from 'jwt-decode';
+import { Inventory } from '../../../../models/inventory-module-models/inventory';
 
 @Component({
   selector: 'app-inventory-purchase-order',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
-    NgIf,
     PurchaseOrderProductsComponent,
     CurrencyPipe,
-    NgFor,
   ],
   templateUrl: './inventory-purchase-order.component.html',
   styleUrl: './inventory-purchase-order.component.scss',
 })
 export class InventoryPurchaseOrderComponent implements OnInit {
-  purchaseOrders: PurchaseOrder = new PurchaseOrder();
-  openProductForm: boolean = false;
+  // Core data
+  orderItems: PurchaseOrderItem[] = [];
+
+  // Form data
   suppliers: Supplier[] = [];
   employee: Employee = new Employee();
-  selectedSupplier: Supplier = new Supplier();
+  selectedSupplier: Supplier | null = null;
   purchaseOrderNumber: string = '';
+  deliveryDate: Date = new Date();
+  notes: string = '';
+  totalAmount: number = 0;
+
+  // Inventory alerts
+  inventoriesOutOfStock: Inventory[] = [];
+  inventoriesExpired: Inventory[] = [];
+  showInventoryAlerts: boolean = true;
+
+  // UI state
+  openProductForm: boolean = false;
   showSuccessAlert: boolean = false;
   selectSupplier: boolean = false;
   addItem: boolean = false;
 
-  // Search filter
+  // Pagination and search
   searchQuery: string = '';
-
-  paginatedItems: PurchaseOrderItem[] = [];
-  currentPage = 1;
-  itemsPerPage = 5;
-  totalPages = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
 
   constructor(
     private getService: GetService,
@@ -55,249 +65,290 @@ export class InventoryPurchaseOrderComponent implements OnInit {
     this.getAllSuppliers();
     this.getLoggedInUser();
     this.generateNewPurchaseOrderNumber();
-    this.updatePagination();
+    this.getAllInventoriesOutOfStockAsync();
+    this.getAllExpiredInventories();
   }
 
-  // Filtered items based on search query
+  // Computed properties
   get filteredItems(): PurchaseOrderItem[] {
     if (!this.searchQuery.trim()) {
-      return this.purchaseOrders.purchaseOrderItems;
+      return this.orderItems;
     }
-    const query = this.searchQuery.toLowerCase();
-    return this.purchaseOrders.purchaseOrderItems.filter((item) =>
-      item.productName.toLowerCase().includes(query)
+    return this.orderItems.filter(item =>
+      item.productName.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
-  updatePagination() {
-    const items = this.filteredItems;
-    this.totalPages = Math.ceil(items.length / this.itemsPerPage);
-    if (this.totalPages === 0) this.totalPages = 1;
-
-    // Reset to page 1 if current page exceeds total pages
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = 1;
-    }
-
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedItems = items.slice(startIndex, endIndex);
+  get displayItems(): PurchaseOrderItem[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredItems.slice(start, end);
   }
 
-  onSearchChange() {
-    this.currentPage = 1;
-    this.updatePagination();
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredItems.length / this.itemsPerPage));
   }
 
-  goToPage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.updatePagination();
-    }
-  }
-
-  openProductsForm() {
-    if (!this.selectedSupplier || !this.selectedSupplier.products?.length) {
+  // Modal controls
+  openProductsForm(): void {
+    if (!this.selectedSupplier) {
       this.selectSupplier = true;
+      return;
+    }
+    if (!this.selectedSupplier.products?.length) {
+      alert('The selected supplier has no products available.');
       return;
     }
     this.openProductForm = true;
   }
 
-  closeProductsForm() {
+  closeProductsForm(): void {
     this.openProductForm = false;
   }
 
-  closeAddItemMessage() {
+  closeAddItemMessage(): void {
     this.addItem = false;
   }
 
-  onProductsSelected(products: Product[]) {
-    const items: PurchaseOrderItem[] = products.map((p) => {
-      const isBoxOrder = p.poUnitType === 'Box';
-      const initialQuantity = 1;
+  dismissInventoryAlerts(): void {
+    this.showInventoryAlerts = false;
+  }
 
-      return {
+  closeSuccessAlert(): void {
+    this.showSuccessAlert = false;
+  }
+
+  closeSelectSupplierForm(): void {
+    this.selectSupplier = false;
+  }
+
+  // Add products
+  onProductsSelected(products: Product[]): void {
+    if (!products?.length) {
+      return;
+    }
+
+    // Filter duplicates
+    const existingIds = new Set(this.orderItems.map(i => i.productId));
+    const newProducts = products.filter(p => !existingIds.has(p.productID));
+
+    if (!newProducts.length) {
+      alert('All selected products have already been added.');
+      this.closeProductsForm();
+      return;
+    }
+
+    // Create items
+    newProducts.forEach(product => {
+      const isBox = product.poUnitType === 'Box';
+      const qty = 1;
+
+      const item: PurchaseOrderItem = {
         id: 0,
-        productId: p.productID,
-        productName: p.productName,
-        // Set quantities based on unit type
-        boxQuantityOrdered: isBoxOrder ? initialQuantity : 0,
+        productId: product.productID,
+        productName: product.productName,
+        boxQuantityOrdered: isBox ? qty : 0,
         boxQuantityReceived: 0,
         sheetQuantityOrdered: 0,
         sheetQuantityReceived: 0,
-        pieceQuantityOrdered: isBoxOrder ? 0 : initialQuantity,
+        pieceQuantityOrdered: isBox ? 0 : qty,
         pieceQuantityReceived: 0,
-        boxPrice: p.boxPrice,
-        sheetPrice: p.sheetPrice,
-        piecePrice: p.piecePrice,
-        // Calculate total based on unit type
-        totalCost: isBoxOrder
-          ? p.costBoxPrice * initialQuantity
-          : p.costPiecePrice * initialQuantity,
+        boxPrice: product.boxPrice || 0,
+        sheetPrice: product.sheetPrice || 0,
+        piecePrice: product.piecePrice || 0,
+        totalCost: isBox
+          ? (product.costBoxPrice || product.boxPrice || 0) * qty
+          : (product.costPiecePrice || product.piecePrice || 0) * qty,
         batchNumber: '',
         manufacturingDate: new Date(),
         expirationDate: new Date(),
-        category: p.categoryName,
-        classification: p.classificationName,
-        type: p.typeName,
-        unitMeasurement: p.unitMeasurement,
-        poUnitType: p.poUnitType,
-        quantityOrdered: initialQuantity,
+        category: product.categoryName || '',
+        classification: product.classificationName || '',
+        type: product.typeName || '',
+        unitMeasurement: product.unitMeasurement || '',
+        poUnitType: product.poUnitType || 'Pieces',
+        quantityOrdered: qty,
         quantityReceived: 0,
         damagedPiecesCount: 0,
         expiredPiecesCount: 0,
         defectPiecesCount: 0,
       };
+
+      this.orderItems.push(item);
     });
 
-    this.purchaseOrders.purchaseOrderItems.push(...items);
-    this.updatePagination();
-    this.computeTotalAmount();
-    this.openProductForm = false;
+    // Reset selection
+    products.forEach(p => p.selected = false);
+
+    // Update totals
+    this.updateTotal();
+
+    // Close modal
+    this.closeProductsForm();
+
+    // Reset page if needed
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = 1;
+    }
   }
 
-  recalculateQuantitiesAndTotals(item: PurchaseOrderItem) {
-    const product = this.selectedSupplier.products.find(
-      (p) => p.productID === item.productId
-    );
+  // Remove item
+  removeItem(item: PurchaseOrderItem): void {
+    const index = this.orderItems.indexOf(item);
+    if (index > -1) {
+      this.orderItems.splice(index, 1);
+      this.updateTotal();
 
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = Math.max(1, this.totalPages);
+      }
+    }
+  }
+
+  // Update quantity
+  onQuantityChange(item: PurchaseOrderItem): void {
+    if (!this.selectedSupplier?.products) return;
+
+    const product = this.selectedSupplier.products.find(p => p.productID === item.productId);
     if (!product) return;
 
-    // Reset
-    item.boxQuantityOrdered = 0;
-    item.sheetQuantityOrdered = 0;
-    item.pieceQuantityOrdered = 0;
-
-    if (product.poUnitType == 'Box') {
+    if (product.poUnitType === 'Box') {
       item.boxQuantityOrdered = item.quantityOrdered;
+      item.pieceQuantityOrdered = 0;
       item.totalCost = item.boxPrice * item.quantityOrdered;
-    } else if (product.poUnitType == 'Pieces') {
+    } else {
+      item.boxQuantityOrdered = 0;
       item.pieceQuantityOrdered = item.quantityOrdered;
       item.totalCost = item.piecePrice * item.quantityOrdered;
     }
-    this.computeTotalAmount();
+
+    this.updateTotal();
   }
 
-  getDisplayUnitPrice(request: PurchaseOrderItem) {
-    return request.poUnitType == 'Box' ? request.boxPrice : request.piecePrice;
+  getUnitPrice(item: PurchaseOrderItem): number {
+    return item.poUnitType === 'Box' ? item.boxPrice : item.piecePrice;
   }
 
-  computeTotalAmount() {
-    this.purchaseOrders.totalAmount =
-      this.purchaseOrders.purchaseOrderItems.reduce(
-        (sum, item) => sum + item.totalCost,
-        0
-      );
+  updateTotal(): void {
+    this.totalAmount = this.orderItems.reduce((sum, item) => sum + (item.totalCost || 0), 0);
   }
 
-  removeItemPaginated(item: PurchaseOrderItem) {
-    const index = this.purchaseOrders.purchaseOrderItems.findIndex(
-      (i) => i === item
-    );
-    if (index !== -1) {
-      this.purchaseOrders.purchaseOrderItems.splice(index, 1);
-      this.updatePagination();
-      this.computeTotalAmount();
+  // Search
+  onSearchChange(): void {
+    this.currentPage = 1;
+  }
+
+  // Pagination
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
     }
   }
 
-  createPurchaseOrder() {
-    if (this.purchaseOrders.purchaseOrderItems.length === 0) {
+  // Create PO
+  createPurchaseOrder(): void {
+    if (!this.orderItems.length) {
       this.addItem = true;
       return;
     }
 
-    if (!this.selectedSupplier.supplierName) {
+    if (!this.selectedSupplier) {
       alert('Please select a supplier.');
       return;
     }
 
-    const requestPayload: CreatePurchaseOrder = {
+    const payload: CreatePurchaseOrder = {
       purchaseOrderNumber: this.purchaseOrderNumber,
       orderDate: new Date().toISOString(),
-      deliveryDate: new Date(this.purchaseOrders.deliveryDate).toISOString(),
+      deliveryDate: new Date(this.deliveryDate).toISOString(),
       employeeLastName: this.employee.lastName,
       supplierName: this.selectedSupplier.supplierName,
-      notes: this.purchaseOrders.notes,
-      purchaseOrderItems: this.purchaseOrders.purchaseOrderItems.map(
-        (item) => ({
-          productId: item.productId,
-          boxQuantityOrdered: item.boxQuantityOrdered,
-          boxQuantityReceived: item.boxQuantityReceived,
-          sheetQuantityOrdered: item.sheetQuantityOrdered,
-          sheetQuantityReceived: item.sheetQuantityReceived,
-          pieceQuantityOrdered: item.pieceQuantityOrdered,
-          pieceQuantityReceived: item.pieceQuantityReceived,
-          boxPrice: item.boxPrice,
-          sheetPrice: item.sheetPrice,
-          piecePrice: item.piecePrice,
-          batchNumber: item.batchNumber,
-          totalCost: item.totalCost,
-          manufacturingDate: new Date(item.manufacturingDate).toISOString(),
-          expirationDate: new Date(item.expirationDate).toISOString(),
-          poUnitType: item.poUnitType,
-          quantityReceived: 0
-        })
-      ),
+      notes: this.notes,
+      purchaseOrderItems: this.orderItems.map(item => ({
+        productId: item.productId,
+        boxQuantityOrdered: item.boxQuantityOrdered,
+        boxQuantityReceived: item.boxQuantityReceived,
+        sheetQuantityOrdered: item.sheetQuantityOrdered,
+        sheetQuantityReceived: item.sheetQuantityReceived,
+        pieceQuantityOrdered: item.pieceQuantityOrdered,
+        pieceQuantityReceived: item.pieceQuantityReceived,
+        boxPrice: item.boxPrice,
+        sheetPrice: item.sheetPrice,
+        piecePrice: item.piecePrice,
+        batchNumber: item.batchNumber,
+        totalCost: item.totalCost,
+        manufacturingDate: new Date(item.manufacturingDate).toISOString(),
+        expirationDate: new Date(item.expirationDate).toISOString(),
+        poUnitType: item.poUnitType,
+        quantityReceived: 0
+      }))
     };
 
-    this.postService.createPurchaseOrderAsync(requestPayload).subscribe({
+    this.postService.createPurchaseOrderAsync(payload).subscribe({
       next: () => {
         this.showSuccessAlert = true;
         this.generateNewPurchaseOrderNumber();
-        this.clearFields();
+        this.clearForm();
       },
       error: (err) => {
-        console.error(err.error);
-      },
+        console.error('Error:', err);
+        alert('Failed to create purchase order.');
+      }
     });
   }
 
-  clearFields() {
-    this.purchaseOrders = new PurchaseOrder();
-    this.purchaseOrders.purchaseOrderItems = [];
+  clearForm(): void {
+    this.orderItems = [];
+    this.selectedSupplier = null;
+    this.notes = '';
     this.searchQuery = '';
     this.currentPage = 1;
-    this.updatePagination();
+    this.totalAmount = 0;
   }
 
-  getAllSuppliers() {
+  // API calls
+  getAllSuppliers(): void {
     this.getService.getAllSuppliersAsync().subscribe({
-      next: (res) => (this.suppliers = res),
-      error: (err) => console.error(err.error),
+      next: (res) => this.suppliers = res,
+      error: (err) => console.error('Error loading suppliers:', err)
     });
   }
 
-  getLoggedInUser() {
+  getLoggedInUser(): void {
     const token = localStorage.getItem(LogInToken);
     if (!token) return;
 
-    const decoded: any = jwtDecode(token);
-    const employeeId = parseInt(decoded.EmployeeId);
+    try {
+      const decoded: any = jwtDecode(token);
+      const employeeId = parseInt(decoded.EmployeeId);
 
-    this.getService.GetEmployeeById(employeeId).subscribe({
-      next: (res) => (this.employee = res),
-      error: () => console.error('Logged-in user not found.'),
-    });
+      this.getService.GetEmployeeById(employeeId).subscribe({
+        next: (res) => this.employee = res,
+        error: () => console.error('Error loading user')
+      });
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
   }
 
-  generateNewPurchaseOrderNumber() {
+  generateNewPurchaseOrderNumber(): void {
     this.postService.generateNewPurchaseOrderNumberAsync().subscribe({
-      next: (res) => {
-        this.purchaseOrderNumber = res;
-      },
-      error: (err) => {
-        console.log(`${err.error}`);
-      },
+      next: (res) => this.purchaseOrderNumber = res,
+      error: (err) => console.error('Error generating PO number:', err)
     });
   }
 
-  closeSuccessAlert() {
-    this.showSuccessAlert = false;
+  getAllInventoriesOutOfStockAsync(): void {
+    this.getService.getInventoriesOutOfStockAsync().subscribe({
+      next: res => this.inventoriesOutOfStock = res,
+      error: err => console.error('Error loading out of stock:', err)
+    });
   }
 
-  closeSelectSupplierForm() {
-    this.selectSupplier = false;
+  getAllExpiredInventories(): void {
+    this.getService.getExpiredInventoriesAsync().subscribe({
+      next: res => this.inventoriesExpired = res,
+      error: err => console.error('Error loading expired:', err)
+    });
   }
 }
