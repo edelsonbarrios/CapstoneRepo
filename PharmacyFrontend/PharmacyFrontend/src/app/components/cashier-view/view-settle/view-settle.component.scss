@@ -72,11 +72,12 @@
       margin-bottom: 18px;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
       background: #ffffff;
 
       thead {
-        background:#3b82f6;
+        background: #3b82f6;
 
         tr th {
           padding: 1rem 0.5rem;
@@ -332,7 +333,8 @@
       border-radius: 12px;
       padding: 1rem;
       margin-bottom: 18px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
       .summary-row {
         display: flex;
@@ -433,7 +435,8 @@
       border-radius: 12px;
       padding: 1rem;
       margin-bottom: 18px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
       border-left: 4px solid #8b5cf6;
 
       label {
@@ -505,13 +508,14 @@
           transition: all 0.2s ease;
           background: transparent;
           font-weight: 600;
-          font-family: 'Courier New', monospace;
+          font-family: "Courier New", monospace;
           letter-spacing: 0.5px;
 
           &::placeholder {
             color: #94a3b8;
             font-weight: 500;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+              sans-serif;
             letter-spacing: normal;
           }
 
@@ -548,7 +552,8 @@
       background: #ffffff;
       border-radius: 12px;
       padding: 1rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
       label {
         display: flex;

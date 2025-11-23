@@ -37,6 +37,7 @@ namespace PharmacyBackend.Contracts.ServiceContracts.UpdateInterface
         public Task<bool> UpdateDiscountAsync(int id, UpdateDiscountDto dto);
         public Task<bool> ValidateDiscountAsync(string name, int discountId);
         public Task<bool> ArchiveDiscountByIdAsync(int discountId);
+        public Task<bool> AssignInventoryDiscountsAsync(int discountId, List<InventoryDto> inventories);
         #endregion
 
         #region Product

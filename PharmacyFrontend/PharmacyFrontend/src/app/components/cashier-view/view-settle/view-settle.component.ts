@@ -94,7 +94,7 @@ export class ViewSettleComponent implements OnInit {
     this.getService.getAllVatAsync().subscribe({
       next: (res) => {
         this.vats = res;
-        const defaultVat = res.find((v) => v.vatName == 'Standard');
+        const defaultVat = res.find((v) => v.vatName === 'Standard');
         this.selectedVat = defaultVat || null;
       },
       error: (err) => {
@@ -106,7 +106,8 @@ export class ViewSettleComponent implements OnInit {
   // NEW: Get available unit measurements for a product
   getAvailableUnitMeasurements(item: any): string[] {
     if (!item) return [];
-    const unitMeasurement = item.unitMeasurement || item.product?.unitMeasurement;
+    const unitMeasurement =
+      item.unitMeasurement || item.product?.unitMeasurement;
 
     if (unitMeasurement === 'Multi-Level') {
       return ['Piece', 'Sheet', 'Box'];
@@ -119,7 +120,9 @@ export class ViewSettleComponent implements OnInit {
 
   // NEW: Get max quantity for validation
   getMaxQuantity(item: any): number {
-    const product = this.products.find((p: any) => p.productID === item.productID);
+    const product = this.products.find(
+      (p: any) => p.productID === item.productID
+    );
     if (!product) return Infinity;
 
     switch (item.unitType) {
@@ -135,7 +138,10 @@ export class ViewSettleComponent implements OnInit {
   }
 
   // NEW: Resolve unit price from product
-  resolveUnitPriceFromProduct(product: any, unit: 'Box' | 'Sheet' | 'Piece'): number {
+  resolveUnitPriceFromProduct(
+    product: any,
+    unit: 'Box' | 'Sheet' | 'Piece'
+  ): number {
     const boxPrice = product.boxPrice ?? 0;
     const sheetPrice =
       product.sheetPrice ??
@@ -143,7 +149,8 @@ export class ViewSettleComponent implements OnInit {
     const piecePrice =
       product.piecePrice ??
       (product.piecesPerSheet
-        ? (sheetPrice ?? boxPrice / (product.sheetsPerBox ?? 1)) / product.piecesPerSheet
+        ? (sheetPrice ?? boxPrice / (product.sheetsPerBox ?? 1)) /
+          product.piecesPerSheet
         : undefined);
 
     switch (unit) {
@@ -160,7 +167,9 @@ export class ViewSettleComponent implements OnInit {
 
   // NEW: Handle unit type change
   onCartItemUnitTypeChange(item: any) {
-    const product = this.products.find((p: any) => p.productID === item.productID);
+    const product = this.products.find(
+      (p: any) => p.productID === item.productID
+    );
     if (!product) return;
 
     const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
@@ -244,7 +253,8 @@ export class ViewSettleComponent implements OnInit {
     let discountAmount = 0;
 
     if (this.selectedDiscount.discountType === 'Percentage') {
-      discountAmount = this.subtotal * ((this.selectedDiscount.discountAmount || 0) / 100);
+      discountAmount =
+        this.subtotal * ((this.selectedDiscount.discountAmount || 0) / 100);
     } else if (this.selectedDiscount.discountType === 'Fixed') {
       discountAmount = this.selectedDiscount.discountAmount || 0;
     }
@@ -270,7 +280,9 @@ export class ViewSettleComponent implements OnInit {
     if (this.selectedDiscount.discountType === 'Percentage') {
       return `${this.selectedDiscount.discountName} (${this.selectedDiscount.discountAmount}%)`;
     } else if (this.selectedDiscount.discountType === 'Fixed') {
-      return `${this.selectedDiscount.discountName} (₱${this.selectedDiscount.discountAmount?.toFixed(2) || '0.00'})`;
+      return `${this.selectedDiscount.discountName} (₱${
+        this.selectedDiscount.discountAmount?.toFixed(2) || '0.00'
+      })`;
     }
 
     return this.selectedDiscount.discountName;
@@ -311,7 +323,8 @@ export class ViewSettleComponent implements OnInit {
           this.submitPayment();
         },
         error: (err) => {
-          this.refNumErrorMessage = err.error.message || 'Invalid reference number';
+          this.refNumErrorMessage =
+            err.error.message || 'Invalid reference number';
           console.error('Error validating reference number:', err);
         },
       });
@@ -328,7 +341,8 @@ export class ViewSettleComponent implements OnInit {
       changeAmount: this.change,
       discountAmount: this.calculateDiscountAmount(),
       vatAmount: this.calculateVatAmount(),
-      referenceNumber: this.selectedPaymentMethod === 'e-Payment' ? this.refNum : '',
+      referenceNumber:
+        this.selectedPaymentMethod === 'e-Payment' ? this.refNum : '',
       discountId: this.selectedDiscount?.id || 0,
       employeeID: this.loggedInEmployee.id,
       vatId: this.selectedVat?.vatid || null,

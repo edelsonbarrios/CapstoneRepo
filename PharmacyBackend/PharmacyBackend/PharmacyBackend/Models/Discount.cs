@@ -13,5 +13,9 @@ namespace PharmacyBackend.Models
         public DateTime? StartDate {get; set;}
         public DateTime? EndDate {get; set;}
         public bool IsActive { get; set; } = true;
+
+        // Navigation Properties
+        public List<Inventory> Inventories {get; set;}
+
     }
 }

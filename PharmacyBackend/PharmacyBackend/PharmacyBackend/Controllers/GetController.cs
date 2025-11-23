@@ -18,6 +18,7 @@ using System.Diagnostics.Contracts;
 using PharmacyBackend.DTOs.DataBaseBackUpDTOs;
 using PharmacyBackend.Service.GetService;
 using PharmacyBackend.DTOs.ItemDataControlDTOs;
+using PharmacyBackend.DTOs.DiscountDTOs;
 
 namespace PharmacyBackend.Controllers
 {
@@ -361,6 +362,16 @@ namespace PharmacyBackend.Controllers
                 return NotFound(new { Message = "Discount not found." });
 
             return Ok(discount);
+        }
+
+        [HttpGet("AvailableDiscounts")]
+        public async Task<ActionResult<List<DiscountDto>>> GetAllAvailableDiscountsAsync() 
+        {
+          var discounts = await _getService.GetAllAvailableDiscountsAsync();
+          if(!discounts.Any() || discounts.Count() == 0)
+            return NotFound(new List<DiscountDto>());
+
+          return Ok(discounts);
         }
         #endregion
 

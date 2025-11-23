@@ -1,0 +1,124 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h2>Select Inventory Items - {{ discount.discountName }}</h2>
+    <span class="close" (click)="close.emit()">&times;</span>
+  </div>
+
+  <div class="modal-body">
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search by product name, category, brand, or batch number..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          class="search-input"
+        />
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="selection-info" *ngIf="selectedCount > 0">
+        <span class="badge">{{ selectedCount }} selected</span>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th class="checkbox-col">
+              <input
+                type="checkbox"
+                (change)="toggleAll($event)"
+                title="Select all on this page"
+              />
+            </th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Brand</th>
+            <th>Batch Number</th>
+            <th>Expiration Date</th>
+            <th>Box Qty</th>
+            <th>Sheet Qty</th>
+            <th>Piece Qty</th>
+            <th>Box Price</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="paginatedInventories.length === 0">
+            <td colspan="11" class="empty-state">
+              {{
+                searchQuery
+                  ? "No inventory items found matching your search."
+                  : "No inventory items available."
+              }}
+            </td>
+          </tr>
+          <tr *ngFor="let inventory of paginatedInventories">
+            <td class="checkbox-col">
+              <input
+                type="checkbox"
+                [(ngModel)]="inventory.selected"
+                [disabled]="inventory.isExpired"
+              />
+            </td>
+            <td class="product-name">{{ inventory.productName || 'N/A' }}</td>
+            <td>{{ inventory.categoryName || 'N/A' }}</td>
+            <td>{{ inventory.brandName || 'N/A' }}</td>
+            <td>{{ inventory.batchNumber || 'N/A' }}</td>
+            <td>{{ formatDate(inventory.expirationDate) }}</td>
+            <td class="quantity">{{ inventory.boxQuantity }}</td>
+            <td class="quantity">{{ inventory.sheetQuantity }}</td>
+            <td class="quantity">{{ inventory.pieceQuantity }}</td>
+            <td class="price">{{ inventory.boxPrice | currency: 'PHP': 'symbol-narrow' }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStockStatusClass(inventory)">
+                {{ getStockStatus(inventory) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+      <button
+        class="btn-page"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        ← Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="btn-page"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="modal-footer">
+    <button class="btn-secondary" (click)="cancel()">Cancel</button>
+    <button class="btn-primary" (click)="addSelected()">
+      Assign to Selected ({{ selectedCount }})
+    </button>
+  </div>
+</div>
+
+<!-- Error Alert Modal -->
+<div class="error-overlay" *ngIf="addItem">
+  <div class="error-alert">
+    <div class="alert-icon">!</div>
+    <p class="alert-message">Please select at least one inventory item.</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeAddItemMessage()">OK</button>
+    </div>
+  </div>
+</div>

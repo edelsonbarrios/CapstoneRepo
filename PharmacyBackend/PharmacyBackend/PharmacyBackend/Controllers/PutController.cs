@@ -151,6 +151,23 @@ namespace PharmacyBackend.Controllers
 
             return Ok(new ArchiveDiscountResponse { Message = "Discount is now inactive" });
         }
+
+        [HttpPut("AssignDiscounts")]
+        public async Task<ActionResult<object>> AssignInventoryDiscountsAsync(int discountId, List<InventoryDto> inventories) 
+        {
+          if(discountId == 0)
+            return NotFound(new {Message = "Discount does not exist."});
+
+          if(!inventories.Any() || inventories.Count() == 0)
+            return NotFound(new {Message = "Inventories does not exist."});
+
+          var assignDiscounts = await _updateService.AssignInventoryDiscountsAsync(discountId, inventories);
+          if(!assignDiscounts)
+            return BadRequest(new {Message = "Discount cannot be applied."});
+
+          return Ok(new {Message = "Discount successfully assigned"});
+        }
+
         #endregion
 
         #region Product

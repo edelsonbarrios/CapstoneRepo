@@ -41,9 +41,7 @@
 
           <!-- EDITABLE UNIT TYPE -->
           <td>
-            <select [(ngModel)]="item.unitType"
-                    (ngModelChange)="onCartItemUnitTypeChange(item)"
-                    class="unit-select">
+            <select [(ngModel)]="item.unitType" (ngModelChange)="onCartItemUnitTypeChange(item)" class="unit-select">
               <option *ngFor="let unit of getAvailableUnitMeasurements(item)" [value]="unit">
                 {{ unit }}
               </option>
@@ -57,12 +55,8 @@
                 <i class="fa-solid fa-minus"></i>
               </button>
               <div class="qty-input-wrapper">
-                <input type="number"
-                       min="1"
-                       [(ngModel)]="item.quantity"
-                       (ngModelChange)="onCartItemChange(item)"
-                       class="qty-input"
-                       [class.error]="item.quantityError" />
+                <input type="number" min="1" [(ngModel)]="item.quantity" (ngModelChange)="onCartItemChange(item)"
+                  class="qty-input" [class.error]="item.quantityError" />
                 <div class="qty-error" *ngIf="item.quantityError">
                   <i class="fa-solid fa-circle-exclamation"></i>
                   <span>{{ item.quantityError }}</span>
@@ -96,12 +90,7 @@
       <div class="summary-row">
         <span class="label">VAT:</span>
         <div class="input-group">
-          <span class="selected-value" *ngIf="selectedVat">
-            {{ selectedVat.vatName }} ({{ selectedVat.vatRate }}%)
-          </span>
-          <span class="selected-value" *ngIf="!selectedVat">No VAT</span>
           <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
-            <option [ngValue]="null">None</option>
             <option *ngFor="let v of vats" [ngValue]="v">
               {{ v.vatName }} ({{ v.vatRate }}%)
             </option>
@@ -119,7 +108,8 @@
           <span class="selected-value" *ngIf="!selectedDiscount">No Discount</span>
           <span class="selected-value" *ngIf="selectedDiscount">
             {{ getDiscountDisplayText() }}
-            <span class="discount-type-badge" [class.percentage]="selectedDiscount.discountType === 'Percentage'" [class.fixed]="selectedDiscount.discountType === 'Fixed'">
+            <span class="discount-type-badge" [class.percentage]="selectedDiscount.discountType === 'Percentage'"
+              [class.fixed]="selectedDiscount.discountType === 'Fixed'">
               {{ selectedDiscount.discountType === 'Percentage' ? 'Percentage' : 'FIXED' }}
             </span>
           </span>
@@ -186,11 +176,10 @@
       <div class="change-display" *ngIf="payment > 0">
         <span class="label">
           <i class="fas fa-exchange-alt"></i>
-          {{ change < 0 ? 'Balance:' : 'Change:' }}
-        </span>
-        <span class="value" [class.negative]="change < 0">
-          {{ change | currency:'PHP':'symbol':'1.2-2' }}
-        </span>
+          {{ change < 0 ? 'Balance:' : 'Change:' }} </span>
+            <span class="value" [class.negative]="change < 0">
+              {{ change | currency:'PHP':'symbol':'1.2-2' }}
+            </span>
       </div>
     </div>
   </div>

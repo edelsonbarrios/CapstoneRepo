@@ -286,6 +286,19 @@ namespace PharmacyBackend.Service.UpdateService
                 return false;
             return updateDiscount;
         }
+
+        public async Task<bool> AssignInventoryDiscountsAsync(int discountId, List<InventoryDto> inventories) 
+        {
+          foreach(var inv in inventories) {
+            var inventory = await _getRepo.GetInventoryByIdAsync(inv.InventoryID);
+            if(inventory is null)
+              continue;
+            inventory.DiscountId = discountId;
+            await _updateRepo.UpdateInventoryAsync(inventory);
+          }
+          return true;
+        }
+
         #endregion
 
         #region Product Helper

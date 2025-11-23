@@ -98,6 +98,7 @@
             <span class="status-badge active">Active</span>
           </td>
           <td>
+            <button class="btn-assign" (click)="openAssignModal(d)">Assign</button>
             <button class="btn-view" (click)="openEditDiscountForm(d)">Edit</button>
             <button class="btn-archive" (click)="openArchiveForm(d.id)">Archive</button>
           </td>
@@ -169,3 +170,14 @@
     </div>
   </div>
 </div>
+
+<div class="modal-overlay" *ngIf="selectedDiscountForAssign">
+<app-assign-inventory-discount
+    *ngIf="selectedDiscountForAssign"
+    [discount]="selectedDiscountForAssign"
+
+  >
+
+</app-assign-inventory-discount>
+</div>
+

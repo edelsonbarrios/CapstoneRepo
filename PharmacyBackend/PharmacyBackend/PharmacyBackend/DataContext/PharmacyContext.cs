@@ -176,6 +176,11 @@ namespace PharmacyBackend.DataContext
                 .HasForeignKey(st => st.DiscountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Discount>()
+              .HasMany(d => d.Inventories)
+              .WithOne(iv => iv.Discount)
+              .OnDelete(DeleteBehavior.Restrict);
+
             // SalesItem relationships
             modelBuilder.Entity<SalesItem>()
                 .HasOne(si => si.SalesTransaction)

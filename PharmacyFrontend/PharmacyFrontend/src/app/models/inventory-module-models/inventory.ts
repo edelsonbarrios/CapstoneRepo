@@ -5,7 +5,7 @@ export class Inventory {
     productID: number = 0;
     product: Product = new Product();
     productName: string = '';
-    categoryName: string='';  
+    categoryName: string='';
     brandName: string ='';
     batchNumber: string = '';
     manufacturingDate: Date = new Date();
@@ -27,4 +27,8 @@ export class Inventory {
     isCriticalStock: boolean = false;
     isMultiUnit : boolean = false;
     totalPiecesAvailable:  number = 0;
+
+  // Additional Properties
+
+  selected: boolean = false;
 }

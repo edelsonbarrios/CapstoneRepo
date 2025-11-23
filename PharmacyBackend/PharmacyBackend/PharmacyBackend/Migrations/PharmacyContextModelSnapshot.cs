@@ -442,6 +442,9 @@ namespace PharmacyBackend.Migrations
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("DiscountId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -482,6 +485,8 @@ namespace PharmacyBackend.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("InventoryID");
+
+                    b.HasIndex("DiscountId");
 
                     b.HasIndex("ExpirationDate");
 
@@ -996,11 +1001,18 @@ namespace PharmacyBackend.Migrations
 
             modelBuilder.Entity("PharmacyBackend.Models.Inventory", b =>
                 {
+                    b.HasOne("PharmacyBackend.Models.Discount", "Discount")
+                        .WithMany("Inventories")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("PharmacyBackend.Models.Product", "Product")
                         .WithMany("Inventory")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Discount");
 
                     b.Navigation("Product");
                 });
@@ -1144,6 +1156,11 @@ namespace PharmacyBackend.Migrations
             modelBuilder.Entity("PharmacyBackend.Models.Classification", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("PharmacyBackend.Models.Discount", b =>
+                {
+                    b.Navigation("Inventories");
                 });
 
             modelBuilder.Entity("PharmacyBackend.Models.Employee", b =>

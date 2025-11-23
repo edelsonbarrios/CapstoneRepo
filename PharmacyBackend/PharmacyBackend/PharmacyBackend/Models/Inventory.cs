@@ -42,6 +42,8 @@ namespace PharmacyBackend.Models
         public bool IsActive { get; set; } = true;
         public int? PiecePerBox { get; set; }
         public bool IsDeleted {get; set;} = false;
+        public int? DiscountId {get; set;}
+        public Discount Discount {get; set;}
 
         public ICollection<StockMovement> StockMovements { get; set; } = new List<StockMovement>();
 
