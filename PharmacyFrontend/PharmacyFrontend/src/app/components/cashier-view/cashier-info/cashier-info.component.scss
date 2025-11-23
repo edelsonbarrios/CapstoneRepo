@@ -1,6 +1,6 @@
 .wrapper {
   display: grid;
-  grid-template-rows: auto 1fr 1fr;
+  grid-template-columns:1fr 1fr;
   height: 100%;
   padding: 1rem;
   gap: 10px;
@@ -15,30 +15,16 @@
     margin-bottom: 1rem;
   }
 
-  .upper {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-
-    .total-sales,
-    .total-products,
-    .active-promos {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
-  }
-
   .mid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    
+    .fast-moving { 
+      height: 100%;
+    }
   }
 
   .lower {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 10px;
   }
 
@@ -168,7 +154,7 @@
     }
   }
 
-  // Pagination Controls
+  // Pagination Controls (Shared styling for all tables)
   .pagination-controls {
     display: flex;
     justify-content: flex-end;
@@ -347,5 +333,59 @@
     background: #fee2e2;
     color: #991b1b;
     border: 1px solid #fca5a5;
+  }
+}
+
+// Critical Stock Table
+.critical-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+
+  th,
+  td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+  }
+
+  th {
+    font-weight: 600;
+    color: #334155;
+    background: #f8fafc;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    color: #475569;
+    font-weight: 500;
+  }
+
+  tbody tr {
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &.badge-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
   }
 }

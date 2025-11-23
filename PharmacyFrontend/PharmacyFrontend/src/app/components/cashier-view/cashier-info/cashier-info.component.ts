@@ -4,6 +4,8 @@ import { GetService } from '../../../services/GetService/get.service';
 import { ProductSalesSummary } from '../../../models/sales-transaction-models/product-sales-summary';
 import { FastMovingProduct } from '../../../models/report-models/fast-moving-product';
 import { FastMovingProductReport } from '../../../models/report-models/fast-moving-product-report';
+import { InventoryDashboard } from '../../../models/inventory-module-models/inventory-dashboard';
+import { Inventory } from '../../../models/inventory-module-models/inventory';
 
 // Extended interface for top selling medicines with unit breakdown
 interface TopSellingMedWithBreakdown extends ProductSalesSummary {
@@ -42,17 +44,30 @@ export class CashierInfoComponent implements OnInit {
   fastMovingReport: FastMovingProductReport | null = null;
   
   fastMovingCurrentPage: number = 1;
-  fastMovingItemsPerPage: number = 5;
+  fastMovingItemsPerPage: number = 10;
   fastMovingTotalPages: number = 0;
   
   fastMovingLoading: boolean = false;
   fastMovingError: string = '';
+
+  // Critical Stock
+  criticalStockItems: Inventory[] = [];
+  paginatedCriticalStock: Inventory[] = [];
+  inventoryDashboard: InventoryDashboard | null = null;
+  
+  criticalCurrentPage: number = 1;
+  criticalItemsPerPage: number = 3;
+  criticalTotalPages: number = 0;
+  
+  criticalLoading: boolean = false;
+  criticalError: string = '';
 
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
     this.getTopSellingProductsMonthly();
     this.getFastMovingProducts();
+    this.getCriticalStockItems();
   }
 
   getTopSellingProductsMonthly() {
@@ -137,6 +152,41 @@ export class CashierInfoComponent implements OnInit {
     if (page >= 1 && page <= this.fastMovingTotalPages) {
       this.fastMovingCurrentPage = page;
       this.updateFastMovingPagination();
+    }
+  }
+
+  getCriticalStockItems() {
+    this.criticalLoading = true;
+    this.criticalError = '';
+
+    this.getService.getInventoryDashboardValues().subscribe({
+      next: (res) => {
+        this.inventoryDashboard = res;
+        this.criticalStockItems = res.criticalStockItems || [];
+        this.criticalLoading = false;
+        this.updateCriticalPagination();
+        console.log('Critical stock items loaded:', this.criticalStockItems);
+      },
+      error: (err) => {
+        console.error('Critical stock API Error:', err);
+        this.criticalError = err.error?.message || err.message || 'Failed to load critical stock items';
+        this.criticalLoading = false;
+      }
+    });
+  }
+
+  updateCriticalPagination() {
+    this.criticalTotalPages = Math.ceil(this.criticalStockItems.length / this.criticalItemsPerPage);
+    if (this.criticalTotalPages === 0) this.criticalTotalPages = 1;
+    const startIndex = (this.criticalCurrentPage - 1) * this.criticalItemsPerPage;
+    const endIndex = startIndex + this.criticalItemsPerPage;
+    this.paginatedCriticalStock = this.criticalStockItems.slice(startIndex, endIndex);
+  }
+
+  goToCriticalPage(page: number) {
+    if (page >= 1 && page <= this.criticalTotalPages) {
+      this.criticalCurrentPage = page;
+      this.updateCriticalPagination();
     }
   }
 }
