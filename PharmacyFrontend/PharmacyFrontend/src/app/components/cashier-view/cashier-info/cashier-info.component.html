@@ -8,7 +8,7 @@
     </div>
 
     <div class="grid-items total-products">
-      <h2>Total Products</h2>
+      <h2>Critical Stock</h2>
       <p>256</p>
     </div>
 
@@ -92,10 +92,75 @@
   <div class="lower container">
     <div class="grid-items fast-moving">
       <h2>Fast Moving Product</h2>
+
+      <div *ngIf="fastMovingLoading" style="text-align: center; padding: 2rem; color: #6b7280;">
+        Loading...
+      </div>
+
+      <div *ngIf="fastMovingError" style="text-align: center; padding: 2rem; color: #dc2626;">
+        {{fastMovingError}}
+      </div>
+
+      <div class="table-wrapper" *ngIf="!fastMovingLoading && fastMovingProducts.length > 0">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Product Name</th>
+              <th>Brand</th>
+              <th>Generic Name</th>
+              <th>Revenue</th>
+              <th>Stock</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="paginatedFastMoving.length === 0">
+              <td colspan="7" style="text-align: center; color: #525252; padding: 1rem;">
+                No recent data
+              </td>
+            </tr>
+            <tr *ngFor="let p of paginatedFastMoving">
+              <td>
+                <span class="rank-badge" 
+                      [class.rank-1]="p.rank === 1" 
+                      [class.rank-2]="p.rank === 2" 
+                      [class.rank-3]="p.rank === 3">
+                  {{p.rank}}
+                </span>
+              </td>
+              <td class="product-name">{{p.productName}}</td>
+              <td>{{p.brand || 'N/A'}}</td>
+              <td>{{p.generic || 'N/A'}}</td>
+              <td class="revenue">{{p.revenue | currency:'PHP':'symbol-narrow'}}</td>
+              <td>
+                <span [style.color]="p.currentStock < 10 ? '#dc2626' : '#10b981'">
+                  {{p.currentStock | number}}
+                </span>
+              </td>
+              <td>
+                <span class="trend-badge"
+                      [class.trend-increasing]="p.trend === 'Increasing'"
+                      [class.trend-stable]="p.trend === 'Stable'"
+                      [class.trend-decreasing]="p.trend === 'Decreasing'">
+                  {{p.trend}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAGINATION CONTROLS FOR FAST MOVING -->
+      <div class="pagination-controls" *ngIf="!fastMovingLoading && paginatedFastMoving.length > 0">
+        <button class="btn-page" [disabled]="fastMovingCurrentPage === 1" (click)="goToFastMovingPage(fastMovingCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{fastMovingCurrentPage}} of {{fastMovingTotalPages}}</span>
+        <button class="btn-page" [disabled]="fastMovingCurrentPage === fastMovingTotalPages" (click)="goToFastMovingPage(fastMovingCurrentPage + 1)">Next</button>
+      </div>
     </div>
 
     <div class="grid-items slow-moving">
-      <h2>Slow Moving Product</h2>
+      <h2>Critical Stock</h2>
     </div>
   </div>
 </main>

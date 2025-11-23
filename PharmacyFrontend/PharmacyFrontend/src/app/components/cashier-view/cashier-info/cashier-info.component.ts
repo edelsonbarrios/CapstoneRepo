@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf, CommonModule } from '@angular/common';
 import { GetService } from '../../../services/GetService/get.service';
 import { ProductSalesSummary } from '../../../models/sales-transaction-models/product-sales-summary';
+import { FastMovingProduct } from '../../../models/report-models/fast-moving-product';
+import { FastMovingProductReport } from '../../../models/report-models/fast-moving-product-report';
 
 // Extended interface for top selling medicines with unit breakdown
 interface TopSellingMedWithBreakdown extends ProductSalesSummary {
@@ -26,6 +28,7 @@ interface TopSellingMedWithBreakdown extends ProductSalesSummary {
   styleUrl: './cashier-info.component.scss'
 })
 export class CashierInfoComponent implements OnInit {
+  // Top Selling Products
   topSellingMedicines: TopSellingMedWithBreakdown[] = [];
   paginatedTopMeds: TopSellingMedWithBreakdown[] = [];
   
@@ -33,10 +36,23 @@ export class CashierInfoComponent implements OnInit {
   topMedsItemsPerPage: number = 5;
   topMedsTotalPages: number = 0;
 
+  // Fast Moving Products
+  fastMovingProducts: FastMovingProduct[] = [];
+  paginatedFastMoving: FastMovingProduct[] = [];
+  fastMovingReport: FastMovingProductReport | null = null;
+  
+  fastMovingCurrentPage: number = 1;
+  fastMovingItemsPerPage: number = 5;
+  fastMovingTotalPages: number = 0;
+  
+  fastMovingLoading: boolean = false;
+  fastMovingError: string = '';
+
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
     this.getTopSellingProductsMonthly();
+    this.getFastMovingProducts();
   }
 
   getTopSellingProductsMonthly() {
@@ -70,6 +86,30 @@ export class CashierInfoComponent implements OnInit {
     });
   }
 
+  getFastMovingProducts() {
+    this.fastMovingLoading = true;
+    this.fastMovingError = '';
+
+    this.getService.getFastMovingProductReportAsync(
+      undefined,
+      undefined,
+      20
+    ).subscribe({
+      next: (res) => {
+        this.fastMovingReport = res;
+        this.fastMovingProducts = res.products || [];
+        this.fastMovingLoading = false;
+        this.updateFastMovingPagination();
+        console.log('Fast moving products loaded:', this.fastMovingProducts);
+      },
+      error: (err) => {
+        console.error('Fast moving API Error:', err);
+        this.fastMovingError = err.error?.message || err.message || 'Failed to load fast moving products';
+        this.fastMovingLoading = false;
+      }
+    });
+  }
+
   updateTopMedsPagination() {
     this.topMedsTotalPages = Math.ceil(this.topSellingMedicines.length / this.topMedsItemsPerPage);
     if (this.topMedsTotalPages === 0) this.topMedsTotalPages = 1;
@@ -78,10 +118,25 @@ export class CashierInfoComponent implements OnInit {
     this.paginatedTopMeds = this.topSellingMedicines.slice(startIndex, endIndex);
   }
 
+  updateFastMovingPagination() {
+    this.fastMovingTotalPages = Math.ceil(this.fastMovingProducts.length / this.fastMovingItemsPerPage);
+    if (this.fastMovingTotalPages === 0) this.fastMovingTotalPages = 1;
+    const startIndex = (this.fastMovingCurrentPage - 1) * this.fastMovingItemsPerPage;
+    const endIndex = startIndex + this.fastMovingItemsPerPage;
+    this.paginatedFastMoving = this.fastMovingProducts.slice(startIndex, endIndex);
+  }
+
   goToTopMedsPage(page: number) {
     if (page >= 1 && page <= this.topMedsTotalPages) {
       this.topMedsCurrentPage = page;
       this.updateTopMedsPagination();
+    }
+  }
+
+  goToFastMovingPage(page: number) {
+    if (page >= 1 && page <= this.fastMovingTotalPages) {
+      this.fastMovingCurrentPage = page;
+      this.updateFastMovingPagination();
     }
   }
 }
