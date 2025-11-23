@@ -24,7 +24,7 @@ export class ViewSettleComponent implements OnInit {
   @Input() products: any[] = []; // Add this to receive products from parent
 
   vats: VAT[] = [];
-  discounts: Discount[] = [];
+  @Input() discounts: Discount[] = [];
   loggedInEmployee: Employee = new Employee();
   selectedVat: VAT | null = null;
   selectedDiscount: Discount | null = null;
