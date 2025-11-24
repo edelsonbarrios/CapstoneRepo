@@ -1,4 +1,3 @@
-// cashier-dashboard.component.ts
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,6 +35,7 @@ export class CashierDashboardComponent implements OnInit {
   viewInventory: any;
   finishedTransac: boolean = false;
   receipt: any;
+  pendingTransaction: any = null; // NEW: Store transaction before saving to DB
   newInvoice: string = '';
   timeNow: Date = new Date();
   timer: any;
@@ -141,7 +141,7 @@ export class CashierDashboardComponent implements OnInit {
 
   closeTransactionMessage() {
     this.finishedTransac = false;
-    this.openPrintReceiptForm();
+    this.receipt = null;
   }
 
   getAllCategories() {
@@ -220,8 +220,9 @@ export class CashierDashboardComponent implements OnInit {
     });
   }
 
+  // UPDATED: This now calls confirmTransaction before closing
   closeReceiptForm() {
-    this.receipt = null;
+    this.confirmTransaction();
   }
 
   getProductUnitPriceDisplay(product: any): number {
@@ -396,8 +397,6 @@ export class CashierDashboardComponent implements OnInit {
     return 0;
   }
 
-
-
   onItemDiscountChange(item: any) {
     const discount = this.discounts.find(d => d.id === item.discountId);
 
@@ -568,6 +567,7 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
+  // UPDATED: Store pending transaction and show receipt (NO DATABASE SAVE YET)
   handlePayment(event: any) {
     const employeeId = event.employeeID;
     if (!employeeId || employeeId <= 0) {
@@ -575,13 +575,28 @@ export class CashierDashboardComponent implements OnInit {
       return;
     }
 
-    this.postService.createSalesTransactionAsync(event).subscribe({
+    // Store the transaction data but DON'T save to database yet
+    this.pendingTransaction = event;
+    
+    // Show the receipt
+    this.receipt = event;
+    
+    // Close the settle form
+    this.closeViewSettle();
+  }
+
+  // NEW: This method saves the transaction to the database
+  confirmTransaction() {
+    if (!this.pendingTransaction) return;
+
+    // NOW save to database
+    this.postService.createSalesTransactionAsync(this.pendingTransaction).subscribe({
       next: () => {
-        this.receipt = event;
         this.getAllProducts();
         this.generateNewInvoiceNumber();
         this.clearSelection();
-        this.closeViewSettle();
+        this.pendingTransaction = null;
+        this.receipt = null;
         this.finishedTransac = true;
       },
       error: (err) => {
@@ -607,6 +622,8 @@ export class CashierDashboardComponent implements OnInit {
         }
 
         this.errorMessage = errorMsg;
+        this.receipt = null;
+        this.pendingTransaction = null;
       },
     });
   }

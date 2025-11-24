@@ -81,13 +81,26 @@
         <p class="total-amount">₱{{viewSales.totalAmount | number: '1.2-2'}}</p>
       </div>
 
-      <div class="final-info">
+      <div class="final-info vat-row">
         <label>VAT</label>
+        <div class="vat-details" *ngIf="appliedVat">
+          <span class="vat-text">{{ getVatDisplayText() }}</span>
+        </div>
+        <span class="vat-no-vat" *ngIf="!appliedVat">No VAT</span>
         <p class="vat-amount">₱{{viewSales.vatAmount | number: '1.2-2'}}</p>
       </div>
 
-      <div class="final-info">
+      <div class="final-info discount-row">
         <label>Discount</label>
+        <div class="discount-details" *ngIf="appliedDiscount">
+          <span class="discount-text">{{ getDiscountDisplayText() }}</span>
+          <span class="discount-type-badge" 
+                [class.percentage]="appliedDiscount.discountType === 'Percentage'"
+                [class.fixed]="appliedDiscount.discountType === 'Fixed'">
+            {{ appliedDiscount.discountType === 'Percentage' ? 'Percentage' : 'FIXED' }}
+          </span>
+        </div>
+        <span class="discount-no-discount" *ngIf="!appliedDiscount">No Discount</span>
         <p class="discount-amount">-₱{{viewSales.discountAmount | number: '1.2-2'}}</p>
       </div>
 

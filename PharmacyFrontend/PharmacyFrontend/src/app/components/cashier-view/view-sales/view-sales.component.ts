@@ -5,6 +5,7 @@ import { SalesTransaction } from '../../../models/sales-transaction-models/sales
 import { GetService } from '../../../services/GetService/get.service';
 import { Employee } from '../../../models/employee-models/employee';
 import { SalesItem } from '../../../models/sales-transaction-models/sales-item';
+import { Discount } from '../../../models/discount-models/discount';
 
 @Component({
   selector: 'app-view-sales',
@@ -18,6 +19,8 @@ export class ViewSalesComponent implements OnInit, OnChanges {
   @Output() closeForm = new EventEmitter<void>();
   paginatedItems: SalesItem[] = [];
   cashier: Employee = new Employee();
+  appliedDiscount: Discount | null = null;
+  appliedVat: any = null;
   
   // Cache for products to avoid multiple API calls
   private productCache: Map<number, Product> = new Map();
@@ -35,6 +38,8 @@ export class ViewSalesComponent implements OnInit, OnChanges {
     this.updatePagination();
     this.getCashier();
     this.preloadProducts(); // Load all products for items
+    this.getAppliedDiscount(); // Load discount details
+    this.getAppliedVat(); // Load VAT details
   }
  
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,6 +47,10 @@ export class ViewSalesComponent implements OnInit, OnChanges {
       this.currentPage = 1;
       this.updatePagination();
       this.preloadProducts();
+    }
+    if (changes['viewSales']) {
+      this.getAppliedDiscount();
+      this.getAppliedVat();
     }
   }
 
@@ -78,6 +87,71 @@ export class ViewSalesComponent implements OnInit, OnChanges {
         });
       } 
     });
+  }
+
+  /**
+   * Get discount details for the transaction
+   */
+  getAppliedDiscount() {
+    if (!this.viewSales.discountId || this.viewSales.discountId === 0) {
+      this.appliedDiscount = null;
+      return;
+    }
+
+    this.getService.getAllDiscountAsync().subscribe({
+      next: res => {
+        this.appliedDiscount = res.find(d => d.id === this.viewSales.discountId) || null;
+      },
+      error: err => {
+        console.log(`Error loading discount: ${err.error}`);
+        this.appliedDiscount = null;
+      }
+    });
+  }
+
+  /**
+   * Get discount display text with type and amount
+   */
+  getDiscountDisplayText(): string {
+    if (!this.appliedDiscount) return 'No Discount';
+
+    if (this.appliedDiscount.discountType === 'Percentage') {
+      return `${this.appliedDiscount.discountName} (${this.appliedDiscount.discountAmount}%)`;
+    } else if (this.appliedDiscount.discountType === 'Fixed') {
+      return `${this.appliedDiscount.discountName} (₱${
+        this.appliedDiscount.discountAmount?.toFixed(2) || '0.00'
+      })`;
+    }
+
+    return this.appliedDiscount.discountName;
+  }
+
+  /**
+   * Get VAT details for the transaction
+   */
+  getAppliedVat() {
+    if (!this.viewSales.vatId || this.viewSales.vatId === 0) {
+      this.appliedVat = null;
+      return;
+    }
+
+    this.getService.getAllVatAsync().subscribe({
+      next: res => {
+        this.appliedVat = res.find(v => v.vatid === this.viewSales.vatId) || null;
+      },
+      error: err => {
+        console.log(`Error loading VAT: ${err.error}`);
+        this.appliedVat = null;
+      }
+    });
+  }
+
+  /**
+   * Get VAT display text with percentage
+   */
+  getVatDisplayText(): string {
+    if (!this.appliedVat) return 'No VAT';
+    return `${this.appliedVat.vatName} (${this.appliedVat.vatRate}%)`;
   }
 
   /**
