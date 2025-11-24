@@ -1,4 +1,3 @@
-// cashier-dashboard.component.ts
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,12 +35,12 @@ export class CashierDashboardComponent implements OnInit {
   viewInventory: any;
   finishedTransac: boolean = false;
   receipt: any;
+  pendingTransaction: any = null; // NEW: Store transaction before saving to DB
   newInvoice: string = '';
   timeNow: Date = new Date();
   timer: any;
   errorMessage: string = '';
 
-  // NEW: Add discounts array
   discounts: Discount[] = [];
 
   products: (Product & {
@@ -100,7 +99,6 @@ export class CashierDashboardComponent implements OnInit {
     }, 1000);
   }
 
-  // NEW: Load all discounts
   getAllDiscounts() {
     this.getService.getAllDiscountAsync().subscribe({
       next: (res) => {
@@ -139,7 +137,7 @@ export class CashierDashboardComponent implements OnInit {
 
   closeTransactionMessage() {
     this.finishedTransac = false;
-    this.openPrintReceiptForm();
+    this.receipt = null;
   }
 
   getAllCategories() {
@@ -216,8 +214,9 @@ export class CashierDashboardComponent implements OnInit {
     });
   }
 
+  // UPDATED: This now calls confirmTransaction before closing
   closeReceiptForm() {
-    this.receipt = null;
+    this.confirmTransaction();
   }
 
   getProductUnitPriceDisplay(product: any): number {
@@ -291,7 +290,6 @@ export class CashierDashboardComponent implements OnInit {
     });
   }
 
-  // NEW: Calculate item discount amount
   calculateItemDiscountAmount(item: any): number {
     if (!item.selectedDiscount) return 0;
 
@@ -306,7 +304,6 @@ export class CashierDashboardComponent implements OnInit {
     return 0;
   }
 
-  // NEW: Handle item discount change
   onItemDiscountChange(item: any) {
     item.itemDiscountAmount = this.calculateItemDiscountAmount(item);
   }
@@ -390,7 +387,6 @@ export class CashierDashboardComponent implements OnInit {
     return this.selectedProducts.reduce((acc, p) => acc + (p.quantity || 0), 0);
   }
 
-  // UPDATED: Subtract item discounts from total
   getTotalPrice(): number {
     return this.selectedProducts.reduce((acc, p) => {
       const itemSubtotal = p.unitPrice * (p.quantity || 0);
@@ -419,6 +415,7 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
+  // UPDATED: Store pending transaction and show receipt (NO DATABASE SAVE YET)
   handlePayment(event: any) {
     const employeeId = event.employeeID;
     if (!employeeId || employeeId <= 0) {
@@ -426,13 +423,28 @@ export class CashierDashboardComponent implements OnInit {
       return;
     }
 
-    this.postService.createSalesTransactionAsync(event).subscribe({
+    // Store the transaction data but DON'T save to database yet
+    this.pendingTransaction = event;
+    
+    // Show the receipt
+    this.receipt = event;
+    
+    // Close the settle form
+    this.closeViewSettle();
+  }
+
+  // NEW: This method saves the transaction to the database
+  confirmTransaction() {
+    if (!this.pendingTransaction) return;
+
+    // NOW save to database
+    this.postService.createSalesTransactionAsync(this.pendingTransaction).subscribe({
       next: () => {
-        this.receipt = event;
         this.getAllProducts();
         this.generateNewInvoiceNumber();
         this.clearSelection();
-        this.closeViewSettle();
+        this.pendingTransaction = null;
+        this.receipt = null;
         this.finishedTransac = true;
       },
       error: (err) => {
@@ -458,6 +470,8 @@ export class CashierDashboardComponent implements OnInit {
         }
 
         this.errorMessage = errorMsg;
+        this.receipt = null;
+        this.pendingTransaction = null;
       },
     });
   }
