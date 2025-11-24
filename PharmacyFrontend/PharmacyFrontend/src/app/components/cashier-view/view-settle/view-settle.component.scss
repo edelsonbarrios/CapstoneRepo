@@ -275,6 +275,81 @@
           }
         }
       }
+
+      // NEW: Item Discount Cell Styling
+      .discount-cell {
+        padding: 0.5rem;
+        min-width: 140px;
+
+        .item-discount-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          align-items: flex-start;
+
+          .discount-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+
+            i {
+              font-size: 0.65rem;
+            }
+
+            .discount-name {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100px;
+            }
+          }
+
+          .discount-amount {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #059669;
+          }
+        }
+
+        .no-discount {
+          color: #9ca3af;
+          font-size: 0.875rem;
+          font-style: italic;
+        }
+      }
+
+      // NEW: Subtotal Cell with Discount Display
+      .subtotal-cell {
+        .subtotal-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.25rem;
+
+          .original-price {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+          }
+
+          .final-price {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e293b;
+
+            &.discounted {
+              color: #059669;
+              font-weight: 700;
+            }
+          }
+        }
+      }
     }
 
     // Pagination
@@ -352,6 +427,23 @@
           font-weight: 600;
           color: #475569;
           flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          // NEW: Icon styling
+          i {
+            color: #8b5cf6;
+            font-size: 0.9rem;
+
+            &.fa-tags {
+              color: #8b5cf6;
+            }
+
+            &.fa-receipt {
+              color: #3b82f6;
+            }
+          }
         }
 
         .input-group {
@@ -366,6 +458,28 @@
             color: #64748b;
             font-weight: 600;
             min-width: 100px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            // NEW: Discount type badge styling
+            .discount-type-badge {
+              padding: 0.125rem 0.5rem;
+              border-radius: 4px;
+              font-size: 0.7rem;
+              font-weight: 700;
+              text-transform: uppercase;
+
+              &.percentage {
+                background: #dbeafe;
+                color: #1e40af;
+              }
+
+              &.fixed {
+                background: #fef3c7;
+                color: #92400e;
+              }
+            }
           }
 
           select {
@@ -861,6 +975,43 @@
           input.qty-input {
             width: 40px;
             font-size: 11px;
+          }
+        }
+
+        // NEW: Responsive discount cell
+        .discount-cell {
+          min-width: 100px;
+
+          .item-discount-info {
+            .discount-badge {
+              font-size: 0.65rem;
+              padding: 0.2rem 0.4rem;
+
+              .discount-name {
+                max-width: 60px;
+              }
+            }
+
+            .discount-amount {
+              font-size: 0.75rem;
+            }
+          }
+
+          .no-discount {
+            font-size: 0.75rem;
+          }
+        }
+
+        // NEW: Responsive subtotal cell
+        .subtotal-cell {
+          .subtotal-wrapper {
+            .original-price {
+              font-size: 0.7rem;
+            }
+
+            .final-price {
+              font-size: 0.85rem;
+            }
           }
         }
       }

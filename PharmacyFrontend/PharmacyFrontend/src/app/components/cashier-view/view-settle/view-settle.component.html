@@ -28,6 +28,7 @@
           <th>Unit</th>
           <th>Qty</th>
           <th>Price</th>
+          <th>Item Discount</th>
           <th>Subtotal</th>
         </tr>
       </thead>
@@ -69,7 +70,34 @@
           </td>
 
           <td>{{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}</td>
-          <td>{{ item.quantity * (item.unitPrice || 0) | currency:'PHP':'symbol':'1.2-2' }}</td>
+
+          <!-- ITEM DISCOUNT COLUMN -->
+          <td class="discount-cell">
+            <div class="item-discount-info" *ngIf="item.selectedDiscount && item.itemDiscountAmount > 0">
+              <div class="discount-badge">
+                <i class="fa-solid fa-tag"></i>
+                <span class="discount-name">{{ item.selectedDiscount.discountName }}</span>
+              </div>
+              <div class="discount-amount">
+                -{{ item.itemDiscountAmount | currency:'PHP':'symbol':'1.2-2' }}
+              </div>
+            </div>
+            <span class="no-discount" *ngIf="!item.selectedDiscount || item.itemDiscountAmount === 0">
+              No discount
+            </span>
+          </td>
+
+          <!-- SUBTOTAL WITH DISCOUNT APPLIED -->
+          <td class="subtotal-cell">
+            <div class="subtotal-wrapper">
+              <span class="original-price" *ngIf="item.itemDiscountAmount > 0">
+                {{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}
+              </span>
+              <span class="final-price" [class.discounted]="item.itemDiscountAmount > 0">
+                {{ ((item.quantity * item.unitPrice) - (item.itemDiscountAmount || 0)) | currency:'PHP':'symbol':'1.2-2' }}
+              </span>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -82,8 +110,19 @@
 
     <!-- SUMMARY SECTION -->
     <div class="summary-section">
+      <!-- Item Discounts Total -->
+      <div class="summary-row" *ngIf="getTotalItemDiscounts() > 0">
+        <span class="label">
+          <i class="fa-solid fa-tags"></i>
+          Item Discounts:
+        </span>
+        <span class="value discount-value">
+          - {{ getTotalItemDiscounts() | currency:'PHP':'symbol':'1.2-2' }}
+        </span>
+      </div>
+
       <div class="summary-row">
-        <span class="label">Subtotal:</span>
+        <span class="label">Subtotal (After Item Discounts):</span>
         <span class="value">{{ subtotal | currency:'PHP':'symbol':'1.2-2' }}</span>
       </div>
 
@@ -101,9 +140,11 @@
         </span>
       </div>
 
-
       <div class="summary-row">
-        <span class="label">Discount:</span>
+        <span class="label">
+          <i class="fa-solid fa-receipt"></i>
+          Transaction Discount:
+        </span>
         <div class="input-group">
           <span class="selected-value" *ngIf="!selectedDiscount">No Discount</span>
           <span class="selected-value" *ngIf="selectedDiscount">
@@ -176,10 +217,11 @@
       <div class="change-display" *ngIf="payment > 0">
         <span class="label">
           <i class="fas fa-exchange-alt"></i>
-          {{ change < 0 ? 'Balance:' : 'Change:' }} </span>
-            <span class="value" [class.negative]="change < 0">
-              {{ change | currency:'PHP':'symbol':'1.2-2' }}
-            </span>
+          {{ change < 0 ? 'Balance:' : 'Change:' }}
+        </span>
+        <span class="value" [class.negative]="change < 0">
+          {{ change | currency:'PHP':'symbol':'1.2-2' }}
+        </span>
       </div>
     </div>
   </div>

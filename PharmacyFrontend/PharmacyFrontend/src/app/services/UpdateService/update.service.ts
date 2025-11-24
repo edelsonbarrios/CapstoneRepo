@@ -18,6 +18,7 @@ import { Category } from '../../models/category-models/category';
 import { VAT } from '../../models/vat-models/vat';
 import { UpdateEmployeeRequest } from '../../models/employee-models/updateEmployeeRequest';
 import { UpdateEmployeeAccountRequest } from '../../models/update-employee-account-request';
+import { Inventory } from '../../models/inventory-module-models/inventory';
 
 @Injectable({
   providedIn: 'root',
@@ -70,6 +71,12 @@ export class UpdateService {
       responseType: 'text',
     });
   }
+
+  assignInventoryDiscountsAsync(discountId : number, inventories : Inventory[]) : Observable<{message: string}> {
+    return this.httpClient.put<{message: string}>(`${this.apiUrl}/Put/AssignDiscounts?discountId=${discountId}`,
+    inventories);
+  }
+
   //Discount Service End
 
   //VAT Service

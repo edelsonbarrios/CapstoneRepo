@@ -5,4 +5,5 @@ export class Discount {
   discountAmount : number = 0;
   startDate ?: string = '';
   endDate ?: string = '';
+  isActive: boolean = false;
 }

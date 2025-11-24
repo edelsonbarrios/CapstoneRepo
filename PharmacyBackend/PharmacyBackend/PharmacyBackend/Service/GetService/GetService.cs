@@ -1303,7 +1303,8 @@ namespace PharmacyBackend.Service.GetService
           IsNearExpiry = i.IsNearExpiry,
           IsCriticalStock = i.IsCriticalStock,
           IsMultiUnit = i.IsMultiUnit,
-          TotalPiecesAvailable = i.TotalPiecesAvailable
+          TotalPiecesAvailable = i.TotalPiecesAvailable,
+          DiscountId = i.DiscountId,
           })
       .ToList();
     }

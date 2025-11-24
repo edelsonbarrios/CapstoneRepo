@@ -27,6 +27,7 @@ export class Inventory {
     isCriticalStock: boolean = false;
     isMultiUnit : boolean = false;
     totalPiecesAvailable:  number = 0;
+    discountId: number = 0;
 
   // Additional Properties
 

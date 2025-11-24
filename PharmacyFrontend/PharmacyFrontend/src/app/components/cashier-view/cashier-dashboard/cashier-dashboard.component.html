@@ -38,6 +38,14 @@
                 <span class="detail">{{ product.product.brandName }}</span>
                 <span class="divider" *ngIf="product.product.formulationName">•</span>
                 <span class="detail" *ngIf="product.product.formulationName">{{ product.product.formulationName }}</span>
+                <!-- UPDATED: Show discount badge with status -->
+                <span class="divider" *ngIf="product.discountId > 0">•</span>
+                <span class="discount-badge"
+                      *ngIf="product.discountId > 0"
+                      [ngClass]="getDiscountStatusClass(product)">
+                  <i class="fa-solid fa-tag"></i>
+                  {{ getDiscountStatusText(product) }}
+                </span>
               </div>
             </div>
           </div>
@@ -146,24 +154,34 @@
                 {{ item.unitPrice | currency:'PHP':'symbol':'1.2-2' }}
               </td>
 
-              <!-- NEW: DISCOUNT COLUMN -->
+              <!-- DISCOUNT COLUMN - Selectable discount dropdown -->
               <td class="discount-cell">
                 <div class="discount-wrapper">
-                  <select [(ngModel)]="item.selectedDiscount"
-                          (ngModelChange)="onItemDiscountChange(item)"
-                          class="discount-select">
-                    <option [ngValue]="null">No Discount</option>
-                    <option *ngFor="let discount of discounts" [ngValue]="discount">
+                  <!-- Dropdown to select discount or no discount -->
+                  <select
+                    [(ngModel)]="item.discountId"
+                    (ngModelChange)="onItemDiscountChange(item)"
+                    class="discount-select">
+                    <option [value]="0">No discount</option>
+                    <option
+                      *ngFor="let discount of getAvailableDiscountsForItem(item)"
+                      [value]="discount.id"
+                      [disabled]="!isDiscountValid(discount)">
                       {{ discount.discountName }}
                       <ng-container *ngIf="discount.discountType === 'Percentage'">
                         ({{ discount.discountAmount }}%)
                       </ng-container>
                       <ng-container *ngIf="discount.discountType === 'Fixed'">
-                        (₱{{ discount.discountAmount | number:'1.2-2' }})
+                        (₱{{ discount.discountAmount }})
+                      </ng-container>
+                      <ng-container *ngIf="!isDiscountValid(discount)">
+                        - Expired/Inactive
                       </ng-container>
                     </option>
                   </select>
-                  <div class="discount-amount" *ngIf="item.itemDiscountAmount > 0">
+
+                  <!-- Display applied discount amount if any -->
+                  <div class="discount-amount" *ngIf="item.discountId > 0 && item.itemDiscountAmount > 0">
                     <i class="fa-solid fa-tag"></i>
                     <span class="discount-value">-{{ item.itemDiscountAmount | currency:'PHP':'symbol':'1.2-2' }}</span>
                   </div>

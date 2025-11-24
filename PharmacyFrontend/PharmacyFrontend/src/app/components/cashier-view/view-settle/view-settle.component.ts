@@ -8,7 +8,6 @@ import { Employee } from '../../../models/employee-models/employee';
 import { GetService } from '../../../services/GetService/get.service';
 import { VAT } from '../../../models/vat-models/vat';
 import { Discount } from '../../../models/discount-models/discount';
-import { Product } from '../../../models/product-models/product';
 
 @Component({
   selector: 'app-view-settle',
@@ -21,7 +20,7 @@ export class ViewSettleComponent implements OnInit {
   @Input() cartItems: CartItem[] = [];
   @Input() subtotal: number = 0;
   @Input() newInvoice: string = '';
-  @Input() products: any[] = []; // Add this to receive products from parent
+  @Input() products: any[] = [];
 
   vats: VAT[] = [];
   @Input() discounts: Discount[] = [];
@@ -103,7 +102,6 @@ export class ViewSettleComponent implements OnInit {
     });
   }
 
-  // NEW: Get available unit measurements for a product
   getAvailableUnitMeasurements(item: any): string[] {
     if (!item) return [];
     const unitMeasurement =
@@ -118,7 +116,6 @@ export class ViewSettleComponent implements OnInit {
     }
   }
 
-  // NEW: Get max quantity for validation
   getMaxQuantity(item: any): number {
     const product = this.products.find(
       (p: any) => p.productID === item.productID
@@ -137,7 +134,6 @@ export class ViewSettleComponent implements OnInit {
     }
   }
 
-  // NEW: Resolve unit price from product
   resolveUnitPriceFromProduct(
     product: any,
     unit: 'Box' | 'Sheet' | 'Piece'
@@ -165,7 +161,6 @@ export class ViewSettleComponent implements OnInit {
     }
   }
 
-  // NEW: Handle unit type change
   onCartItemUnitTypeChange(item: any) {
     const product = this.products.find(
       (p: any) => p.productID === item.productID
@@ -184,12 +179,10 @@ export class ViewSettleComponent implements OnInit {
       }, 3000);
     }
 
-    // Recalculate subtotal
     this.recalculateSubtotal();
     this.onPaymentChange();
   }
 
-  // NEW: Handle quantity change
   onCartItemChange(item: any) {
     if (item.quantity && !Number.isInteger(Number(item.quantity))) {
       item.quantityError = 'Whole number only';
@@ -209,12 +202,10 @@ export class ViewSettleComponent implements OnInit {
       }, 3000);
     }
 
-    // Recalculate subtotal
     this.recalculateSubtotal();
     this.onPaymentChange();
   }
 
-  // NEW: Increment quantity
   incrementQuantity(item: any) {
     const max = this.getMaxQuantity(item);
     if (max !== Infinity && item.quantity >= max) {
@@ -229,7 +220,6 @@ export class ViewSettleComponent implements OnInit {
     this.onPaymentChange();
   }
 
-  // NEW: Decrement quantity
   decrementQuantity(item: any) {
     if (item.quantity > 1) {
       item.quantity--;
@@ -238,12 +228,18 @@ export class ViewSettleComponent implements OnInit {
     }
   }
 
-  // NEW: Recalculate subtotal when items change
+  // NEW: Get total of all item-level discounts
+  getTotalItemDiscounts(): number {
+    return this.cartItems.reduce((acc, item) => acc + (item.itemDiscountAmount || 0), 0);
+  }
+
+  // UPDATED: Recalculate subtotal including item discounts
   recalculateSubtotal() {
-    this.subtotal = this.cartItems.reduce(
-      (acc, item) => acc + item.unitPrice * (item.quantity || 0),
-      0
-    );
+    this.subtotal = this.cartItems.reduce((acc, item) => {
+      const itemSubtotal = item.unitPrice * (item.quantity || 0);
+      const itemDiscount = item.itemDiscountAmount || 0;
+      return acc + (itemSubtotal - itemDiscount);
+    }, 0);
   }
 
   calculateDiscountAmount(): number {
@@ -353,8 +349,11 @@ export class ViewSettleComponent implements OnInit {
         unitPrice: i.unitPrice,
         salesTransactionId: 0,
         product: i.product,
+        itemDiscountAmount: i.itemDiscountAmount || 0,
+        selectedDiscount: i.selectedDiscount || null,
       })),
       totalAmount: this.calculateTotals(),
+      totalItemDiscounts: this.getTotalItemDiscounts(),
     };
 
     this.paymentConfirmed.emit(eventPayload);

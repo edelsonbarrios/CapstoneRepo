@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { GetService } from '../../../../services/GetService/get.service';
 import { Discount } from '../../../../models/discount-models/discount';
 import { Inventory } from '../../../../models/inventory-module-models/inventory';
+import { UpdateService } from '../../../../services/UpdateService/update.service';
 
 @Component({
   selector: 'app-assign-inventory-discount',
@@ -20,6 +21,7 @@ export class AssignInventoryDiscountComponent implements OnInit {
   inventories: Inventory[] = [];
   searchQuery: string = '';
   addItem: boolean = false;
+  assignMessage : string = '';
 
   // Pagination
   paginatedInventories: Inventory[] = [];
@@ -27,10 +29,44 @@ export class AssignInventoryDiscountComponent implements OnInit {
   itemsPerPage = 8;
   totalPages = 0;
 
-  constructor(private getService: GetService) {}
+  constructor(
+    private getService: GetService,
+    private updateService : UpdateService
+  ) {}
 
   ngOnInit(): void {
     this.loadInventories();
+  }
+
+  closeAssignModal() {
+    this.close.emit();
+  }
+
+  assignInventoryDiscounts() {
+    if(this.discount == null) {
+      console.log('Discount is empty');
+      return;
+    }
+    const selectedInventories = this.inventories.filter(iv => iv.selected);
+
+    if(selectedInventories.length === 0) {
+      this.addItem = true;
+      return;
+    }
+
+    this.updateService.assignInventoryDiscountsAsync(this.discount.id, selectedInventories).subscribe({
+      next: res => {
+        this.assignMessage = res.message;
+      },
+      error: err => {
+        console.log(`${err.error}`);
+      }
+    });
+  }
+
+  closeAssignMessage() {
+    this.assignMessage = '';
+    this.close.emit();
   }
 
   loadInventories(): void {

@@ -40,5 +40,6 @@ namespace PharmacyBackend.DTOs.InventoryDTOs
         public bool IsMultiUnit { get; set; }
         public int TotalPiecesAvailable { get; set; }
         public bool IsDeleted { get; set; }
+        public int? DiscountId {get; set;}
     }
 }

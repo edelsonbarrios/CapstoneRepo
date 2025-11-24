@@ -41,7 +41,6 @@ export class CashierDashboardComponent implements OnInit {
   timer: any;
   errorMessage: string = '';
 
-  // NEW: Add discounts array
   discounts: Discount[] = [];
 
   products: (Product & {
@@ -60,9 +59,12 @@ export class CashierDashboardComponent implements OnInit {
     product: Product;
     piecePerBox: number;
     reorderLevel: number;
+    discountId: number;
+    inventoryID: number;
   })[] = [];
 
   selectedProducts: {
+    inventoryID: number;
     productID: number;
     productName: string;
     categoryName: string;
@@ -74,8 +76,9 @@ export class CashierDashboardComponent implements OnInit {
     unitPrice: number;
     unitMeasurement: string;
     quantityError?: string;
-    selectedDiscount?: Discount | null;
+    selectedDiscount: Discount | undefined;
     itemDiscountAmount: number;
+    discountId: number;
     product?: any;
   }[] = [];
 
@@ -100,7 +103,6 @@ export class CashierDashboardComponent implements OnInit {
     }, 1000);
   }
 
-  // NEW: Load all discounts
   getAllDiscounts() {
     this.getService.getAllDiscountAsync().subscribe({
       next: (res) => {
@@ -167,6 +169,8 @@ export class CashierDashboardComponent implements OnInit {
           product: p.product,
           piecePerBox: p.piecePerBox,
           reorderLevel: p.reorderLevel,
+          discountId: p.discountId || 0,
+          inventoryID: p.inventoryID,
         }));
       },
       error: (err) => console.error(err.error),
@@ -252,6 +256,35 @@ export class CashierDashboardComponent implements OnInit {
     }
   }
 
+  /**
+   * Check if a discount is currently valid based on dates and active status
+   */
+  isDiscountValid(discount: Discount): boolean {
+    if (!discount || !discount.isActive) {
+      return false;
+    }
+
+    const now = new Date();
+
+    // Check start date (if exists)
+    if (discount.startDate) {
+      const startDate = new Date(discount.startDate);
+      if (now < startDate) {
+        return false; // Discount hasn't started yet
+      }
+    }
+
+    // Check end date (if exists)
+    if (discount.endDate) {
+      const endDate = new Date(discount.endDate);
+      if (now > endDate) {
+        return false; // Discount has expired
+      }
+    }
+
+    return true;
+  }
+
   addSelectedProducts() {
     const toAdd = this.products.filter((p) => p.selected);
 
@@ -261,13 +294,28 @@ export class CashierDashboardComponent implements OnInit {
       const qtyToAdd = p.quantity && p.quantity > 0 ? p.quantity : 1;
 
       const existing = this.selectedProducts.find(
-        (sp) => sp.productID === p.productID && sp.unitType === unitType
+        (sp) => sp.inventoryID === p.inventoryID && sp.unitType === unitType
       );
 
       if (existing) {
         existing.quantity += qtyToAdd;
+        this.calculateAndApplyItemDiscount(existing);
       } else {
-        this.selectedProducts.push({
+        // Find discount if inventory has one AND validate it
+        let assignedDiscount: Discount | undefined = undefined;
+        if (p.discountId > 0) {
+          const discount = this.discounts.find(d => d.id === p.discountId);
+          // ADDED: Check if discount is valid
+          if (discount && this.isDiscountValid(discount)) {
+            assignedDiscount = discount;
+          } else if (discount && !this.isDiscountValid(discount)) {
+            // Optional: Show warning that discount is expired
+            console.warn(`Discount "${discount.discountName}" for ${p.productName} is expired or inactive`);
+          }
+        }
+
+        const newItem = {
+          inventoryID: p.inventoryID,
           productID: p.productID,
           productName: p.productName,
           categoryName: p.categoryName || '',
@@ -278,11 +326,19 @@ export class CashierDashboardComponent implements OnInit {
           unitPrice: price,
           unitMeasurement: p.unitMeasurement,
           batchNumber: p.batchNumber || '',
-          selectedDiscount: null,
+          selectedDiscount: assignedDiscount,
           itemDiscountAmount: 0,
+          discountId: p.discountId || 0,
+          originalDiscountId: p.discountId || 0,
           product: p.product,
           quantityError: undefined,
-        });
+        };
+
+        if (newItem.selectedDiscount) {
+          this.calculateAndApplyItemDiscount(newItem);
+        }
+
+        this.selectedProducts.push(newItem);
       }
 
       p.selected = false;
@@ -291,7 +347,41 @@ export class CashierDashboardComponent implements OnInit {
     });
   }
 
-  // NEW: Calculate item discount amount
+  calculateAndApplyItemDiscount(item: any) {
+    if (!item.selectedDiscount) {
+      item.itemDiscountAmount = 0;
+      return;
+    }
+
+    const itemSubtotal = item.quantity * item.unitPrice;
+
+    if (item.selectedDiscount.discountType === 'Percentage') {
+      item.itemDiscountAmount = itemSubtotal * (item.selectedDiscount.discountAmount / 100);
+    } else if (item.selectedDiscount.discountType === 'Fixed') {
+      item.itemDiscountAmount = Math.min(item.selectedDiscount.discountAmount, itemSubtotal);
+    } else {
+      item.itemDiscountAmount = 0;
+    }
+  }
+
+  getAvailableDiscountsForItem(item: any): Discount[] {
+    // Use the stored original inventory discount
+    if (!item.originalDiscountId || item.originalDiscountId === 0) {
+      return [];
+    }
+
+    const discount = this.discounts.find(d => d.id === item.originalDiscountId);
+
+    if (!discount) return [];
+
+    if (!this.isDiscountValid(discount)) return [];
+
+    this.calculateItemDiscountAmount(item);
+    this.calculateAndApplyItemDiscount(item);
+
+    return [discount];
+  }
+
   calculateItemDiscountAmount(item: any): number {
     if (!item.selectedDiscount) return 0;
 
@@ -306,9 +396,69 @@ export class CashierDashboardComponent implements OnInit {
     return 0;
   }
 
-  // NEW: Handle item discount change
+
+
   onItemDiscountChange(item: any) {
-    item.itemDiscountAmount = this.calculateItemDiscountAmount(item);
+    const discount = this.discounts.find(d => d.id === item.discountId);
+
+    if (!discount) {
+      item.selectedDiscount = undefined;
+      item.itemDiscountAmount = 0;
+    } else {
+      item.selectedDiscount = discount;
+    }
+
+    this.calculateAndApplyItemDiscount(item);
+
+    // 🚀 FORCE Angular to update the UI
+    this.selectedProducts = [...this.selectedProducts];
+  }
+
+
+
+  // OPTIONAL: Visual indicator methods for product list
+  getDiscountStatusClass(product: any): string {
+    if (product.discountId === 0) {
+      return '';
+    }
+
+    const discount = this.discounts.find(d => d.id === product.discountId);
+    if (!discount) {
+      return 'discount-missing';
+    }
+
+    if (!this.isDiscountValid(discount)) {
+      return 'discount-expired';
+    }
+
+    return 'discount-active';
+  }
+
+  getDiscountStatusText(product: any): string {
+    if (product.discountId === 0) {
+      return '';
+    }
+
+    const discount = this.discounts.find(d => d.id === product.discountId);
+    if (!discount) {
+      return 'Discount Not Found';
+    }
+
+    if (!discount.isActive) {
+      return 'Discount Inactive';
+    }
+
+    const now = new Date();
+
+    if (discount.startDate && now < new Date(discount.startDate)) {
+      return 'Starts ' + new Date(discount.startDate).toLocaleDateString();
+    }
+
+    if (discount.endDate && now > new Date(discount.endDate)) {
+      return 'Expired';
+    }
+
+    return 'Discount Available';
   }
 
   incrementQuantity(item: any) {
@@ -321,13 +471,13 @@ export class CashierDashboardComponent implements OnInit {
       return;
     }
     item.quantity++;
-    this.onItemDiscountChange(item);
+    this.calculateAndApplyItemDiscount(item);
   }
 
   decrementQuantity(item: any) {
     if (item.quantity > 1) {
       item.quantity--;
-      this.onItemDiscountChange(item);
+      this.calculateAndApplyItemDiscount(item);
     }
   }
 
@@ -342,7 +492,7 @@ export class CashierDashboardComponent implements OnInit {
     if (!item.quantity || item.quantity < 1) item.quantity = 1;
     if (!item.unitPrice || item.unitPrice < 0) item.unitPrice = 0;
 
-    const product = this.products.find((p) => p.productID === item.productID);
+    const product = this.products.find((p) => p.inventoryID === item.inventoryID);
     if (product && (!item.unitPrice || item.unitPrice === 0)) {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
     }
@@ -356,11 +506,11 @@ export class CashierDashboardComponent implements OnInit {
       }, 3000);
     }
 
-    this.onItemDiscountChange(item);
+    this.calculateAndApplyItemDiscount(item);
   }
 
   onCartItemUnitTypeChange(item: any) {
-    const product = this.products.find((p) => p.productID === item.productID);
+    const product = this.products.find((p) => p.inventoryID === item.inventoryID);
     if (!product) return;
 
     const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
@@ -375,7 +525,7 @@ export class CashierDashboardComponent implements OnInit {
       }, 3000);
     }
 
-    this.onItemDiscountChange(item);
+    this.calculateAndApplyItemDiscount(item);
   }
 
   removeFromCart(index: number) {
@@ -390,7 +540,6 @@ export class CashierDashboardComponent implements OnInit {
     return this.selectedProducts.reduce((acc, p) => acc + (p.quantity || 0), 0);
   }
 
-  // UPDATED: Subtract item discounts from total
   getTotalPrice(): number {
     return this.selectedProducts.reduce((acc, p) => {
       const itemSubtotal = p.unitPrice * (p.quantity || 0);
@@ -404,7 +553,7 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   getMaxQuantity(item: any): number {
-    const product = this.products.find((p) => p.productID === item.productID);
+    const product = this.products.find((p) => p.inventoryID === item.inventoryID);
     if (!product) return Infinity;
 
     switch (item.unitType) {

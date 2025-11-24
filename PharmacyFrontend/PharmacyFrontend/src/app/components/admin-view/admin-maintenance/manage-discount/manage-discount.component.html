@@ -175,7 +175,7 @@
 <app-assign-inventory-discount
     *ngIf="selectedDiscountForAssign"
     [discount]="selectedDiscountForAssign"
-
+    (close)="closeAssignModal()"
   >
 
 </app-assign-inventory-discount>

@@ -42,13 +42,12 @@
             <th>Box Qty</th>
             <th>Sheet Qty</th>
             <th>Piece Qty</th>
-            <th>Box Price</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="paginatedInventories.length === 0">
-            <td colspan="11" class="empty-state">
+            <td colspan="10" class="empty-state">
               {{
                 searchQuery
                   ? "No inventory items found matching your search."
@@ -72,7 +71,6 @@
             <td class="quantity">{{ inventory.boxQuantity }}</td>
             <td class="quantity">{{ inventory.sheetQuantity }}</td>
             <td class="quantity">{{ inventory.pieceQuantity }}</td>
-            <td class="price">{{ inventory.boxPrice | currency: 'PHP': 'symbol-narrow' }}</td>
             <td>
               <span class="status-badge" [ngClass]="getStockStatusClass(inventory)">
                 {{ getStockStatus(inventory) }}
@@ -105,8 +103,8 @@
 
   <!-- Footer Actions -->
   <div class="modal-footer">
-    <button class="btn-secondary" (click)="cancel()">Cancel</button>
-    <button class="btn-primary" (click)="addSelected()">
+    <button class="btn-secondary" (click)="closeAssignModal()">Cancel</button>
+    <button class="btn-primary" (click)="assignInventoryDiscounts()">
       Assign to Selected ({{ selectedCount }})
     </button>
   </div>
@@ -119,6 +117,16 @@
     <p class="alert-message">Please select at least one inventory item.</p>
     <div class="alert-footer">
       <button class="ok-btn" (click)="closeAddItemMessage()">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-overlay" *ngIf="assignMessage">
+  <div class="success-alert">
+    <div class="alert-icon">✓</div>
+    <p class="alert-message">Discount assigned successfully!</p>
+    <div class="alert-footer">
+      <button class="ok-btn" (click)="closeAssignMessage()">OK</button>
     </div>
   </div>
 </div>
