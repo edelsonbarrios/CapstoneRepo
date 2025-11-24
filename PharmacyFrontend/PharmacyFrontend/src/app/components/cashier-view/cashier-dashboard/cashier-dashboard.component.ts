@@ -699,4 +699,53 @@ export class CashierDashboardComponent implements OnInit {
   closeErrorMessageForm() {
     this.errorMessage = '';
   }
+  
+  handleCancelTransaction() {
+    this.receipt = null;
+  }
+  // Add this method after handleCancelTransaction() in your cashier-dashboard.component.ts
+
+handleFinishTransaction() {
+  if (!this.pendingTransaction) return;
+
+  // NOW save to database
+  this.postService
+    .createSalesTransactionAsync(this.pendingTransaction)
+    .subscribe({
+      next: () => {
+        this.getAllProducts();
+        this.generateNewInvoiceNumber();
+        this.clearSelection();
+        this.pendingTransaction = null;
+        this.receipt = null;
+        this.finishedTransac = true;
+      },
+      error: (err) => {
+        console.error('Full error object:', err);
+
+        let errorMsg = 'An unexpected error occurred';
+
+        if (err.error) {
+          if (typeof err.error === 'string') {
+            try {
+              const parsed = JSON.parse(err.error);
+              errorMsg = parsed.Message || parsed.message || err.error;
+            } catch {
+              errorMsg = err.error;
+            }
+          } else if (err.error.Message) {
+            errorMsg = err.error.Message;
+          } else if (err.error.message) {
+            errorMsg = err.error.message;
+          }
+        } else if (err.message) {
+          errorMsg = err.message;
+        }
+
+        this.errorMessage = errorMsg;
+        this.receipt = null;
+        this.pendingTransaction = null;
+      },
+    });
+}
 }

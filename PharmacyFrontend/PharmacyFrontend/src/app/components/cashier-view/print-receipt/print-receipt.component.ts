@@ -37,6 +37,9 @@ interface ReceiptPayload {
 export class PrintReceiptComponent implements OnInit {
   @Input() receiptData!: ReceiptPayload;
   @Output() closeForm = new EventEmitter<void>();
+  @Output() cancelTransaction = new EventEmitter<void>();
+  @Output() finishTransaction = new EventEmitter<void>();
+  
   finishedTransac: boolean = false;
   paginatedItems: ReceiptItem[] = [];
   isPrinting: boolean = false;
@@ -124,7 +127,15 @@ export class PrintReceiptComponent implements OnInit {
     return product ? product.productName : '';
   }
 
-  close() {
-    this.closeForm.emit();
+  cancel() {
+    this.cancelTransaction.emit();
+  }
+
+  finish() {
+    this.finishedTransac = true;
+  }
+
+  confirmFinish() {
+    this.finishTransaction.emit();
   }
 }
