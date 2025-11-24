@@ -77,8 +77,13 @@
     <!-- Summary Section -->
     <div class="summary-section">
       <div class="final-info">
-        <label>Total Amount</label>
-        <p class="total-amount">₱{{viewSales.totalAmount | number: '1.2-2'}}</p>
+        <label>Total Amount <span>(Vat & Discount inlcuded.)</span></label>
+        <p class="total-amount">₱{{calculateTotalAmount() | number: '1.2-2'}}</p>
+      </div>
+
+      <div class="final-info">
+        <label>Subtotal</label>
+        <p class="subtotal-amount">₱{{calculateSubtotal() | number: '1.2-2'}}</p>
       </div>
 
       <div class="final-info vat-row">

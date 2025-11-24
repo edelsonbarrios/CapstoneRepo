@@ -1,0 +1,202 @@
+<main class="wrapper">
+
+  <!-- MIDDLE CONTAINER -->
+  <div class="mid container">
+
+    <div class="grid-items fast-moving">
+      <h2>Fast Moving Product</h2>
+
+      <div *ngIf="fastMovingLoading" style="text-align: center; padding: 2rem; color: #6b7280;">
+        Loading...
+      </div>
+
+      <div *ngIf="fastMovingError" style="text-align: center; padding: 2rem; color: #dc2626;">
+        {{fastMovingError}}
+      </div>
+
+      <div class="table-wrapper" *ngIf="!fastMovingLoading && fastMovingProducts.length > 0">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Product Name</th>
+              <th>Brand</th>
+              <th>Generic Name</th>
+              <th>Revenue</th>
+              <th>Stock</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="paginatedFastMoving.length === 0">
+              <td colspan="7" style="text-align: center; color: #525252; padding: 1rem;">
+                No recent data
+              </td>
+            </tr>
+            <tr *ngFor="let p of paginatedFastMoving">
+              <td>
+                <span class="rank-badge" 
+                      [class.rank-1]="p.rank === 1" 
+                      [class.rank-2]="p.rank === 2" 
+                      [class.rank-3]="p.rank === 3">
+                  {{p.rank}}
+                </span>
+              </td>
+              <td class="product-name">{{p.productName}}</td>
+              <td>{{p.brand || 'N/A'}}</td>
+              <td>{{p.generic || 'N/A'}}</td>
+              <td class="revenue">{{p.revenue | currency:'PHP':'symbol-narrow'}}</td>
+              <td>
+                <span [style.color]="p.currentStock < 10 ? '#dc2626' : '#10b981'">
+                  {{p.currentStock | number}}
+                </span>
+              </td>
+              <td>
+                <span class="trend-badge"
+                      [class.trend-increasing]="p.trend === 'Increasing'"
+                      [class.trend-stable]="p.trend === 'Stable'"
+                      [class.trend-decreasing]="p.trend === 'Decreasing'">
+                  {{p.trend}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAGINATION CONTROLS FOR FAST MOVING -->
+      <div class="pagination-controls" *ngIf="!fastMovingLoading && paginatedFastMoving.length > 0">
+        <button class="btn-page" [disabled]="fastMovingCurrentPage === 1" (click)="goToFastMovingPage(fastMovingCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{fastMovingCurrentPage}} of {{fastMovingTotalPages}}</span>
+        <button class="btn-page" [disabled]="fastMovingCurrentPage === fastMovingTotalPages" (click)="goToFastMovingPage(fastMovingCurrentPage + 1)">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOWER CONTAINER -->
+  <div class="lower container">
+    
+    <div class="grid-items top-selling">
+      <h2>Top Selling Product</h2>
+      
+      <!-- TSM TABLE-->
+      <table class="top-meds-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Unit Type</th>
+            <th>Qty Sold</th>
+            <th>Available Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="topSellingMedicines.length === 0">
+            <td colspan="4" style="text-align: center; color: #94a3b8; padding: 2rem;">
+              No recent data
+            </td>
+          </tr>
+          <tr *ngFor="let med of paginatedTopMeds">
+            <td>{{med.productName}}</td>
+            <td>
+              <span class="unit-badge" [ngClass]="{
+                'multi-level': med.unitType === 'Multi-Level',
+                'dual-level': med.unitType === 'Dual-Level',
+                'single-level': med.unitType === 'Single-Level'
+              }">
+                {{med.unitType}}
+              </span>
+            </td>
+            <td>
+              <div class="qty-breakdown">
+                <!-- Multi-Level -->
+                <div *ngIf="med.unitType === 'Multi-Level'" class="sold-items">
+                  <span class="sold-badge">Box: {{med.quantitySoldBreakdown.box}}</span>
+                  <span class="sold-badge">Sheet: {{med.quantitySoldBreakdown.sheet}}</span>
+                  <span class="sold-badge">Pc: {{med.quantitySoldBreakdown.piece}}</span>
+                </div>
+                <!-- Dual-Level -->
+                <div *ngIf="med.unitType === 'Dual-Level'" class="sold-items">
+                  <span class="sold-badge">Box: {{med.quantitySoldBreakdown.box}}</span>
+                  <span class="sold-badge">Pc: {{med.quantitySoldBreakdown.piece}}</span>
+                </div>
+                <!-- Single-Level -->
+                <div *ngIf="med.unitType === 'Single-Level'" class="sold-items">
+                  <span class="sold-badge">Pieces: {{med.quantitySoldBreakdown.piece}}</span>
+                </div>
+                <div class="total-qty">Total: {{med.totalQty}}</div>
+              </div>
+            </td>
+            <td>{{med.availableStock}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- PAGINATION CONTROLS FOR TOP MEDS -->
+      <div class="pagination-controls" *ngIf="topSellingMedicines.length > 0">
+        <button class="btn-page" [disabled]="topMedsCurrentPage === 1" (click)="goToTopMedsPage(topMedsCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{topMedsCurrentPage}} of {{topMedsTotalPages}}</span>
+        <button class="btn-page" [disabled]="topMedsCurrentPage === topMedsTotalPages" (click)="goToTopMedsPage(topMedsCurrentPage + 1)">Next</button>
+      </div>
+    </div>
+
+    <div class="grid-items slow-moving">
+      <h2>Critical Stock</h2>
+
+      <div *ngIf="criticalLoading" style="text-align: center; padding: 2rem; color: #6b7280;">
+        Loading...
+      </div>
+
+      <div *ngIf="criticalError" style="text-align: center; padding: 2rem; color: #dc2626;">
+        {{criticalError}}
+      </div>
+
+      <div class="table-wrapper" *ngIf="!criticalLoading && criticalStockItems.length > 0">
+        <table class="critical-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Batch</th>
+              <th>Unit Type</th>
+              <th>Quantity</th>
+              <th>Reorder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="paginatedCriticalStock.length === 0">
+              <td colspan="5" style="text-align: center; color: #525252; padding: 1rem;">
+                No recent data
+              </td>
+            </tr>
+            <tr *ngFor="let i of paginatedCriticalStock">
+              <td>{{i.productName}}</td>
+              <td>{{i.batchNumber}}</td>
+              <!-- Unit Type based on measurement -->
+              <td *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">Box</td>
+              <td *ngIf="i.product.unitMeasurement == 'Single-Level'">Pieces</td>
+              <!-- Quantity based on measurement -->
+              <td>
+                <span class="badge badge-danger"
+                  *ngIf="i.product.unitMeasurement == 'Multi-Level' || i.product.unitMeasurement == 'Dual-Level'">
+                  {{i.boxQuantity}}
+                </span>
+                <span class="badge badge-danger"
+                  *ngIf="i.product.unitMeasurement == 'Single-Level'">
+                  {{i.pieceQuantity}}
+                </span>
+              </td>
+              <!-- Reorder level -->
+              <td>{{i.reorderLevel}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PAGINATION CONTROLS FOR CRITICAL STOCK -->
+      <div class="pagination-controls" *ngIf="!criticalLoading && paginatedCriticalStock.length > 0">
+        <button class="btn-page" [disabled]="criticalCurrentPage === 1" (click)="goToCriticalPage(criticalCurrentPage - 1)">Previous</button>
+        <span class="page-info">Page {{criticalCurrentPage}} of {{criticalTotalPages}}</span>
+        <button class="btn-page" [disabled]="criticalCurrentPage === criticalTotalPages" (click)="goToCriticalPage(criticalCurrentPage + 1)">Next</button>
+      </div>
+    </div>
+  </div>
+</main>

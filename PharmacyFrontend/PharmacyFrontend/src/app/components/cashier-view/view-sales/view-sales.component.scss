@@ -217,6 +217,11 @@
     border-radius: 10px;
     padding: 1rem;
     border: 2px solid #e2e8f0;
+    
+    span {
+      font-weight: 500;
+      font-size: 0.7rem;
+    }
 
     .final-info {
       display: flex;
@@ -274,6 +279,10 @@
 
         &.discount-amount {
           color: #ef4444;
+        }
+
+        &.subtotal-amount {
+          color: #006dba;
         }
       }
 

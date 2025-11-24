@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="receipt-header">
       <h1>Racquel Pharmacy</h1>
-      <h2>123 Amparo, Quezon City</h2>
+      <h2>Barangay 179, Makabud St. Amparo Subdivision Caloocan City</h2>
       <p><strong>Invoice #:</strong> {{ receiptData.invoiceNumber }}</p>
       <p><strong>Date:</strong> {{ today | date: 'medium' }}</p>
       <p><strong>Cashier Name:</strong> {{ cashier.fullName }}</p>
@@ -17,9 +17,9 @@
       <thead>
         <tr>
           <th>Product</th>
-          <th>Quantity</th>
-          <th>Unit Type</th>
-          <th>Unit Price</th>
+          <th>Qty</th>
+          <th>Unt Type</th>
+          <th>Unt Price</th>
           <th>Total</th>
         </tr>
       </thead>
@@ -53,7 +53,10 @@
     <div class="receipt-footer">
       <p>Thank you for shopping with Racquel Pharmacy!</p>
       <p>Please come again</p>
-      <button (click)="finishedTransac = true">Finish</button>
+      <div class="footer-buttons">
+        <button class="cancel-btn" (click)="close()">Cancel</button>
+        <button class="finish-btn" (click)="finishedTransac = true">Finish</button>
+      </div>
     </div>
   </div>
 </div>

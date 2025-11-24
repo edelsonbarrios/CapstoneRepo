@@ -1,5 +1,9 @@
 <div class="wrapper">
   <nav class="left-nav">
+    <a routerLink="/cashier-main/cashier-info">
+      <span><i class="fa-solid fa-grip"></i></span>
+      Cashier Dashboard
+    </a>
     <a routerLink="/cashier-main/cashier-dashboard">
       <span><i class="fa-solid fa-desktop"></i></span>
       POS
@@ -9,12 +13,6 @@
       Daily Sales
     </a>
   </nav>
-
-  <!-- Employee Information -->
-  <div class="employee-info">
-    <i class="fa-solid fa-user-circle"></i>
-    <span class="employee-name">{{ employee.fullName || (employee.firstName + ' ' + employee.lastName) }}</span>
-  </div>
 
   <!-- Date & Time Display -->
   <div class="datetime-display">
@@ -28,16 +26,25 @@
     </div>
   </div>
 
-  <nav class="right-nav">
-    <a routerLink="/cashier-main/your-account">
-      <span><i class="fa-solid fa-gear"></i></span>
-      Your Account
-    </a>
-    <a (click)="logOut()">
-      <span><i class="fa-solid fa-right-from-bracket"></i></span>
-      Logout
-    </a>
-  </nav>
+  <!-- Employee Dropdown -->
+  <div class="employee-dropdown">
+    <div class="employee-info" (click)="toggleDropdown()">
+      <i class="fa-solid fa-user-circle"></i>
+      <span class="employee-name">{{ employee.fullName || (employee.firstName + ' ' + employee.lastName) }}</span>
+      <i class="fa-solid fa-chevron-down dropdown-icon" [class.rotate]="isDropdownOpen"></i>
+    </div>
+    
+    <div class="dropdown-menu" *ngIf="isDropdownOpen">
+      <a routerLink="/cashier-main/your-account" (click)="closeDropdown()">
+        <span><i class="fa-solid fa-gear"></i></span>
+        Your Account
+      </a>
+      <a (click)="logOut()">
+        <span><i class="fa-solid fa-right-from-bracket"></i></span>
+        Logout
+      </a>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" *ngIf="viewCashierProduct">

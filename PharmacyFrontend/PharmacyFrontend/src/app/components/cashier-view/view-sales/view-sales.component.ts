@@ -199,6 +199,22 @@ export class ViewSalesComponent implements OnInit, OnChanges {
     return displayQty * item.unitPrice;
   }
 
+  /**
+   * Calculate the total subtotal from all items
+   */
+  calculateSubtotal(): number {
+    return this.viewSales.items.reduce((sum, item) => {
+      return sum + this.getDisplaySubtotal(item);
+    }, 0);
+  }
+
+  /**
+   * Calculate total amount: Subtotal + VAT - Discount
+   */
+  calculateTotalAmount(): number {
+    return this.calculateSubtotal() + this.viewSales.vatAmount - this.viewSales.discountAmount;
+  }
+
   closeViewSales() {
     this.closeForm.emit();
   }

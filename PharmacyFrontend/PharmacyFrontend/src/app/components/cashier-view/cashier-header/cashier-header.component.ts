@@ -20,6 +20,7 @@ export class CashierHeaderComponent implements OnInit, OnDestroy {
   dateTime: Date = new Date();
   timer: any;
   employee: Employee = new Employee();
+  isDropdownOpen: boolean = false;
 
   constructor(
     private router: Router,
@@ -51,7 +52,16 @@ export class CashierHeaderComponent implements OnInit, OnDestroy {
     this.viewCashierProduct = null;
   }
 
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+  }
+
   logOut() {
+    this.closeDropdown();
     localStorage.removeItem(LogInToken);
     this.router.navigate(['/log-in'], { replaceUrl: true });
     this.router.navigateByUrl('/log-in');

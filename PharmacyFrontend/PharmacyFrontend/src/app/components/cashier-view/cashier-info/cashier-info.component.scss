@@ -1,0 +1,391 @@
+.wrapper {
+  display: grid;
+  grid-template-columns:1fr 1fr;
+  height: 100%;
+  padding: 1rem;
+  gap: 10px;
+
+  h2 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #284368;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+
+  .mid {
+    
+    .fast-moving { 
+      height: 100%;
+    }
+  }
+
+  .lower {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .grid-items {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    padding: 1.5rem;
+  }
+
+  // Top Selling Medicines Table
+  .top-meds-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      padding: 0.7rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      color: #475569;
+      background: #f8fafc;
+      border-bottom: 2px solid #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    // Column widths for the 4-column layout
+    th:nth-child(1) { width: 30%; } // Product
+    th:nth-child(2) { width: 20%; } // Unit Type
+    th:nth-child(3) { width: 30%; } // Qty Sold
+    th:nth-child(4) { width: 20%; } // Available Stock
+
+    td {
+      padding: 0.6rem;
+      text-align: left;
+      color: #334155;
+      font-weight: 500;
+      font-size: 13px;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.15s ease;
+      vertical-align: top;
+
+      &:first-child {
+        font-weight: 600;
+        color: #3498ff;
+        font-size: 14px;
+      }
+
+      &:last-child {
+        color: #64748b;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: center;
+      }
+    }
+
+    tr {
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // Fast Moving Products Ranking Table
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+
+    th,
+    td {
+      padding: 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    th {
+      font-weight: 600;
+      color: #334155;
+      background: #f8fafc;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      color: #475569;
+      font-weight: 500;
+
+      &:first-child {
+        font-weight: 600;
+        color: #3498ff;
+        width: 60px;
+      }
+    }
+
+    tbody tr {
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: #3498ff;
+      font-size: 14px;
+    }
+
+    .revenue {
+      font-weight: 600;
+      color: #10b981;
+    }
+  }
+
+  // Pagination Controls (Shared styling for all tables)
+  .pagination-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+
+    .btn-page {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background-color: white;
+      color: #475569;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background-color: #3498ff;
+        border-color: #3498ff;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(52, 152, 255, 0.2);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+
+    .page-info {
+      font-weight: 600;
+      color: #64748b;
+      font-size: 13px;
+      min-width: 80px;
+      text-align: center;
+    }
+  }
+}
+
+// Unit Type Badges
+.unit-badge {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  border: 1px solid;
+  display: inline-block;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &.multi-level {
+    background: #dbeafe;
+    color: #1e40af;
+    border-color: #93c5fd;
+  }
+
+  &.dual-level {
+    background: #fed7aa;
+    color: #c2410c;
+    border-color: #fdba74;
+  }
+
+  &.single-level {
+    background: #e9d5ff;
+    color: #7c3aed;
+    border-color: #c4b5fd;
+  }
+}
+
+// Quantity Breakdown
+.qty-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .sold-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .sold-badge {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 3px 7px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid #86efac;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    line-height: 1.2;
+
+    &:hover {
+      background: #bbf7d0;
+    }
+  }
+
+  .total-qty {
+    font-size: 9px;
+    color: #64748b;
+    font-weight: 700;
+    margin-top: 2px;
+    padding: 2px 5px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    display: inline-block;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+}
+
+// Rank Badges
+.rank-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-block;
+  background: #f1f5f9;
+  color: #64748b;
+
+  &.rank-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #92400e;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  }
+
+  &.rank-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+    color: #1f2937;
+    box-shadow: 0 2px 8px rgba(192, 192, 192, 0.3);
+  }
+
+  &.rank-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #e9a96a 100%);
+    color: #78350f;
+    box-shadow: 0 2px 8px rgba(205, 127, 50, 0.3);
+  }
+}
+
+// Trend Badges
+.trend-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: capitalize;
+
+  &.trend-increasing {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+  }
+
+  &.trend-stable {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde047;
+  }
+
+  &.trend-decreasing {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+  }
+}
+
+// Critical Stock Table
+.critical-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+
+  th,
+  td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+  }
+
+  th {
+    font-weight: 600;
+    color: #334155;
+    background: #f8fafc;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    color: #475569;
+    font-weight: 500;
+  }
+
+  tbody tr {
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &.badge-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+  }
+}
