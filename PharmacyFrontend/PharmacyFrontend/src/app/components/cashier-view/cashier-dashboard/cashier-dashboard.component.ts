@@ -156,7 +156,11 @@ export class CashierDashboardComponent implements OnInit {
       next: (res) => {
         this.products = res.map((p: any) => ({
           ...p,
-          categoryName: p.categoryName || p.product?.categoryName || p.product?.category?.categoryName || '',
+          categoryName:
+            p.categoryName ||
+            p.product?.categoryName ||
+            p.product?.category?.categoryName ||
+            '',
           tempUnitType: 'Piece',
           sheetPrice: p.sheetPrice,
           piecePrice: p.piecePrice,
@@ -305,13 +309,15 @@ export class CashierDashboardComponent implements OnInit {
         // Find discount if inventory has one AND validate it
         let assignedDiscount: Discount | undefined = undefined;
         if (p.discountId > 0) {
-          const discount = this.discounts.find(d => d.id === p.discountId);
+          const discount = this.discounts.find((d) => d.id === p.discountId);
           // ADDED: Check if discount is valid
           if (discount && this.isDiscountValid(discount)) {
             assignedDiscount = discount;
           } else if (discount && !this.isDiscountValid(discount)) {
             // Optional: Show warning that discount is expired
-            console.warn(`Discount "${discount.discountName}" for ${p.productName} is expired or inactive`);
+            console.warn(
+              `Discount "${discount.discountName}" for ${p.productName} is expired or inactive`
+            );
           }
         }
 
@@ -357,28 +363,36 @@ export class CashierDashboardComponent implements OnInit {
     const itemSubtotal = item.quantity * item.unitPrice;
 
     if (item.selectedDiscount.discountType === 'Percentage') {
-      item.itemDiscountAmount = itemSubtotal * (item.selectedDiscount.discountAmount / 100);
+      item.itemDiscountAmount =
+        itemSubtotal * (item.selectedDiscount.discountAmount / 100);
     } else if (item.selectedDiscount.discountType === 'Fixed') {
-      item.itemDiscountAmount = Math.min(item.selectedDiscount.discountAmount, itemSubtotal);
+      item.itemDiscountAmount = Math.min(
+        item.selectedDiscount.discountAmount,
+        itemSubtotal
+      );
     } else {
       item.itemDiscountAmount = 0;
     }
   }
 
+  // FIXED: getAvailableDiscountsForItem - Remove auto-calculation
   getAvailableDiscountsForItem(item: any): Discount[] {
     // Use the stored original inventory discount
     if (!item.originalDiscountId || item.originalDiscountId === 0) {
       return [];
     }
 
-    const discount = this.discounts.find(d => d.id === item.originalDiscountId);
+    const discount = this.discounts.find(
+      (d) => d.id === item.originalDiscountId
+    );
 
     if (!discount) return [];
 
     if (!this.isDiscountValid(discount)) return [];
 
-    this.calculateItemDiscountAmount(item);
-    this.calculateAndApplyItemDiscount(item);
+    // REMOVED: Don't auto-calculate here, let the user choose
+    // this.calculateItemDiscountAmount(item);
+    // this.calculateAndApplyItemDiscount(item);
 
     return [discount];
   }
@@ -397,23 +411,43 @@ export class CashierDashboardComponent implements OnInit {
     return 0;
   }
 
+  // FIXED: onItemDiscountChange
   onItemDiscountChange(item: any) {
-    const discount = this.discounts.find(d => d.id === item.discountId);
+    // Convert to number to ensure proper comparison
+    const discountId = Number(item.discountId);
 
-    if (!discount) {
+    console.log('Discount changed:', discountId, 'Type:', typeof discountId);
+    console.log('Item before:', { ...item });
+
+    // When "No discount" is selected (value = 0 or null or undefined)
+    if (!discountId || discountId === 0) {
+      item.discountId = 0;
       item.selectedDiscount = undefined;
       item.itemDiscountAmount = 0;
+      console.log('No discount selected - cleared discount');
     } else {
-      item.selectedDiscount = discount;
+      // Find the discount by ID
+      const discount = this.discounts.find((d) => d.id === discountId);
+
+      if (!discount) {
+        // Discount not found, reset
+        console.log('Discount not found, resetting');
+        item.discountId = 0;
+        item.selectedDiscount = undefined;
+        item.itemDiscountAmount = 0;
+      } else {
+        // Valid discount found, apply it
+        console.log('Valid discount found:', discount.discountName);
+        item.selectedDiscount = discount;
+        this.calculateAndApplyItemDiscount(item);
+      }
     }
 
-    this.calculateAndApplyItemDiscount(item);
+    console.log('Item after:', { ...item });
 
-    // 🚀 FORCE Angular to update the UI
+    // Force Angular to detect changes and update the UI
     this.selectedProducts = [...this.selectedProducts];
   }
-
-
 
   // OPTIONAL: Visual indicator methods for product list
   getDiscountStatusClass(product: any): string {
@@ -421,7 +455,7 @@ export class CashierDashboardComponent implements OnInit {
       return '';
     }
 
-    const discount = this.discounts.find(d => d.id === product.discountId);
+    const discount = this.discounts.find((d) => d.id === product.discountId);
     if (!discount) {
       return 'discount-missing';
     }
@@ -438,7 +472,7 @@ export class CashierDashboardComponent implements OnInit {
       return '';
     }
 
-    const discount = this.discounts.find(d => d.id === product.discountId);
+    const discount = this.discounts.find((d) => d.id === product.discountId);
     if (!discount) {
       return 'Discount Not Found';
     }
@@ -491,7 +525,9 @@ export class CashierDashboardComponent implements OnInit {
     if (!item.quantity || item.quantity < 1) item.quantity = 1;
     if (!item.unitPrice || item.unitPrice < 0) item.unitPrice = 0;
 
-    const product = this.products.find((p) => p.inventoryID === item.inventoryID);
+    const product = this.products.find(
+      (p) => p.inventoryID === item.inventoryID
+    );
     if (product && (!item.unitPrice || item.unitPrice === 0)) {
       item.unitPrice = this.resolveUnitPriceFromProduct(product, item.unitType);
     }
@@ -509,7 +545,9 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   onCartItemUnitTypeChange(item: any) {
-    const product = this.products.find((p) => p.inventoryID === item.inventoryID);
+    const product = this.products.find(
+      (p) => p.inventoryID === item.inventoryID
+    );
     if (!product) return;
 
     const resolved = this.resolveUnitPriceFromProduct(product, item.unitType);
@@ -552,7 +590,9 @@ export class CashierDashboardComponent implements OnInit {
   }
 
   getMaxQuantity(item: any): number {
-    const product = this.products.find((p) => p.inventoryID === item.inventoryID);
+    const product = this.products.find(
+      (p) => p.inventoryID === item.inventoryID
+    );
     if (!product) return Infinity;
 
     switch (item.unitType) {
@@ -577,10 +617,10 @@ export class CashierDashboardComponent implements OnInit {
 
     // Store the transaction data but DON'T save to database yet
     this.pendingTransaction = event;
-    
+
     // Show the receipt
     this.receipt = event;
-    
+
     // Close the settle form
     this.closeViewSettle();
   }
@@ -590,47 +630,50 @@ export class CashierDashboardComponent implements OnInit {
     if (!this.pendingTransaction) return;
 
     // NOW save to database
-    this.postService.createSalesTransactionAsync(this.pendingTransaction).subscribe({
-      next: () => {
-        this.getAllProducts();
-        this.generateNewInvoiceNumber();
-        this.clearSelection();
-        this.pendingTransaction = null;
-        this.receipt = null;
-        this.finishedTransac = true;
-      },
-      error: (err) => {
-        console.error('Full error object:', err);
+    this.postService
+      .createSalesTransactionAsync(this.pendingTransaction)
+      .subscribe({
+        next: () => {
+          this.getAllProducts();
+          this.generateNewInvoiceNumber();
+          this.clearSelection();
+          this.pendingTransaction = null;
+          this.receipt = null;
+          this.finishedTransac = true;
+        },
+        error: (err) => {
+          console.error('Full error object:', err);
 
-        let errorMsg = 'An unexpected error occurred';
+          let errorMsg = 'An unexpected error occurred';
 
-        if (err.error) {
-          if (typeof err.error === 'string') {
-            try {
-              const parsed = JSON.parse(err.error);
-              errorMsg = parsed.Message || parsed.message || err.error;
-            } catch {
-              errorMsg = err.error;
+          if (err.error) {
+            if (typeof err.error === 'string') {
+              try {
+                const parsed = JSON.parse(err.error);
+                errorMsg = parsed.Message || parsed.message || err.error;
+              } catch {
+                errorMsg = err.error;
+              }
+            } else if (err.error.Message) {
+              errorMsg = err.error.Message;
+            } else if (err.error.message) {
+              errorMsg = err.error.message;
             }
-          } else if (err.error.Message) {
-            errorMsg = err.error.Message;
-          } else if (err.error.message) {
-            errorMsg = err.error.message;
+          } else if (err.message) {
+            errorMsg = err.message;
           }
-        } else if (err.message) {
-          errorMsg = err.message;
-        }
 
-        this.errorMessage = errorMsg;
-        this.receipt = null;
-        this.pendingTransaction = null;
-      },
-    });
+          this.errorMessage = errorMsg;
+          this.receipt = null;
+          this.pendingTransaction = null;
+        },
+      });
   }
 
   openViewSettleForm() {
     if (this.selectedProducts.length === 0) {
-      this.errorMessage = 'Cannot proceed to settlement. Please add items to cart first.';
+      this.errorMessage =
+        'Cannot proceed to settlement. Please add items to cart first.';
       return;
     }
     this.viewSettle = new Product();
