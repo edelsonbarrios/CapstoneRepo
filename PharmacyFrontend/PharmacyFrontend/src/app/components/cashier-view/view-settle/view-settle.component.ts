@@ -46,9 +46,9 @@ export class ViewSettleComponent implements OnInit {
   constructor(private getService: GetService) {}
 
   ngOnInit(): void {
+    this.getAllVAT();
     this.getLoggedInUser();
     this.getAllDiscounts();
-    this.getAllVAT();
     this.updatePagination();
   }
 
@@ -93,8 +93,14 @@ export class ViewSettleComponent implements OnInit {
     this.getService.getAllVatAsync().subscribe({
       next: (res) => {
         this.vats = res;
-        const defaultVat = res.find((v) => v.vatName === 'Standard');
-        this.selectedVat = defaultVat || null;
+        const defaultVat = res.find(v => v.vatid == 1);
+        if (defaultVat) {
+          this.selectedVat = defaultVat;
+          // Recalculate subtotal first in case it wasn't set
+          this.recalculateSubtotal();
+          // Then trigger payment calculations
+          this.onPaymentChange();
+        }
       },
       error: (err) => {
         console.log(`${err.error}`);
@@ -230,7 +236,10 @@ export class ViewSettleComponent implements OnInit {
 
   // NEW: Get total of all item-level discounts
   getTotalItemDiscounts(): number {
-    return this.cartItems.reduce((acc, item) => acc + (item.itemDiscountAmount || 0), 0);
+    return this.cartItems.reduce(
+      (acc, item) => acc + (item.itemDiscountAmount || 0),
+      0
+    );
   }
 
   // UPDATED: Recalculate subtotal including item discounts

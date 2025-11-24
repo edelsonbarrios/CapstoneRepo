@@ -94,7 +94,8 @@
                 {{ (item.quantity * item.unitPrice) | currency:'PHP':'symbol':'1.2-2' }}
               </span>
               <span class="final-price" [class.discounted]="item.itemDiscountAmount > 0">
-                {{ ((item.quantity * item.unitPrice) - (item.itemDiscountAmount || 0)) | currency:'PHP':'symbol':'1.2-2' }}
+                {{ ((item.quantity * item.unitPrice) - (item.itemDiscountAmount || 0)) | currency:'PHP':'symbol':'1.2-2'
+                }}
               </span>
             </div>
           </td>
@@ -130,7 +131,7 @@
         <span class="label">VAT:</span>
         <div class="input-group">
           <select id="vat" [(ngModel)]="selectedVat" (ngModelChange)="onPaymentChange()">
-            <option *ngFor="let v of vats" [ngValue]="v">
+            <option *ngFor="let v of vats" [ngValue]="v" [selected]="v.vatName === 'Standard'">
               {{ v.vatName }} ({{ v.vatRate }}%)
             </option>
           </select>
@@ -217,11 +218,10 @@
       <div class="change-display" *ngIf="payment > 0">
         <span class="label">
           <i class="fas fa-exchange-alt"></i>
-          {{ change < 0 ? 'Balance:' : 'Change:' }}
-        </span>
-        <span class="value" [class.negative]="change < 0">
-          {{ change | currency:'PHP':'symbol':'1.2-2' }}
-        </span>
+          {{ change < 0 ? 'Balance:' : 'Change:' }} </span>
+            <span class="value" [class.negative]="change < 0">
+              {{ change | currency:'PHP':'symbol':'1.2-2' }}
+            </span>
       </div>
     </div>
   </div>
